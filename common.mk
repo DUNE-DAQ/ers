@@ -19,7 +19,7 @@ ERS_HEADS = ers/util.h ers/Issue.h ers/IssueFactory.h ers/Context.h \
 	 ers/Precondition.h ers/Assertion.h  ers/NotImplemented.h \
 	 ers/Stream.h ers/STLOutStream.h ers/XMLOutStream.h \
 	 ers/HumanStream.h ers/SyncStream.h ers/TabOutStream.h \
-	 ers/PosixIssue.h ers/FileIssue.h ers/OpenFail.h 
+	 ers/PosixIssue.h ers/IOIssue.h ers/FileIssue.h ers/OpenFail.h 
 
 ERS_SRCS = ${ERS_HEADS:ers/%.h=src/%.cxx}
 
@@ -29,7 +29,7 @@ LIB_OBJS	 = ${ERS_OBJS}
 
 LIB_NAME  = libers.dylib
            
-all:   ${BUILD}/test
+all:   ${BINARY_BUILD}/test
 
 ${BUILD}/${LIB_NAME}: ${LIB_OBJS}
 	${LD} -dynamiclib ${LIB_OBJS} -dynamic-library -install_name ${LIB_NAME} -o $@
@@ -47,7 +47,7 @@ ${BUILD}/Issue.o: src/Issue.cxx ers/Issue.h ers/Context.h ers/IssueFactory.h ers
 	${CC} $<  -c -o $@
 	
 ${BUILD}/test.o: test/test.cxx
-	${CC} $<  -c -o $@
+	${CC} $< ${ERS_OBJS} -c -o $@
 	
 ${BUILD}/%.o: src/%.cxx ${ERS_HEADS}
 	${CC} $<  -c -o $@

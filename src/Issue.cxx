@@ -95,7 +95,7 @@ Issue::Issue(const string_map_type &values) {
 * @param line line where Issue occured 
 */
 
-Issue::Issue(const std::string &m, ers_severity s, const Context &context) {
+Issue::Issue(const Context &context, ers_severity s, const std::string &m) {
     cause(); 
     setup_common(&context);
     severity(s);
@@ -104,7 +104,7 @@ Issue::Issue(const std::string &m, ers_severity s, const Context &context) {
 
 /** @overload */
 
-Issue::Issue(ers_severity s,  const Context &context) {
+Issue::Issue(const Context &context, ers_severity s) {
     cause();   
     setup_common(&context);
     severity(s);
@@ -116,7 +116,7 @@ Issue::Issue(ers_severity s,  const Context &context) {
  * @param cause the exception that caused the current Issue
  */
 
-Issue::Issue(const std::exception *c, ers_severity s, const Context &context) { 
+Issue::Issue(const Context &context, ers_severity s, const std::exception *c) { 
     ERS_PRECONDITION(c!=0,"Null cause exception"); 
     cause(c); 
     setup_common(&context);

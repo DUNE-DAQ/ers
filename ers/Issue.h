@@ -25,7 +25,7 @@ namespace ers {
     *  The object contains utility methods to allow the manipulation of those key / values and
     *  code to insert common values into it, like time, compilation information, host information etc.
     *  @author Matthias Wiesmann
-    *  @version 0.2 (test)
+    *  @version 1.0
     */
     
     class Issue : public std::exception  {  
@@ -68,14 +68,14 @@ protected:
 	virtual std::string build_human_description() const;           /**< \brief Builds human description for Issue. */
         void setup_common(const Context *context) ;                    /**< \brief Sets up the common fields. */
         void finish_setup(const std::string &message) ;                /**< \brief Finishes the setup of the Issue */
-        Issue(ers_severity s, const Context &context);                 /**< \brief Constrcutor for subclasses */
+        Issue(const Context &context, ers_severity s);                 /**< \brief Constrcutor for subclasses */
         void set_values(const string_map_type &values); 
 public:
 	Issue();  
 	Issue(const Issue &issue); 
         Issue(const string_map_type &values); 
-	Issue(const std::string &message, ers_severity s, const Context &context);   
-        Issue(const std::exception *cause, ers_severity s, const Context &context); 
+	Issue(const Context &context, ers_severity s, const std::string &message);   
+        Issue(const Context &context, ers_severity s, const std::exception *cause); 
 	const std::string get_value(const std::string &key) const ;   /**< \brief Reads the property list. */
 	virtual const char *get_class_name() const throw() ;          /**< \brief Get key for class (used for serialisation)*/
 	const string_map_type* get_value_table() const ; 

@@ -25,7 +25,7 @@ public:
     void serialize_start(const Issue *i) ; 
     void serialize_end(const Issue *i) ;
     void serialize(const std::string &key, const std::string &value) ; 
-} ; // file_stream
+} ; // XMLOutStream
     
 } // ers
 

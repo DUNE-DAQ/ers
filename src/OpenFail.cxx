@@ -2,8 +2,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <sys/types.h>
-#include <sys/stat.h>
+
 #include <fcntl.h>
 
 #include "ers/OpenFail.h"
@@ -53,17 +52,26 @@ std::string ers::OpenFail::open_flag_message(int flags) {
     return flag_str.str();
 } // open_flag_message
 
-ers::OpenFail::OpenFail(const char *path, int flags, const Context &context) : FileIssue(path,ers_error,context) {
+ers::OpenFail::OpenFail(const Context &c, int flags, const char *path) : FileIssue(c,ers_error,path) {
     ERS_PRECONDITION(path!=0,"Null path pointer"); 
-    m_value_table[FLAG_KEY] = open_flag_message(flags); 
-    responsibility(ers_resp_client); 
-    std::string host = get_value(HOST_NAME_KEY); 
-    std::string message = open_fail_message(path,host,posix_message());
-    finish_setup(message);
+    setup(path, flags); 
 } // open_fail
+
+ers::OpenFail::OpenFail(const Context &c, int flags, const char *path, const std::exception *cause) : FileIssue(c, ers_error, path,cause) {
+    ERS_PRECONDITION(path!=0,"Null path pointer"); 
+    setup(path, flags); 
+} // open_fail
+
 
 ers::OpenFail::OpenFail() : FileIssue() {} // open_fail
 
 const char* ers::OpenFail::get_class_name() const throw () { return OPENFAIL_CLASS ;} 
 
+void ers::OpenFail::setup(const char *path, int flags) {
+    m_value_table[FLAG_KEY] = open_flag_message(flags); 
+    responsibility(ers_resp_client); 
+    std::string host = get_value(HOST_NAME_KEY); 
+    std::string message = open_fail_message(path,host,posix_message());
+    finish_setup(message);
+}  // setup
 

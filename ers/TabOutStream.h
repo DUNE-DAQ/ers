@@ -1,5 +1,5 @@
 /*
- *  tab_out_stream.h
+ *  STLOutStream.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 01.11.04.
@@ -7,6 +7,8 @@
  *
  */
 
+#ifndef ERS_TAB_OUT
+#define ERS_TAB_OUT
 
 #include "ers/STLOutStream.h"
 
@@ -28,4 +30,6 @@ public:
 } ; // Tab_Stream
 
 } // ers 
+
+#endif
 

@@ -9,7 +9,7 @@
 
 #include "ers/STLOutStream.h"
 #include "ers/Precondition.h"
-#include "ers/FileIssue.h"
+#include "ers/OpenFail.h"
 
 /** Builds a stream that writes into a file 
   * @param filename the name of the file
@@ -21,10 +21,9 @@ ers::STLOutStream::STLOutStream(const char* filename) {
 	this->m_stream = new std::ofstream(filename) ; 
 	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
 	m_delete_stream = true ; 
-    } catch (std::exception &e) {
-	printf("%s %p\n",e.what(),&e); 
-	throw FileIssue("Cannot open stream",filename,&e,ers::ers_error,ERS_HERE); 
-    } 
+    } catch (std::ios_base::failure &ex) {
+	throw ERS_OPEN_WRITE_FAIL(filename,&ex); 
+    } // catch
 } // Stream_Stream
 
 ers::STLOutStream::STLOutStream(std::ostream *s) {
@@ -48,18 +47,22 @@ ers::STLOutStream::~STLOutStream() {
 
 void ers::STLOutStream::send(const Issue *i) {
     ERS_PRECONDITION(i!=0,"Null Issue pointer"); 
-    const string_map_type *table = i->get_value_table(); 
-    serialize_start(i); 
-    bool first = true ; 
-    for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
-        if (first) {
-            first = false ;
-        } else {
-            serialize_separator(i);
-        } // first or not
-        serialize(pos->first,pos->second);
-    } // for
-    serialize_end(i); 
+    try {
+	const string_map_type *table = i->get_value_table(); 
+	serialize_start(i); 
+	bool first = true ; 
+	for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
+	    if (first) {
+		first = false ;
+	    } else {
+		serialize_separator(i);
+	    } // first or not
+	    serialize(pos->first,pos->second);
+	} // for
+	serialize_end(i); 
+    } catch (std::ios_base::failure &ex) {
+	throw ERS_IOERROR("Cannot write to stream",&ex); 
+    } 
 } // send
 
 ers::Issue *ers::STLOutStream::receive() {

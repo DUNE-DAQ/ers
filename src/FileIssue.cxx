@@ -12,6 +12,8 @@
 #include "ers/FileIssue.h"
 
 const char* ers::FileIssue::PATH_KEY = "POSIX_FILE_PATH" ; 
+const char* ers::FileIssue::FILE_TYPE_KEY = "FILE_TYPE" ; 
+
 const char* ers::FileIssue::FILE_ISSUE_CLASS = "ers::FileIssue" ; 
 
 namespace {
@@ -19,17 +21,22 @@ namespace {
     bool registered = ers::IssueFactory::instance()->register_issue(ers::FileIssue::FILE_ISSUE_CLASS,create_file_issue) ;
 } 
 
-ers::FileIssue::FileIssue() : ers::PosixIssue() { } // FileIssue
+ers::FileIssue::FileIssue() : ers::IOIssue() { } // FileIssue
 
-ers::FileIssue::FileIssue(const char *p, ers_severity s, const Context &context) : ers::PosixIssue(s,context) {
+ers::FileIssue::FileIssue(const Context &c, ers_severity s, const char *p) : ers::IOIssue(c,s) {
     path(p); 
 }  // FileIssue
 
-ers::FileIssue::FileIssue(const std::string &message, const char *p, ers::ers_severity s, const ers::Context &context) : ers::PosixIssue(s,context) {
+ers::FileIssue::FileIssue(const Context &c, ers_severity s, const char *p, const std::exception *cause) : ers::IOIssue(c,s,cause) {
+    path(p); 
+} // FileIssue
+
+
+ers::FileIssue::FileIssue(const Context &c, ers_severity s, const std::string &message, const char *p) : ers::IOIssue(c,s) {
     setup_file_issue(message,p); 
 } // FileIssue
 
-ers::FileIssue::FileIssue(const std::string &message, const char *p, const std::exception *cause, ers::ers_severity s, const ers::Context &context) : ers::PosixIssue(cause,s,context) {
+ers::FileIssue::FileIssue(const Context &c, ers_severity s, const std::string &message, const char *p, const std::exception *cause) : ers::IOIssue(c,s,cause) {
     setup_file_issue(message,p); 
 } //  FileIssue
 

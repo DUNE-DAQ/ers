@@ -58,26 +58,26 @@ void PosixIssue::setup_posix(int err) {
 
 PosixIssue::PosixIssue() : Issue() {} 
 
-PosixIssue::PosixIssue(const std::string &message, ers_severity s, int err, const Context &context) : Issue(s,context) {
+PosixIssue::PosixIssue(const Context &c, ers_severity s, const std::string &message, int err) : Issue(c,s) {
     setup_posix(err);
     finish_setup(message); 
 } // posix_issue
 
-PosixIssue::PosixIssue(const std::string &message, ers_severity s, const Context &context) : Issue(s,context) {
+PosixIssue::PosixIssue(const Context &c, ers_severity s, const std::string &message) : Issue(c,s) {
     setup_posix(errno);
     finish_setup(message); 
 } // posix_issue
 
-PosixIssue::PosixIssue(ers_severity s, const Context &context) : Issue(s,context) {
+PosixIssue::PosixIssue(const Context &c ,ers_severity s) : Issue(c,s) {
     setup_posix(errno);
 } // posix_issue
 
-PosixIssue::PosixIssue(const std::string &message, const std::exception *cause, ers_severity s, const Context &context) : Issue(cause,s,context) {
+PosixIssue::PosixIssue(const Context &c, ers_severity s, const std::string &message, const std::exception *cause) : Issue(c,s,cause) {
     setup_posix(errno);
     finish_setup(message);
 } // PosixIssue
 
-PosixIssue::PosixIssue(const std::exception *cause, ers_severity s, const Context &context) : Issue(cause,s,context) {
+PosixIssue::PosixIssue(const Context &c, ers_severity s, const std::exception *cause ) : Issue(c,s,cause) {
     setup_posix(errno);
 }  // PosixIssue
 

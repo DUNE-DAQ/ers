@@ -7,10 +7,12 @@
  *
  */
 
+#ifndef ERS_STL_OUT_STREAM
+#define ERS_STL_OUT_STREAM
+
 #include "ers/Stream.h"
 #include <iostream>
 #include <fstream>
-
 
 namespace ers {
     
@@ -35,3 +37,5 @@ public:
 	~STLOutStream() ; 
     } ; // Stream_Stream
 } // ers
+
+#endif

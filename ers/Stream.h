@@ -1,3 +1,13 @@
+/*
+ *  Stream.h
+ *  ers
+ *
+ *  Created by Matthias Wiesmann on 02.12.04.
+ *  Copyright 2004 CERN. All rights reserved.
+ *
+ */
+
+
 #include <string>
 
 #include "ers/util.h"
@@ -13,7 +23,7 @@ namespace ers {
   * This class is meant to be subclassed in order to implement concrete issue streams. 
   * This class silently discards issues.
   * @author Matthias Wiesmann
-  * @version 0.1
+  * @version 1.0
   */
     
 class Stream {

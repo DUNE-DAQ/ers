@@ -23,7 +23,7 @@ class Issue ;
       * Each issue should register one factory method for instances of this class.
       * This is needed for deserilizing of Issues. 
       * @author Matthias Wiesmann
-      * @version 0.3 Ready for common 
+      * @version 1.0
       */
     
 class IssueFactory {
@@ -32,7 +32,7 @@ public:
     typedef std::map<std::string,CreateIssueCallback> CallbackMap ; 
 protected:
     IssueFactory(); 
-    CallbackMap factory_map ; 
+    CallbackMap m_factory_map ; 
     static IssueFactory  *s_factory ; 
 public:
     static IssueFactory *instance() ;

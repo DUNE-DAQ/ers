@@ -8,11 +8,12 @@
  */
 
 /** @file This files contains small utility functions and general definitions for ers.
+  * @version 1.0 
   */
 
 
 #ifndef __ERS_UTIL__
-#define __ERS_UTIL__  "0.1"
+#define __ERS_UTIL__  "0.3"
 
 #include <string>
 #include <map>

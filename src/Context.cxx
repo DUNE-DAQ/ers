@@ -38,7 +38,7 @@ const char* ers::Context::function() const {
 
 std::string ers::Context::position() const {
     std::ostringstream position_s ;
-    position_s << file_name << ":" << line_number << "(" << function_name << ")" ; 
+    position_s << file_name << ":" << line_number << " (" << function_name << ")" ; 
     return position_s.str();
 } // position
 

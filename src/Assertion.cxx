@@ -36,7 +36,7 @@ ers::Assertion::Assertion() : Issue() {}
 /** Constructor for subclasses 
   */
 
-ers::Assertion::Assertion(ers_severity s, const Context &context) : Issue(s,context) {} 
+ers::Assertion::Assertion(const Context &context, ers_severity s) : Issue(context,s) {} 
 
 /** Constructor 
   * @param condition_text the text of the assertion's condition
@@ -46,7 +46,7 @@ ers::Assertion::Assertion(ers_severity s, const Context &context) : Issue(s,cont
   * @param constant_expression is the expression constant (as detected by the compiler).
   */
 
-ers::Assertion::Assertion(const char* condition_text, const std::string &message, ers_severity s, const Context &context, bool constant_expression) : Issue(s,context) {
+ers::Assertion::Assertion(const Context &context, ers_severity s, const char* condition_text, const std::string &message, bool constant_expression) : Issue(context,s) {
     setup(condition_text,message,constant_expression);
 } // Assertion
 

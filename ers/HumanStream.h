@@ -1,3 +1,13 @@
+/*
+ *  HumanStream.h
+ *  ers
+ *
+ *  Created by Matthias Wiesmann on 01.11.04.
+ *  Copyright 2004 CERN. All rights reserved.
+ *
+ */
+
+
 #include <ostream>
 #include <sstream>
 

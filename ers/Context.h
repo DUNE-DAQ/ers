@@ -25,7 +25,7 @@ namespace ers {
   *
   * The current context can be obtained using the macro ERS_HERE
   * @author Matthias Wiesmann
-  * @version 0.1 
+  * @version 1.0 
   */
  
 class Context {

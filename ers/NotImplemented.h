@@ -14,7 +14,7 @@ namespace ers {
     /** This special 'assertion' is used to mark a non implemented function or method. 
      *  Typically, this is marked using the NOT_IMPLEMENTED() macro. 
      *  @author Matthias Wiesmann
-     *  @version 0.1
+     *  @version 1.0
      */
     
     class NotImplemented : public Assertion {
@@ -24,11 +24,11 @@ protected:
 public:
 	static const char* NOTIMPLEMENTED_CLASS ; 
 	NotImplemented();
-	NotImplemented(ers_severity s, const Context &context) ;
+	NotImplemented(const Context &context, ers_severity s) ;
 	virtual const char*get_class_name() const throw();
     } ;  // Precondition
 } // ers
 
-#define NOT_IMPLEMENTED() throw NotImplemented(ers::ers_error,ERS_HERE)
-#define NOT_IMPLEMENTED_FATAL() throw NotImplemented(ers::ers_fatal,ERS_HERE)
+#define NOT_IMPLEMENTED() throw NotImplemented(ERS_HERE,ers::ers_error)
+#define NOT_IMPLEMENTED_FATAL() throw NotImplemented(ERS_HERE,ers::ers_fatal)
 

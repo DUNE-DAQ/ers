@@ -21,7 +21,7 @@ namespace ers {
 protected:
 	std::istream *m_stream ;           
 	bool m_delete_stream ;
-	virtual bool read_properties(string_map_type &values) = 0; 
+	virtual bool read_properties(string_map_type *values) = 0; 
 public:
 	void send(const Issue *i) ; 
 	Issue *receive() ; 

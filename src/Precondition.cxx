@@ -28,13 +28,13 @@ ers::Precondition::Precondition() : Assertion() {}
  *  @param constext of the issue 
  */
 
-ers::Precondition::Precondition(ers_severity s, const Context &context) : Assertion(s,context) {}  
+ers::Precondition::Precondition(const Context &c, ers_severity s) : Assertion(c,s) {}  
 
 /** Main constructor, it should be used for building Precondition Issues
   * @param condition the condition 
   */
 
-ers::Precondition::Precondition(const char*condition, const std::string &message, ers_severity s, const Context &context, bool constant_expression) : Assertion(s,context) {
+ers::Precondition::Precondition(const Context &context, ers_severity s, const char*condition, const std::string &message , bool constant_expression) : Assertion(context,s) {
     this->setup(condition,message,constant_expression); 
 } // Precondition
 
