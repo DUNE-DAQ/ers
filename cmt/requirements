@@ -29,7 +29,7 @@ private
 
 	
 library		ers			$(lib_opts)			*.cxx
-macro           ers_shlibflags          "-lsystem -lxerces-c -L$(xerces_root)/lib" 
+macro           ers_shlibflags          "-lxerces-c -L$(xerces_root)/lib" 
 
 
 macro		instlibs		libers.so	\
