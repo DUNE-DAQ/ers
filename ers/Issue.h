@@ -72,7 +72,7 @@ protected:
 	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
 	void insert(const Context *context) throw() ;                  /**< \brief Inserts the context */
 	void insert_time() throw() ;                                   /**< \brief Inserts current time */
-	void insert_env(const char*env_key, const char* issue_key) throw() ;  /**< \brief Inserts environnement variable */
+	
         void setup_common(const Context *context) throw() ;            /**< \brief Sets up the common fields. */
         void finish_setup(const std::string &message) throw() ;        /**< \brief Finishes the setup of the Issue */
         Issue(const Context &context, ers_severity s);                 /**< \brief Constructor for subclasses */

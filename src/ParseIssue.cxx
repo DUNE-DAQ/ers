@@ -8,7 +8,6 @@
  */
 
 #include "ers/ParseIssue.h"
-#include "system/FileIssue.h"
 
 const char * const ers::ParseIssue::OFFENDING_LINE_KEY = "PARSE_ISSUE_TEXT" ; 
 const char * const ers::ParseIssue::OFFENDING_LINE_NUMBER_KEY = "PARSE_ISSUE_LINE_NUMBER" ; 
@@ -45,7 +44,7 @@ void ers::ParseIssue::offending_line_number(int line) {
 } // offending_line_number
     
 void ers::ParseIssue::file_name(std::string filename) {
-    m_value_table[System::FileIssue::PATH_KEY] = filename ; 
+    m_value_table["ParseFileName"] = filename ; 
 } // file_name
 
 

@@ -1,13 +1,12 @@
 /*
- *  HumanStream.h
- *  ers
+ *  DefaultStream.cxx
+ *  Test
  *
- *  Created by Matthias Wiesmann on 01.11.04.
- *  Copyright 2004 CERN. All rights reserved.
+ *  Created by Matthias Wiesmann on 21.01.05.
+ *  Copyright 2005 CERN. All rights reserved.
  *
  */
-
-
+ 
 #include <ostream>
 #include <sstream>
 
@@ -22,16 +21,15 @@ namespace ers {
   * \brief Single line, human readable format stream. 
   */
     
-class HumanStream  : public Stream {
+class DefaultStream  : public Stream {
 protected:
-    std::ostringstream m_out_stream ; 
+   
 public:
-    static std::string to_string(const Issue *issue) throw() ; 
-    
-    HumanStream() ;
-    std::string to_string() ; 
+    static const char * const KEY ;
+    DefaultStream() ;
+    ~DefaultStream() ; 
     void send(const Issue *ptr); 
-} ; // human_stream 
+} ; // DefaultStream 
 
 } // namespace ers
 

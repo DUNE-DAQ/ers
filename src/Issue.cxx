@@ -15,15 +15,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
-#include "system/File.h"
-#include "system/User.h"
-#include "system/Environnement.h"
-#include "system/Process.h"
-#include "system/Host.h"
 
 #define BUFFER_SIZE 256 
 
@@ -37,7 +30,6 @@ namespace {
 } 
 
 using namespace ers ; 
-using namespace System  ;
 
 const char* const Issue::CLASS_KEY = "ISSUE_CLASS" ; 
 const char* const Issue::COMPILATION_TIME_KEY = "COMPILATION_TIME" ; 
@@ -405,21 +397,6 @@ void Issue::insert_time() throw() {
     set_value(TIME_KEY,time_buffer); 
 } // insert_time
 
-
-/** Inserts a environnement variable into the issue 
-* \param env_key name of the environnement variable
-* \param issue_key key used to store the resulting value into the value table 
-*/
-
-void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
-    if (! env_key) return ; 
-    if (! issue_key) return ; 
-    std::string value = Environnement::get(std::string(issue_key)); 
-    if (! value.empty()) {
-	set_value(issue_key,value); 
-    } // value exists 
-} // insert_env
-
 // ====================================================
 // Setup Methods
 // ====================================================
@@ -429,9 +406,6 @@ void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
   * \li Source code position (file/line)
   * \li Compiler version
   * \li Compilation time and date
-  * \li Hostname 
-  * \li Process id
-  * \li OS and processor of the host
   *
   * \param context context where the exception occured, this should be the ERS_HERE macro. 
   * \note All method used within this method should throw no exceptions to avoid circular problems. 
@@ -440,7 +414,15 @@ void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
 void Issue::setup_common(const Context *context) throw() {
     const int errno_copy = errno ; // We need to save errno, because it might be changed 
     insert(context);
-    Process p ; 
+    insert_time();
+    errno = errno_copy ; // we restaure errno 
+} // setup_common
+
+/* Cut out stuff to remove dependency
+* \li Hostname 
+  * \li Process id
+  * \li OS and processor of the host
+ Process p ; 
     set_value(PROCESS_ID_KEY,p.process_id()); 
     System::User user ; 
     set_value(USER_ID_KEY,user.identity()) ; 
@@ -450,9 +432,9 @@ void Issue::setup_common(const Context *context) throw() {
     set_value(HOST_NAME_KEY,localhost->full_name()); 
     set_value(HOST_IP_ADDR_KEY,localhost->ip_string()); 
     set_value(HOST_TYPE_KEY,localhost->description()); 
-    insert_time();
-    errno = errno_copy ; // we restaure errno 
-} // setup_common
+
+*/
+
 
 /** Finishes the setting up of the information fields.
   * In particular, in fills in the human message and the class type fields 

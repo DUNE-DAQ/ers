@@ -1,6 +1,6 @@
 /*
  *  StreamFactory.cxx
- *  Test
+ *  ERS
  *
  *  Created by Matthias Wiesmann on 21.01.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -11,11 +11,10 @@
 
 
 #include "ers/StreamFactory.h"
-
+#include "ers/DefaultStream.h"
 #include "ers/ers.h"
 
-#include "ers/HumanStream.h"
-#include "ers/TabStream.h"
+
 
 
 
@@ -39,9 +38,9 @@
 
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
     "null",                                                         // none
-    "cerr:msg", "cerr:msg", "cerr:msg", "cerr:msg",                 // debug levels
-    "cerr:msg", "cerr:tab", "cerr:tab",                             // information, notification, warning
-    "cerr:tab", "cerr:tab",                                         // Errors and Fatals
+    "default",  "default",  "default", "default",                 // debug levels
+    "default",  "default",  "default",                             // information, notification, warning
+    "default",  "default",                                         // Errors and Fatals
     "null:"  } ;                                                    // max
 
 
@@ -126,7 +125,7 @@ const char* ers::StreamFactory::key_for_severity(ers_severity s) {
     if (env!=0) return env ;
     const char* static_key = DEFAULT_STREAMS[s] ; 
     if (static_key) return static_key ; 
-    return "cerr:tab" ; 
+    return ers::DefaultStream::KEY ; 
 } // key_for_severity
 
 /** Builds a stream from a textual key 
@@ -139,14 +138,21 @@ const char* ers::StreamFactory::key_for_severity(ers_severity s) {
   */
 
 ers::Stream *ers::StreamFactory::create_stream(const std::string &key) {
-    std::string protocol = System::File::protocol(key);
-    std::string uri = System::File::uri(key);
+    std::string protocol ; 
+    std::string uri ; 
+    std::string::size_type colon = key.find(":") ; 
+    if (colon==std::string::npos) {
+    	protocol = key ; 
+    } else {
+        protocol = key.substr(0,colon-1) ; 
+	uri = key.substr(colon) ; 
+    } 
     for(stream_factory_collection::const_iterator pos=m_factories.begin();pos!=m_factories.end();++pos) {
 	create_stream_callback callback = pos->second; 
 	Stream *s = callback(protocol,uri); 
 	if (s!=0) return s ; 
     } // for
-    return new TabStream(); 
+    return new DefaultStream(); 
 } // create_stream
 
 /** Builds a stream for a given severity. 

@@ -6,7 +6,6 @@ manager	Matthias.Wiesmann@cern.ch
 #What policy do we use? 
 
 use OnlinePolicy
-use XercesC * TDAQExternal
 
 macro lib_ers_cppflags                  "-I../ers"
 
@@ -17,12 +16,13 @@ private
 ########################################################################################################
 
 	
-library		ers			$(lib_opts)			*.cxx
-macro           ers_shlibflags          "-lxerces-c" 
+library		ers			ers $(lib_opts)			*.cxx
+macro           ers_shlibflags          "" 
 
 
 macro		instlibs		libers.so	\
 		lynxos			libers.a
+		
 apply_pattern   install_libs            files=$(instlibs)
 
 ########################################################################################################
@@ -31,6 +31,6 @@ apply_pattern   install_libs            files=$(instlibs)
 
 
 application	ers_test 		 -group=check -check ../test/test.cxx ../test/ExampleIssue.cxx
-macro		ers_test_dependencies	"ers" "system"
-macro           ers_test_cppflags	"-I../../../system/ -I../../system/test/"
+macro		ers_test_dependencies	"ers" 
+macro           ers_test_cppflags	""
 macro		ers_testlinkopts	"-lers"
