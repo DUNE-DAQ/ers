@@ -93,7 +93,6 @@ protected:
 	Stream *m_streams[severity_max] ;                                     /**< \brief array of pointers to streams per severity_t */
 	stream_factory_collection m_factories ;                                   /**< \brief collection of factories to build streams */
 	
-	Stream *create_stream(const std::string &key) ;                           /**< \brief create a stream from a key */
 	Stream *create_stream(severity_t s) ;                                   /**< \brief create a stream for severity_t */
 public:
 	static StreamFactory *instance();                                         /**< \brief return the singleton */
@@ -107,6 +106,7 @@ public:
 	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity_t */
 	static void dispatch(Issue &i, bool throw_error = false) ; 	
 	static void set_stream(severity_t, const std::string &key) ;
+	Stream *create_stream(const std::string &key) const ;                         /**< \brief create a stream from a key */
 	Stream *get_stream(severity_t s) ;                                      /**< \brief get stream for severity_t */
 	void set(severity_t severity, Stream *s) ;                              /**< \brief Sets the stream for a given severity_t */
 	void set(severity_t severity, const char* key) ;                        /**< \brief Setup a stream for a given severity_t based on a key */
@@ -120,6 +120,9 @@ public:
     std::ostream& operator<<(std::ostream&, const ers::StreamFactory& factory);        /**< \brief streaming operator */
 } // ers 
 
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 3
+#endif
 
     
     /** Sends a debug message with level 0, the first parameter is a \c printf like pattern, the next are parameters for it */

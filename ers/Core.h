@@ -46,6 +46,7 @@ public:
 	static const char* to_string(bool b) throw ();                                  /**< \brief boolean to string */
 	static std::string parse_prefix_string(const char **ptr) throw() ;                    /**< \brief prefix string data to string */
 	static std::string umangle_gcc_class_name(const char* name) throw() ;           /**< \brief unmangles gcc RTTI names */
+	static std::vector<std::string> tokenize(const std::string &text, const std::string &separators) ; 
     } ; // Core
 }
 

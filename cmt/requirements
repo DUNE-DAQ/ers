@@ -13,7 +13,8 @@ private
 
 macro  ERS_LIB_SRC   "Assertion.cxx DefaultStream.cxx InvalidReferenceIssue.cxx  \ 
                       LogIssue.cxx RangeIssue.cxx Context.cxx EntityNotFoundIssue.cxx \
-		      Issue.cxx NotImplemented.cxx  Stream.cxx Core.cxx FIFOStream.cxx  \
+		      Issue.cxx NotImplemented.cxx  \
+		      Stream.cxx Core.cxx FIFOStream.cxx  FilterStream.cxx \
 		      IssueFactory.cxx ParseIssue.cxx StreamFactory.cxx DefaultIssue.cxx \
 		      HumanStream.cxx IssueFactoryIssue.cxx Precondition.cxx"
 

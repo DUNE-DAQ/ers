@@ -583,21 +583,8 @@ void Issue::add_qualifier(const std::string &qualif) {
 } // add_qualifier
 
 std::vector<std::string> Issue::qualifiers() const {
-    std::vector<std::string> qualif_vector ; 
     const std::string &qualif_s = get_value(QUALIFIER_LIST_KEY) ; 
-    const std::string delimiters = (", \t"); 
-    std::string::size_type start_p, end_p ; 
-    start_p = qualif_s.find_first_not_of(delimiters) ; 
-    while(start_p != std::string::npos) {
-	end_p = qualif_s.find_first_of(delimiters,start_p) ;
-	if (end_p == std::string::npos) {
-	    end_p = qualif_s.length(); 
-	}
-	const std::string sub_str = qualif_s.substr(start_p,end_p);
-	qualif_vector.push_back(sub_str) ; 
-	start_p = qualif_s.find_first_not_of(delimiters,end_p) ;
-    } // while
-    return qualif_vector ; 
+    return ers::Core::tokenize(qualif_s,", \t"); 
 } // qualifiers
 
 

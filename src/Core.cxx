@@ -146,6 +146,21 @@ std::string ers::Core::umangle_gcc_class_name(const char* name) throw() {
     return stream.str(); 
 } // umangle_gcc_class_name
 
+std::vector<std::string> ers::Core::tokenize(const std::string &text, const std::string &separators) {
+    std::vector<std::string> result_vector ; 
+    std::string::size_type start_p, end_p ; 
+    start_p = text.find_first_not_of(separators) ; 
+    while(start_p != std::string::npos) {
+	end_p = text.find_first_of(separators,start_p) ;
+	if (end_p == std::string::npos) {
+	    end_p = text.length(); 
+	}
+	const std::string sub_str = text.substr(start_p,end_p);
+	result_vector.push_back(sub_str) ; 
+	start_p = text.find_first_not_of(separators,end_p) ;
+    } // while
+    return result_vector ; 
+} // tokenize
 
 
 

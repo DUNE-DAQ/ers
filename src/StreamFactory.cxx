@@ -139,7 +139,7 @@ const char* ers::StreamFactory::key_for_severity(severity_t s) {
   * \note the stream is allocated on the stack, it is the caller's responsibility to delete it.
   */
 
-ers::Stream *ers::StreamFactory::create_stream(const std::string &key) {
+ers::Stream *ers::StreamFactory::create_stream(const std::string &key) const {
     std::string protocol ; 
     std::string uri ; 
     std::string::size_type colon = key.find(":") ; 

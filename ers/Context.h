@@ -47,6 +47,7 @@ protected:
     std::string m_compiler_version ;   /**< compiler version */
     std::string m_compilation_date ;   /**< compilation date */
     std::string m_compilation_time ;   /**< compilation time */
+    std::string m_package_name ; 
     mutable std::string m_compiler ;   /**< compilation string (cache) */
     mutable std::string m_position ;   /**< code position (cache) */
     mutable std::string m_compilation ; /**< compilation (cache) */
@@ -59,16 +60,17 @@ public:
     static void add_qualifier(const std::string &qualif) ;
     Context(const std::string &filename, int line_number, const std::string &function_name, 
 	    const std::string &compiler_name, const std::string &compiler_version, 
-	    const std::string &compilation_time, const std::string &compilation_date) ;
-    const std::string & file() const ;        /**< \return file-name */
-    int line() const ;                        /**< \return line-number */
-    const std::string & function() const ;    /**< \return function name */
-    const std::string & position() const ;    /**< \return position (i.e file+line+function) */
-    const std::string & compiler() const ;    /**< \return compiler (compiler-name + compiler-version) */
-    const std::string & compilation() const ; /**< \return compilation time and date */
-    int stack_frames() const throw() ;        /**< \return number of stack frames */
-    const std::string &stack_frame(int i) const ; /**< \return stack frame with index */
-    std::vector<std::string>  qualifiers() const throw() ; /**< \return array of qualifiers */
+	    const std::string &compilation_time, const std::string &compilation_date, const std::string &package) ;
+    const std::string & file() const throw();         /**< \return file-name */
+    int line() const throw() ;                  /**< \return line-number */
+    const std::string & function() const throw() ;    /**< \return function name */
+    const std::string & position() const ;            /**< \return position (i.e file+line+function) */
+    const std::string & compiler() const ;            /**< \return compiler (compiler-name + compiler-version) */
+    const std::string & compilation() const ;         /**< \return compilation time and date */
+    const std::string & package_name() const throw(); /**< \return package name (if defined by CMT) */
+    int stack_frames() const throw() ;                /**< \return number of stack frames */
+    const std::string &stack_frame(int i) const ;     /**< \return stack frame with index */
+    std::vector<std::string> qualifiers() const throw() ; /**< \return array of qualifiers */
    } ; // Context
 
 } // ers 
@@ -102,9 +104,9 @@ public:
 
 #ifndef N_DEBUG
 #ifdef __GNUC__
-#define ERS_HERE ers::Context(__FILE__,__LINE__,__PRETTY_FUNCTION__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__)
+#define ERS_HERE ers::Context(__FILE__,__LINE__,__PRETTY_FUNCTION__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,"")
 #else
-#define ERS_HERE ers::Context(__FILE__,__LINE__,__func__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__)
+#define ERS_HERE ers::Context(__FILE__,__LINE__,__func__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,"")
 #endif
 #else
 #define ERS_HERE ERS_EMPTY

@@ -26,8 +26,9 @@ std::vector<std::string>  ers::Context::default_qualifiers ;
 
 const ers::Context *ers::Context::empty() {
     if (! empty_instance) {
-	empty_instance = new ers::Context("",0,"","","","","") ; 
-    }
+	std::string empty = "" ; 
+	empty_instance = new ers::Context(empty,0,empty,empty,empty,empty,empty,empty) ; 
+    } // if 
     return empty_instance ; 
 } // empty 
 
@@ -69,7 +70,8 @@ void ers::Context::add_qualifier(const std::string &qualif) {
 
 ers::Context::Context(const std::string &filename, int line_number, const std::string &function_name, 
                       const std::string &compiler_name, const std::string &compiler_version, 
-                      const std::string &compilation_time, const std::string &compilation_date) {
+                      const std::string &compilation_time, const std::string &compilation_date, 
+		      const std::string &package_name) {
     this->m_file_name = filename ; 
     this->m_line_number = line_number ; 
     this->m_function_name = function_name ; 
@@ -77,6 +79,7 @@ ers::Context::Context(const std::string &filename, int line_number, const std::s
     this->m_compiler_version = compiler_version ; 
     this->m_compilation_date = compilation_date ; 
     this->m_compilation_time = compilation_time ; 
+    this->m_package_name = package_name ; 
 #if defined(__GNU_LIBRARY__)
     void * array[128] ; 
     const int n_size =  backtrace (array,128) ; 
@@ -92,7 +95,7 @@ ers::Context::Context(const std::string &filename, int line_number, const std::s
   * \return path of the source file 
   */
 
-const std::string & ers::Context::file() const {
+const std::string & ers::Context::file() const throw() {
     return m_file_name ; 
 } // file
 
@@ -100,7 +103,7 @@ const std::string & ers::Context::file() const {
   * \return line number 
   */
 
-int ers::Context::line() const {
+int ers::Context::line() const throw() {
     return m_line_number ; 
 } // line 
 
@@ -108,10 +111,14 @@ int ers::Context::line() const {
   * \return name of the function
   */
 
-const std::string & ers::Context::function() const {
+const std::string & ers::Context::function() const throw() {
     return m_function_name ; 
 } // function
 
+/** Pretty printed code position 
+  * format: file_name:line_number (function_name)
+  * \return reference to string containing format 
+  */
 
 const std::string & ers::Context::position() const {
     if (m_position.empty()) {
@@ -127,6 +134,10 @@ const std::string & ers::Context::position() const {
     return m_position ; 
 } // position
 
+/** Pretty printed compiler name 
+  * \return reference to string containing format 
+  */
+
 const std::string & ers::Context::compiler() const {
     if (m_compiler.empty()) {
 	if (! m_compiler_name.empty()) {
@@ -139,6 +150,10 @@ const std::string & ers::Context::compiler() const {
     } // build cache
     return m_compiler ; 
 } // compiler
+
+/** Pretty printed compilation time description
+  * \return reference to string containing description
+  */
 
 const std::string & ers::Context::compilation() const {
     if (m_compilation.empty()) {
@@ -153,6 +168,13 @@ const std::string & ers::Context::compilation() const {
     } // if
     return m_compilation ; 
 } // compilation
+
+/** \return package name 
+  */
+
+const std::string & ers::Context::package_name() const throw() {
+    return m_package_name ; 
+} // package_name
 
 void ers::Context::build_host_type() {
     std::ostringstream plateform_s ;
@@ -192,8 +214,17 @@ const std::string & ers::Context::stack_frame(int i) const {
    return m_stack_frames[i] ; 
 } // stack_frame
 
+/** Returns the set of qualifiers associated with context
+  * At the moment, this includes the default qualifiers plus the package 
+  * \return array of strings represnting the qualifiers 
+  */
+
 std::vector<std::string>  ers::Context::qualifiers() const throw() {
-    return default_qualifiers ; 
+    std::vector<std::string> qualif = default_qualifiers ;
+    if (! m_package_name.empty()) {
+	qualif.push_back(m_package_name) ; 
+    } // if 
+    return qualif ; 
 } // qualifiers
 
 

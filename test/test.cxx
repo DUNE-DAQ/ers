@@ -31,9 +31,9 @@ void foo(int n) {
 
 int main(int, char**) {
     ers::Context::add_qualifier("ers_test") ;   // we add a qualifier to all issues 
-    ers::StreamFactory::set_stream(ers::debug_3,"null"); // we disable the stream for debugging level 3
-    ERS_DEBUG_3("This should not be displayed"); 
-    try { // We need to work with a try/catch block 
+      try { // We need to work with a try/catch block 
+	ers::StreamFactory::set_stream(ers::debug_3,"filter:?!ers_test,ers_failure@default"); // we filter out all issue with qualifier ers_test at level debug_3
+	ERS_DEBUG_3("This should not be displayed"); 
         ERS_DEBUG_0("checking static assert");
 	ERS_STATIC_ASSERT(sizeof(int)==4);            
 	ERS_DEBUG_0("dispatching custom issue (warning)"); 
