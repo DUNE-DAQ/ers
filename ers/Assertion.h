@@ -34,7 +34,7 @@ protected:
     void setup(const char *condition, const std::string &message, bool constant_expression); 
 public:
     static const char* const ASSERT_CONDITION_KEY ;
-    static const char* const ASSERTION_CLASS_NAME ; 
+    static const char* const CLASS_NAME ; 
     virtual const char*get_class_name() const throw() ;
     Assertion(); 
     Assertion(const Context &context, ers_severity s, const char*condition, const std::string &message,  bool constant_expression=false) ;

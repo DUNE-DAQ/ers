@@ -17,7 +17,7 @@
 
 namespace {
     ers::Issue *create_issue() { return new ers::Assertion(); } 
-    bool registered = ers::IssueFactory::instance()->register_issue(ers::Assertion::ASSERTION_CLASS_NAME,create_issue) ;
+    bool registered = ers::IssueFactory::instance()->register_issue(ers::Assertion::CLASS_NAME,create_issue) ;
 } 
 
 /** Key for assertion condition description 
@@ -25,7 +25,7 @@ namespace {
 
 const char * const ers::Assertion::ASSERT_CONDITION_KEY = "ASSERTION_CONDITION" ; 
 
-const char * const ers::Assertion::ASSERTION_CLASS_NAME = "ers::Assertion" ;
+const char * const ers::Assertion::CLASS_NAME = "ers::Assertion" ;
 
 
 /** Empty constructor for deserialisation / factory 
@@ -61,7 +61,7 @@ void ers::Assertion::setup(const char *condition_text, const std::string &messag
 } // setup
 
 const char* ers::Assertion::get_class_name() const throw (){
-    return ASSERTION_CLASS_NAME ; 
+    return CLASS_NAME ; 
 } // get_class_name
 
 /** Builds the message associated with an assertion 
