@@ -36,6 +36,7 @@ namespace ers {
     *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that 
     *  correctly implement the factory methods required by the IssueFactory class
     *  \see ers::IssueFactory
+    *  \brief Root Issue class
     */
     
     class Issue : public std::exception  {  

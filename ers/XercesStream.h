@@ -27,6 +27,7 @@ namespace ers {
       * This clas represents a stream that reads and writes Issues to an XML stream using the Xerces XML Framework 
       * \author Matthias Wiesmann
       * \version 1.0 
+      * \brief XML stream
       */
     
     class XercesStream : 
@@ -49,6 +50,7 @@ protected:
 	void send(DOMDocument *document_ptr, const Issue *issue_ptr) ; 
 	MemBufInputSource *get_source() ; 
 public: 
+	static const char* XML_SUFFIX ;          /**< Key for XML format */
 	virtual void writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter);
 	bool handleError(const DOMError& domError) ;
 	XercesStream(std::ostream *out_stream) ; 

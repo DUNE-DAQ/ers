@@ -42,10 +42,14 @@ public:
 
 /** This structure is simply used to trigger compile-time assertion errors 
   * The \c true template instanciation is implemented, but not the false, this means that if the template
-  * is instanciated with \c false, we get a compile-time error
+  * is instanciated with \c false, we get a compile-time error.
+  * \brief compile time error structure. 
   */
 
 template <bool> struct Compile_time_error ; 
+
+/** \brief compile time error structure */
+
 template<> struct Compile_time_error<true> { };
 
 } // ers 

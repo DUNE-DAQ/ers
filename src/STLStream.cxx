@@ -16,7 +16,33 @@
 
 #include "ers/STLStream.h"
 #include "ers/ers.h"
+#include "system/File.h"
+#include "ers/XercesStream.h"
+#include "ers/HumanStream.h"
+#include "ers/TabStream.h"
 
+const char* ers::STLStream::FILE_KEY = "file" ;     
+const char* ers::STLStream::CERR_STREAM_KEY = "cerr" ;        
+
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::STLStream::FILE_KEY) {
+	    System::File file(uri); 
+	    std::string extension = file.extension(uri) ;
+	    if (extension==ers::HumanStream::TXT_SUFFIX) return new HumanStream(file,false); 
+	    if (extension==ers::XercesStream::XML_SUFFIX) return new ers::XercesStream(file,false);  
+	    return new ers::TabStream(file,false); 
+	}  // file protocol
+	if (protocol==ers::STLStream::CERR_STREAM_KEY) {
+	    if (uri==ers::HumanStream::TXT_SUFFIX) return new HumanStream(&std::cerr) ; 
+	    if (uri==ers::XercesStream::XML_SUFFIX) return new ers::XercesStream(&std::cerr);
+	    return new ers::TabStream(&std::cerr); 
+	} // cerr protocol 
+	return 0 ;
+    } 
+    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+} // anonymous namespace
 
 ers::STLStream::STLStream() {
     open_stdin();

@@ -17,6 +17,7 @@ protected:
 	virtual void serialize_end(const Issue *i) ;
 	virtual void serialize_pair(const Issue *i, const std::string &key, const std::string &value) ; 
 public:
+	static const char* TAB_SUFFIX ;          /**< Key for Tabulated format */
         TabStream();  
 	TabStream(std::istream *in_stream) ; 
 	TabStream(std::ostream *out_stream) ; 

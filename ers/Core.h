@@ -33,6 +33,10 @@ namespace ers {
     ers_responsibility parse_responsibility(const std::string &s) ;
     int parse_boolean(const char* s) ; 
     const char* get_boolean(bool b); 
+    
+    /** This class contains some general constants.
+      * \brief Miscalenous constants
+      */
     class Core {
     	public:
     	static const char* XML_ISSUE_TAG  ; 

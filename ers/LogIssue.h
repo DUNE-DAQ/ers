@@ -16,6 +16,7 @@ namespace ers {
     /** This issue is used to encapsulate simple text message like those used for logging
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Wrapper for log messages.
       */
     
     class LogIssue : public Issue {

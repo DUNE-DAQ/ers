@@ -17,6 +17,7 @@ namespace ers {
      *  Typically, this is marked using the NOT_IMPLEMENTED() macro. 
      *  \author Matthias Wiesmann
      *  \version 1.0
+     *  \brief Macro to mark unimplemented code. 
      */
     
     class NotImplemented : public Assertion {

@@ -11,6 +11,17 @@
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/InvalidReferenceIssue.h"
+#include "ers/StreamFactory.h"
+
+const char* ers::FIFOStream::FIFO_STREAM_KEY = "fifo" ; 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::FIFOStream::FIFO_STREAM_KEY) return new ers::FIFOStream() ; 
+	return 0 ;
+    } 
+    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+} 
 
 
 ers::FIFOStream::FIFOStream() : Stream() {} 

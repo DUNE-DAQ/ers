@@ -40,13 +40,13 @@ protected:
     std::string compilation_date ;   /**< compilation date */
     std::string compilation_time ;   /**< compilation time */
 public:
-	static Context* empty() ;
+    static const Context* empty() ;
     Context(const std::string &filename, int line_number, const std::string &function_name, 
 	    const std::string &compiler_name, const std::string &compiler_version, 
 	    const std::string &compilation_time, const std::string &compilation_date) ;
     std::string file() const ;       /**< \return file-name */
     int line() const ;               /**< \return line-number */
-    const char* function() const ;   /**< \return function name */
+    std::string function() const ;   /**< \return function name */
     std::string position() const ;   /**< \return position (i.e file+line+function) */
     std::string compiler() const ;   /**< \return compiler (compiler-name + compiler-version) */
     std::string compilation() const ; /**< \return compilation time and date */

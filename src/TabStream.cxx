@@ -11,6 +11,8 @@
 #include "ers/ers.h"
 #include "ers/ParseIssue.h"
 
+const char* ers::TabStream::TAB_SUFFIX = "tab" ;     
+
 ers::TabStream::TabStream() : STLStream() {} 
 ers::TabStream::TabStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) {}
 ers::TabStream::TabStream(std::istream *in_stream) : STLStream(in_stream) {} 

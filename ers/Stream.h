@@ -35,6 +35,7 @@ class Stream {
     friend class Issue ; 
 protected:
 public:    
+    static const char* NULL_STREAM_KEY ;         /**< Key for discard stream */
     Stream();
     virtual ~Stream(); 
     virtual void send(const Issue *i) ;          /**< \brief Sends an issue into the stream */

@@ -14,6 +14,7 @@ namespace ers {
   * trancoding of char* data to XMLCh data.
   * \author Apache Software Foundation
   * \note This is adapted from the \c CreateDOMDocument example for Xerces 
+  * \brief XML string helper class. 
   */  
 
 class XercesString {

@@ -17,6 +17,7 @@ namespace ers {
     /** This class represents an error while parsing data. 
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Data parsing error
       */
     
 class ParseIssue: public Issue {

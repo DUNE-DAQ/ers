@@ -13,7 +13,7 @@
 
 ers::Context *ers::Context::empty_instance = 0 ; 
 
-ers::Context *ers::Context::empty() {
+const ers::Context *ers::Context::empty() {
     if (! empty_instance) {
 	empty_instance = new ers::Context("",0,"","","","","") ; 
     }
@@ -43,15 +43,27 @@ ers::Context::Context(const std::string &filename, int line_number, const std::s
     this->compilation_time = compilation_time ; 
 } // Context
 
+/** The source code file name 
+  * \return path of the source file 
+  */
+
 std::string ers::Context::file() const {
     return this->file_name ; 
 } // file
+
+/** The line number in the source code 
+  * \return line number 
+  */
 
 int ers::Context::line() const {
     return this->line_number ; 
 } // line 
 
-const char* ers::Context::function() const {
+/** Name of the function containing the context 
+  * \return name of the function
+  */
+
+std::string ers::Context::function() const {
     return this->function_name.c_str() ; 
 } // function
 

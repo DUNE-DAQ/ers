@@ -42,6 +42,8 @@ protected:
 	virtual void serialize_pair(const Issue* issue_ptr, const std::string &key, const std::string &value) ;  /**< \brief serialise a key / value pair */	
 	virtual bool deserialize(string_map_type *values) ;  /** \brief deserialise a set of properties from the stream */
 public:
+	static const char* FILE_KEY ;                                   /**< Key for file data */
+	static const char* CERR_STREAM_KEY ;                            /**< Key for standard output destination */
 	STLStream() ;
 	STLStream(std::istream *in_stream) ; 
 	STLStream(std::ostream *out_stream) ; 

@@ -13,6 +13,15 @@
 #include <syslog.h>
 #include <stdarg.h>
 
+const char* ers::SyslogStream::SYSLOG_KEY = "syslog" ; 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::SyslogStream::SYSLOG_KEY) return new ers::SyslogStream() ; 
+	return 0 ;
+    } 
+    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+} 
 
 ers::SyslogStream::SyslogStream() {}
 ers::SyslogStream::~SyslogStream() {}

@@ -18,6 +18,7 @@ namespace ers {
      * Typically, precondition check entry values for function, and members state in object methods
      * \author Matthias Wiesmann
      * \version 1.0 
+     * \brief Precondition issue. 
      */
     
     class Precondition : public Assertion {

@@ -16,6 +16,7 @@
 
 using namespace ers ; 
 
+const char* HumanStream::TXT_SUFFIX = "txt" ; 
 
 std::string HumanStream::to_string(const Issue *issue_ptr) {
     std::ostringstream stl_stream ; 

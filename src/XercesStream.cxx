@@ -30,6 +30,9 @@
 
 #include "system/IOIssue.h"
 
+const char* ers::XercesStream::XML_SUFFIX = "xml" ; 
+
+
 /** Stuff needed to initialise the DOM implementation. 
   * Probably a list off character sets 
   */

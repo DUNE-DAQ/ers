@@ -23,6 +23,7 @@ namespace ers {
     
     class SyslogStream : public Stream {
 public:
+	static const char* SYSLOG_KEY ;          /**< Key for syslog stream */
 	static int syslog_level(ers_severity s) ; 
 	static int syslog_level(const Issue *issue_ptr) ; 
 	SyslogStream();

@@ -10,23 +10,35 @@
 #include <assert.h>
 
 #include "ers/Issue.h"
+#include "ers/StreamFactory.h"
+
+const char* ers::Stream::NULL_STREAM_KEY = "null" ; 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::Stream::NULL_STREAM_KEY) return new ers::Stream() ; 
+	return 0 ;
+    } 
+    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+} 
 
 
-using namespace ers ; 
+
+
 
 // --------------
 // Member methods 
 // --------------
 
-Stream::Stream() {}
-Stream::~Stream() {}
+ers::Stream::Stream() {}
+ers::Stream::~Stream() {}
 
 /** Sends the issue to the stream.
   * \param i the issue to send 
   * \note This implementation silently discards the Issue
   */
 
-void Stream::send(const Issue *i) {
+void ers::Stream::send(const Issue *i) {
     (void) i ; 
 } // send 
 
@@ -35,7 +47,7 @@ void Stream::send(const Issue *i) {
   * \note This implementation always returns a null pointer
   */
 
-Issue *Stream::receive() {
+ers::Issue *ers::Stream::receive() {
     return 0 ; 
 } // receive
 

@@ -9,6 +9,14 @@
 
 #include "ers/Issue.h"
 
+
+/** This class is an example of an user issue. 
+  * It contains a integer member field
+  * \brief Example issue
+  * \author Matthias Wiesmann
+  * \version 1.0 
+  */
+
 class ExampleIssue : public ers::Issue {
     
 protected:

@@ -14,6 +14,7 @@
 #include "ers/Context.h"
 #include "system/File.h"
 
+#include <map>
 
 namespace ers {
     
@@ -25,9 +26,10 @@ namespace ers {
       * There should normally only be one instance of this class per process at any time, each instance 
       * handles a table of the different stream attached to each severity. 
       * When issues occurs, they can be dispatched using this instance. 
-      * In general, the following method should be used to dispatch issues 
-      * \li \c dispatch if the severity of the issue is set correctly. 
-      * \li \c fatal, \c error, \c warning, \c debug for setting the severity and dispatch.
+      * In general, the following method should be used to dispatch issues<ul>
+      * <li> \c dispatch if the severity of the issue is set correctly. </li>
+      * <li> \c fatal, \c error, \c warning, \c debug for setting the severity and dispatch.</li>
+      * </ul>
       * The default stream are set up in the following way: 
       * <ol>
       * <li>The system checks if an environnement variable with the same name as severity is defined. 
@@ -45,7 +47,7 @@ namespace ers {
       * <li>The user can provide another stream for any severity simply by calling method \c set, either 
       *     by specifying the stream directly, or by providing a key.</li>
       * </ol>
-      * The string format used by key supportes the following protocols:<ul>
+      * The string format used by key supports the following protocols:<ul>
       * <li>file: writes into a file</li>
       * <li>cerr: writes into the standard error stream</li>
       * <li>fifo: writes into a FIFO stream, to be actually used the issues need to be read by another entity</li>
@@ -55,34 +57,41 @@ namespace ers {
       * The string format supports the following serializing encodings<ul>
       * <li>XML - issues are serialized as XML data</li>
       * <li>TAB - issues are serialized as tabulated data</li>
+      * <li>TXT - issues are serialized as single line of text</li>
       * </ul>
+      * In order to add new stream implementations, one needs to register a factory function of type \c create_stream_callback.
+      * This method takes two parameters, a protocol parameter, and an uri parameter, that basically contains everything except
+      * the protocol part of the key. If the implementation can offer a stream that corresponds to the key it should return a 
+      * heap allocated stream, if not it should return null. This method should be registered using the \c register_factory method
+      * on the default instance. 
       * \author Matthias Wiesmann
-      * \version 1.0
+      * \version 1.1
+      * \brief Factory for Stream objects and repository of default streams. 
       */
     
     
     class StreamFactory {
+	
+public:
+	typedef Stream* (*create_stream_callback)(const std::string &, const std::string &);
+	typedef std::vector<create_stream_callback> stream_factory_collection ; 
 protected:
 	static StreamFactory *s_instance ; 
 	static const char* DEFAULT_STREAMS[] ; 
 	static const char *key_for_severity(ers_severity s) ; 
-	static Stream *get_default_stream(ers_severity s) ; 
+	static Stream *get_default_stream(ers_severity s) ;
+	
 	StreamFactory();
 	StreamFactory(const StreamFactory &other); 
+	
 	Stream *m_streams[ers_severity_max] ;  
-	Stream *create_stream(const char* key) ; 
+	stream_factory_collection m_factories ; 
+	
+	Stream *create_stream(const std::string &key) ; 
 	Stream *create_stream(ers_severity s) ; 
-	Stream *get_stream(ers_severity s) const ; 
+	Stream *get_stream(ers_severity s) ; 
 public:
-	static const char* FILE_KEY ;            /**< Key for file data */
-	static const char* NULL_STREAM_KEY ;     /**< Key for discard stream */
-	static const char* CERR_STREAM_KEY ;     /**< Key for standard output destination */
-	static const char* FIFO_STREAM_KEY ;     /**< Key for FIFO stream */
-	static const char* SYSLOG_KEY ;          /**< Key for syslog stream */
-	static const char* XML_SUFFIX ;          /**< Key for XML format */
-	static const char* TAB_SUFFIX ;          /**< Key for Tabulated format */
-	static const char* TXT_SUFFIX ;          /**< Key for 'human readable descrption */
-	static StreamFactory *instance();        /**< \brief return the singleton */
+	static StreamFactory *instance();                                         /**< \brief return the singleton */
 	static void fatal(Issue *i) ;                                             /**< \brief sends an issue to the fatal stream */
 	static void error(Issue *i) ;                                             /**< \brief sends an issue to the error stream */
 	static void warning(Issue *i);                                            /**< \brief sends an issue to the warning stream */
@@ -90,14 +99,14 @@ public:
 	static void debug(Issue *i, ers_severity) ;                               /**< \brief sends an Issue to the debug stream */
 	static void debug(const Context &c, const std::string &message, ers_severity s);  /**< \brief sends a debug message */
 	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity */	
-	static Stream *factory(std::ostream *s, const std::string &type) ;        /**< \brief Builds a stream out of an STL stream and a type key */
-	static Stream *factory(const System::File &file)  ;                       /**< \brief Builds a stream out of a file name */
+	
 	void set(ers_severity severity, Stream *s) ;                              /**< \brief Sets the stream for a given severity */
 	void set(ers_severity severity, const char* key) ;                        /**< \brief Setup a stream for a given severity based on a key */
-	Stream *fatal() const;                                                    /**< \brief Fatal stream */
-	Stream *error() const ;                                                   /**< \brief Error stream */
-	Stream *warning() const ;                                                 /**< \brief Warning stream */
-	Stream* debug(ers_severity s) const ;                                     /**< \brief Debug stream for level*/
+	Stream *fatal() ;                                                    /**< \brief Fatal stream */
+	Stream *error()  ;                                                   /**< \brief Error stream */
+	Stream *warning()  ;                                                 /**< \brief Warning stream */
+	Stream* debug(ers_severity s)  ;                                     /**< \brief Debug stream for level*/
+	bool register_factory(create_stream_callback callback); 
 	
     } ; 
     

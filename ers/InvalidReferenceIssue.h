@@ -20,6 +20,7 @@ namespace ers {
       * aka. pointers.
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Invalid pointer issue. 
       */
     
     class InvalidReferenceIssue : public Issue {

@@ -21,7 +21,7 @@ namespace {
 ers::NotImplemented::NotImplemented() : Assertion() {} 
 
 ers::NotImplemented::NotImplemented(const Context &c, ers_severity s) : Assertion(c,s) {
-    this->setup(c.function(),"",true);  
+    this->setup(c.function().c_str(),"",true);  
 } // NotImplemented
  
 /** Builds the message for a the not implemented issue.

@@ -19,6 +19,7 @@ namespace ers {
   * It is uses by the issue class to display itself and to put it into standard stl streams. 
   * \author Matthias Wiesmann
   * \version 1.0
+  * \brief Single line, human readable format stream. 
   */
     
 class HumanStream  : public STLStream {
@@ -28,6 +29,7 @@ protected:
     virtual void serialize_end(const Issue *issue) ; 
     virtual void serialize_separator(const Issue *issue) ;
 public:
+    static const char* TXT_SUFFIX ;          /**< Suffix for 'human readable' descrption */
     static std::string to_string(const Issue *issue); 
     HumanStream() ;
     HumanStream(std::ostream *s);
