@@ -11,6 +11,15 @@
 #include <iostream>
 #include <sstream>
 
+ers::Context *ers::Context::empty_instance = 0 ; 
+
+ers::Context *ers::Context::empty() {
+    if (! empty_instance) {
+	empty_instance = new ers::Context("",0,"","","","","") ; 
+    }
+    return empty_instance ; 
+} // empty 
+
 /** Constructor - defines an Issue context.
   * This constructor should generally not be called directly, instead use the macro \c ERS_HERE. 
   * \param filename name of the source code file
@@ -49,19 +58,31 @@ const char* ers::Context::function() const {
 
 std::string ers::Context::position() const {
     std::ostringstream position_s ;
-    position_s << file_name << ":" << line_number << " (" << function_name << ")" ; 
+    if (! file_name.empty()) {
+	position_s << file_name << ":" << line_number << " ";
+    } 
+    if (! function_name.empty()) {
+	position_s << "(" << function_name << ")" ;
+    } // if
     return position_s.str();
 } // position
 
 std::string ers::Context::compiler() const {
     std::ostringstream compiler_s ;
-    compiler_s << compiler_name << " " << compiler_version ; 
+    if (! compiler_name.empty()) {
+	compiler_s << compiler_name << " " << compiler_version ; 
+    } // if 
     return compiler_s.str(); 
 } // compiler
 
 std::string ers::Context::compilation() const {
     std::ostringstream compilation_s ;
-    compilation_s << compilation_time << " " << compilation_date ; 
+    if (! compilation_time.empty()) {
+	compilation_s << compilation_time << " " ; 
+    } // compilation time
+    if (! compilation_date.empty()) {
+	compilation_s << compilation_date ; 
+    } // compilation date
     return compilation_s.str(); 
 } // compilation
 

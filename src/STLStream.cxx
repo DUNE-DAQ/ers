@@ -28,7 +28,7 @@ ers::STLStream::STLStream(std::istream *in_stream) : ers::Stream() {
     m_in_stream = in_stream ; 
     m_out_stream = 0 ; 
     m_delete_in_stream = false ; 
-    m_delete_in_stream = false ; 
+    m_delete_out_stream = false ; 
 } // STLStream
 
 ers::STLStream::STLStream(std::ostream *out_stream) : ers::Stream() {
@@ -36,28 +36,19 @@ ers::STLStream::STLStream(std::ostream *out_stream) : ers::Stream() {
     m_in_stream =  0 ; 
     m_out_stream = out_stream ; 
     m_delete_in_stream = false ; 
-    m_delete_in_stream = false ; 
+    m_delete_out_stream = false ; 
 } // STLStream
 
 ers::STLStream::STLStream(const System::File &file, bool read_mode) {
     m_in_stream =  0 ; 
     m_out_stream = 0 ; 
     m_delete_in_stream = false ; 
-    m_delete_in_stream = false ; 
+    m_delete_out_stream = false ; 
     if (read_mode) { // read 
 	open_read(file) ; 
     } else { // write 
 	open_write(file) ; 
     } // write
-} // STLStream
-
-ers::STLStream::STLStream(const void* ptr) {
-    const char* data = static_cast<const char *> (ptr) ;
-    std::string str(data); 
-    m_in_stream = new std::istringstream(str); 
-    m_out_stream = new std::ostringstream() ; 
-    m_delete_in_stream = true ; 
-    m_delete_out_stream = true ; 
 } // STLStream
 
 ers::STLStream::~STLStream() {
@@ -87,20 +78,35 @@ void ers::STLStream::open_write(const System::File &file) {
     m_delete_out_stream = true ;     
 } // open_write
 
-std::string ers::STLStream::str() const {
-    std::ostringstream *stream = dynamic_cast<std::ostringstream *>(m_out_stream) ; 
-    if (! stream) {
-	return "" ; 
-    } else {
-	std::string s = stream->str();
-	return s ; 
-    } // there is a string stream 
-} // std::string()
+/** Serialises the start of an issue. 
+  * This method is called first 
+  * \param issue_ptr the issue to serialize 
+  * \note This implementation does nothing 
+  */
+void ers::STLStream::serialize_start(const ers::Issue *issue_ptr) { (void) issue_ptr ;  }   
 
+/** Serialises the end of an issue. 
+  * This method is called last.
+  * \param issue_ptr the issue to serialize 
+  * \note This implementation does nothing 
+  */
+void ers::STLStream::serialize_end(const ers::Issue *issue_ptr) { (void) issue_ptr ; } 
 
-void ers::STLStream::serialize_start(const ers::Issue *issue_ptr) { }       
-void ers::STLStream::serialize_end(const ers::Issue *issue_ptr) { } 
-void ers::STLStream::serialize_separator(const ers::Issue *issue_ptr) { } 
+/** Serialises the separation between key-value pairs of an issue. 
+  * This method is between each pair, it is called n-1 times where n is the number of key-pairs. 
+  * \param issue_ptr the issue to serialize 
+  * \note This implementation does nothing 
+  */
+
+void ers::STLStream::serialize_separator(const ers::Issue *issue_ptr) { (void) issue_ptr ; } 
+
+/** Serialises a key-value pair. 
+  * This method is called once per key-value pair
+  * \param issue_ptr the issue to serialize 
+  * \param key the key to store 
+  * \param value the value to store
+  * \note This implementation does nothing 
+  */
 void ers::STLStream::serialize_pair(const Issue* issue_ptr, const std::string &key, const std::string &value) { } 
 bool ers::STLStream::deserialize(string_map_type *values) { return false ;  }  
 
@@ -142,9 +148,9 @@ void ers::STLStream::send(const Issue *issue_ptr) {
 } // send
 
 /** This method implements the core of the deserialisation for Issues
-  * It calls the abstract method \c read_properties to get the value table for the issue and builds it.
+  * It calls the  method \c deserialize to get the value table for the issue and builds it.
   * \see deserialize()
-  * \return a newly created instance (heap allocated). 
+  * \return a newly created instance (heap allocated) or false if no data could be read. 
   */
 
 ers::Issue *ers::STLStream::receive() {

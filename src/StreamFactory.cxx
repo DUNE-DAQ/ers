@@ -9,34 +9,48 @@
 
 #include "ers/StreamFactory.h"
 
+#include "ers/ers.h"
+
 #include "ers/HumanStream.h"
 #include "ers/TabStream.h"
 #include "ers/FIFOStream.h"
-
-#ifdef USE_TINY_XML
-#include "ers/TinyXMLStream.h"
-#else 
+#include "ers/SyslogStream.h"
 #include "ers/XercesStream.h"
-#endif
-
-#include "ers/InvalidReferenceIssue.h"
-#include "ers/Precondition.h"
-#include "ers/LogIssue.h"
-
 
 const char *ers::StreamFactory::FILE_KEY = "file" ; 
 const char *ers::StreamFactory::NULL_STREAM_KEY = "null" ;
 const char *ers::StreamFactory::CERR_STREAM_KEY = "cerr" ; 
 const char *ers::StreamFactory::FIFO_STREAM_KEY = "fifo" ;
+const char *ers::StreamFactory::SYSLOG_KEY = "syslog" ; 
 
 const char *ers::StreamFactory::XML_SUFFIX = "xml" ; 
 const char *ers::StreamFactory::TAB_SUFFIX = "tab" ; 
+const char *ers::StreamFactory::TXT_SUFFIX = "txt" ; 
+
+/** This variable contains the default keys for building the default streams.
+  * The default variables are the following
+  * <table border=1 cellpadding=2> 
+    <tr><th>ers_severity_none</th><td>null:</td></tr>
+    <tr><th>ers_debug_0</th><td rowspan="9">cerr:tab</td></tr>
+    <tr><th>ers_debug_1</th></tr>
+    <tr><th>ers_debug_2</th></tr>
+    <tr><th>ers_debug_3</th></tr>
+    <tr><th>ers_information</th></tr>
+    <tr><th>ers_notification</th></tr>
+    <tr><th>ers_warning</th></tr>
+    <tr><th>ers_error</th></tr>
+    <tr><th>ers_fatal</th></tr>
+    <tr><th>ers_severity_max</th><td>null:</td></tr>
+    </table>
+
+  */
 
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
-    "cerr:.tab", "cerr:.tab", "cerr:.tab", "cerr:.tab", "cerr:.tab", // debug levels
-    "cerr:.tab", "cerr:.tab", "cerr:.tab", "cerr:.tab",              // information, notification, warning
-    "cerr:.tab", "fifo:",                                            // Errors and Fatals
-    "null:", "null:" } ;                                             // None & max
+    "null",                                                         // none
+    "cerr:tab", "cerr:tab", "cerr:tab", "cerr:tab",                 // debug levels
+    "cerr:tab", "cerr:tab", "cerr:tab",                             // information, notification, warning
+    "cerr:tab", "cerr:tab",                                         // Errors and Fatals
+    "null:"  } ;                                                    // max
 
 
 ers::StreamFactory *ers::StreamFactory::s_instance = 0 ; 
@@ -45,12 +59,30 @@ ers::StreamFactory *ers::StreamFactory::s_instance = 0 ;
 // Constructors & Instance access methods
 // --------------------------------------
 
+/** Constructor - should never be called by user code, use the \c instance() method instead
+  * \see instance() 
+  */
+
 ers::StreamFactory::StreamFactory() {
     for(int i= static_cast<int> (ers_severity_none);i< static_cast<int> (ers_severity_max);i++) {	
 	ers_severity s = static_cast<ers_severity> (i) ; 
 	m_streams[s]=create_stream(s) ; 
     } // for
 } // StreamFactory
+
+/** Copy constructor - disabled, use the \c instance() method instead
+  * \see instance() 
+  * \throw ers::NotImplemented in all cases
+  */
+
+ers::StreamFactory::StreamFactory(const StreamFactory &other) {
+    ERS_NOT_IMPLEMENTED(); 
+} // StreamFactory
+
+/** This method returns the singleton instance. 
+  * It should be used for every operation on the factory. 
+  * \return a pointer to the singleton instance 
+  */
 
 ers::StreamFactory* ers::StreamFactory::instance() {
     if (0==s_instance) {
@@ -84,7 +116,6 @@ ers::Stream* ers::StreamFactory::get_default_stream(ers_severity s) {
   * \return the key describing the stream. 
   */
 
-
 const char* ers::StreamFactory::key_for_severity(ers_severity s) {
     char key_buffer[64] ; 
     snprintf(key_buffer,sizeof(key_buffer),"ERS_%s",get_severity_text(s)) ;
@@ -117,6 +148,7 @@ ers::Stream *ers::StreamFactory::create_stream(const char* c_key) {
     if (protocol==NULL_STREAM_KEY) return new Stream(); 
     if (protocol==CERR_STREAM_KEY) return factory(&std::cerr,System::File::uri(key)) ; 
     if (protocol==FIFO_STREAM_KEY) return new FIFOStream() ; 
+    if (protocol==SYSLOG_KEY) return new SyslogStream(); 
     return new HumanStream(&std::cerr); 
 } // create_stream
 
@@ -139,7 +171,6 @@ ers::Stream *ers::StreamFactory::create_stream(ers_severity s) {
 /** Sends an Issue to the fatal error stream 
  * \param issue_ptr 
  */
-
 
 void ers::StreamFactory::fatal(Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr); 
@@ -218,16 +249,16 @@ void ers::StreamFactory::dispatch(Issue *issue_ptr, bool throw_error) {
     stream_ptr->send(issue_ptr); 
 } // dispatch
 
-
 /** This function builds a stream that writes into a STL stream
  * The streaming format is decide by parameter \c type
  * \param s the stream to stream into
- * \param type the type of streaming (xml or tab). 
- * \note XML is not implemented 
+ * \param type the type of streaming the following formats are supported: xml, tab (tab separated), txt (human readable). 
  */
 
 ers::Stream* ers::StreamFactory::factory(std::ostream *s, const std::string &type)  {
     if (type==TAB_SUFFIX) return new TabStream(s); 
+    if (type==XML_SUFFIX) return new XercesStream(s); 
+    if (type==TXT_SUFFIX) return new HumanStream(s) ;
     return new TabStream(s); 
 } // factory
 
@@ -246,7 +277,6 @@ ers::Stream* ers::StreamFactory::factory(const System::File &file) {
     return new HumanStream(file,false); 
 } // factory
 
-
 // Member methods
 // --------------------------------------
 
@@ -255,10 +285,41 @@ ers::Stream* ers::StreamFactory::factory(const System::File &file) {
   * \return the stream 
   */
 
-
 ers::Stream * ers::StreamFactory::get_stream(ers_severity s) const {
     return m_streams[s] ; 
 } // get_stream
+
+
+/** Sets the stream for a given severity 
+  * \param severity  severity of the stream 
+  * Accepted values: \li \c ers_debug_0 \li \c ers_debug_1 \li \c ers_debug_2 \li \c ers_debug_3 
+  * \li \c ers_information \li \c ers_notification \li \c ers_warning
+  * \li \c ers_error \li \c ers_fatal
+  * \param s the new stream 
+  */
+
+void ers::StreamFactory::set(ers_severity severity, Stream *s) {
+    ERS_PRE_CHECK_PTR(s); 
+    ERS_PRECONDITION(ers_severity_none < severity && severity < ers_severity_max,"illegal severity %d",(int) severity);
+    if (m_streams[severity]) {
+	delete m_streams[severity] ;
+    } // if there is a stream defined 
+    m_streams[severity] = s ; 
+} // stream
+
+/** Builds a stream using a string key and sets it up for a given severity
+  * \param severity  severity of the stream 
+  * Accepted values: \li \c ers_debug_0 \li \c ers_debug_1 \li \c ers_debug_2 \li \c ers_debug_3 
+  * \li \c ers_information \li \c ers_notification \li \c ers_warning
+  * \li \c ers_error \li \c ers_fatal
+  * \param key the key used to build the new stream 
+  */
+
+void ers::StreamFactory::set(ers_severity severity, const char* key) {
+    ERS_PRE_CHECK_PTR(key); 
+    Stream *s = create_stream(key);
+    set(severity,s); 
+} // 
 
 /** 
   * \return the current fatal stream 

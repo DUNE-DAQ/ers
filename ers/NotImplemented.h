@@ -7,6 +7,8 @@
  *
  */
 
+#ifndef ERS_NOT_IMPLEMENTED
+
 #include "ers/Assertion.h"
 
 namespace ers {
@@ -14,7 +16,7 @@ namespace ers {
     /** This special 'assertion' is used to mark a non implemented function or method. 
      *  Typically, this is marked using the NOT_IMPLEMENTED() macro. 
      *  \author Matthias Wiesmann
-     * Â \version 1.0
+     *  \version 1.0
      */
     
     class NotImplemented : public Assertion {
@@ -32,3 +34,4 @@ public:
 #define ERS_NOT_IMPLEMENTED() throw ers::NotImplemented(ERS_HERE,ers::ers_error)
 #define ERS_NOT_IMPLEMENTED_FATAL() throw ers::NotImplemented(ERS_HERE,ers::ers_fatal)
 
+#endif

@@ -45,8 +45,7 @@ ers::XercesStream::XercesStream(const System::File &file, bool read_mode) : STLS
     m_file_path = file ; 
 } // XercesStream
 
-ers::XercesStream::XercesStream(const void* ptr) : STLStream(ptr) {} 
-
+ers::XercesStream::XercesStream(std::ostream *out_stream) : STLStream(out_stream) {}
 
 /** Destructor 
   */

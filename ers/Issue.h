@@ -100,6 +100,7 @@ public:
 	int values_number() const ;                                    /**< \brief How many key / values */
 	void set_value(const std::string &key, long value);            /**< \brief Sets a value (numerical) */
 	void set_value(const std::string &key, const std::string &value); /**< \brief Sets a value (string) */
+	void set_value(const std::string &key, const char* value) ;    /**< \brief Sets a value (c-string) */
 	virtual const char *get_class_name() const throw() ;           /**< \brief Get key for class (used for serialisation)*/
 	const string_map_type* get_value_table() const ; 
         ers_severity severity() const throw()  ;

@@ -16,7 +16,17 @@
 
 using namespace ers ; 
 
-HumanStream::HumanStream() : STLStream("") {
+
+std::string HumanStream::to_string(const Issue *issue_ptr) {
+    std::ostringstream stl_stream ; 
+    HumanStream ers_stream(&stl_stream);
+    ers_stream.send(issue_ptr) ; 
+    std::string str = stl_stream.str();
+    return str ; 
+} // to_string
+
+
+HumanStream::HumanStream() : STLStream() {
 } // HumanStream
 
 HumanStream::HumanStream(std::ostream *s) : STLStream(s) {

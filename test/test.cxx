@@ -38,7 +38,7 @@ void test_read2(const char* path) {
     XercesStream xml_in(file,true); 
     Issue *i = xml_in.receive() ; 
     ERS_CHECK_PTR(i);
-    printf("Got Issue %s\n",i->what());
+    printf("Got Issue %s\n-------\n",i->what());
     throw *i ; 
 } // test_read
 
@@ -53,7 +53,7 @@ void test_issue(const Issue &e) {
     } catch (Issue &i) {
 	// XMLStream xml("/tmp/out.xml");
 	// xml << i ; 
-	StreamFactory::error(&i); 
+	StreamFactory::warning(&i); 
     } // try / catch 
 } // test_issue
 

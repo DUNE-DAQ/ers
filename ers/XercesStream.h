@@ -1,6 +1,6 @@
 /*
  *  XercesStream.h
- *  Test
+ *  ers
  *
  *  Created by Matthias Wiesmann on 12.01.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -51,7 +51,7 @@ protected:
 public: 
 	virtual void writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter);
 	bool handleError(const DOMError& domError) ;
-	XercesStream(const void* ptr); 
+	XercesStream(std::ostream *out_stream) ; 
 	XercesStream(const System::File &file, bool read_mode) ; 
 	~XercesStream() ; 
 	virtual void send(const Issue *i) ;        

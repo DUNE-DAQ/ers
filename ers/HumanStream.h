@@ -28,6 +28,7 @@ protected:
     virtual void serialize_end(const Issue *issue) ; 
     virtual void serialize_separator(const Issue *issue) ;
 public:
+    static std::string to_string(const Issue *issue); 
     HumanStream() ;
     HumanStream(std::ostream *s);
     HumanStream(const System::File &file, bool read_mode);

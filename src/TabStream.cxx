@@ -12,11 +12,11 @@
 #include "ers/ParseIssue.h"
 
 ers::TabStream::TabStream() : STLStream() {} 
-ers::TabStream::TabStream(const void *ptr) : STLStream(ptr) {} 
 ers::TabStream::TabStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) {}
 ers::TabStream::TabStream(std::istream *in_stream) : STLStream(in_stream) {} 
 ers::TabStream::TabStream(std::ostream *out_stream) : STLStream(out_stream) {}
 ers::TabStream::~TabStream() {}
+
 
 /** This method parses the input stream and extracts key - values pairs from it
 * The parsing is done line after line, each line is supposed to contain a key, 

@@ -1,6 +1,6 @@
 /*
  *  TabStream.h
- *  ERS
+ *  ers
  *
  *  Created by Matthias Wiesmann on 28.01.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -20,7 +20,6 @@ public:
         TabStream();  
 	TabStream(std::istream *in_stream) ; 
 	TabStream(std::ostream *out_stream) ; 
-	TabStream(const void *ptr) ;
 	TabStream(const System::File &file, bool read_mode); 
 	~TabStream();
     } ; // TabStream

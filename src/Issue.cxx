@@ -244,7 +244,7 @@ void Issue::cause(const std::exception *c) {
     } else {
 	m_cause = 0 ; 
     } // if
-    m_value_table[CAUSE_TEXT_KEY] = c->what(); 
+    set_value(CAUSE_TEXT_KEY,c->what()); 
 } // cause
 
 
@@ -293,6 +293,7 @@ int Issue::values_number() const {
 
 void Issue::set_values(const string_map_type &values) {
     m_value_table = values ;
+    m_human_description=build_human_description();
 } // load_values
 
 /** Set a numerical value in the value table
@@ -313,7 +314,21 @@ void Issue::set_value(const std::string &key, long value) {
   */
 
 void Issue::set_value(const std::string &key, const std::string &value) {
-    m_value_table[key] = value ; 
+    if (! value.empty()) {
+	m_value_table[key] = value ; 
+    }
+} // set_value
+
+/** Sets a string value in the value table
+  * \param key the key to use for insertion
+  * \param value c-string, null pointer is ignored. 
+  */
+
+void Issue::set_value(const std::string &key, const char* value) {
+    if (value) {
+	std::string value_str = std::string(value) ; 
+	set_value(key,value_str); 
+    } // if 
 } // set_value
 
 // ====================================================
@@ -326,10 +341,10 @@ void Issue::set_value(const std::string &key, const std::string &value) {
 
 void Issue::insert(const Context *context) {
     ERS_PRE_CHECK_PTR(context); 
-    m_value_table[SOURCE_POSITION_KEY] = context->position();
-    m_value_table[COMPILER_KEY] = context->compiler();
-    m_value_table[COMPILATION_TIME_KEY] = context->compilation(); 
-    m_value_table[COMPILATION_TARGET_KEY] = context->host_type(); 
+    set_value(SOURCE_POSITION_KEY,context->position()) ; 
+    set_value(COMPILER_KEY,context->compiler()) ; 
+    set_value(COMPILATION_TIME_KEY,context->compilation()) ; 
+    set_value(COMPILATION_TARGET_KEY,context->host_type()) ; 
 } // insert
 
 /** Inserts the current hostname into the issue  
@@ -339,7 +354,7 @@ void Issue::insert_hostname() {
     char host_buffer[BUFFER_SIZE] ;
     int status = gethostname(host_buffer,BUFFER_SIZE);
     if (0==status && (strlen(host_buffer)>0)) {
-        m_value_table[HOST_NAME_KEY] = std::string(host_buffer) ;
+	set_value(HOST_NAME_KEY,host_buffer); 
     } // gethostnameworked
 } // insert_hostname
 
@@ -349,7 +364,7 @@ void Issue::insert_hostname() {
 void Issue::insert_processid() {
     std::ostringstream pid_str ;
     pid_str << getpid() ; 
-    m_value_table[PROCESS_ID_KEY] = pid_str.str(); 
+    set_value(PROCESS_ID_KEY,pid_str.str()); 
 } // insert_processid
 
 /** Inserts the current user id into the issue
@@ -358,7 +373,7 @@ void Issue::insert_processid() {
 void Issue::insert_userid() {
     std::ostringstream uid_str ;
     uid_str << getuid();
-    m_value_table[USER_ID_KEY] = uid_str.str(); 
+    set_value(USER_ID_KEY,uid_str.str()) ;
     insert_env("LOGNAME",USER_NAME_KEY); 
 } // insert_userid
 
@@ -374,7 +389,7 @@ void Issue::insert_time() {
     if (cr) {
 	*cr = '\0' ;
     } // carriage return 
-    m_value_table[TIME_KEY] =  time_buffer ; 
+    set_value(TIME_KEY,time_buffer); 
 } // insert_time
 
 /** Inserts the current working directory 
@@ -382,7 +397,7 @@ void Issue::insert_time() {
   */
 
 void Issue::insert_pwd() {
-    m_value_table[PROCESS_PWD_KEY] = System::File::working_directory() ; 
+    set_value(PROCESS_PWD_KEY,System::File::working_directory()); 
 } // insert_pwd
 
 /** Inserts a environnement variable into the issue 
@@ -395,7 +410,7 @@ void Issue::insert_env(const char*env_key, const char* issue_key) {
     ERS_PRE_CHECK_PTR(issue_key);
     std::string value = Environnement::get(std::string(issue_key)); 
     if (value!=Environnement::NO_VALUE) {
-	m_value_table[issue_key] = value; 
+	set_value(issue_key,value); 
     } // value exists 
 } // insert_env
 
@@ -434,11 +449,9 @@ void Issue::setup_common(const Context *context) {
   */
 
 void Issue::finish_setup(const std::string &message) {
-    Issue *p = this ; 
-    std::string type_string = (typeid(*p)).name() ; 
-    m_value_table[CPP_CLASS_KEY]=type_string ;
-    m_value_table[CLASS_KEY] = get_class_name(); 
-    m_value_table[MESSAGE_KEY] = message ; 
+    set_value(CPP_CLASS_KEY,(typeid(this)).name()); 
+    set_value(CLASS_KEY, get_class_name()) ;
+    set_value(MESSAGE_KEY,message); 
     m_human_description=build_human_description();
     insert_pwd(); 
 } // finish_setup
@@ -450,10 +463,7 @@ void Issue::finish_setup(const std::string &message) {
 */
 
 std::string Issue::build_human_description() const {
-    HumanStream s ; 
-    s.send(this);
-    const char* msg = s.str().c_str() ; 
-    std::string message = std::string(msg); 
+    std::string message = HumanStream::to_string(this); 
     return message ; 
 } // buildmm_human_description
 
@@ -483,7 +493,7 @@ ers_severity Issue::severity() const throw() {
  */
 
 void Issue::severity(ers_severity s) {
-    m_value_table[SEVERITY_KEY] = get_severity_text(s) ; 
+    set_value(SEVERITY_KEY,get_severity_text(s)); 
 } // severity
 
 /** Is the issue either an error or a fatal error 
@@ -518,7 +528,7 @@ ers_responsibility Issue::responsibility() const throw() {
  */
 
 void Issue::responsibility(ers_responsibility r) {
-    m_value_table[RESPONSIBILITY_KEY] = get_responsibility_text(r) ; 
+    set_value(RESPONSIBILITY_KEY,get_responsibility_text(r)) ; 
 } // responsability
 
 
@@ -527,8 +537,8 @@ void Issue::responsibility(ers_responsibility r) {
   */
 
 void Issue::transience(bool tr) {
-    m_value_table[TRANSIENCE_KEY] = get_boolean(tr);
-} // 
+    set_value(TRANSIENCE_KEY,get_boolean(tr)) ; 
+} // transience
 
 /** @return the transience of the issue, 1 = true, 0 = false, -1 = unknown 
   */

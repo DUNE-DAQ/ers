@@ -1,6 +1,6 @@
 /*
  *  ers.h
- *  ERS
+ *  ers
  *
  *  Created by Matthias Wiesmann on 26.01.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -25,3 +25,4 @@
 #include "ers/Precondition.h"
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/NotImplemented.h"
+#include "ers/LogIssue.h"

@@ -1,6 +1,6 @@
 /*
  *  XercesString.h
- *  Test
+ *  ers
  *
  *  Created by Matthias Wiesmann on 13.01.05.
  *  Copyright 2005 CERN. All rights reserved.
