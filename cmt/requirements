@@ -5,21 +5,10 @@ manager	Matthias.Wiesmann@cern.ch
 
 #What policy do we use? 
 
-use TDAQPolicy
-use TDAQExternal
-use system
+use OnlinePolicy
+use XercesC * TDAQExternal
 
-macro   xerces_root     ""                                                  \
-                 i686-rh73-gcc32       "${xercesc_home_linux}/rh73_gcc32"   \
-                 i686-slc3-gcc323      "${xercesc_home_linux}/slc3_gcc323"  \
-                 i686-rh73-icc8-opt    "${xercesc_home_linux}/rh73_icc80"
-
-
-#use AtlasXercesC	AtlasXercesC-*	External
-
-#use xercesc	TDAQExternal
-
-macro lib_ers_cppflags	                "-I../ers -I$(xerces_root)/include/"
+macro lib_ers_cppflags                  "-I../ers"
 
 private
 
@@ -29,7 +18,7 @@ private
 
 	
 library		ers			$(lib_opts)			*.cxx
-macro           ers_shlibflags          "-lxerces-c -L$(xerces_root)/lib" 
+macro           ers_shlibflags          "-lxerces-c" 
 
 
 macro		instlibs		libers.so	\
@@ -43,5 +32,5 @@ apply_pattern   install_libs            files=$(instlibs)
 
 application	ers_test 		 -group=check -check ../test/test.cxx ../test/ExampleIssue.cxx
 macro		ers_test_dependencies	"ers" "system"
-macro           ers_test_cppflags	"-I../../../system/ -I../../system/test/ -I$(xerces_root)/include/"
+macro           ers_test_cppflags	"-I../../../system/ -I../../system/test/"
 macro		ers_testlinkopts	"-lers"
