@@ -118,5 +118,13 @@ public:
     Stream& operator<<(Stream&, const Issue&); 
 } // ers
 
+// This macro suppresses assertion if either N_DEBUG is defined or the debug level is zero 
+// 
+
+#if defined(N_DEBUG) || (defined(DEBUG_LEVEL) && (DEBUG_LEVEL==0))
+#define N_ERS_STATIC_ASSERT
+#define N_ERS_ASSERT
+#endif
+
 #endif
 

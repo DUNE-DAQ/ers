@@ -45,7 +45,7 @@ public:
   * If the pointer is invalid, this is considered as a client responsibility. 
   */
 
-#ifndef N_DEBUG
+#ifndef N_ERS_ASSERT
 #define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
 #else 
 #define ERS_PRE_CHECK_PTR(p) 
@@ -55,7 +55,7 @@ public:
  * If the pointer is invalid, this is considered as a server responsibility. 
  */
 
-#ifndef N_DEBUG
+#ifndef N_ERS_ASSERT
 #define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
 #else 
 #define ERS_CHECK_PTR(p) 

@@ -32,13 +32,13 @@ ers::IssueFactoryIssue::IssueFactoryIssue(const Context &context, ers_severity s
   * \param context the context of the issue, use \c MRS_HERE 
   * \param s the severity of the issue
   * \param name the name of the class requested to the factory 
-  * \param message the error message associated with the issue 
+  * \param msg the error message associated with the issue 
   */
 
 
-ers::IssueFactoryIssue::IssueFactoryIssue(const Context &context, ers_severity s, const std::string&name, const std::string &message) : Issue(context,s) {
+ers::IssueFactoryIssue::IssueFactoryIssue(const Context &context, ers_severity s, const std::string&name, const std::string &msg) : Issue(context,s) {
     std::ostringstream m ;
-    m << "Unable to build Issue for name '" << name << "': " << message ;
+    m << "Unable to build Issue for name '" << name << "': " << msg ;
     finish_setup(m.str());
 } // IssueFactoryIssue
 

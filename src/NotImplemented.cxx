@@ -25,19 +25,19 @@ ers::NotImplemented::NotImplemented(const Context &c, ers_severity s) : Assertio
 } // NotImplemented
  
 /** Builds the message for a the not implemented issue.
-  * @param condition_text should contain the problem condition, i.e the part that is not implemented,
+  * \param condition_text should contain the problem condition, i.e the part that is not implemented,
   *  this should contain the function name or some similar information
-  * @param message an optional message (this is displayed between parentheses). 
-  * @param constant_expression is the condition constant, this should be the case for not implemented functions.
-  * @return A complete information message. 
+  * \param msg an optional message (this is displayed between parentheses). 
+  * \param constant_expression is the condition constant, this should be the case for not implemented functions.
+  * \return A complete information message. 
   */
 
-std::string ers::NotImplemented::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
+std::string ers::NotImplemented::build_message(const char* condition_text, const std::string &msg, bool constant_expression) throw() {
     std::ostringstream message_stream ;
     (void) constant_expression ; 
     message_stream << "Function in " << condition_text ;
-    if (! message.empty()) {
-	message_stream << "(" << message << ")" ; 
+    if (! msg.empty()) {
+	message_stream << "(" << msg << ")" ; 
     }
     message_stream << " is not implemented" ;
     return message_stream.str(); 

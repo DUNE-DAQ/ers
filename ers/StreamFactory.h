@@ -115,13 +115,26 @@ public:
 #define ERS_DEBUG_0(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_0) ; }
     
     /** Sends a debug message with level 1, the first parameter is a \c printf like pattern, the next are parameters for it */
+#if DEBUG_LEVEL>0
 #define ERS_DEBUG_1(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_1) ; }
+#else 
+#define ERS_DEBUG_1
+#endif
     
     /** Sends a debug message with level 2, the first parameter is a \c printf like pattern, the next are parameters for it */
+#if DEBUG_LEVEL>1
 #define ERS_DEBUG_2(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_2) ; }
+#else 
+#define ERS_DEBUG_2(...)
+#endif
     
     /** Sends a debug message with level 3, the first parameter is a \c printf like pattern, the next are parameters for it */
+#if DEBUG_LEVEL>2
 #define ERS_DEBUG_3(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_3) ; }
+#else 
+#define ERS_DEBUG_3(...)
+#endif
+    
     
     /** Sends a warning, the first parameter is a \c printf like pattern, the next are parameters for it */
 #define ERS_WARN(...)    { char ers_warn_buf[256] ; snprintf(ers_warn_buf,sizeof(ers_warn_buf),__VA_ARGS__)    ; ers::StreamFactory::warning(ERS_HERE,ers_warn_buf) ; }

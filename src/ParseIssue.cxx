@@ -23,12 +23,13 @@ ers::ParseIssue::ParseIssue() : ers::Issue() {}
 
 ers::ParseIssue::ParseIssue(const Context &c, ers_severity s) : ers::Issue(c,s) {} 
 
-ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &message ) : ers::Issue(c,s) {
-    finish_setup(message); 
+ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &msg ) : ers::Issue(c,s) {
+    finish_setup(msg); 
 } // ParseIssue
 
-ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &message, const std::string &line )  : ers::Issue(c,s) {
+ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &msg, const std::string &line )  : ers::Issue(c,s) {
     this->offending_line(line); 
+    finish_setup(msg); 
 } // ParseIssue
  
 const char* ers::ParseIssue::get_class_name() const throw() {

@@ -47,11 +47,11 @@ ers::RangeIssue::RangeIssue(const ers::Context &c, ers::ers_severity s) : ers::I
 
 ers::RangeIssue::RangeIssue(const ers::Context &c, ers::ers_severity s, long min_index, long index, long max_index, const char* entity_name) : ers::InvalidReferenceIssue(c,s) {
     set_range(*this,index,min_index,max_index,entity_name) ; 
-    std::ostringstream message ;
-    message << "invalid " ; 
+    std::ostringstream message_stream ;
+    message_stream << "invalid " ; 
     if (entity_name) {
-	message << entity_name << ' '; 
+	message_stream << entity_name << ' '; 
     } // entity
-    message << "reference: " << index << " is not in range " << min_index << '-' << max_index ;  
-    finish_setup(message.str()); 
+    message_stream << "reference: " << index << " is not in range " << min_index << '-' << max_index ;  
+    finish_setup(message_stream.str()); 
 } // RangeIssue

@@ -38,25 +38,25 @@ ers::Assertion::Assertion() : Issue() {}
 ers::Assertion::Assertion(const Context &context, ers_severity s) : Issue(context,s) {} 
 
 /** Constructor 
-  * @param condition_text the text of the assertion's condition
-  * @param message message describing the assertion's condition 
-  * @param s severity of the assertion 
-  * @param context position in the code where the assertion failed, should be the MRS_HERE macro 
-  * @param constant_expression is the expression constant (as detected by the compiler).
+  * \param condition_text the text of the assertion's condition
+  * \param msg message describing the assertion's condition 
+  * \param s severity of the assertion 
+  * \param context position in the code where the assertion failed, should be the MRS_HERE macro 
+  * \param constant_expression is the expression constant (as detected by the compiler).
   */
 
-ers::Assertion::Assertion(const Context &context, ers_severity s, const char* condition_text, const std::string &message, bool constant_expression) : Issue(context,s) {
-    setup(condition_text,message,constant_expression);
+ers::Assertion::Assertion(const Context &context, ers_severity s, const char* condition_text, const std::string &msg, bool constant_expression) : Issue(context,s) {
+    setup(condition_text,msg,constant_expression);
 } // Assertion
 
 /** Setup method, should be called at the end of the constructor by class and subclasses 
   */
 
-void ers::Assertion::setup(const char *condition_text, const std::string &message, bool constant_expression)  {
+void ers::Assertion::setup(const char *condition_text, const std::string &msg, bool constant_expression)  {
     m_value_table[ASSERT_CONDITION_KEY] = *condition_text ;
     responsibility(ers_resp_server); 
     transience( ! constant_expression); 
-    finish_setup(build_message(condition_text,message,constant_expression));
+    finish_setup(build_message(condition_text,msg,constant_expression));
 } // setup
 
 const char* ers::Assertion::get_class_name() const throw (){
@@ -66,14 +66,14 @@ const char* ers::Assertion::get_class_name() const throw (){
 /** Builds the message associated with an assertion 
   * \return message describing the failure of the assertion 
   * \param condition_text the condition in textual form 
-  * \param message the message associated with the condition
+  * \param msg the message associated with the condition
   * \param constant_expression is the assertion a constant expression as detected by the compiler. 
   * \return an human readable message 
   */
 
-std::string ers::Assertion::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
+std::string ers::Assertion::build_message(const char* condition_text, const std::string &msg, bool constant_expression) throw() {
     std::ostringstream m ;
-    m << MESSAGE_ELEMENTS[0] << condition_text << MESSAGE_ELEMENTS[1]  << message ;
+    m << MESSAGE_ELEMENTS[0] << condition_text << MESSAGE_ELEMENTS[1]  << msg ;
     if (constant_expression) {
 	m << MESSAGE_ELEMENTS[2]  ; 
     } // constant expression 

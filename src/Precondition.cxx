@@ -35,12 +35,12 @@ ers::Precondition::Precondition(const Context &c, ers_severity s) : Assertion(c,
  * \param context context of the issue
  * \param s severity of the issue 
  * \param condition text of the condition of the precondition
- * \param message message for condition 
+ * \param msg message for condition 
  * \param constant_expression does compiler think expression is constant
  */
 
-ers::Precondition::Precondition(const Context &context, ers_severity s, const char*condition, const std::string &message , bool constant_expression) : Assertion(context,s) {
-    this->setup(condition,message,constant_expression); 
+ers::Precondition::Precondition(const Context &context, ers_severity s, const char*condition, const std::string &msg , bool constant_expression) : Assertion(context,s) {
+    this->setup(condition,msg,constant_expression); 
 } // Precondition
 
 /** \return name key for the class */
@@ -49,14 +49,14 @@ const char* ers::Precondition::get_class_name() const throw () { return PRECONDI
 
 /** Builds the message associated with an assertion 
  * \param condition_text the condition in textual form 
- * \param message the message associated with the condition
+ * \param msg the message associated with the condition
  * \param constant_expression is the condition constant (as detected by compiler). 
  * \return message describing the failure of the assertion 
  */
 
-std::string ers::Precondition::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
+std::string ers::Precondition::build_message(const char* condition_text, const std::string &msg, bool constant_expression) throw() {
     std::ostringstream m ;
-    m << "Precondition '" << condition_text << "' failed: " << message ;
+    m << "Precondition '" << condition_text << "' failed: " << msg ;
     if (constant_expression) {
 	m << " (this condition is constant)" ; 
     } // constant expression 

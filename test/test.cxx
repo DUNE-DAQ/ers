@@ -61,17 +61,16 @@ void test_issue(const Issue &e) {
 } // test_issue
 
 int main(int argc, char* argv[]) {
-    std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
+    // std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
     ers::IssueFactory::print_registered(); 
     ers::StreamFactory::print_registered(); 
-    printf("loading Xerxes\n"); 
+    ERS_DEBUG_1("loading Xerxes\n"); 
     XMLPlatformUtils::Initialize(); 
-    printf("done\n");
+    ERS_DEBUG_1("done\n");
     try {
-        printf("checking static assert\n");
+        ERS_DEBUG_1("checking static assert\n");
 	ERS_STATIC_ASSERT(sizeof(int)==4); 
-	ERS_ASSERT(0,"dummy assert"); 
-	printf("throwing custom issue\n");
+	ERS_DEBUG_1("throwing custom issue\n");
 	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {
 	 test_issue(e); 

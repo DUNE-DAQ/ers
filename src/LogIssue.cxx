@@ -21,9 +21,9 @@ namespace {
 ers::LogIssue::LogIssue() : Issue() {} 
 ers::LogIssue::LogIssue(const ers::Context &c, ers_severity s) : ers::Issue(c,s) {}
 
-ers::LogIssue::LogIssue(const ers::Context &c, ers_severity s, const std::string &message) : Issue(c,s) {
+ers::LogIssue::LogIssue(const ers::Context &c, ers_severity s, const std::string &msg) : Issue(c,s) {
     std::ostringstream stream ;
-    stream << ers::Core::to_string(s) << ": " << message ;
+    stream << ers::Core::to_string(s) << ": " << msg ;
     finish_setup(stream.str()); 
 } // 
 

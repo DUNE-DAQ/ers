@@ -56,16 +56,18 @@ template<> struct Compile_time_error<true> { };
 
 } // ers 
 
+
+
 /** \def ERS_STATIC_ASSERT(expr) This macro inserts a compile-time assertion into the code. 
  * Compile time assertion can only be done on constant factors (i.e compile-time known quantities).  
  *
  */
 
-#ifndef N_STATIC_ASSERT
+#ifndef N_ERS_STATIC_ASSERT
 #define ERS_STATIC_ASSERT(expr) { ers::Compile_time_error <((expr) != 0)> ERROR_ASSERTION_FAILED ;   (void) ERROR_ASSERTION_FAILED ; }
 #else 
-#define ERS_STATIC_ASSERT(expr) ;
-#endif
+#define ERS_STATIC_ASSERT(expr) 
+#endif 
 
 
 /** \def ERS_ASSERT(expr,msg,...) This macro inserts an assertion than checks condition e, 
@@ -74,14 +76,14 @@ template<> struct Compile_time_error<true> { };
  * If the compiler is gcc, then the transient field of the assertion is set according to the transcience of the expression. 
  * This means that if the expression is detected by the compiler as being constant, 
  */
-#ifndef N_DEBUG
+#ifndef N_ERS_ASSERT
 #ifdef __GNUC__
 #define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error, #expr,assertion_buffer,__builtin_constant_p(expr)) ; throw failed_assertion ; } }
 #else 
 #define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error,#expr,assertion_buffer,false) ; throw failed_assertion ; } }
 #endif
 #else 
-#define ERS_ASSERT(expr,...) ((void) expr) 
+#define ERS_ASSERT(expr,...) ((void) (expr))
 #endif
 
 #endif

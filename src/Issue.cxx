@@ -432,7 +432,7 @@ void Issue::setup_common(const Context *context) throw() {
   * \note All method used within this method should throw no exceptions to avoid circular problems. 
   */
 
-void Issue::finish_setup(const std::string &message) throw() {
+void Issue::finish_setup(const std::string &msg) throw() {
     Issue *p = this ; 
 #ifdef __GNUC__
     std::string class_name = ers::Core::umangle_gcc_class_name((typeid(*p)).name()).c_str(); 
@@ -441,7 +441,7 @@ void Issue::finish_setup(const std::string &message) throw() {
 #endif
     set_value(CPP_CLASS_KEY,class_name); 
     set_value(CLASS_KEY, get_class_name()) ;
-    set_value(MESSAGE_KEY,message); 
+    set_value(MESSAGE_KEY,msg); 
 } // finish_setup
 
 

@@ -41,7 +41,7 @@ public:
  * If the macro \c N_DEBUG is defined then the macros are disabled. 
 */
 
-#ifndef N_DEBUG
+#ifndef N_ERS_ASSERT
 #ifdef __GNUC__
 #define ERS_PRECONDITION(expr,...) { if(!(expr)) { char precondition_buffer[256] ; snprintf(precondition_buffer,256, __VA_ARGS__) ; ers::Precondition failed_precondition(ERS_HERE,ers::ers_error,#expr,precondition_buffer,__builtin_constant_p(expr)) ; throw failed_precondition ; } }
 #else 

@@ -26,10 +26,10 @@ ers::InvalidReferenceIssue::InvalidReferenceIssue() : Issue() {}
 
 ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s) : Issue(context,s) {} 
 
-ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s, const void* p, const std::string &message, ers_responsibility r) : Issue(context,s) {
+ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s, const void* p, const std::string &msg, ers_responsibility r) : Issue(context,s) {
     severity(s);
     pointer(p); 
-    finish_setup(message); 
+    finish_setup(msg); 
 } // InvalidReferenceIssue
 
 
