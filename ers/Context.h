@@ -94,6 +94,12 @@ public:
 #define __VERSION__ "unknown"
 #endif
 
+#ifdef TDAQ_PACKAGE_NAME
+#define ERS_PACK TDAQ_PACKAGE_NAME
+#else
+#define ERS_PACK "unknown_package"
+#endif
+
 /** \def ERS_EMPTY macro to an empty context object used when no context is available */
 #define ERS_EMPTY *(ers::Context::empty()) 
 
@@ -104,9 +110,9 @@ public:
 
 #ifndef N_DEBUG
 #ifdef __GNUC__
-#define ERS_HERE ers::Context(__FILE__,__LINE__,__PRETTY_FUNCTION__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,"")
+#define ERS_HERE ers::Context(__FILE__,__LINE__,__PRETTY_FUNCTION__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,ERS_PACK)
 #else
-#define ERS_HERE ers::Context(__FILE__,__LINE__,__func__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,"")
+#define ERS_HERE ers::Context(__FILE__,__LINE__,__func__,COMPILER_NAME,__VERSION__,__TIME__,__DATE__,ERS_PACK)
 #endif
 #else
 #define ERS_HERE ERS_EMPTY

@@ -28,12 +28,6 @@
 #include "ers/LogIssue.h"
 #include "ers/RangeIssue.h"
 
-/** \page ERS 
-   The ERS package offers basic facilites to do error handling. 
-   It offers facilities for building issues, sending and receiving them from Streams. 
-   Please see the <a href="ershowto.html">HowTo</a> page for more information about using the package. 
-*/
-
 /** \page ERSHowTo How to use the ERS package
   This package can be used at different levels. At the lowest level, one can simply use the existing checking macros. 
   A more advanced way of using this package is to define specific Issue subclasses. 
@@ -67,14 +61,20 @@
   <li>ERS_DEBUG_3</li>
   <li>ERS_WARN</li>
   </ul>
-
-  \section Wrappers Using the System package
-  The System package offers wrapper for operating system operations. 
-  All operations in this package report errors using ERS issues. 
-  It also offers classes for representing POSIX related Issues. 
+  Each macro can be disabled at compilation time. It is also possible to set up the associated stream to discard messages or to 
+  filter them based on qualifiers. 
 
   \section Issues Building Custom Issues
   For a discussion about building custom issue, see the documentation for the Issue class. 
+  An example custom issue is also given in the example directory. 
   \see ers::Issue 
+  \see ExampleIssue 
+
+  \section Selecting Streams
+  The ERS system use the abstraction of streams to handle issues. 
+  Conceptualy, a stream is simply an object that can the user can use to send (or receive) Issues. 
+  There is one stream associated with each severity level,
+  those streams can be set or retrieved using methods of the ers::StreamFactory class. 
+  \see ers::StreamFactory 
 
 */

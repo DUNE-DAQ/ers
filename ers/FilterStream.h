@@ -24,18 +24,22 @@ namespace ers {
       * If the include list is empty, the second condition is not applied. 
       * This stream should only be used for severity levels where filtering makes sense, 
       * i.e warning, debugs, etc...
-      * The syntax to request a filter stream is the following: 
-      * <tt>filter:filter:?include_qualifier1,include_qualifier2!exclude_qualifier1,exclude_qualifier2\@stream_identifier</tt>
+      * The syntax to request a filter stream is the following:<br> 
+      * <nobr><code>filter:filter:?include_qualifier1,include_qualifier2!exclude_qualifier1,exclude_qualifier2\@stream_identifier</code></nobr>
       * The stream_identifier can be any stream_key used by ERS (including a second filter). 
+      * 
+      * For more information on associating a stream to severity level, see the documentation on the StreamFactory class.
+      * \see ers::StreamFactory
       * \author Matthias Wiesmann
       * \version 1.0
       */
     
     class FilterStream : public Stream {
 protected:
-	Stream *m_target_stream_ptr ; 
-	std::vector<std::string> m_include ; 
-	std::vector<std::string> m_exclude ; 
+	Stream *m_target_stream_ptr ;                                /**< \brief chained target stream */
+	std::vector<std::string> m_include ;                         /**< \brief include list */
+	std::vector<std::string> m_exclude ;                         /**< \brief exclude list */
+	FilterStream(const FilterStream &other);                    
 public:
 	static const char *const FILTER_STREAM_TAG ; 
 	static FilterStream *factory(const std::string &include_str, const::std::string &exclude_str, const std::string &target_str) ; 
@@ -43,9 +47,9 @@ public:
 	FilterStream(Stream *target_ptr, 
 		     const std::vector<std::string> & include_list, 
 		     const std::vector<std::string> & exclude_list) ; 
-	~FilterStream() ; 
-	bool is_accept(const Issue* issue_ptr); 
-	virtual void send(const Issue *issue_ptr) ;   
+	~FilterStream() ;                                             /**< \brief destructor */
+	virtual bool is_accept(const Issue* issue_ptr);               /**< \brief filter method */
+	virtual void send(const Issue *issue_ptr) ;                   /**< \brief send method */
 	
     } ; // FilterStream
     

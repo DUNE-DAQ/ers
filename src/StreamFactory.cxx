@@ -19,25 +19,10 @@
 
 
 /** This variable contains the default keys for building the default streams.
-  * The default variables are the following
-  * <table border=1 cellpadding=2> 
-    <tr><th>severity_none</th><td>null:</td></tr>
-    <tr><th>ers_debug_0</th><td rowspan="9">cerr:tab</td></tr>
-    <tr><th>ers_debug_1</th></tr>
-    <tr><th>ers_debug_2</th></tr>
-    <tr><th>ers_debug_3</th></tr>
-    <tr><th>ers_information</th></tr>
-    <tr><th>ers_notification</th></tr>
-    <tr><th>ers_warning</th></tr>
-    <tr><th>ers::error</th></tr>
-    <tr><th>ers_fatal</th></tr>
-    <tr><th>severity_max</th><td>null:</td></tr>
-    </table>
-
   */
 
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
-    "null",                                                         // none
+    "null:",                                                         // none
     "default",  "default",  "default", "default",                 // debug levels
     "default",  "default",  "default",                             // information, notification, warning
     "default",  "default",                                         // Errors and Fatals

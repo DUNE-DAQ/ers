@@ -26,6 +26,14 @@ namespace {
 
 
 ers::FIFOStream::FIFOStream() : Stream() {} 
+
+ers::FIFOStream::FIFOStream(const FIFOStream &other) : Stream(other) {
+    for(unsigned int i=0;i<other.m_issue_queue.size();i++) {
+	Issue *cloned = other.m_issue_queue[i]->clone();
+	m_issue_queue.push_back(cloned);
+    } // for
+} // FIFOStream
+
 ers::FIFOStream::~FIFOStream() {}
 
 /** Sends the issue into the stream.
@@ -34,9 +42,9 @@ ers::FIFOStream::~FIFOStream() {}
   * @note This method is not implemented, pending some form of common TDAQ thread library. 
   */
 
-void ers::FIFOStream::send(const ers::Issue *i) {
-    ERS_PRE_CHECK_PTR(i); 
-    Issue *cloned = i->clone();
+void ers::FIFOStream::send(const ers::Issue *issue_ptr) {
+    ERS_PRE_CHECK_PTR(issue_ptr); 
+    Issue *cloned = issue_ptr->clone();
     m_issue_queue.push_back(cloned); 
 } // send
 
@@ -51,5 +59,16 @@ ers::Issue *ers::FIFOStream::receive() {
     m_issue_queue.pop_front();
     return issue ; 
 } // receive
+
+void ers::FIFOStream::print_to(std::ostream& stream) const {
+    stream << ers::FIFOStream::FIFO_STREAM_KEY << ":[" ;
+    for(unsigned int i=0;i<m_issue_queue.size();i++) {
+	stream << m_issue_queue[i]->what() ; 
+	if (i!=m_issue_queue.size()-1) {
+	    stream << ", " ; 
+	} // if not last 
+    } // for elements
+    stream << "]" ; 
+} // print_to
 
 

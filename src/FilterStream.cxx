@@ -10,6 +10,7 @@
 #include "ers/FilterStream.h"
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/StreamFactory.h"
+#include "ers/NotImplemented.h"
 
 const char* const ers::FilterStream::FILTER_STREAM_TAG = "filter" ; 
 
@@ -44,18 +45,42 @@ ers::FilterStream * ers::FilterStream::factory(const std::string &params) {
     return factory(include_str,exclude_str,target_str); 
 } // factory
 
+/** Constructor 
+  * \param target_ptr pointer to the target stream, the target pointer is assumed to be allocated
+  * on the stack and owned by the current object, i.e it will be deleted upon destruction
+  * \param include_list collection of strings, at least one of these strings need to be present
+  * in the qualifiers in order for the Issue to be accepted.
+  * \param exclude_list collection of strings, no qualifier of the Issue must match those in this 
+  * collection in order for the Issue to be accepted. 
+  */
 
-ers::FilterStream::FilterStream(ers::Stream *target_ptr, const std::vector<std::string> & include_list,  const std::vector<std::string> & exclude_list) {
+ers::FilterStream::FilterStream(ers::Stream *target_ptr, const std::vector<std::string> &
+include_list,  const std::vector<std::string> & exclude_list) : ers::Stream() {
     ERS_CHECK_PTR(target_ptr); 
     m_target_stream_ptr = target_ptr ; 
     m_include = include_list ; 
     m_exclude = exclude_list ; 
 } // FilterStream
 
+/** Disabled copy constructor 
+  */
+
+ers::FilterStream::FilterStream(const FilterStream &other) : ers::Stream(other) {
+    ERS_NOT_IMPLEMENTED();
+} // FilterStream
+
+/** Destructor
+ */
+
 ers::FilterStream::~FilterStream() {
     delete(m_target_stream_ptr) ; 
 } // FilterStream
 
+/** Filtering method 
+  * This method checks if an Issue is to be accepted or not. 
+  * \param issue_ptr the issue to check 
+  * \return \c true if the Issue passes filtering, \c false otherwise.
+  */
 
 bool ers::FilterStream::is_accept(const ers::Issue* issue_ptr) {
     ERS_CHECK_PTR(issue_ptr);
@@ -82,7 +107,12 @@ bool ers::FilterStream::is_accept(const ers::Issue* issue_ptr) {
     return true ; 
 } // is_accept
 
-
+/** Send method 
+  * basically calls \c is_accept to check if the issue is accepted. 
+  * If this is the case, the \c send method on the target is called with 
+  * \c issue_ptr. 
+  * \param issue_ptr pointer to the issue to send. 
+  */
 
 void ers::FilterStream::send(const ers::Issue *issue_ptr) {
     ERS_CHECK_PTR(issue_ptr);
@@ -94,3 +124,4 @@ void ers::FilterStream::send(const ers::Issue *issue_ptr) {
 	// ERS_DEBUG_3("rejected %s:",issue_ptr->what()); 
     } 
 } // send
+

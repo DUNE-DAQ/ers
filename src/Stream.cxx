@@ -7,7 +7,8 @@
  *
  */
 
-#include <assert.h>
+#include <iostream>
+#include <sstream>
 
 #include "ers/Issue.h"
 #include "ers/StreamFactory.h"
@@ -28,7 +29,14 @@ namespace {
 // --------------
 
 ers::Stream::Stream() {}
+ers::Stream::Stream(const Stream &) {} 
 ers::Stream::~Stream() {}
+
+ers::Stream::operator std::string() const {
+    std::ostringstream stream ; 
+    print_to(stream); 
+    return stream.str(); 
+} // to string 
 
 /** Sends the issue to the stream.
   * \param i the issue to send 
@@ -48,6 +56,14 @@ ers::Issue *ers::Stream::receive() {
     return 0 ; 
 } // receive
 
+void ers::Stream::print_to(std::ostream& stream) const {
+    stream << NULL_STREAM_KEY << ':' ; 
+} // print_to
+
+std::ostream& operator<<(std::ostream& target, const ers::Stream & s) {
+    s.print_to(target); 
+    return target ; 
+} // operator<<
 
 
 

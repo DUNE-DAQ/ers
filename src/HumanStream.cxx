@@ -44,9 +44,9 @@ std::string ers::HumanStream::to_string(const Issue *issue_ptr) throw() {
     } // 
 } // to_string
 
-ers::HumanStream::HumanStream() : ers::Stream() {
-	
-} // HumanStream
+ers::HumanStream::HumanStream() : ers::Stream() {} // HumanStream
+ers::HumanStream::HumanStream(const HumanStream &other) : ers::Stream(other) {} 
+ers::HumanStream::~HumanStream() {} 
 
 /** \return the content of the stream as a string 
   */
@@ -61,6 +61,10 @@ std::string ers::HumanStream::to_string() {
 void ers::HumanStream::clear() {
     m_out_stream.str(""); 
 } // clear
+
+void ers::HumanStream::print_to(std::ostream& stream) const {
+    stream << ers::HumanStream::KEY << ':' ; 
+} // print_to
 
 void ers::HumanStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr); 

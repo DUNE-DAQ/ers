@@ -31,9 +31,13 @@ public:
     static std::string to_string(const Issue *issue) throw() ; 
     static const char* const KEY ; 
     HumanStream() ;
+    HumanStream(const HumanStream &other); 
+    ~HumanStream() ; 
     std::string to_string() ; 
     void clear() ; 
-    void send(const Issue *ptr); 
+    virtual void send(const Issue *ptr); 
+    virtual void print_to(std::ostream& stream) const ; 
+
 } ; // human_stream 
 
 } // namespace ers

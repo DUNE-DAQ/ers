@@ -48,7 +48,7 @@ public:
 
 #if (!defined(N_ERS_ASSERT))
 #if (defined(__GNUC__))
-#define ERS_PRE_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_client)
+#define ERS_PRE_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_client) ;
 #else 
 #define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_client)
 #endif

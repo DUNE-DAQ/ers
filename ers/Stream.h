@@ -12,6 +12,7 @@
 #define __ERS_ISSUE_STREAM__
 
 #include <string>
+#include <iostream>
 
 #include "ers/Core.h"
 #include "ers/Context.h"
@@ -35,14 +36,20 @@ class Stream {
     friend class Issue ; 
 protected:
 public:    
-    static const char* const NULL_STREAM_KEY ;         /**< Key for discard stream */
+    static const char* const NULL_STREAM_KEY ;          /**< Key for discard stream */
     Stream();
+    Stream(const Stream &other); 
+    operator std::string() const ; 
     virtual ~Stream(); 
-    virtual void send(const Issue *i) ;          /**< \brief Sends an issue into the stream */
-    virtual Issue *receive() ;                   /**< \brief Receives an issue from the stream */
+    virtual void send(const Issue *i) ;                /**< \brief Sends an issue into the stream */
+    virtual Issue *receive() ;                         /**< \brief Receives an issue from the stream */
+    virtual void print_to(std::ostream& stream) const ; 
 } ; 
 
 } // ers 
+
+std::ostream& operator<<(std::ostream& target, const ers::Stream & s);
+
 
 #endif
 

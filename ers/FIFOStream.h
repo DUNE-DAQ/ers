@@ -25,10 +25,12 @@ protected:
 	std::deque<Issue*> m_issue_queue ; 
 public:
 	static const char* const FIFO_STREAM_KEY ;     /**< Key for FIFO stream */
-	void send(const Issue *i) ;
-	Issue *receive() ; 
 	FIFOStream();
+	FIFOStream(const FIFOStream &other); 
 	~FIFOStream() ;
+	virtual void send(const Issue *i) ;
+	virtual Issue *receive() ; 
+	virtual void print_to(std::ostream& stream) const ;
     } ; //  FIFOStream
 } // ers
 	
