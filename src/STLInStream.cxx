@@ -87,6 +87,6 @@ ers::Issue *ers::STLInStream::receive() {
   */
 
 void ers::STLInStream::send(const Issue *i) {
-    NOT_IMPLEMENTED() ; 
+    ERS_NOT_IMPLEMENTED() ; 
 } // send
 

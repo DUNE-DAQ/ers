@@ -128,6 +128,11 @@ Issue::Issue(const Context &context, ers_severity s, const std::exception *cause
     finish_setup(cause_exception->what()); 
 } // Issue
 
+Issue *Issue::clone() const { 
+    return IssueFactory::instance()->build(this) ; 
+} // clone
+
+
 // Value Table manipulation Methods 
 // ====================================================
 
@@ -391,7 +396,6 @@ int Issue::transience() const throw () {
 const std::exception *Issue::cause() const throw() {
     return 0 ; 
 } // cause
-
 
 void Issue::cause(const std::exception *c) {
     if (c==0) {

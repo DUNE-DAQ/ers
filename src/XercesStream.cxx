@@ -80,7 +80,7 @@ ers::Issue ers::XercesStream::to_issue(const DOMError& domError){
 	case DOMError::DOM_SEVERITY_ERROR: severity = ers_error ; break ; 
 	case DOMError::DOM_SEVERITY_FATAL_ERROR: severity = ers_error ; break ; 
 	default: 
-	    NOT_IMPLEMENTED(); 
+	    ERS_NOT_IMPLEMENTED(); 
 	    break ; 
     } // switch 
     std::string message = to_string(domError.getMessage()); 

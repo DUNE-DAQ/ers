@@ -94,14 +94,92 @@ Stream *Stream::get_stream(ers_severity s) {
     return s_streams[s] ; 
 } // get_stream
 
+
+// ----------------------------------
+// Fatal Methods
+// ----------------------------------
+
+Stream *Stream::fatal() {return get_stream(ers_fatal) ; } 
+
+void Stream::fatal(Issue *issue_ptr) {
+    ERS_PRE_CHECK_PTR(issue_ptr); 
+    issue_ptr->severity(ers_fatal); 
+    fatal()->send(issue_ptr); 
+} // fatal
+
+
+// ----------------------------------
+// Error Methods
+// ----------------------------------
+
+/** Finds the current error stream. 
+  * The stream is created if needed. 
+  * \return the current error stream 
+  */
+
 Stream* Stream::error() {
     return get_stream(ers_error) ; 
 } // error
+
+/** Sends an Issue to the error stream 
+  * \param issue_ptr 
+  */
+
+void Stream::error(Issue *issue_ptr) {
+    ERS_PRE_CHECK_PTR(issue_ptr); 
+    issue_ptr->severity(ers_error); 
+    error()->send(issue_ptr); 
+} // error
+
+// ----------------------------------
+// Warning Methods
+// ----------------------------------
+
+/** Finds the current warning stream. 
+  * \return the current warning stream 
+  */
+
+Stream* Stream::warning() {
+    return get_stream(ers_warning); 
+}  // warning
+
+/** Sends an Issue to the warning stream 
+ * \param issue_ptr the issue to send
+ */
+
+void Stream::warning(Issue *issue_ptr) {
+    ERS_PRE_CHECK_PTR(issue_ptr); 
+    issue_ptr->severity(ers_warning); 
+    warning()->send(issue_ptr); 
+} // warning
+
+/** Sends a message to the warning stream 
+ * \param c the context of the message
+ * \param message the message to send 
+ */
+
+void Stream::warning(const Context &c, const std::string &message) {
+    LogIssue i(c,ers_warning,message);
+    warning(&i); 
+} // warning
+
+// ----------------------------------
+// Debug Methods
+// ----------------------------------
+
+/** Finds the debug stream 
+  * \param s the severity of the associated stream. Accepted values: \li \c ers_debug_0 \li \c ers_debug_1 \li \c ers_debug_2 \li \c ers_debug_3 
+  */
 
 Stream* Stream::debug(ers_severity s) {
     ERS_PRECONDITION(s<ers_information,"severity is not debug : %s (%d) %d",get_severity_text(s),s,ers_information);
     return get_stream(s) ; 
 } // debug
+
+/** Sends an issue to the debug stream 
+ * \param i the Issue to send
+ * \param s the severity of the associated stream. Accepted values: \li \c ers_debug_0 \li \c ers_debug_1 \li \c ers_debug_2 \li \c ers_debug_3 
+ */
 
 void Stream::debug(Issue *i, ers_severity s) {
     ERS_PRE_CHECK_PTR(i); 
@@ -111,10 +189,27 @@ void Stream::debug(Issue *i, ers_severity s) {
     stream->send(i); 
 } //  debug
 
+/** Sends a message to the debug stream 
+ * \param c the Context of the message
+ * \param message the text of the message 
+ * \param s the severity of the associated stream. Accepted values: \li \c ers_debug_0 \li \c ers_debug_1 \li \c ers_debug_2 \li \c ers_debug_3 
+ */
+
 void Stream::debug(const Context &c, const std::string &message, ers_severity s) {
     LogIssue i(c,s,message); 
     debug(&i,s); 
 } // debug
+
+// ----------------------------------
+// Dispatch Methods
+// ----------------------------------
+
+/** Dispatches an issue to the appropriate stream.
+  * The stream is decided based upon the severity specified in the Issue.
+  * If \c throw_error is true errors and fatal errors are not sent to a stream, but thrown in the context of the caller.
+  * \param issue_ptr the Issue to dispatch
+  * \param throw_error should errors and fatals are thrown 
+  */
 
 void Stream::dispatch(Issue *issue_ptr, bool throw_error) {
     ERS_PRE_CHECK_PTR(issue_ptr); 
@@ -124,20 +219,27 @@ void Stream::dispatch(Issue *issue_ptr, bool throw_error) {
     stream_ptr->send(issue_ptr); 
 } // dispatch
 
-void Stream::error(Issue *issue_ptr) {
-    ERS_PRE_CHECK_PTR(issue_ptr); 
-    error()->send(issue_ptr); 
-} // error
 
+// --------------
 // Member methods 
 // --------------
 
 Stream::Stream() {}
 Stream::~Stream() {}
 
+/** Sends the issue to the stream.
+  * \param i the issue to send 
+  * \note This implementation silently discards the Issue
+  */
+
 void Stream::send(const Issue *i) {
     (void) i ; 
 } // send 
+
+/** Reads an isssue on the stream
+  * \return the issue that has been read
+  * \note This implementation always returns a null pointer
+  */
 
 Issue *Stream::receive() {
     return 0 ; 

@@ -1,5 +1,5 @@
 /*
- *  SyncStream.h
+ *  FIFOStream.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 02.12.04.
@@ -7,6 +7,7 @@
  *
  */
 
+#include <deque>
 #include "ers/Stream.h"
 
 namespace ers {
@@ -17,14 +18,16 @@ namespace ers {
       * \note This class is only partially implemented, as it requires a thread library of some sort. 
       */
     
-    class SyncStream : public Stream {
+    class FIFOStream : public Stream {
+	
+protected:
+	std::deque<Issue*> m_issue_queue ; 
 public:
 	void send(const Issue *i) ;
 	Issue *receive() ; 
-	SyncStream();
-	~SyncStream() ;
-protected:
-    } ; //  Sync_Stream
+	FIFOStream();
+	~FIFOStream() ;
+    } ; //  FIFOStream
 } // ers
 	
 

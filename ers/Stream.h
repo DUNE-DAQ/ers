@@ -46,17 +46,23 @@ public:
 
     static const char *key_for_severity(ers_severity s) ; 
     
-    static Stream* error() ;
-    static Stream* debug(ers_severity s) ; 
-    static void debug(Issue *i, ers_severity) ; 
-    static void debug(const Context &c, const std::string &message, ers_severity s); 
-    static void error(Issue *i) ; 
+    static Stream *fatal();
+    static void fatal(Issue *i) ;
+    
+    static Stream* error() ;                                                  /**< \brief the error stream */
+    static void error(Issue *i) ;                                             /**< \brief sends an error to the error stream */
+    static Stream* warning();                                                 /**< \brief the warning stream */
+    static void warning(Issue *i);                                            /**< \brief sends a warning to the warning stream */
+    static void warning(const Context &c, const std::string &message);        /**< \brief sends a warning message */
+    static Stream* debug(ers_severity s) ;                                    /**< \brief the debug stream for a debug level */
+    static void debug(Issue *i, ers_severity) ;                               /**< \brief sends a debug to the debug stream */
+    static void debug(const Context &c, const std::string &message, ers_severity s);  /**< \brief sends a debug message */
     static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity */
     
     Stream();
     virtual ~Stream(); 
     virtual void send(const Issue *i) ;          /**< \brief Sends an issue into the stream */
-    virtual Issue *receive() ; 
+    virtual Issue *receive() ;                   /**< \brief Receives an issue from the stream */
       
 } ; 
 
@@ -66,6 +72,7 @@ public:
 #define ERS_DEBUG_1(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::Stream::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_1) ; }
 #define ERS_DEBUG_2(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::Stream::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_2) ; }
 #define ERS_DEBUG_3(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::Stream::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_3) ; }
+#define ERS_WARN(...)    { char ers_warn_buf[256] ; snprintf(ers_warn_buf,sizeof(ers_warn_buf),__VA_ARGS__)    ; ers::Stream::warning(ERS_HERE,ers_warn_buf) ; }
 
 
 

@@ -3,6 +3,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
+#include "system/MapFile.h"
 
 #include "ers/TabOutStream.h"
 #include "ers/TabInStream.h"
@@ -11,6 +12,7 @@
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/InvalidReferenceIssue.h"
+#include "system/SignalIssue.h"
 
 #include "system/OpenFail.h"
 
@@ -56,9 +58,23 @@ void test_issue(const Issue &e) {
 
 int main(int argc, char* argv[]) {
     XMLPlatformUtils::Initialize(); 
+    // System::SignalIssue::register_fatal(SIGSEGV); 
+    // System::SignalIssue::register_fatal(SIGBUS); 
     try {
-	int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
-	if (fd<0) throw OpenFail(ERS_HERE,O_RDWR |  O_CREAT, "/etc/forbidden"); 
+	ERS_DEBUG_0("creating file object");
+	int s = 4096 ;
+	MapFile f("~/maptest",s,0,true,false); 
+	ERS_DEBUG_0("trying map"); 
+	f.map();
+	void *a = f.address() ;
+	printf("%p\n",a);
+	char *p = (char *) calloc(sizeof(char),1024); 
+	memcpy(p,a,1024);
+	p[64] = 0 ; 
+	printf("%s\n",p);
+	f.unmap();
+	// char *b = 0 ; 
+	// b[0] = 0xff ; 
     } catch (Issue &e) {
 	test_issue(e); 
     }
@@ -67,9 +83,15 @@ int main(int argc, char* argv[]) {
 // Stream::error(&e);
 
 /* 
+
+int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
+if (fd<0) throw OpenFail(ERS_HERE,O_RDWR |  O_CREAT, "/etc/forbidden"); 
 */
 // ERS_ASSERT(n,"foo");
 //  ERS_PRECONDITION(3<2,"maths work %d %s",3<2,"argument");
+
+
+
 
 
 /*  
@@ -81,18 +103,7 @@ if (fd<0) {
 /*
  
  printf("starting\n");	
-	ERS_DEBUG_0("creating file object");
-	int s = 4096 ;
-	MapFile f("/Users/wiesmann/.login",s,0,true,false); 
-	ERS_DEBUG_0("trying map"); 
-	f.map();
-	void *a = f.address() ;
-	printf("%p\n",a);
-	char *p = (char *) calloc(sizeof(char),1024); 
-	memcpy(p,a,1024);
-	p[64] = 0 ; 
-	printf("%s\n",p); 
- 
+	 
  
  // NOT_IMPLEMENTED(); 
 	// int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
@@ -113,7 +124,6 @@ if (fd<0) {
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/Executable.h"
 #include "ers/AllocIssue.h"
-#include "ers/MapFile.h"
 #include "ers/Stream.h"
  
  

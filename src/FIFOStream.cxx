@@ -1,5 +1,5 @@
 /*
- *  SyncStream.cxx
+ *  FIFOStream.cxx
  *  ers
  *
  *  Created by Matthias Wiesmann on 02.12.04.
@@ -7,14 +7,14 @@
  *
  */
 
-#include "ers/SyncStream.h"
+#include "ers/FIFOStream.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/InvalidReferenceIssue.h"
 
 
-ers::SyncStream::SyncStream() : Stream() {} 
-ers::SyncStream::~SyncStream() {}
+ers::FIFOStream::FIFOStream() : Stream() {} 
+ers::FIFOStream::~FIFOStream() {}
 
 /** Sends the issue into the stream.
   * This method should put the issue into a FIFO queue and be non blocking
@@ -22,9 +22,10 @@ ers::SyncStream::~SyncStream() {}
   * @note This method is not implemented, pending some form of common TDAQ thread library. 
   */
 
-void ers::SyncStream::send(const ers::Issue *i) {
+void ers::FIFOStream::send(const ers::Issue *i) {
     ERS_PRE_CHECK_PTR(i); 
-    NOT_IMPLEMENTED();
+    Issue *cloned = i->clone();
+    m_issue_queue.push_back(cloned); 
 } // send
 
 /** Blocking read into the stream. 
@@ -32,9 +33,11 @@ void ers::SyncStream::send(const ers::Issue *i) {
   * @note This method is not implemented, pending some form of common TDAQ thread library. 
   */
 
-ers::Issue *ers::SyncStream::receive() {
-    NOT_IMPLEMENTED();
-    return 0 ; 
+ers::Issue *ers::FIFOStream::receive() {
+    if (m_issue_queue.empty()) return 0 ; 
+    Issue *issue = m_issue_queue[0] ; 
+    m_issue_queue.pop_front();
+    return issue ; 
 } // receive
 
 

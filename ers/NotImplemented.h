@@ -29,6 +29,6 @@ public:
     } ;  // Precondition
 } // ers
 
-#define NOT_IMPLEMENTED() throw NotImplemented(ERS_HERE,ers::ers_error)
-#define NOT_IMPLEMENTED_FATAL() throw NotImplemented(ERS_HERE,ers::ers_fatal)
+#define ERS_NOT_IMPLEMENTED() throw ers::NotImplemented(ERS_HERE,ers::ers_error)
+#define ERS_NOT_IMPLEMENTED_FATAL() throw ers::NotImplemented(ERS_HERE,ers::ers_fatal)
 

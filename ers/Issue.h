@@ -78,6 +78,8 @@ public:
         Issue(const string_map_type &values); 
 	Issue(const Context &context, ers_severity s, const std::string &message);   
         Issue(const Context &context, ers_severity s, const std::exception *cause); 
+	virtual ~Issue() throw() {} ;
+	Issue *clone() const ; 
 	const std::string get_value(const std::string &key) const ;   /**< \brief Reads the property list. */
 	int values_number() const ; 
 	void set_value(const std::string &key, long value); 
@@ -94,7 +96,6 @@ public:
 	const std::exception *cause() const throw() ;
 	const std::string human_description() const throw()  ;        /**< \brief Human description message. */
         const char* what() const throw() ;                            /**< \brief Human description message. */
-        virtual ~Issue() throw() {} ;
 	operator std::string() const ; 
     } ; // Issue
     
