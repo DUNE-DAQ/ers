@@ -62,6 +62,7 @@ ers::HumanStream::HumanStream(const System::File &file, bool read_mode) : ers::S
   */
 
 void ers::HumanStream::serialize_pair(const ers::Issue *issue, const std::string &key, const std::string &value) {
+    (void) issue ; 
     (*m_out_stream)  << key << "=\"" << value << '\"';
 } // serialize
 

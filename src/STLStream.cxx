@@ -112,7 +112,12 @@ void ers::STLStream::serialize_separator(const ers::Issue *issue_ptr) { (void) i
   * \param value the value to store
   * \note This implementation does nothing 
   */
-void ers::STLStream::serialize_pair(const Issue* issue_ptr, const std::string &key, const std::string &value) { } 
+void ers::STLStream::serialize_pair(const Issue* issue_ptr, const std::string &key, const std::string &value) { 
+	(void) issue_ptr ; 
+	(void) key ;
+	(void) value ; 
+} // serialize_pair
+
 bool ers::STLStream::deserialize(string_map_type *values) { return false ;  }  
 
 

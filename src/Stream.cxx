@@ -16,6 +16,7 @@ const char* const ers::Stream::NULL_STREAM_KEY = "null" ;
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+    	(void) uri ; 
 	if (protocol==ers::Stream::NULL_STREAM_KEY) return new ers::Stream() ; 
 	return 0 ;
     } 

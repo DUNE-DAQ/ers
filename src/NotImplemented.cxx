@@ -34,6 +34,7 @@ ers::NotImplemented::NotImplemented(const Context &c, ers_severity s) : Assertio
 
 std::string ers::NotImplemented::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
     std::ostringstream message_stream ;
+    (void) constant_expression ; 
     message_stream << "Function in " << condition_text ;
     if (message!="") {
 	message_stream << "(" << message << ")" ; 
