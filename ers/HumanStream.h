@@ -11,7 +11,7 @@
 #include <ostream>
 #include <sstream>
 
-#include "STLStream.h"
+#include "ers/STLStream.h"
 
 namespace ers {
 

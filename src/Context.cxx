@@ -12,6 +12,7 @@
 #include <sstream>
 
 ers::Context *ers::Context::empty_instance = 0 ; 
+std::string ers::Context::s_host_type  ; 
 
 const ers::Context *ers::Context::empty() {
     if (! empty_instance) {
@@ -34,21 +35,21 @@ const ers::Context *ers::Context::empty() {
 ers::Context::Context(const std::string &filename, int line_number, const std::string &function_name, 
                       const std::string &compiler_name, const std::string &compiler_version, 
                       const std::string &compilation_time, const std::string &compilation_date) {
-    this->file_name = filename ; 
-    this->line_number = line_number ; 
-    this->function_name = function_name ; 
-    this->compiler_name = compiler_name ; 
-    this->compiler_version = compiler_version ; 
-    this->compilation_date = compilation_date ; 
-    this->compilation_time = compilation_time ; 
+    this->m_file_name = filename ; 
+    this->m_line_number = line_number ; 
+    this->m_function_name = function_name ; 
+    this->m_compiler_name = compiler_name ; 
+    this->m_compiler_version = compiler_version ; 
+    this->m_compilation_date = compilation_date ; 
+    this->m_compilation_time = compilation_time ; 
 } // Context
 
 /** The source code file name 
   * \return path of the source file 
   */
 
-std::string ers::Context::file() const {
-    return this->file_name ; 
+const std::string & ers::Context::file() const {
+    return m_file_name ; 
 } // file
 
 /** The line number in the source code 
@@ -56,53 +57,60 @@ std::string ers::Context::file() const {
   */
 
 int ers::Context::line() const {
-    return this->line_number ; 
+    return m_line_number ; 
 } // line 
 
 /** Name of the function containing the context 
   * \return name of the function
   */
 
-std::string ers::Context::function() const {
-    return this->function_name.c_str() ; 
+const std::string & ers::Context::function() const {
+    return m_function_name ; 
 } // function
 
 
-std::string ers::Context::position() const {
-    std::ostringstream position_s ;
-    if (! file_name.empty()) {
-	position_s << file_name << ":" << line_number << " ";
-    } 
-    if (! function_name.empty()) {
-	position_s << "(" << function_name << ")" ;
-    } // if
-    return position_s.str();
+const std::string & ers::Context::position() const {
+    if (m_position.empty()) {
+	std::ostringstream position_s ;
+	if (! m_file_name.empty()) {
+	    position_s << m_file_name << ":" << m_line_number << " ";
+	} 
+	if (! m_function_name.empty()) {
+	    position_s << "(" << m_function_name << ")" ;
+	} // if
+	m_position = position_s.str();
+    } // cached version not calculated 
+    return m_position ; 
 } // position
 
-std::string ers::Context::compiler() const {
-    std::ostringstream compiler_s ;
-    if (! compiler_name.empty()) {
-	compiler_s << compiler_name << " " << compiler_version ; 
-    } // if 
-    return compiler_s.str(); 
+const std::string & ers::Context::compiler() const {
+    if (m_compiler.empty()) {
+	if (! m_compiler_name.empty()) {
+	    std::ostringstream compiler_s ;
+	    compiler_s << m_compiler_name << " " << m_compiler_version ; 
+	    m_compiler = compiler_s.str(); 
+	} else {
+	    m_compiler = "unknown" ; 
+	} 
+    } // build cache
+    return m_compiler ; 
 } // compiler
 
-std::string ers::Context::compilation() const {
-    std::ostringstream compilation_s ;
-    if (! compilation_time.empty()) {
-	compilation_s << compilation_time << " " ; 
-    } // compilation time
-    if (! compilation_date.empty()) {
-	compilation_s << compilation_date ; 
-    } // compilation date
-    return compilation_s.str(); 
+const std::string & ers::Context::compilation() const {
+    if (m_compilation.empty()) {
+	std::ostringstream compilation_s ;
+	if (! m_compilation_time.empty()) {
+	    compilation_s << m_compilation_time << " " ; 
+	} // compilation time
+	if (! m_compilation_date.empty()) {
+	    compilation_s << m_compilation_date ; 
+	} // compilation date
+	m_compilation = compilation_s.str(); 
+    } // if
+    return m_compilation ; 
 } // compilation
 
-/** Tries to gues the host name 
-  * \return a string describing the host, in the form <var>architecture</var>-<var>operating-system</var>
-  */
-
-std::string ers::Context::host_type() {
+void ers::Context::build_host_type() {
     std::ostringstream plateform_s ;
 #if defined(__linux__) 
     plateform_s << "linux" ; 
@@ -129,8 +137,16 @@ std::string ers::Context::host_type() {
 #if defined(sparc) || defined(__sparc)   
     plateform_s << "Sparc" ; 
 #endif
-    
-    return plateform_s.str();
+   s_host_type=  plateform_s.str();
+} // build_host_type
+
+/** Tries to gues the host name 
+  * \return a string describing the host, in the form <var>architecture</var>-<var>operating-system</var>
+  */
+
+std::string & ers::Context::host_type() {
+    if (s_host_type.empty()) build_host_type() ; 
+    return s_host_type ; 
 } // plateform
 
 

@@ -69,7 +69,7 @@ const char* const Issue::ISSUE_CLASS_NAME = "ers::issue" ;
   */
 
 Issue::Issue() {
-    m_human_description = "" ; 
+    m_human_description.clear() ; 
     m_cause = 0 ; 
 } // Issue
 
@@ -80,8 +80,8 @@ Issue::Issue() {
   */ 
 
 Issue::Issue(const Issue &issue) : std::exception() {
-    this->m_human_description = issue.m_human_description ;
-    this->m_value_table = issue.m_value_table ;
+    m_value_table = issue.m_value_table ;
+    m_human_description = issue.m_human_description ; 
     if (issue.m_cause) {
 	this->m_cause = issue.m_cause->clone(); 
     } else {
@@ -96,7 +96,7 @@ Issue::Issue(const Issue &issue) : std::exception() {
 Issue::Issue(const string_map_type &values) {
     cause(); 
     set_values(values); 
-    m_human_description = this->get_value(MESSAGE_KEY) ; 
+    m_human_description.clear();
 } // Issue
 
 
@@ -160,7 +160,8 @@ Issue *Issue::clone() const {
 
 
 Issue::operator std::string() const {
-    return m_human_description ;
+    std::string s = human_description();
+    return s ;
 } // std::string()
 
 /** Copy operator 
@@ -184,6 +185,17 @@ bool Issue::operator==(Issue other) {
     if (m_cause == other.m_cause) return true ; 
     return (*m_cause) == *(other.m_cause) ; 
 } // operator==
+
+/** Array access operator 
+  * \param key the resolve
+  * \return string containing value
+  * \see get_value(const std::string &)
+  */
+
+const std::string & Issue::operator[](const std::string &key) const throw() {
+    return get_value(key);
+} // operator[]
+
 
 
 // ====================================================
@@ -265,15 +277,15 @@ const string_map_type* Issue::get_value_table() const {
  * @return the string value for the key and empty string if the key is not found
  */
 
-const std::string Issue::get_value(const std::string &key) const {
+const std::string &Issue::get_value(const std::string &key) const throw() {
     string_map_type::const_iterator pos = m_value_table.find(key);
     if (pos!=m_value_table.end()) {
         return pos->second ; 
     } // if
-    return "";
+    return ers::Core::empty_string;
 } // get_value
 
-int Issue::get_int_value(const std::string &key) const {
+int Issue::get_int_value(const std::string &key) const throw() {
     std::string v = get_value(key) ; 
     return atoi(v.c_str()); 
 } // get_int_value
@@ -294,7 +306,6 @@ int Issue::values_number() const {
 
 void Issue::set_values(const string_map_type &values) throw() {
     m_value_table = values ;
-    m_human_description=build_human_description();
 } // load_values
 
 /** Set a numerical value in the value table
@@ -431,19 +442,9 @@ void Issue::finish_setup(const std::string &message) throw() {
     set_value(CPP_CLASS_KEY,class_name); 
     set_value(CLASS_KEY, get_class_name()) ;
     set_value(MESSAGE_KEY,message); 
-    m_human_description=build_human_description();
 } // finish_setup
 
-/** Builds a human readable description of the Issue.
-* This is done using the human_Stream class. 
-* @return A string containing the human description. 
-* @see Human_Stream
-*/
 
-std::string Issue::build_human_description() const throw() {
-    std::string message = HumanStream::to_string(this); 
-    return message ;
-} // buildmm_human_description
 
 // ====================================================
 // Field Access Methods
@@ -531,7 +532,10 @@ int Issue::transience() const throw () {
  * @return human description of the Issue 
  */
 
-const std::string Issue::human_description() const throw()  {
+const std::string &Issue::human_description() const throw()  {
+    if (m_human_description.empty()) {
+	 m_human_description = HumanStream::to_string(this) ; 
+    } 
     return m_human_description ; 
 }  // human_description
 
@@ -541,10 +545,11 @@ const std::string Issue::human_description() const throw()  {
   */
 
 const char *Issue::what() const throw() {
-    return m_human_description.c_str(); 
+    std::string desr = human_description() ; 
+    return desr.c_str(); 
 } // what();  
 
-const std::string Issue::message() const throw() {
+const std::string &Issue::message() const throw() {
     return get_value(MESSAGE_KEY) ; 
 } // message
 

@@ -9,6 +9,7 @@
 const char* const ers::Core::SEVERITY_NAMES[] = { "none", "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "maximum (illegal)" } ;
 const char* const ers::Core::BOOLEAN_NAMES[] = { "false", "true" } ; 
 const char* const ers::Core::RESPONSIBILITY_NAMES[] = { "precondition", "internal", "subSystem" } ; 
+const std::string ers::Core::empty_string = "" ;
 
 /** 
  * \brief Transforms a severity type into the corresponding string
@@ -109,7 +110,7 @@ const char* ers::Core::to_string(bool b) throw () {
   */
 
 std::string ers::Core::parse_prefix_string(const char **ptr) throw() {
-    if (ptr==0 || *ptr==0 || **ptr=='\0') return "" ; 
+    if (ptr==0 || *ptr==0 || **ptr=='\0') return ers::Core::empty_string ; 
     int l = 0 ; 
     while(isdigit(**ptr)) { // we parse the integer 
 	l*=10 ;
@@ -130,7 +131,7 @@ std::string ers::Core::parse_prefix_string(const char **ptr) throw() {
   */
 
 std::string ers::Core::umangle_gcc_class_name(const char* name) throw() {
-    if (name==0 || strlen(name)==0) return "" ; 
+    if (name==0 || strlen(name)==0) return ers::Core::empty_string ; 
     const char *ptr = name ; 
     std::ostringstream stream ; 
     while (*ptr=='P') { // pointers are denoted with P

@@ -39,7 +39,7 @@ std::string to_string(const XMLCh* data) {
 	XMLString::release(&c_tag);
 	return str ; 
     } else {
-	return "" ; 
+	return ers::Core::empty_string ; 
     } // if data
 } // to_string
 

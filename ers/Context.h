@@ -23,34 +23,43 @@ namespace ers {
   * - compilation date and time
   * - compilator type 
   *
-  * The current context can be obtained using the macro ERS_HERE
+  * The current context can be obtained using the macro \c ERS_HERE
+  * An empty context can be obtained using the macro \c ERS_EMPTY
+  *
   * \author Matthias Wiesmann
-  * \version 1.0 
+  * \version 1.1 - now returns references 
   * \brief Source context for Issue. 
+  * \note it should be possible to optimize out the compilation text string, have only one default instance if 
+  *       all the code share the same info. This would save some memory space. 
   */
  
 class Context {
 protected:
     static Context* empty_instance ; 
-    std::string file_name ;          /**< source file-name */
-    int line_number ;                /**< source line-number */
-    std::string function_name ;      /**< source function name (can be pretty printed or not) */
-    std::string compiler_name ;      /**< compiler name */
-    std::string compiler_version ;   /**< compiler version */
-    std::string compilation_date ;   /**< compilation date */
-    std::string compilation_time ;   /**< compilation time */
+    static std::string s_host_type ;   /**< host_type */
+    std::string m_file_name ;          /**< source file-name */
+    int m_line_number ;                /**< source line-number */
+    std::string m_function_name ;      /**< source function name (can be pretty printed or not) */
+    std::string m_compiler_name ;      /**< compiler name */
+    std::string m_compiler_version ;   /**< compiler version */
+    std::string m_compilation_date ;   /**< compilation date */
+    std::string m_compilation_time ;   /**< compilation time */
+    mutable std::string m_compiler ;   /**< compilation string (cache) */
+    mutable std::string m_position ;   /**< code position (cache) */
+    mutable std::string m_compilation ; /**< compilation (cache) */
+    static void build_host_type() ;
 public:
     static const Context* empty() ;
     Context(const std::string &filename, int line_number, const std::string &function_name, 
 	    const std::string &compiler_name, const std::string &compiler_version, 
 	    const std::string &compilation_time, const std::string &compilation_date) ;
-    std::string file() const ;       /**< \return file-name */
-    int line() const ;               /**< \return line-number */
-    std::string function() const ;   /**< \return function name */
-    std::string position() const ;   /**< \return position (i.e file+line+function) */
-    std::string compiler() const ;   /**< \return compiler (compiler-name + compiler-version) */
-    std::string compilation() const ; /**< \return compilation time and date */
-    static std::string host_type() ; /**< \brief type of target host */
+    const std::string & file() const ;       /**< \return file-name */
+    int line() const ;                       /**< \return line-number */
+    const std::string & function() const ;   /**< \return function name */
+    const std::string & position() const ;   /**< \return position (i.e file+line+function) */
+    const std::string & compiler() const ;   /**< \return compiler (compiler-name + compiler-version) */
+    const std::string & compilation() const ; /**< \return compilation time and date */
+    static std::string & host_type()  ; /**< \brief type of target host */
 } ; // Context
 
 } // ers 

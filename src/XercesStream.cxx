@@ -157,7 +157,7 @@ bool ers::XercesStream::handleError(const DOMError& domError) {
   */
 
 std::string ers::XercesStream::get_text(const DOMNode *node) {
-    if (0==node) return "" ; 
+    if (0==node) return ers::Core::empty_string ; 
     const XMLCh* data = node->getNodeValue(); 
     if (data) return to_string(data); 
     return "" ; 

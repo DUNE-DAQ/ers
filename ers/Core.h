@@ -35,6 +35,7 @@ namespace ers {
 	static const char* const RESPONSIBILITY_NAMES[] ; 
 protected:
 public:
+	static const std::string empty_string ;
 	static ers_severity parse_severity(const char *s) throw() ;                     /**< \brief string to severity */
 	static ers_severity parse_severity(const std::string &s) throw() ;              /**< \brief string to severity */
 	static const char* to_string(ers_severity s) throw() ;                          /**< \brief severity to string */

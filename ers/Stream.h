@@ -15,7 +15,6 @@
 
 #include "ers/Core.h"
 #include "ers/Context.h"
-#include "system/File.h"
 
 namespace ers {
     

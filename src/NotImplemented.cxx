@@ -36,7 +36,7 @@ std::string ers::NotImplemented::build_message(const char* condition_text, const
     std::ostringstream message_stream ;
     (void) constant_expression ; 
     message_stream << "Function in " << condition_text ;
-    if (message!="") {
+    if (! message.empty()) {
 	message_stream << "(" << message << ")" ; 
     }
     message_stream << " is not implemented" ;

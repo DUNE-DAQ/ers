@@ -1,6 +1,6 @@
 /*
  *  EntityNotFoundIssue.h
- *  Test
+ *  ers
  *
  *  Created by Matthias Wiesmann on 09.02.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -16,7 +16,7 @@ namespace ers {
 protected:
 	EntityNotFoundIssue(const ers::Context &c, ers::ers_severity s) ; 
 public:
-	static const char* const CLASS_NAME ; 
+	static const char* const CLASS_NAME ;            /**< \brief Class name */
 	static const char* const ENTITY_NAME_KEY ; 
 	static const char* const ENTITY_TYPE_KEY ; 
 	static const char* const ENTITY_CONTEXT_KEY ;
