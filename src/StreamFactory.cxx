@@ -146,8 +146,8 @@ ers::Stream *ers::StreamFactory::create_stream(const std::string &key) {
     if (colon==std::string::npos) {
     	protocol = key ; 
     } else {
-        protocol = key.substr(0,colon-1) ; 
-	uri = key.substr(colon) ; 
+        protocol = key.substr(0,colon) ; 
+	uri = key.substr(colon+1) ; 
     } 
     for(stream_factory_collection::const_iterator pos=m_factories.begin();pos!=m_factories.end();++pos) {
 	create_stream_callback callback = pos->second; 
