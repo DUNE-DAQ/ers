@@ -33,9 +33,12 @@ namespace ers {
     ers_responsibility parse_responsibility(const std::string &s) ;
     int parse_boolean(const char* s) ; 
     const char* get_boolean(bool b); 
-    static const char* XML_ISSUE_TAG ="issue" ; 
-    static const char* XML_KEY_TAG = "key" ; 
-    static const char* XML_STRING_VALUE_TAG = "string" ; 
+    class Core {
+    	public:
+    	static const char* XML_ISSUE_TAG  ; 
+    	static const char* XML_KEY_TAG  ; 
+    	static const char* XML_STRING_VALUE_TAG  ; 
+    } ; // Core
 }
 
 #endif

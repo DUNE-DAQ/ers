@@ -44,3 +44,5 @@ ers::IssueFactoryIssue::IssueFactoryIssue(const Context &context, ers_severity s
 
 
 const char *ers::IssueFactoryIssue::get_class_name() const throw() { return CLASS_NAME ; }
+
+

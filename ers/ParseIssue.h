@@ -40,3 +40,4 @@ public:
 #define ERS_PARSE_ERROR(message,...) ParseIssue(ERS_HERE,ers::ers_error,__VA_ARGS__) 
 
 #endif
+

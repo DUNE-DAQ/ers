@@ -86,4 +86,11 @@ const char* ers::get_boolean(bool b) {
     return boolean_names[index] ;
 } // get_boolean
 
+const char* ers::Core::XML_ISSUE_TAG = "issue" ; 
+const char* ers::Core::XML_KEY_TAG = "key" ; 
+const char* ers::Core::XML_STRING_VALUE_TAG = "string" ; 
+
+
+
+
 

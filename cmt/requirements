@@ -16,7 +16,7 @@ use system
 
 #use xercesc	TDAQExternal
 
-macro lib_ers_cppflags	                "-I../ers -I../../../system/ -I$(xercesc_home_linux)/rh73_gcc323/include/"
+macro lib_ers_cppflags	                "-I../ers -I$(xercesc_home_linux)/rh73_gcc323/include/"
 
 private
 	

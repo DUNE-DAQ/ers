@@ -21,9 +21,10 @@ XERCES_CPP_NAMESPACE_USE
 namespace ers {
     
     /** 
-    * \author Matthias Wiesmann
-    * \version 1.0 
-    */
+      * This clas represents a stream that reads and writes Issues to an XML stream using the Xerces XML Framework 
+      * \author Matthias Wiesmann
+      * \version 1.0 
+      */
     
     class XercesStream : public Stream , public DOMErrorHandler {
 	

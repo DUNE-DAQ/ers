@@ -42,3 +42,4 @@ public:
 #define ERS_ISSUE_FACTORY_ERROR(name,message) IssueFactoryIssue(ERS_HERE,ers::ers_error,name,message) 
 
 #endif
+
