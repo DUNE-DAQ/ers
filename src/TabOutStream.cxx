@@ -13,12 +13,22 @@
 #include "ers/Precondition.h"
 #include "ers/InvalidReferenceIssue.h"
 
+ers::TabOutStream::TabOutStream() : ers::STLOutStream() {} 
+ers::TabOutStream::TabOutStream(const char* filename) : ers::STLOutStream(filename) {} 
+ers::TabOutStream::TabOutStream(const std::string & filename) : ers::STLOutStream(filename) {} 
+ers::TabOutStream::TabOutStream(const ers::File & file) : ers::STLOutStream(file) {} 
 
-ers::TabOutStream::TabOutStream(const char* filename) : ers::STLOutStream(filename) {
-} // TabOutStream
-
-ers::TabOutStream::TabOutStream() : ers::STLOutStream() {
-} // TabOutStream
+/** Serializes a key-value pair. 
+  * This is done by: 
+  * - printing the key
+  * - printing a tabulation character
+  * - printing a opening quote "
+  * - printing the value 
+  * - printing a closing quote "
+  * - printing a carriage return
+  * \param key the key to serialize
+  * \param value the value to serialize
+  */
 
 void ers::TabOutStream::serialize(const std::string &key, const std::string &value) {
     ERS_PRE_CHECK_PTR(m_stream);
@@ -29,6 +39,13 @@ void ers::TabOutStream::serialize_start(const Issue *i) {
     ERS_PRE_CHECK_PTR(m_stream);
 } // serialize_start
 
+/** Finishes the serialization
+  * As this serialization method does not support for serializing causes, 
+  * it adds a pseudo key with the description of the cause. 
+  * \param i the issue to serialize
+  * \bug at the moment cause exceptions are not supported, and the root exception adds the cause property by itself
+  */
+
 void ers::TabOutStream::serialize_end(const Issue *i) {
     ERS_PRE_CHECK_PTR(m_stream);
     const std::exception *cause = i->cause() ; 
@@ -36,6 +53,7 @@ void ers::TabOutStream::serialize_end(const Issue *i) {
 	printf("%s %p\n",cause->what(),&cause); 
 	*m_stream << Issue::CAUSE_PSEUDO_KEY << "\t\"" << cause->what() << "\"" << std::endl ; 
     } // cause
+    *m_stream << std::endl ; 
 } // serialize_end
 
 

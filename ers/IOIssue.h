@@ -25,8 +25,10 @@ namespace ers {
 protected:
 	IOIssue(const Context &c, ers_severity s, const std::exception *cause);
 	IOIssue(const Context &c, ers_severity s);
+	void file_descriptor(int fd); 
 public:
 	static const char *IO_ISSUE_CLASS ; 
+	static const char *POSIX_IO_FD_KEY ; 
 	IOIssue(); 
 	IOIssue(const Context &c, ers_severity s, const std::string &message) ; 
 	IOIssue(const Context &c, ers_severity s, const std::string &message, const std::exception *cause) ; 

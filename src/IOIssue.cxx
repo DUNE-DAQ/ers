@@ -12,6 +12,7 @@
 #include "ers/Precondition.h"
 
 const char* ers::IOIssue::IO_ISSUE_CLASS = "ers::IOIssue" ; 
+const char* ers::IOIssue::POSIX_IO_FD_KEY = "POSIX_FD" ; 
 
 namespace {
     ers::Issue *create_io_issue() { return new ers::IOIssue();  } 
@@ -36,6 +37,12 @@ ers::IOIssue::IOIssue(const Context &c, ers_severity s, const std::string &messa
     full_message_str << message << ", " << severity_message() << ":" << f->what() << ": " << posix_message() ; 
     this->finish_setup(full_message_str.str()); 
 } // IOIssue
+
+void ers::IOIssue::file_descriptor(int fd) {
+    set_value(POSIX_IO_FD_KEY,fd);
+} // file_descriptor
+
+
 
 const char *ers::IOIssue::get_class_name() const throw() {
     return ers::IOIssue::IO_ISSUE_CLASS ; 

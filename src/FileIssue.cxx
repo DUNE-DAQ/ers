@@ -24,10 +24,12 @@ namespace {
 ers::FileIssue::FileIssue() : ers::IOIssue() { } // FileIssue
 
 ers::FileIssue::FileIssue(const Context &c, ers_severity s, const char *p) : ers::IOIssue(c,s) {
+    transience(false); 
     path(p); 
 }  // FileIssue
 
 ers::FileIssue::FileIssue(const Context &c, ers_severity s, const char *p, const std::exception *cause) : ers::IOIssue(c,s,cause) {
+    transience(false); 
     path(p); 
 } // FileIssue
 
@@ -47,6 +49,7 @@ ers::FileIssue::FileIssue(const Context &c, ers_severity s, const std::string &m
 
 void ers::FileIssue::setup_file_issue(const std::string &message, const char* p) {
     path(p); 
+    transience(false); 
     std::ostringstream full_message_str ;
     full_message_str << message << ", " << severity_message() << " for file '" << p << "': " << posix_message() ; 
     this->finish_setup(full_message_str.str()); 

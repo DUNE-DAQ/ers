@@ -80,7 +80,7 @@ Issue::Issue(const Issue &issue){
 } // Issue
 
 /** Builds an Issue out of a value table
-  * @param values table of values for the issue
+  * \param values table of values for the issue
   */
 
 Issue::Issue(const string_map_type &values) {
@@ -91,10 +91,10 @@ Issue::Issue(const string_map_type &values) {
 
 
 /** Constructor 
-* @param m message of the Issue
-* @param s severity of the Issue 
-* @param file file where Issue occured 
-* @param line line where Issue occured 
+* \param m message of the Issue
+* \param s severity of the Issue 
+* \param file file where Issue occured 
+* \param line line where Issue occured 
 */
 
 Issue::Issue(const Context &context, ers_severity s, const std::string &m) {
@@ -114,8 +114,8 @@ Issue::Issue(const Context &context, ers_severity s) {
 
 /** Constructor - takes another exceptions as the cause for the current exception.
  * 
- * @param s the severity of the exception
- * @param cause the exception that caused the current Issue
+ * \param s the severity of the exception
+ * \param cause the exception that caused the current Issue
  */
 
 Issue::Issue(const Context &context, ers_severity s, const std::exception *cause_exception) {
@@ -138,7 +138,7 @@ const string_map_type* Issue::get_value_table() const {
 } // get_value_table
 
 /** General method for querying properties of the Issue 
-* @param key the key to lookup
+* \param key the key to lookup
 * @return the string value for the key and empty string if the key is not found
 */
 
@@ -150,21 +150,37 @@ const std::string Issue::get_value(const std::string &key) const {
     return "";
 } // get_value
 
+int Issue::values_number() const {
+    return m_value_table.size(); 
+} // values_number
+
+
 /** Sets the value table 
- * @param value the value table to load
+ * \param value the value table to load
  */
 
 void Issue::set_values(const string_map_type &values) {
     m_value_table = values ;
 } // load_values
 
+/** Set a numerical value in the value table
+  * \param key the key to insert
+  * \param value the value to insert
+  */
+
+
+void Issue::set_value(const std::string &key, long value) {
+    std::ostringstream stream ;
+    stream << value ; 
+    m_value_table[key] = stream.str();
+} // set_value
 
 // ====================================================
 // Insertions Methods
 // ====================================================
 
 /** Inserts the context of the issue into the issue 
-* @param context pointer to context object
+* \param context pointer to context object
 */
 
 void Issue::insert(const Context *context) {
@@ -226,8 +242,8 @@ void Issue::insert_pwd() {
 } // insert_pwd
 
 /** Inserts a environnement variable into the issue 
-* @param env_key name of the environnement variable
-* @param issue_key key used to store the resulting value into the value table 
+* \param env_key name of the environnement variable
+* \param issue_key key used to store the resulting value into the value table 
 */
 
 void Issue::insert_env(const char*env_key, const char* issue_key) {
@@ -252,7 +268,7 @@ void Issue::insert_env(const char*env_key, const char* issue_key) {
 * \li Process id
 * \li OS and processor of the host
 *
-* @param context context where the exception occured, this should be the ERS_HERE macro. 
+* \param context context where the exception occured, this should be the ERS_HERE macro. 
 */
 
 void Issue::setup_common(const Context *context) {
@@ -270,7 +286,7 @@ void Issue::setup_common(const Context *context) {
   * In particular, in fills in the human message and the class type fields 
   * (those fields are not available until the end of the object construction.
   * @note this method should be called by the sub-class constructor, so that RTTI information is setup and correct. 
-  * @param message human readable message 
+  * \param message human readable message 
   */
 
 void Issue::finish_setup(const std::string &message) {
@@ -317,7 +333,7 @@ ers_severity Issue::severity() const throw() {
 } // severity
 
 /** Set the severity of the Issue 
- * @param s the severity level 
+ * \param s the severity level 
  */
 
 void Issue::severity(ers_severity s) {
@@ -339,7 +355,7 @@ ers_responsibility Issue::responsibility() const throw() {
 } // responsability
 
 /** Sets the responsbility of the Issue
-* @param r the responsibility type
+* \param r the responsibility type
 */
 
 void Issue::responsibility(ers_responsibility r) {
@@ -348,7 +364,7 @@ void Issue::responsibility(ers_responsibility r) {
 
 
 /** Sets the transience of the issue 
-  * @param tr true if the issue is transient, false if not
+  * \param tr true if the issue is transient, false if not
   */
 
 void Issue::transience(bool tr) {
@@ -404,8 +420,8 @@ Issue::operator std::string() const {
 
 
 /** Standard Streaming operator - puts the human description into the Stream. 
-  * @param Stream the destination Stream 
-  * @param Issue the Issue to Stream
+  * \param Stream the destination Stream 
+  * \param Issue the Issue to Stream
   * @see Issue::human_description()
   */
 
@@ -414,8 +430,8 @@ std::ostream& ers::operator<<(std::ostream& s, const Issue& i) {
 } // operator<<
 
 /** Sends the Issue into a Stream 
-  * @param Stream the Stream to send the Issue into
-  * @param Issue the Issue to send
+  * \param Stream the Stream to send the Issue into
+  * \param Issue the Issue to send
   * @return the Stream
   * @see serialize_to() 
   */

@@ -34,3 +34,4 @@ void ers::RenameFail::destination(const char* dst) {
 const char *ers::RenameFail::get_class_name() const throw() {
     return ers::RenameFail::CLASS_NAME ; 
 } // UnlinkFail
+

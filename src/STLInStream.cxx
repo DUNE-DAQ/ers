@@ -10,6 +10,7 @@
 #include "ers/STLInStream.h"
 #include "ers/Issue.h"
 #include "ers/IssueFactory.h"
+#include "ers/File.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/OpenFail.h"
@@ -23,15 +24,17 @@ ers::STLInStream::STLInStream(std::istream *s) {
 } // STLInStream
 
 ers::STLInStream::STLInStream(const char* filename) {
-    ERS_PRE_CHECK_PTR(filename); 
-    try {
-	this->m_stream = new std::ifstream(filename) ; 
-	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
-	m_delete_stream = true ; 
-    } catch (std::ios_base::failure &ex) {
-	throw ERS_OPEN_READ_FAIL(filename,&ex); 
-    } // catch
+    open(filename);
 } // STLInStream
+
+ers::STLInStream::STLInStream(const std::string &filename) {
+    open(filename.c_str());
+} // STLInStream
+
+ers::STLInStream::STLInStream(const ers::File& file) {
+    open(file.full_name().c_str());
+} // STLInStream
+
 
 ers::STLInStream::STLInStream() {
 } // STLInStream
@@ -43,6 +46,18 @@ ers::STLInStream::~STLInStream() {
     } // if 
     m_stream = 0 ; 
 } // ~STLInStream
+
+void ers::STLInStream::open(const char* filename) {
+    ERS_PRE_CHECK_PTR(filename); 
+    try {
+	this->m_stream = new std::ifstream(filename) ; 
+	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
+	m_delete_stream = true ; 
+    } catch (std::ios_base::failure &ex) {
+	throw ERS_OPEN_READ_FAIL(filename,&ex); 
+    } // catch
+} // open
+
 
 /** This method implements the core of the deserialisation for Issues
   * It calls the abstract method \c read_properties to get the value table for the issue and builds it.

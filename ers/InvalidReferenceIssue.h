@@ -27,11 +27,11 @@ protected:
 	void pointer(const void *p); 
 	InvalidReferenceIssue(const Context &context, ers_severity s) ; 
 public:
-	const static char* CLASS ; 
-	const static char* REFERENCE_VALUE_KEY ;
-	const static char* REFERENCE_TYPE_KEY ; 
-	const static char* REFERENCE_NAME_KEY ; 
-	const static char* REFERENCE_C_PTR_TYPE ; 
+	static const char* CLASS ; 
+	static const char* REFERENCE_VALUE_KEY ;
+	static const char* REFERENCE_TYPE_KEY ; 
+	static const char* REFERENCE_NAME_KEY ; 
+	static const char* REFERENCE_C_PTR_TYPE ; 
 	InvalidReferenceIssue() ;
 	InvalidReferenceIssue(const Context &context, ers_severity s, const void* pointer, const std::string &message, ers_responsibility r = ers_resp_unknown) ; 
 	virtual const char*get_class_name() const throw() ;

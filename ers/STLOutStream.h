@@ -11,6 +11,7 @@
 #define ERS_STL_OUT_STREAM
 
 #include "ers/Stream.h"
+#include "ers/File.h"
 #include <iostream>
 #include <fstream>
 
@@ -29,11 +30,14 @@ protected:
 	virtual void serialize_start(const Issue *i) ; /**< \brief serialise the start of an issue */
 	virtual void serialize_end(const Issue *i) ;   /**< \brief serialise the end of an issue */
 	virtual void serialize(const std::string &key, const std::string &value) = 0 ; /**< \brief serialise a key / value pair */
+	void open(const char* filename); 
 public:
 	void send(const Issue *i) ; 
 	Issue *receive() ; 
 	STLOutStream(std::ostream *s);
 	STLOutStream(const char* filename) ; 
+	STLOutStream(const std::string &filename); 
+	STLOutStream(const ers::File &file); 
 	STLOutStream(); 
 	~STLOutStream() ; 
     } ; // Stream_Stream

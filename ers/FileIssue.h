@@ -16,6 +16,7 @@ namespace ers {
     
     /** This class represents POSIX file issues.
       * It is basically a Posix Issue with an additional tag containing a file path 
+      * All file issues are considered non-transient by default 
       * \author Matthias Wiesmann
       * \version 1.0 
       */

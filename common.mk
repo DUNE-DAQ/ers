@@ -11,23 +11,28 @@ BINARY_DIR  = ${INSTALL_DIR}/${BUILD}/bin
 
 LIB_PATH =  -L${LIBRARY_DIR} -L${BUILD}/ 
 
-CC      = ${GPP} ${CCFLAGS} ${INCLUDES}
+CC      = ${GPP} -DTIXML_USE_STL ${CCFLAGS} ${INCLUDES}
 LD		= g++ ${LIB_PATH} ${LIBS}
 
 ERS_HEADS = ers/Core.h  ers/Context.h \
-	 ers/Issue.h ers/IssueFactory.h \
+	 ers/Issue.h ers/IssueFactory.h ers/LogIssue.h \
 	 ers/Assertion.h ers/Precondition.h ers/NotImplemented.h \
 	 ers/InvalidReferenceIssue.h ers/ParseIssue.h ers/IssueFactoryIssue.h \
 	 ers/PosixIssue.h ers/IOIssue.h ers/FileIssue.h \
 	 ers/OpenFail.h ers/GetWDFail.h \
 	 ers/FStatFail.h ers/UnlinkFail.h \
 	 ers/RenameFail.h ers/ChmodFail.h \
+	 ers/ExecFail.h ers/ForkFail.h \
+	 ers/AllocIssue.h ers/MMapFail.h \
 	 ers/Stream.h ers/SyncStream.h  \
 	 ers/STLInStream.h ers/STLOutStream.h \
 	 ers/TabInStream.h ers/TabOutStream.h \
-	 ers/XMLOutStream.h ers/HumanStream.h \
-	 ers/File.h
+	 ers/XMLStream.h ers/HumanStream.h \
+	 ers/File.h ers/Executable.h ers/MapFile.h \
+	 ers/tinystr.h ers/tinyxml.h \
+	 ers/tinyxmlerror.h ers/tinyxmlparser.h \
 	 
+
 ERS_UTIL_HEADS = util/File.h
 	 
 ERS_SRCS = ${ERS_HEADS:ers/%.h=src/%.cxx}
@@ -43,10 +48,22 @@ all:   ${BINARY_BUILD}/test
 ${BUILD}/${LIB_NAME}: ${LIB_OBJS}
 	${LD} -dynamiclib ${LIB_OBJS} -dynamic-library -install_name ${LIB_NAME} -o $@
 	
+${BUILD}/tinystr.o: src/tinystr.cxx ers/tinystr.h
+	${CC} -I../ers -Iers $< -c -o $@
+	
+${BUILD}/tinyxml.o: src/tinyxml.cxx ers/tinyxml.h
+	${CC} -I../ers -Iers $< -c -o $@
+	
+${BUILD}/tinyxmlerror.o: src/tinyxmlerror.cxx ers/tinyxml.h
+	${CC} -I../ers -Iers $< -c -o $@
+	
+${BUILD}/tinyxmlparser.o: src/tinyxmlparser.cxx ers/tinyxml.h
+	${CC} -I../ers -Iers $< -c -o $@
+	
 ${BUILD}/Context.o: src/Context.cxx ers/Context.h
 	${CC} $< -c -o $@
 	
-${BUILD}/util.o: src/util.cxx ers/util.h
+${BUILD}/Core.o: src/Core.cxx ers/Core.h
 	${CC} $< -c -o $@
 	
 ${BUILD}/IssueFactory.o: src/IssueFactory.cxx ers/IssueFactory.h

@@ -39,3 +39,5 @@ void ers::ChmodFail::permissions(mode_t p) {
 const char *ers::ChmodFail::get_class_name() const throw() {
     return ers::ChmodFail::CLASS_NAME ; 
 } // UnlinkFail
+
+

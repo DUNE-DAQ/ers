@@ -36,3 +36,5 @@ ers::Issue *ers::SyncStream::receive() {
     NOT_IMPLEMENTED();
     return 0 ; 
 } // receive
+
+

@@ -35,6 +35,10 @@
 #define NOTHING_CHAR_CODE '-' 
 #define SETUID_CHAR_CODE 'S' 
 
+#define KILOBYTE (1024)
+#define MEGABYTE (1024*KILOBYTE)
+#define GIGABYTE (1024*MEGABYTE)
+
 /** \return a string containing the working directory for the process */
 
 std::string ers::File::working_directory() {
@@ -101,6 +105,29 @@ std::string ers::File::pretty_open_flag(int flags) {
     return flag_str.str();
 } // pretty_open_permission
 
+std::string ers::File::pretty_size(size_t size, bool cut_small) {
+    std::ostringstream size_str ;
+    bool writen_something = false ; 
+    if (size>GIGABYTE) {
+	const int gb = size / GIGABYTE ; 
+	size = size % GIGABYTE ; 
+	size_str << gb << " GB"  ;
+	writen_something = true ; 
+    } // GIGABYTE
+    if (size>MEGABYTE && ! (cut_small && writen_something)) {
+	if (writen_something) { size_str << " " ; } 
+	const int mb = size / MEGABYTE ;
+	size = size % MEGABYTE ; 
+	size_str << mb << " MB" ;
+	writen_something = true ; 
+    }
+    if (! (cut_small && writen_something)) {
+	if (writen_something) { size_str << " " ; } 
+	size_str << size << " B" ;
+    } // if
+    return size_str.str(); 
+} // pretty_size
+
 /** Constructor 
   * \note This method does not create a file, it simply builds an object describing a file 
   */
@@ -130,7 +157,7 @@ void ers::File::set_name(const std::string &name) {
     if (name.substr(0,1)=="/") { // absolute path
 	m_full_name = name ; 
     } else {
-	m_full_name = working_directory() + name ; 
+	m_full_name = working_directory() + "/" + name ; 
     }
 } // set_name
 
@@ -204,6 +231,39 @@ size_t ers::File::size() const {
     throw ERS_FSTAT_ERROR(m_full_name.c_str());
 } // size 
 
+/** \return the user-id of the owner of the file
+  * \exception ers::IOIssue if an error occurs or the file does not exist 
+  */
+
+uid_t ers::File::owner() const {
+    struct stat file_status ; 
+    const int result = stat(m_full_name.c_str(),&file_status);
+    if (0==result) return file_status.st_uid ;
+    throw ERS_FSTAT_ERROR(m_full_name.c_str());
+} // owner
+
+/** \return the group-id of the group of the file
+  * \exception ers::IOIssue if an error occurs or the file does not exist 
+  */
+
+gid_t ers::File::group() const {
+    struct stat file_status ; 
+    const int result = stat(m_full_name.c_str(),&file_status);
+    if (0==result) return file_status.st_gid ;
+    throw ERS_FSTAT_ERROR(m_full_name.c_str());
+} // owner
+
+bool ers::File::is_regular() const {
+    const mode_t mode = permissions() ;
+    return (mode & S_IFREG) ; 
+} // is_regular
+
+bool ers::File::is_directory() const {
+    const mode_t mode = permissions() ;
+    return (mode & S_IFDIR) ; 
+} // is_regular
+
+
 /** Unlinks (i.e deletes) a file. 
   * \exception ers::IOIssue if an error occurs or the file does not exist 
   */
@@ -244,7 +304,7 @@ void ers::File::permissions(mode_t permissions) {
   * \exception ers::IOIssue if an error occurs or the file does not exist 
   */
 
-ers::File::operator std::istream*() const {
+std::istream* ers::File::input() const {
     try {
 	std::ifstream *stream = new std::ifstream(m_full_name.c_str()) ; 
 	stream->exceptions(std::ios::failbit | std::ios::badbit); 
@@ -260,7 +320,7 @@ ers::File::operator std::istream*() const {
  * \exception ers::IOIssue if an error occurs or the file does not exist 
  */
     
-ers::File::operator std::ostream*() const {
+std::ostream* ers::File::output() const {
     try {
 	std::ofstream *stream = new std::ofstream(m_full_name.c_str()) ; 
 	stream->exceptions(std::ios::failbit | std::ios::badbit); 

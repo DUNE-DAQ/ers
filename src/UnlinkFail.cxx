@@ -24,3 +24,5 @@ ers::UnlinkFail::UnlinkFail(const Context &c,const char *p) : FileIssue(c,ers_er
 const char *ers::UnlinkFail::get_class_name() const throw() {
     return ers::UnlinkFail::CLASS_NAME ; 
 } // UnlinkFail
+
+

@@ -26,6 +26,8 @@ protected:
 public: 
 	virtual bool read_properties(string_map_type *values) ; /**< \brief loads key and values into a value_table */
 	TabInStream(const char* filename) ;                     /**< \brief Builds a Tab format stream that reads from a file */
+	TabInStream(const std::string &filename) ;
+	TabInStream(const ers::File &file); 
 	TabInStream();                                          /**< \brief Builds a Tab format stream that reads from stdin */
     } ; // TabInStream
     

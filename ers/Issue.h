@@ -79,6 +79,8 @@ public:
 	Issue(const Context &context, ers_severity s, const std::string &message);   
         Issue(const Context &context, ers_severity s, const std::exception *cause); 
 	const std::string get_value(const std::string &key) const ;   /**< \brief Reads the property list. */
+	int values_number() const ; 
+	void set_value(const std::string &key, long value); 
 	virtual const char *get_class_name() const throw() ;          /**< \brief Get key for class (used for serialisation)*/
 	const string_map_type* get_value_table() const ; 
         ers_severity severity() const throw()  ;

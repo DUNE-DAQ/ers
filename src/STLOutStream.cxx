@@ -18,14 +18,15 @@
   */
 
 ers::STLOutStream::STLOutStream(const char* filename) {
-    ERS_PRE_CHECK_PTR(filename); 
-    try {
-	this->m_stream = new std::ofstream(filename) ; 
-	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
-	m_delete_stream = true ; 
-    } catch (std::ios_base::failure &ex) {
-	throw ERS_OPEN_WRITE_FAIL(filename,&ex); 
-    } // catch
+    open(filename);
+} // Stream_Stream
+
+ers::STLOutStream::STLOutStream(const std::string &filename) {
+    open(filename.c_str());
+} // Stream_Stream
+
+ers::STLOutStream::STLOutStream(const ers::File &file) {
+    open(file.full_name().c_str());
 } // Stream_Stream
 
 /** Builds an ERS stream that writes into a STL stream 
@@ -59,6 +60,18 @@ ers::STLOutStream::~STLOutStream() {
     } // if 
     m_stream = 0 ; 
 } // ~Stream_Stream
+
+
+void ers::STLOutStream::open(const char* filename) {
+    ERS_PRE_CHECK_PTR(filename); 
+    try {
+	this->m_stream = new std::ofstream(filename) ; 
+	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
+	m_delete_stream = true ; 
+    } catch (std::ios_base::failure &ex) {
+	throw ERS_OPEN_WRITE_FAIL(filename,&ex); 
+    } // catch
+} // open 
 
 /** Sends a issue on the stream.
   * This method serialises an issue in the following way:

@@ -26,6 +26,8 @@ protected:
     void serialize(const std::string &key, const std::string &value) ; 
 public: 
     TabOutStream(const char* filename) ;  /**< \brief Builds a Tab format stream that writes into a file */
+    TabOutStream(const std::string& filename) ; /**< \brief Builds a Tab format stream that writes into a file */
+    TabOutStream(const ers::File& file) ; /**< \brief Builds a Tab format stream that writes into a file */
     TabOutStream();                       /**< \brief Builds a Tab format stream that writes onto stderr */
    
 } ; // Tab_Stream
