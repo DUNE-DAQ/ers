@@ -24,7 +24,7 @@ namespace {
 	} // if
 	return 0 ;
     } // create_stream
-    bool registered = ers::StreamFactory::instance()->register_factory(ers::Stream::NULL_STREAM_KEY,create_stream) ;
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::FilterStream::FILTER_STREAM_TAG,create_stream) ;
 } // anonymous namespace 
 
 ers::FilterStream * ers::FilterStream::factory(const std::string &include_str, const::std::string &exclude_str, const std::string &target_str) {

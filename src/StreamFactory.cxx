@@ -344,6 +344,7 @@ ers::Stream* ers::StreamFactory::debug(severity_t s)  {
   */
 
 bool ers::StreamFactory::register_factory(const std::string &name, create_stream_callback callback) {
+    // std::cerr << "registering " << name << std::endl ; 
     m_factories[name] = callback ;
     return true  ;
 } // register_factory
