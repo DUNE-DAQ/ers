@@ -23,9 +23,9 @@ namespace ers {
     class NotImplemented : public Assertion {
 	
 protected:
-	virtual std::string build_message(const char* condition_text, const std::string &message, bool constant_expression = false) ; 
+	virtual std::string build_message(const char* condition_text, const std::string &message, bool constant_expression = false) throw() ; 
 public:
-	static const char* NOTIMPLEMENTED_CLASS ; 
+	static const char* const CLASS_NAME ; 
 	NotImplemented();
 	NotImplemented(const Context &context, ers_severity s) ;
 	virtual const char*get_class_name() const throw();

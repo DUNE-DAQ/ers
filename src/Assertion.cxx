@@ -23,9 +23,9 @@ namespace {
 /** Key for assertion condition description 
  */
 
-const char *ers::Assertion::ASSERT_CONDITION_KEY = "ASSERTION_CONDITION" ; 
+const char * const ers::Assertion::ASSERT_CONDITION_KEY = "ASSERTION_CONDITION" ; 
 
-const char *ers::Assertion::ASSERTION_CLASS_NAME = "ers::Assertion" ;
+const char * const ers::Assertion::ASSERTION_CLASS_NAME = "ers::Assertion" ;
 
 
 /** Empty constructor for deserialisation / factory 
@@ -72,7 +72,7 @@ const char* ers::Assertion::get_class_name() const throw (){
   * \return an human readable message 
   */
 
-std::string ers::Assertion::build_message(const char* condition_text, const std::string &message, bool constant_expression) {
+std::string ers::Assertion::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
     std::ostringstream m ;
     m << "Assertion '" << condition_text << "' failed: " << message ;
     if (constant_expression) {

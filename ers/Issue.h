@@ -39,30 +39,30 @@ namespace ers {
 	friend class Stream ; 
 	friend class IssueFactory ; 
 public:	
-	static const char *CLASS_KEY ;                               /**< \brief key for class information */
-	static const char *COMPILATION_TIME_KEY ;                    /**< \brief key for compilation time */
-	static const char *COMPILATION_TARGET_KEY ;                  /**< \brief key for compilation target */
-	static const char *COMPILER_KEY ;                            /**< \brief key for compilator type */
-	static const char *CPP_CLASS_KEY ;                           /**< \brief key for c++ class (mangled) */
-	static const char *ERS_VERSION_KEY ;                         /**< \brief key for ERS version */
-	static const char *HOST_NAME_KEY ;                           /**< \brief key for hostname */
-	static const char *HOST_TYPE_KEY ;                           /**< \brief key for host type (architecture / os) */
-	static const char *HOST_IP_ADDR_KEY ;                        /**< \brief key for host ip address */
-	static const char *MESSAGE_KEY ;                             /**< \brief key for human readable */
-	static const char *PROCESS_ID_KEY ;                          /**< \brief key for the process id (number)*/
-	static const char *PROCESS_PWD_KEY ;                         /**< \brief key for the process working directory */
-	static const char *PROGRAM_NAME_KEY ;                        /**< \brief key for the name of the program */
-	static const char *RESPONSIBILITY_KEY ;                      /**< \brief key for the responsibility of the issue (text) */
-	static const char *SEVERITY_KEY ;                            /**< \brief key for the severity of the issue */
-	static const char *SOURCE_POSITION_KEY ;                     /**< \brief key for position in the source code */
-	static const char *TIME_KEY ;                                /**< \brief key for the time of the issue (text) */
-	static const char *TRANSIENCE_KEY ;                          /**< \brief key for the transience of the issue (text) */
-	static const char *USER_ID_KEY ;                             /**< \brief key for the user-id of the owner of the process */
-	static const char *USER_NAME_KEY ;                           /**< \brief key for the user-name of the owner of the process */
-	static const char *CAUSE_PSEUDO_KEY ;                        /**< \brief key used when serializing the cause issue, this key is not used in the value table */
-	static const char *CAUSE_TEXT_KEY ;                          /**< \brief key used to store the cause issue's message */
+	static const char *const CLASS_KEY ;                               /**< \brief key for class information */
+	static const char *const COMPILATION_TIME_KEY ;                    /**< \brief key for compilation time */
+	static const char *const COMPILATION_TARGET_KEY ;                  /**< \brief key for compilation target */
+	static const char *const COMPILER_KEY ;                            /**< \brief key for compilator type */
+	static const char *const CPP_CLASS_KEY ;                           /**< \brief key for c++ class (mangled) */
+	static const char *const ERS_VERSION_KEY ;                         /**< \brief key for ERS version */
+	static const char *const HOST_NAME_KEY ;                           /**< \brief key for hostname */
+	static const char *const HOST_TYPE_KEY ;                           /**< \brief key for host type (architecture / os) */
+	static const char *const HOST_IP_ADDR_KEY ;                        /**< \brief key for host ip address */
+	static const char *const MESSAGE_KEY ;                             /**< \brief key for human readable */
+	static const char *const PROCESS_ID_KEY ;                          /**< \brief key for the process id (number)*/
+	static const char *const PROCESS_PWD_KEY ;                         /**< \brief key for the process working directory */
+	static const char *const PROGRAM_NAME_KEY ;                        /**< \brief key for the name of the program */
+	static const char *const RESPONSIBILITY_KEY ;                      /**< \brief key for the responsibility of the issue (text) */
+	static const char *const SEVERITY_KEY ;                            /**< \brief key for the severity of the issue */
+	static const char *const SOURCE_POSITION_KEY ;                     /**< \brief key for position in the source code */
+	static const char *const TIME_KEY ;                                /**< \brief key for the time of the issue (text) */
+	static const char *const TRANSIENCE_KEY ;                          /**< \brief key for the transience of the issue (text) */
+	static const char *const USER_ID_KEY ;                             /**< \brief key for the user-id of the owner of the process */
+	static const char *const USER_NAME_KEY ;                           /**< \brief key for the user-name of the owner of the process */
+	static const char *const CAUSE_PSEUDO_KEY ;                        /**< \brief key used when serializing the cause issue, this key is not used in the value table */
+	static const char *const CAUSE_TEXT_KEY ;                          /**< \brief key used to store the cause issue's message */
 	
-	static const char *ISSUE_CLASS_NAME ;                        /**< \brief name of the class, used for serialisation */
+	static const char *const ISSUE_CLASS_NAME ;                        /**< \brief name of the class, used for serialisation */
 	
 protected:
 	Issue *m_cause ;                                               /**< \brief Issue that caused the current issue */

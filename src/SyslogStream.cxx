@@ -13,7 +13,7 @@
 #include <syslog.h>
 #include <stdarg.h>
 
-const char* ers::SyslogStream::SYSLOG_KEY = "syslog" ; 
+const char* const ers::SyslogStream::SYSLOG_KEY = "syslog" ; 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 

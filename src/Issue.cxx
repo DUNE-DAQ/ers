@@ -37,31 +37,30 @@ namespace {
 using namespace ers ; 
 using namespace System  ;
 
-const char* Issue::CLASS_KEY = "ISSUE_CLASS" ; 
-const char* Issue::COMPILATION_TIME_KEY = "COMPILATION_TIME" ; 
-const char* Issue::COMPILATION_TARGET_KEY = "COMPILATION_TARGET" ; 
-const char* Issue::COMPILER_KEY = "COMPILER" ; 
-const char* Issue::CPP_CLASS_KEY = "ISSUE_CPP_CLASS" ; 
-const char* Issue::ERS_VERSION_KEY = "ERS_VERSION" ;
-const char* Issue::HOST_NAME_KEY = "HOST_NAME" ; 
-const char* Issue::HOST_TYPE_KEY = "HOST_TYPE" ; 
-const char* Issue::HOST_IP_ADDR_KEY = "HOST_IP" ; 
-const char* Issue::MESSAGE_KEY = "MESSAGE" ; 
-const char* Issue::PROCESS_ID_KEY = "PROCESS_ID" ;
-const char* Issue::PROCESS_PWD_KEY = "PROCESS_PWD" ; 
-const char* Issue::PROGRAM_NAME_KEY = "PROGRAM_NAME"; 
-const char* Issue::RESPONSIBILITY_KEY = "RESPONSIBILITY" ; 
-const char* Issue::SEVERITY_KEY = "SEVERITY" ; 
-const char* Issue::SOURCE_POSITION_KEY = "SOURCE_POSITION" ; 
-const char* Issue::TIME_KEY = "TIME" ; 
-const char* Issue::TRANSIENCE_KEY = "TRANSIENCE" ; 
-const char* Issue::USER_ID_KEY = "USER_ID" ; 
-const char* Issue::USER_NAME_KEY = "USER_NAME" ; 
-const char* Issue::CAUSE_TEXT_KEY = "CAUSE_TEXT"  ;
-const char* Issue::CAUSE_PSEUDO_KEY = "CAUSE" ; 
+const char* const Issue::CLASS_KEY = "ISSUE_CLASS" ; 
+const char* const Issue::COMPILATION_TIME_KEY = "COMPILATION_TIME" ; 
+const char* const Issue::COMPILATION_TARGET_KEY = "COMPILATION_TARGET" ; 
+const char* const Issue::COMPILER_KEY = "COMPILER" ; 
+const char* const Issue::CPP_CLASS_KEY = "ISSUE_CPP_CLASS" ; 
+const char* const Issue::ERS_VERSION_KEY = "ERS_VERSION" ;
+const char* const Issue::HOST_NAME_KEY = "HOST_NAME" ; 
+const char* const Issue::HOST_TYPE_KEY = "HOST_TYPE" ; 
+const char* const Issue::HOST_IP_ADDR_KEY = "HOST_IP" ; 
+const char* const Issue::MESSAGE_KEY = "MESSAGE" ; 
+const char* const Issue::PROCESS_ID_KEY = "PROCESS_ID" ;
+const char* const Issue::PROCESS_PWD_KEY = "PROCESS_PWD" ; 
+const char* const Issue::PROGRAM_NAME_KEY = "PROGRAM_NAME"; 
+const char* const Issue::RESPONSIBILITY_KEY = "RESPONSIBILITY" ; 
+const char* const Issue::SEVERITY_KEY = "SEVERITY" ; 
+const char* const Issue::SOURCE_POSITION_KEY = "SOURCE_POSITION" ; 
+const char* const Issue::TIME_KEY = "TIME" ; 
+const char* const Issue::TRANSIENCE_KEY = "TRANSIENCE" ; 
+const char* const Issue::USER_ID_KEY = "USER_ID" ; 
+const char* const Issue::USER_NAME_KEY = "USER_NAME" ; 
+const char* const Issue::CAUSE_TEXT_KEY = "CAUSE_TEXT"  ;
+const char* const Issue::CAUSE_PSEUDO_KEY = "CAUSE" ; 
 
-
-const char* Issue::ISSUE_CLASS_NAME = "ers::issue" ; 
+const char* const Issue::ISSUE_CLASS_NAME = "ers::issue" ; 
 
 // Constructors
 // ====================================================
@@ -375,7 +374,7 @@ void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
     if (! env_key) return ; 
     if (! issue_key) return ; 
     std::string value = Environnement::get(std::string(issue_key)); 
-    if (value!=Environnement::NO_VALUE) {
+    if (! value.empty()) {
 	set_value(issue_key,value); 
     } // value exists 
 } // insert_env
@@ -398,6 +397,7 @@ void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
   */
 
 void Issue::setup_common(const Context *context) throw() {
+    const int errno_copy = errno ; // We need to save errno, because it might be changed 
     insert(context);
     Process p ; 
     set_value(PROCESS_ID_KEY,p.process_id()); 
@@ -410,6 +410,7 @@ void Issue::setup_common(const Context *context) throw() {
     set_value(HOST_IP_ADDR_KEY,localhost->ip_string()); 
     set_value(HOST_TYPE_KEY,localhost->description()); 
     insert_time();
+    errno = errno_copy ; // we restaure errno 
 } // setup_common
 
 /** Finishes the setting up of the information fields.
@@ -457,7 +458,7 @@ const char*Issue::get_class_name() const throw()  {
 
 ers_severity Issue::severity() const throw() {
     std::string value = get_value(SEVERITY_KEY); 
-    return parse_severity(value);
+    return ers::Core::parse_severity(value);
 } // severity
 
 /** Set the severity of the Issue 
@@ -465,7 +466,7 @@ ers_severity Issue::severity() const throw() {
  */
 
 void Issue::severity(ers_severity s) {
-    set_value(SEVERITY_KEY,get_severity_text(s)); 
+    set_value(SEVERITY_KEY,ers::Core::to_string(s)); 
 } // severity
 
 /** Is the issue either an error or a fatal error 
@@ -492,7 +493,7 @@ std::string Issue::severity_message() const {
 
 ers_responsibility Issue::responsibility() const throw() {
     std::string value = this->get_value(RESPONSIBILITY_KEY); 
-    return parse_responsibility(value);
+    return ers::Core::parse_responsibility(value);
 } // responsability
 
 /** Sets the responsbility of the Issue
@@ -500,7 +501,7 @@ ers_responsibility Issue::responsibility() const throw() {
  */
 
 void Issue::responsibility(ers_responsibility r) {
-    set_value(RESPONSIBILITY_KEY,get_responsibility_text(r)) ; 
+    set_value(RESPONSIBILITY_KEY,ers::Core::to_string(r)) ; 
 } // responsability
 
 
@@ -509,7 +510,7 @@ void Issue::responsibility(ers_responsibility r) {
   */
 
 void Issue::transience(bool tr) {
-    set_value(TRANSIENCE_KEY,get_boolean(tr)) ; 
+    set_value(TRANSIENCE_KEY,ers::Core::to_string(tr)) ; 
 } // transience
 
 /** @return the transience of the issue, 1 = true, 0 = false, -1 = unknown 
@@ -517,7 +518,7 @@ void Issue::transience(bool tr) {
 
 int Issue::transience() const throw () {
     std::string value = this->get_value(TRANSIENCE_KEY); 
-    return parse_boolean(value.c_str());
+    return ers::Core::parse_boolean(value.c_str());
 } // transience
 
 

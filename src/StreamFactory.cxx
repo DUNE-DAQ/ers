@@ -56,11 +56,10 @@ ers::StreamFactory *ers::StreamFactory::s_instance = 0 ;
   */
 
 ers::StreamFactory::StreamFactory() {
-   /* for(int i= static_cast<int> (ers_severity_none);i< static_cast<int> (ers_severity_max);i++) {	
+   for(int i= static_cast<int> (ers_severity_none);i< static_cast<int> (ers_severity_max);i++) {	
 	ers_severity s = static_cast<ers_severity> (i) ; 
-	m_streams[s]=create_stream(s) ; 
-    } // for*/
-
+       m_streams[s]=0 ;
+   } // for*/
 } // StreamFactory
 
 /** Copy constructor - disabled, use the \c instance() method instead
@@ -116,7 +115,7 @@ ers::Stream* ers::StreamFactory::get_default_stream(ers_severity s) {
 
 const char* ers::StreamFactory::key_for_severity(ers_severity s) {
     char key_buffer[64] ; 
-    snprintf(key_buffer,sizeof(key_buffer),"ERS_%s",get_severity_text(s)) ;
+    snprintf(key_buffer,sizeof(key_buffer),"ERS_%s",ers::Core::to_string(s)) ;
     char *c = &(key_buffer[0]);
     while(*c) {
 	*c = toupper(*c) ;
@@ -203,7 +202,7 @@ void ers::StreamFactory::warning(Issue *issue_ptr) {
 
 void ers::StreamFactory::debug(Issue *issue_ptr, ers_severity s) {
     ERS_PRE_CHECK_PTR(issue_ptr); 
-    ERS_PRECONDITION(s<ers_information,"severity is not debug : %s (%d) %d",get_severity_text(s),s,ers_information);
+    ERS_PRECONDITION(s<ers_information,"severity is not debug : %s (%d) %d",ers::Core::to_string(s),s,ers_information);
     issue_ptr->severity(s) ; 
     dispatch(issue_ptr,false);
 } //  debug
@@ -319,7 +318,7 @@ ers::Stream* ers::StreamFactory::warning()  { return get_stream(ers_warning); } 
  */
 
 ers::Stream* ers::StreamFactory::debug(ers_severity s)  {
-    ERS_PRECONDITION(s<ers_information && s>ers_severity_none,"severity is not debug : %s (%d)",get_severity_text(s),s);
+    ERS_PRECONDITION(s<ers_information && s>ers_severity_none,"severity is not debug : %s (%d)",ers::Core::to_string(s),s);
     return get_stream(s) ; 
 } // debug
 

@@ -22,10 +22,10 @@ namespace ers {
     
     class Precondition : public Assertion {
 protected:
-	virtual std::string build_message(const char* condition_text, const std::string &message, bool constant_expression = false) ; 
+	virtual std::string build_message(const char* condition_text, const std::string &message, bool constant_expression = false) throw() ; 
 	Precondition(const Context &context, ers_severity s); 
 public:
-	static const char* PRECONDITION_CLASS ; 
+	static const char* const PRECONDITION_CLASS ; 
 	Precondition();
 	Precondition(const Context &context, ers_severity s, const char*condition, const std::string &message , bool constant_expression=false) ;
 	virtual const char*get_class_name() const throw();

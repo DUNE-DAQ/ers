@@ -11,11 +11,11 @@
 #include <iostream>
 #include <sstream>
 
-const char *ers::NotImplemented::NOTIMPLEMENTED_CLASS = "ers::NotImplemented" ; 
+const char * const ers::NotImplemented::CLASS_NAME = "ers::NotImplemented" ; 
 
 namespace {
     ers::Issue *create_issue() { return new ers::NotImplemented(); } 
-    bool registered = ers::IssueFactory::instance()->register_issue(ers::NotImplemented::NOTIMPLEMENTED_CLASS,create_issue) ;
+    bool registered = ers::IssueFactory::instance()->register_issue(ers::NotImplemented::CLASS_NAME,create_issue) ;
 } 
 
 ers::NotImplemented::NotImplemented() : Assertion() {} 
@@ -32,7 +32,7 @@ ers::NotImplemented::NotImplemented(const Context &c, ers_severity s) : Assertio
   * @return A complete information message. 
   */
 
-std::string ers::NotImplemented::build_message(const char* condition_text, const std::string &message, bool constant_expression) {
+std::string ers::NotImplemented::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
     std::ostringstream message_stream ;
     message_stream << "Function in " << condition_text ;
     if (message!="") {
@@ -43,4 +43,4 @@ std::string ers::NotImplemented::build_message(const char* condition_text, const
 } // build_message
 
 
-const char* ers::NotImplemented::get_class_name() const throw () { return NOTIMPLEMENTED_CLASS ;} 
+const char* ers::NotImplemented::get_class_name() const throw () { return CLASS_NAME ;} 

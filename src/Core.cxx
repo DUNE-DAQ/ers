@@ -1,94 +1,104 @@
-#include <assert.h>
+
 #include <iostream>
 #include <sstream>
 #include <string.h>
 #include "ers/Core.h"
-#include "ers/Assertion.h"
 
-const char* ers_severity_text_names[] = { "none", "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "maximum (illegal)" } ;
-const char* ers_responsibility_text_names[] = { "precondition", "internal", "subSystem" } ; 
-const char* boolean_names[] = { "false", "true" } ; 
+const char* const ers::Core::SEVERITY_NAMES[] = { "none", "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "maximum (illegal)" } ;
+const char* const ers::Core::BOOLEAN_NAMES[] = { "false", "true" } ; 
+const char* const ers::Core::RESPONSIBILITY_NAMES[] = { "precondition", "internal", "subSystem" } ; 
 
-/** @brief Transforms a severity type into the corresponding string
-* @param s severity
-* @return pointer to string with associated text 
-*/
+/** 
+ * \brief Transforms a severity type into the corresponding string
+ * \param s severity
+ * \return pointer to string with associated text 
+ */
 
-const char *ers::get_severity_text(ers::ers_severity s) {
+const char *ers::Core::to_string(ers::ers_severity s) throw() {
     const unsigned int index = (unsigned int) s ;
     assert(index<=ers_severity_max); 
-    return ers_severity_text_names[index] ; 
+    return ers::Core::SEVERITY_NAMES[index] ; 
 } // getSeverityText
 
 /** Parses a string and extracts a severity 
- * @param s the string to parse 
- * @return a severity value
+ * \param s the string to parse 
+ * \return a severity value
  */
 
-ers::ers_severity ers::parse_severity(const char *s) {
+ers::ers_severity ers::Core::parse_severity(const char *s) throw() {
     for(int i=0;i<ers_severity_max;i++) {
-        if (strcmp(s,ers_severity_text_names[i])==0) return (ers::ers_severity) i ; 
-    }
+        if (strcmp(s,ers::Core::SEVERITY_NAMES[i])==0) return (ers::ers_severity) i ; 
+    }// for
     return ers_severity_none ; 
 } // parse_severity
 
 /** Parses a string and extracts a severity 
- * @param s the string to parse 
- * @return a severity value
+ * \param s the string to parse 
+ * \return a severity value
  */
 
-ers::ers_severity ers::parse_severity(const std::string &s) {
-    return ers::parse_severity(s.c_str());
+ers::ers_severity ers::Core::parse_severity(const std::string &s) throw() {
+    return parse_severity(s.c_str());
 } // parse_severity
 
 /** Transforms a responsibility value into a string 
-  * @param r the responsibility
-  * @return string with text for responsibility 
+  * \param r the responsibility
+  * \return string with text for responsibility 
   */
 
-const char* ers::get_responsibility_text(ers::ers_responsibility r) {
+const char* ers::Core::to_string(ers::ers_responsibility r) throw() {
     const unsigned int index = (unsigned int) r ;
     assert(index<=ers_resp_max);
-    return ers_responsibility_text_names[index] ;
-} // get_responsability_text
+    return RESPONSIBILITY_NAMES[index] ;
+} // to_string
 
 /** Parses a string and extracts a responsibility 
- * @param s the string to parse 
- * @return a responsibility value
+ * \param s the string to parse 
+ * \return a responsibility value
  */
 
-ers::ers_responsibility ers::parse_responsibility(const char *s) {
+ers::ers_responsibility ers::Core::parse_responsibility(const char *s) throw() {
     for(int i=0;i<ers_resp_max;i++) {
-        if (strcmp(s,ers_responsibility_text_names[i])==0) return (ers::ers_responsibility) i ; 
-    }
+        if (strcmp(s,RESPONSIBILITY_NAMES[i])==0) return (ers::ers_responsibility) i ; 
+    } // for 
     return ers_resp_unknown ;
 } // parse_responsability
 
 /** Parses a string and extracts a responsibility 
-  * @param s the string to parse
-  * @return a responsibility value
+  * \param s the string to parse
+  * \return a responsibility value
   */
 
-ers::ers_responsibility ers::parse_responsibility(const std::string &s) {
-    return ers::parse_responsibility(s.c_str()) ; 
+ers::ers_responsibility ers::Core::parse_responsibility(const std::string &s) throw() {
+    return parse_responsibility(s.c_str()) ; 
 } // parse_responsability
 
-int ers::parse_boolean(const char* s) {
+/** Parse a string and extract a boolean 
+  * \param s the string to parse
+  * \return 1 if true
+  * \return 0 if false
+  * \return -1 if undefined 
+  */
+
+int ers::Core::parse_boolean(const char* s) throw() {
     if (! s) return -1 ; 
     if (! *s) return -1 ; 
-    if (strcasecmp(s,"true")==0) return 1 ;
-    if (strcasecmp(s,"false")==0) return 0 ; 
+    if (strcasecmp(s,BOOLEAN_NAMES[1])==0) return 1 ;
+    if (strcasecmp(s,BOOLEAN_NAMES[0])==0) return 0 ; 
     return -1 ; 
 } // parse_boolean
 
-const char* ers::get_boolean(bool b) {
-    int index = b ? 1 : 0 ;
-    return boolean_names[index] ;
-} // get_boolean
+/** Convert a boolean to a string 
+  * \param b the boolean
+  * \return either the string "true" or "false"
+  */
 
-const char* ers::Core::XML_ISSUE_TAG = "issue" ; 
-const char* ers::Core::XML_KEY_TAG = "key" ; 
-const char* ers::Core::XML_STRING_VALUE_TAG = "string" ; 
+const char* ers::Core::to_string(bool b) throw () {
+    int index = b ? 1 : 0 ;
+    return BOOLEAN_NAMES[index] ;
+} // to_string
+
+
 
 
 

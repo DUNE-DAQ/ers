@@ -11,7 +11,7 @@
 
 #include <sstream>
 
-const char* ers::LogIssue::CLASS_NAME = "ers::LogIssue" ; 
+const char* const ers::LogIssue::CLASS_NAME = "ers::LogIssue" ; 
 
 namespace {
     ers::Issue *create_issue() { return new ers::LogIssue(); } 
@@ -23,7 +23,7 @@ ers::LogIssue::LogIssue(const ers::Context &c, ers_severity s) : ers::Issue(c,s)
 
 ers::LogIssue::LogIssue(const ers::Context &c, ers_severity s, const std::string &message) : Issue(c,s) {
     std::ostringstream stream ;
-    stream << get_severity_text(s) << ": " << message ;
+    stream << ers::Core::to_string(s) << ": " << message ;
     finish_setup(stream.str()); 
 } // 
 

@@ -11,11 +11,11 @@
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
 
-const char* ers::HumanStream::TXT_SUFFIX = "txt" ; 
+const char* const ers::HumanStream::TXT_SUFFIX = "txt" ; 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
-	if (protocol==ers::STLStream::FILE_KEY) {
+	if (protocol==System::File::FILE_PROTOCOL) {
 	    System::File file(uri); 
 	    std::string extension = file.extension(uri) ;
 	    if (extension==ers::HumanStream::TXT_SUFFIX) return new ers::HumanStream(file,false); 

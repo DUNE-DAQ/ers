@@ -11,7 +11,7 @@
 #include <sstream>
 
 
-const char* ers::IssueFactoryIssue::CLASS_NAME = "ers::IssueFactoryIssue" ; 
+const char* const ers::IssueFactoryIssue::CLASS_NAME = "ers::IssueFactoryIssue" ; 
 
 namespace {
     ers::Issue *create_issue() { return new ers::IssueFactoryIssue(); } 

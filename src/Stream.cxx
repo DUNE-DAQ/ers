@@ -12,7 +12,7 @@
 #include "ers/Issue.h"
 #include "ers/StreamFactory.h"
 
-const char* ers::Stream::NULL_STREAM_KEY = "null" ; 
+const char* const ers::Stream::NULL_STREAM_KEY = "null" ; 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 

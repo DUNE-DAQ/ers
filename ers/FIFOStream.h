@@ -24,7 +24,7 @@ namespace ers {
 protected:
 	std::deque<Issue*> m_issue_queue ; 
 public:
-	static const char* FIFO_STREAM_KEY ;     /**< Key for FIFO stream */
+	static const char* const FIFO_STREAM_KEY ;     /**< Key for FIFO stream */
 	void send(const Issue *i) ;
 	Issue *receive() ; 
 	FIFOStream();

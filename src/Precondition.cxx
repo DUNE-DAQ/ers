@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-const char *ers::Precondition::PRECONDITION_CLASS = "ers::Precondition" ; 
+const char * const ers::Precondition::PRECONDITION_CLASS = "ers::Precondition" ; 
 
 namespace {
     ers::Issue *create_issue() { return new ers::Precondition(); } 
@@ -54,7 +54,7 @@ const char* ers::Precondition::get_class_name() const throw () { return PRECONDI
  * \return message describing the failure of the assertion 
  */
 
-std::string ers::Precondition::build_message(const char* condition_text, const std::string &message, bool constant_expression) {
+std::string ers::Precondition::build_message(const char* condition_text, const std::string &message, bool constant_expression) throw() {
     std::ostringstream m ;
     m << "Precondition '" << condition_text << "' failed: " << message ;
     if (constant_expression) {

@@ -26,7 +26,7 @@ namespace ers {
 protected:
 	IssueFactoryIssue(const Context &context, ers_severity s); 
 public:
-	static const char* CLASS_NAME ; 
+	static const char* const CLASS_NAME ; 
 	
 	IssueFactoryIssue() ; 
 	IssueFactoryIssue(const Context &context, ers_severity s, const std::string&name, const std::string &message); 

@@ -18,8 +18,8 @@ namespace {
     bool registered = ers::IssueFactory::instance()->register_issue(ExampleIssue::CLASS_NAME,create_example_issue) ;
 } 
 
-const char *ExampleIssue::CLASS_NAME = "ExampleIssue" ; 
-const char *ExampleIssue::PROCRASTINATION_LEVEL_KEY = "PROCRASTINATION_LEVEL" ; 
+const char * const ExampleIssue::CLASS_NAME = "ExampleIssue" ; 
+const char * const ExampleIssue::PROCRASTINATION_LEVEL_KEY = "PROCRASTINATION_LEVEL" ; 
 
 ExampleIssue::ExampleIssue() : ers::Issue() {} 
 

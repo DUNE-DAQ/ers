@@ -29,7 +29,7 @@ protected:
     virtual void serialize_end(const Issue *issue) ; 
     virtual void serialize_separator(const Issue *issue) ;
 public:
-    static const char* TXT_SUFFIX ;          /**< Suffix for 'human readable' descrption */
+    static const char* const TXT_SUFFIX ;          /**< Suffix for 'human readable' descrption */
     static std::string to_string(const Issue *issue) throw() ; 
     HumanStream() ;
     HumanStream(std::ostream *s);

@@ -10,9 +10,9 @@
 #include "ers/ParseIssue.h"
 #include "system/FileIssue.h"
 
-const char *ers::ParseIssue::OFFENDING_LINE_KEY = "PARSE_ISSUE_TEXT" ; 
-const char *ers::ParseIssue::OFFENDING_LINE_NUMBER_KEY = "PARSE_ISSUE_LINE_NUMBER" ; 
-const char *ers::ParseIssue::PARSE_ISSUE_CLASS_NAME = "ers::ParseIssue" ; 
+const char * const ers::ParseIssue::OFFENDING_LINE_KEY = "PARSE_ISSUE_TEXT" ; 
+const char * const ers::ParseIssue::OFFENDING_LINE_NUMBER_KEY = "PARSE_ISSUE_LINE_NUMBER" ; 
+const char * const ers::ParseIssue::PARSE_ISSUE_CLASS_NAME = "ers::ParseIssue" ; 
 
 namespace {
     ers::Issue *create_parse_issue() { return new ers::ParseIssue(); } 

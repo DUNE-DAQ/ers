@@ -11,12 +11,12 @@
 #include "ers/ers.h"
 #include "ers/ParseIssue.h"
 
-const char* ers::TabStream::TAB_SUFFIX = "tab" ;     
+const char* const ers::TabStream::TAB_SUFFIX = "tab" ;     
 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
-	if (protocol==ers::STLStream::FILE_KEY) {
+	if (protocol==System::File::FILE_PROTOCOL) {
 	    System::File file(uri); 
 	    std::string extension = file.extension(uri) ;
 	    if (extension==ers::TabStream::TAB_SUFFIX) return new ers::TabStream(file,false); 

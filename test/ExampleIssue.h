@@ -22,8 +22,8 @@ class ExampleIssue : public ers::Issue {
 protected:
     ExampleIssue(const ers::Context& context, ers::ers_severity severity) ;
 public:
-    static const char* CLASS_NAME ; 
-    static const char* PROCRASTINATION_LEVEL_KEY ; 
+    static const char* const CLASS_NAME ; 
+    static const char* const PROCRASTINATION_LEVEL_KEY ; 
     ExampleIssue();
     ExampleIssue(const ers::Context& context, ers::ers_severity severity, int procrastination_level) ;
     virtual const char *get_class_name() const throw() ;

@@ -29,12 +29,12 @@ namespace ers {
     
     class Assertion: public ers::Issue {
 protected:
-    virtual std::string build_message(const char* condition_text, const std::string &msg, bool constant_expression=false) ; 
+    virtual std::string build_message(const char* condition_text, const std::string &msg, bool constant_expression=false) throw() ; 
     Assertion(const Context &context, ers_severity s); 
     void setup(const char *condition, const std::string &message, bool constant_expression); 
 public:
-    static const char* ASSERT_CONDITION_KEY ;
-    static const char *ASSERTION_CLASS_NAME ; 
+    static const char* const ASSERT_CONDITION_KEY ;
+    static const char* const ASSERTION_CLASS_NAME ; 
     virtual const char*get_class_name() const throw() ;
     Assertion(); 
     Assertion(const Context &context, ers_severity s, const char*condition, const std::string &message,  bool constant_expression=false) ;

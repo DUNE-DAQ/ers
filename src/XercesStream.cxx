@@ -28,12 +28,17 @@
 
 #include "system/IOIssue.h"
 
-const char* ers::XercesStream::XML_SUFFIX = "xml" ; 
+const char * const ers::XercesStream::XML_SUFFIX = "xml" ; 
+const char * const ers::XercesStream::XML_TAGS[] = { "issue", "key", "string" } ; 
+
+#define XML_ISSUE_TAG ers::XercesStream::XML_TAGS[0] 
+#define XML_KEY_TAG   ers::XercesStream::XML_TAGS[1] 
+#define XML_STRING_VALUE_TAG ers::XercesStream::XML_TAGS[2] 
 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
-	if (protocol==ers::STLStream::FILE_KEY) {
+	if (protocol==System::File::FILE_PROTOCOL) {
 	    System::File file(uri); 
 	    std::string extension = file.extension(uri) ;
 	    if (ers::XercesStream::XML_SUFFIX) return new ers::XercesStream(file,false); 
@@ -194,13 +199,13 @@ void ers::XercesStream::parse(const DOMNode *node, std::string &key, string_map_
 	const DOMElement *element = dynamic_cast <const DOMElement *> (node) ;
 	const XMLCh *x_tag = element->getTagName() ;  
 	std::string tag = to_string(x_tag); 
-	if (tag == ers::Core::XML_KEY_TAG) { // We have a key 
+	if (tag == XML_KEY_TAG) { // We have a key 
 	    key = get_text(element); 
 	    return ; 
-	} else if (tag == ers::Core::XML_STRING_VALUE_TAG) { // we have a string value 
+	} else if (tag == XML_STRING_VALUE_TAG) { // we have a string value 
 	    values[key] = get_text(element);
 	    return ;
-	} else if (tag== ers::Core::XML_ISSUE_TAG) { // we have a issue 
+	} else if (tag== XML_ISSUE_TAG) { // we have a issue 
 	    ERS_ASSERT(key==ers::Issue::CAUSE_PSEUDO_KEY,"key for cause is %s, not %s",key.c_str(),ers::Issue::CAUSE_PSEUDO_KEY);
 	    *cause = receive(element) ; 
 	} else { // we don't know what we have... 
@@ -257,9 +262,9 @@ ers::Issue *ers::XercesStream::receive(const DOMDocument *document_ptr) const {
     const DOMElement *issue_element = dynamic_cast <const DOMElement *> (issue_node) ;
     ERS_CHECK_PTR(issue_element);
     std::string issue_name = to_string(issue_element->getTagName()) ; 
-    if (issue_name!=ers::Core::XML_ISSUE_TAG) {
+    if (issue_name!=XML_ISSUE_TAG) {
     	throw ERS_PARSE_ERROR("Invalid root tag : %s (should be %s)",
-	issue_name,ers::Core::XML_ISSUE_TAG); 
+	issue_name,XML_ISSUE_TAG); 
     } // not issue 
     return receive(issue_element);
 } // receive
@@ -361,14 +366,14 @@ void ers::XercesStream::serialize(DOMElement *root_element, const Issue *issue_p
     const string_map_type *table = issue_ptr->get_value_table(); 
     ERS_CHECK_PTR(table); 
     for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
-	add_string_tag(root_element,ers::Core::XML_KEY_TAG,pos->first.c_str()) ; 
-	add_string_tag(root_element,ers::Core::XML_STRING_VALUE_TAG,pos->second.c_str()) ; 
+	add_string_tag(root_element,XML_KEY_TAG,pos->first.c_str()) ; 
+	add_string_tag(root_element,XML_STRING_VALUE_TAG,pos->second.c_str()) ; 
     } // for
     const Issue *cause = issue_ptr->cause();
     if (cause) {
-	add_string_tag(root_element,ers::Core::XML_KEY_TAG,ers::Issue::CAUSE_PSEUDO_KEY) ;
+	add_string_tag(root_element,XML_KEY_TAG,ers::Issue::CAUSE_PSEUDO_KEY) ;
 	DOMDocument *document_ptr = root_element->getOwnerDocument() ;
-	DOMElement *cause_element = document_ptr->createElement(to_unicode(ers::Core::XML_KEY_TAG)) ;
+	DOMElement *cause_element = document_ptr->createElement(to_unicode(XML_KEY_TAG)) ;
 	serialize(cause_element,cause);
     } // cause
 } // send
@@ -394,7 +399,7 @@ void ers::XercesStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr);
     DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
     ERS_CHECK_PTR(impl);
-    DOMDocument* document_ptr = impl->createDocument(0,to_unicode(ers::Core::XML_ISSUE_TAG),0);
+    DOMDocument* document_ptr = impl->createDocument(0,to_unicode(XML_ISSUE_TAG),0);
     ERS_CHECK_PTR(document_ptr);
     document_ptr->setStandalone(true); 
     send(document_ptr,issue_ptr);  

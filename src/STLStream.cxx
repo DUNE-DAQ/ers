@@ -21,8 +21,7 @@
 #include "ers/HumanStream.h"
 #include "ers/TabStream.h"
 
-const char* ers::STLStream::FILE_KEY = "file" ;     
-const char* ers::STLStream::CERR_STREAM_KEY = "cerr" ;        
+const char* const ers::STLStream::CERR_STREAM_KEY = "cerr" ;        
 
 ers::STLStream::STLStream() {
     open_stdin();

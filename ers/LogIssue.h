@@ -23,7 +23,7 @@ namespace ers {
 protected:
 	LogIssue(const ers::Context &c, ers_severity s); 
 public:
-	static const char *CLASS_NAME ;
+	static const char * const CLASS_NAME ;
 	LogIssue(); 
 	LogIssue(const ers::Context &c, ers_severity s, const std::string &message); 
 	virtual const char* get_class_name() const throw() ;

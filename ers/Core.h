@@ -25,23 +25,23 @@ namespace ers {
     typedef enum _ers_responsibility { ers_resp_client, ers_resp_server, ers_resp_dependency , ers_resp_unknown, ers_resp_max } ers_responsibility ; 
     typedef std::map<std::string, std::string> string_map_type ;   
     typedef std::vector<std::string> string_vector ;
-    const char* get_severity_text(ers_severity s); 
-    ers_severity parse_severity(const char *s) ; 
-    ers_severity parse_severity(const std::string &s);
-    const char* get_responsibility_text(ers_responsibility r) ; 
-    ers_responsibility parse_responsibility(const char *s) ;
-    ers_responsibility parse_responsibility(const std::string &s) ;
-    int parse_boolean(const char* s) ; 
-    const char* get_boolean(bool b); 
     
     /** This class contains some general constants.
       * \brief Miscalenous constants
       */
     class Core {
-    	public:
-    	static const char* XML_ISSUE_TAG  ; 
-    	static const char* XML_KEY_TAG  ; 
-    	static const char* XML_STRING_VALUE_TAG  ; 
+	static const char* const SEVERITY_NAMES[] ;
+	static const char* const BOOLEAN_NAMES[] ; 
+	static const char* const RESPONSIBILITY_NAMES[] ; 
+public:
+	static ers_severity parse_severity(const char *s) throw() ; 
+	static ers_severity parse_severity(const std::string &s) throw() ; 
+	static const char* to_string(ers_severity s) throw() ; 
+	static ers_responsibility parse_responsibility(const char *s) throw() ;
+	static ers_responsibility parse_responsibility(const std::string &s) throw() ;
+	static const char* to_string(ers_responsibility s) throw() ; 
+	static int parse_boolean(const char* s) throw() ; 
+	static const char* to_string(bool b) throw ();
     } ; // Core
 }
 

@@ -13,7 +13,7 @@
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/StreamFactory.h"
 
-const char* ers::FIFOStream::FIFO_STREAM_KEY = "fifo" ; 
+const char* const ers::FIFOStream::FIFO_STREAM_KEY = "fifo" ; 
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 

@@ -10,12 +10,12 @@
 #include "ers/InvalidReferenceIssue.h"
 #include <sstream>
 
-const char *ers::InvalidReferenceIssue::CLASS = "ers::InvalidReferenceIssue" ; 
+const char * const ers::InvalidReferenceIssue::CLASS = "ers::InvalidReferenceIssue" ; 
 
-const char *ers::InvalidReferenceIssue::REFERENCE_VALUE_KEY = "REFERENCE_VALUE" ; 
-const char *ers::InvalidReferenceIssue::REFERENCE_TYPE_KEY = "REFERENCE_TYPE" ; 
-const char *ers::InvalidReferenceIssue::REFERENCE_NAME_KEY = "REFERENCE_NAME" ; 
-const char *ers::InvalidReferenceIssue::REFERENCE_C_PTR_TYPE = "C Pointer" ; 
+const char * const ers::InvalidReferenceIssue::REFERENCE_VALUE_KEY = "REFERENCE_VALUE" ; 
+const char * const ers::InvalidReferenceIssue::REFERENCE_TYPE_KEY = "REFERENCE_TYPE" ; 
+const char * const ers::InvalidReferenceIssue::REFERENCE_NAME_KEY = "REFERENCE_NAME" ; 
+const char * const ers::InvalidReferenceIssue::REFERENCE_C_PTR_TYPE = "C Pointer" ; 
 
 namespace {
     ers::Issue *create_issue() { return new ers::InvalidReferenceIssue(); } 

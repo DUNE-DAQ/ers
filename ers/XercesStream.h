@@ -50,7 +50,8 @@ protected:
 	void send(DOMDocument *document_ptr, const Issue *issue_ptr) ; 
 	MemBufInputSource *get_source() ; 
 public: 
-	static const char* XML_SUFFIX ;          /**< Key for XML format */
+	static const char * const XML_TAGS[] ; 
+	static const char * const XML_SUFFIX ;          /**< Key for XML format */
 	virtual void writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter);
 	bool handleError(const DOMError& domError) ;
 	XercesStream(std::ostream *out_stream) ; 
