@@ -104,29 +104,34 @@ std::string ers::Context::compilation() const {
 
 std::string ers::Context::host_type() {
     std::ostringstream plateform_s ;
-#ifdef __POWERPC__
-    plateform_s << "powerpc" ; 
-#endif
-#ifdef __i386__
-    plateform_s << "i386" ;
-#endif
-#ifdef __sparc__
-    plateform_s << "sparc" ; 
-#endif
-    plateform_s << "-" ; 
-#ifdef __linux__ 
+#if defined(__linux__) 
     plateform_s << "linux" ; 
 #endif
-#ifdef __MACH__
-    plateform_s << "mach" ; 
+#if defined(__OpenBSD__)
+    plateform_s << "OpenBSD" ;
 #endif
-#ifdef __SUNPRO_C
-    plateform_s << "solaris" ;
+#if defined(__FreeBSD__) 
+    plateform_s << "FreeBSD" ;
+#endif
+#if defined(__APPLE__) && defined(__MACH__)
+    plateform_s << "Darwin" ; 
+#endif
+#if defined(__SOLARIS__)
+    plateform_s << "Solaris" ;
 #endif    
+    plateform_s << "/" ; 
+#if defined(__POWERPC__)  || defined(__ppc__ ) || defined( __PPC__ ) || defined( powerpc ) || defined( ppc )
+    plateform_s << "PowerPC" ; 
+#endif
+#if defined(__i386__) || defined(__INTEL__) || defined( intel ) || defined( _M_IX86 ) 
+    plateform_s << "i386" ;
+#endif
+#if defined(sparc) || defined(__sparc)   
+    plateform_s << "Sparc" ; 
+#endif
+    
     return plateform_s.str();
 } // plateform
 
-
-    
 
 

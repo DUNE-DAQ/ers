@@ -47,6 +47,7 @@ public:
 	static const char *ERS_VERSION_KEY ;                         /**< \brief key for ERS version */
 	static const char *HOST_NAME_KEY ;                           /**< \brief key for hostname */
 	static const char *HOST_TYPE_KEY ;                           /**< \brief key for host type (architecture / os) */
+	static const char *HOST_IP_ADDR_KEY ;                        /**< \brief key for host ip address */
 	static const char *MESSAGE_KEY ;                             /**< \brief key for human readable */
 	static const char *PROCESS_ID_KEY ;                          /**< \brief key for the process id (number)*/
 	static const char *PROCESS_PWD_KEY ;                         /**< \brief key for the process working directory */
@@ -67,13 +68,9 @@ protected:
 	Issue *m_cause ;                                               /**< \brief Issue that caused the current issue */
 	std::string m_human_description ;                              /**< \brief Human readable description */
 	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
-	void insert(const Context *context) throw();                   /**< \brief Inserts the context */
-	void insert_hostname() throw();                                /**< \brief Inserts the hostname */
-	void insert_processid() throw();                               /**< \brief Inserts process id */
-	void insert_time() throw();                                    /**< \brief Inserts current time */
-	void insert_userid() throw() ;                                 /**< \brief Insert user-id */
-	void insert_pwd() throw() ;                                    /**< \brief Inserts the current pwd */
-	void insert_env(const char*env_key, const char* issue_key) throw() ;    /**< \brief Inserts environnement variable */
+	void insert(const Context *context) throw() ;                  /**< \brief Inserts the context */
+	void insert_time() throw() ;                                   /**< \brief Inserts current time */
+	void insert_env(const char*env_key, const char* issue_key) throw() ;  /**< \brief Inserts environnement variable */
 	virtual std::string build_human_description() const throw();   /**< \brief Builds human description for Issue. */
         void setup_common(const Context *context) throw() ;            /**< \brief Sets up the common fields. */
         void finish_setup(const std::string &message) throw() ;        /**< \brief Finishes the setup of the Issue */

@@ -18,7 +18,10 @@
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
 #include "system/File.h"
+#include "system/User.h"
 #include "system/Environnement.h"
+#include "system/Process.h"
+#include "system/Host.h"
 
 #define BUFFER_SIZE 256 
 
@@ -42,6 +45,7 @@ const char* Issue::CPP_CLASS_KEY = "ISSUE_CPP_CLASS" ;
 const char* Issue::ERS_VERSION_KEY = "ERS_VERSION" ;
 const char* Issue::HOST_NAME_KEY = "HOST_NAME" ; 
 const char* Issue::HOST_TYPE_KEY = "HOST_TYPE" ; 
+const char* Issue::HOST_IP_ADDR_KEY = "HOST_IP" ; 
 const char* Issue::MESSAGE_KEY = "MESSAGE" ; 
 const char* Issue::PROCESS_ID_KEY = "PROCESS_ID" ;
 const char* Issue::PROCESS_PWD_KEY = "PROCESS_PWD" ; 
@@ -346,36 +350,6 @@ void Issue::insert(const Context *context) throw() {
     } // if context 
 } // insert
 
-/** Inserts the current hostname into the issue  
-*/
-
-void Issue::insert_hostname() throw() {
-    char host_buffer[BUFFER_SIZE] ;
-    int status = gethostname(host_buffer,BUFFER_SIZE);
-    if (0==status && (strlen(host_buffer)>0)) {
-	set_value(HOST_NAME_KEY,host_buffer); 
-    } // gethostnameworked
-} // insert_hostname
-
-/** Inserts the current process id into the issue
- */
-
-void Issue::insert_processid() throw() {
-    std::ostringstream pid_str ;
-    pid_str << ::getpid() ; 
-    set_value(PROCESS_ID_KEY,pid_str.str()); 
-} // insert_processid
-
-/** Inserts the current user id into the issue
-  */
-
-void Issue::insert_userid() throw() {
-    std::ostringstream uid_str ;
-    uid_str << getuid();
-    set_value(USER_ID_KEY,uid_str.str()) ;
-    insert_env("LOGNAME",USER_NAME_KEY); 
-} // insert_userid
-
 /** Inserts the current time into the issue 
 */
 
@@ -391,17 +365,6 @@ void Issue::insert_time() throw() {
     set_value(TIME_KEY,time_buffer); 
 } // insert_time
 
-/** Inserts the current working directory 
-  * This method should be called once all posix stuff is handled, as it accesses errno 
-  */
-
-void Issue::insert_pwd() throw() {
-    try {
-	set_value(PROCESS_PWD_KEY,System::File::working_directory()); 
-    } catch (Issue &e) {
-	StreamFactory::warning(&e) ; 
-    } // catch 
-} // insert_pwd
 
 /** Inserts a environnement variable into the issue 
 * \param env_key name of the environnement variable
@@ -409,16 +372,12 @@ void Issue::insert_pwd() throw() {
 */
 
 void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
-    try {
-	ERS_PRE_CHECK_PTR(env_key);
-	ERS_PRE_CHECK_PTR(issue_key);
-	std::string value = Environnement::get(std::string(issue_key)); 
-	if (value!=Environnement::NO_VALUE) {
-	    set_value(issue_key,value); 
-	} // value exists 
-    } catch (Issue &e) {
-	StreamFactory::warning(&e) ; 
-    } // catch 
+    if (! env_key) return ; 
+    if (! issue_key) return ; 
+    std::string value = Environnement::get(std::string(issue_key)); 
+    if (value!=Environnement::NO_VALUE) {
+	set_value(issue_key,value); 
+    } // value exists 
 } // insert_env
 
 // ====================================================
@@ -435,15 +394,22 @@ void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
   * \li OS and processor of the host
   *
   * \param context context where the exception occured, this should be the ERS_HERE macro. 
+  * \note All method used within this method should throw no exceptions to avoid circular problems. 
   */
 
 void Issue::setup_common(const Context *context) throw() {
     insert(context);
-    insert_hostname(); 
-    insert_processid(); 
+    Process p ; 
+    set_value(PROCESS_ID_KEY,p.process_id()); 
+    System::User user ; 
+    set_value(USER_ID_KEY,user.identity()) ; 
+    set_value(USER_NAME_KEY,user.name_safe()) ; 
+    set_value(PROCESS_PWD_KEY,System::File::working_directory()); 
+    System::LocalHost *localhost = System::LocalHost::instance(); 
+    set_value(HOST_NAME_KEY,localhost->full_name()); 
+    set_value(HOST_IP_ADDR_KEY,localhost->ip_string()); 
+    set_value(HOST_TYPE_KEY,localhost->description()); 
     insert_time();
-    insert_userid(); 
-    insert_env("HOSTTYPE",HOST_TYPE_KEY); 
 } // setup_common
 
 /** Finishes the setting up of the information fields.
@@ -451,19 +417,15 @@ void Issue::setup_common(const Context *context) throw() {
   * (those fields are not available until the end of the object construction.
   * @note this method should be called by the sub-class constructor, so that RTTI information is setup and correct. 
   * \param message human readable message 
+  * \note All method used within this method should throw no exceptions to avoid circular problems. 
   */
 
 void Issue::finish_setup(const std::string &message) throw() {
-    try {
-	Issue *p = this ; 
-	set_value(CPP_CLASS_KEY,(typeid(*p)).name()); 
-	set_value(CLASS_KEY, get_class_name()) ;
-	set_value(MESSAGE_KEY,message); 
-	m_human_description=build_human_description();
-	insert_pwd();
-    } catch (Issue &e) {
-	StreamFactory::warning(&e) ; 
-    } // try / catch 
+    Issue *p = this ; 
+    set_value(CPP_CLASS_KEY,(typeid(*p)).name()); 
+    set_value(CLASS_KEY, get_class_name()) ;
+    set_value(MESSAGE_KEY,message); 
+    m_human_description=build_human_description();
 } // finish_setup
 
 /** Builds a human readable description of the Issue.
@@ -474,7 +436,7 @@ void Issue::finish_setup(const std::string &message) throw() {
 
 std::string Issue::build_human_description() const throw() {
     std::string message = HumanStream::to_string(this); 
-    return message ; 
+    return message ;
 } // buildmm_human_description
 
 // ====================================================

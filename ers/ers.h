@@ -27,7 +27,7 @@
 #include "ers/NotImplemented.h"
 #include "ers/LogIssue.h"
 
-/** \mainpage 
+/** \page ERS 
    The ERS package offers basic facilites to do error handling. 
    It offers facilities for building issues, sending and receiving them from Streams. 
    Please see the <a href="ershowto.html">HowTo</a> page for more information about using the package. 

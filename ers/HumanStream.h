@@ -30,7 +30,7 @@ protected:
     virtual void serialize_separator(const Issue *issue) ;
 public:
     static const char* TXT_SUFFIX ;          /**< Suffix for 'human readable' descrption */
-    static std::string to_string(const Issue *issue); 
+    static std::string to_string(const Issue *issue) throw() ; 
     HumanStream() ;
     HumanStream(std::ostream *s);
     HumanStream(const System::File &file, bool read_mode);

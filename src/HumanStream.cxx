@@ -28,26 +28,31 @@ namespace {
     bool registered = ers::StreamFactory::instance()->register_factory(ers::HumanStream::TXT_SUFFIX,create_stream) ;
 } // anonymous namespace
 
-using namespace ers ; 
+/** Dumps the content of an issue into a string 
+  * \param issue_ptr the Issue to serialise
+  * \return string description 
+  */
 
-
-
-std::string HumanStream::to_string(const Issue *issue_ptr) {
-    std::ostringstream stl_stream ; 
-    HumanStream ers_stream(&stl_stream);
-    ers_stream.send(issue_ptr) ; 
-    std::string str = stl_stream.str();
-    return str ; 
+std::string ers::HumanStream::to_string(const Issue *issue_ptr) throw() {
+    try {
+	std::ostringstream stl_stream ; 
+	HumanStream ers_stream(&stl_stream);
+	ers_stream.send(issue_ptr) ; 
+	std::string str = stl_stream.str();
+	return str ; 
+    } catch (std::exception &ex) {
+	std::string msg = "error while building message " + std::string(ex.what()) ; 
+	return msg; 
+    } // 
 } // to_string
 
-
-HumanStream::HumanStream() : STLStream() {
+ers::HumanStream::HumanStream() : ers::STLStream() {
 } // HumanStream
 
-HumanStream::HumanStream(std::ostream *s) : STLStream(s) {
+ers::HumanStream::HumanStream(std::ostream *s) : ers::STLStream(s) {
 } // HumanStream
 
-HumanStream::HumanStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) {} 
+ers::HumanStream::HumanStream(const System::File &file, bool read_mode) : ers::STLStream(file,read_mode) {} 
 
 
 /** Serializes a key-value pair. 
@@ -56,7 +61,7 @@ HumanStream::HumanStream(const System::File &file, bool read_mode) : STLStream(f
   * \param value the value
   */
 
-void HumanStream::serialize_pair(const Issue *issue, const std::string &key, const std::string &value) {
+void ers::HumanStream::serialize_pair(const ers::Issue *issue, const std::string &key, const std::string &value) {
     (*m_out_stream)  << key << "=\"" << value << '\"';
 } // serialize
 
@@ -64,7 +69,7 @@ void HumanStream::serialize_pair(const Issue *issue, const std::string &key, con
   * \param issue the issue that is serialised 
   */
 
-void HumanStream::serialize_start(const Issue *issue) {
+void ers::HumanStream::serialize_start(const ers::Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
     ERS_PRE_CHECK_PTR(m_out_stream); 
     const std::string message_str = issue->get_value(Issue::MESSAGE_KEY) ;
@@ -76,7 +81,7 @@ void HumanStream::serialize_start(const Issue *issue) {
   * \param issue the issue that is serialised 
   */
 
-void HumanStream::serialize_end(const Issue *issue) {
+void ers::HumanStream::serialize_end(const ers::Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
     ERS_PRE_CHECK_PTR(m_out_stream);
     (*m_out_stream) << "]" ; 
@@ -86,7 +91,7 @@ void HumanStream::serialize_end(const Issue *issue) {
   * \param issue the issue that is serialised 
   */
 
-void HumanStream::serialize_separator(const Issue *issue) {
+void ers::HumanStream::serialize_separator(const ers::Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
     ERS_PRE_CHECK_PTR(m_out_stream);
     (*m_out_stream) << ", " ; 
