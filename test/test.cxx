@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fcntl.h>
+#include <stdlib.h>
 
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -12,9 +13,12 @@
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/InvalidReferenceIssue.h"
+#include "ers/StreamFactory.h"
 #include "system/SignalIssue.h"
 
 #include "system/OpenFail.h"
+
+#include "ExampleIssue.h"
 
 using namespace ers ; 
 
@@ -52,19 +56,17 @@ void test_issue(const Issue &e) {
     } catch (Issue &i) {
 	// XMLStream xml("/tmp/out.xml");
 	// xml << i ; 
-	Stream::error(&i); 
+	StreamFactory::error(&i); 
     }
 } // test_issue
 
 int main(int argc, char* argv[]) {
     XMLPlatformUtils::Initialize(); 
-    // System::SignalIssue::register_fatal(SIGSEGV); 
-    // System::SignalIssue::register_fatal(SIGBUS); 
     try {
-	ERS_DEBUG_0("creating file object");
+	// ERS_DEBUG_0("creating file object");
 	int s = 4096 ;
-	MapFile f("~/maptest",s,0,true,false); 
-	ERS_DEBUG_0("trying map"); 
+	MapFile f("~/tmp/maptest",s,0,true,false); 
+	// ERS_DEBUG_0("trying map"); 
 	f.map();
 	void *a = f.address() ;
 	printf("%p\n",a);
@@ -73,10 +75,9 @@ int main(int argc, char* argv[]) {
 	p[64] = 0 ; 
 	printf("%s\n",p);
 	f.unmap();
-	// char *b = 0 ; 
-	// b[0] = 0xff ; 
     } catch (Issue &e) {
-	test_issue(e); 
+	 test_issue(e); 
+	// StreamFactory::error(&e); 
     }
 } // main 
 

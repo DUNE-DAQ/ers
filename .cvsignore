@@ -3,8 +3,11 @@ build
 doc
 i686-rh73-gcc32
 i686-rh73-gcc32-opt
+i686-rh73-icc8-dbg
 core.*
 ers.xcode
+docs
+tmp
 
 
 

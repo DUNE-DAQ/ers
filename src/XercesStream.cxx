@@ -24,6 +24,7 @@
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/ParseIssue.h"
 #include "ers/NotImplemented.h"
+#include "ers/StreamFactory.h"
 
 /** Stuff needed to initialise the DOM implementation. 
   * Probably a list off character sets 
@@ -114,7 +115,7 @@ void ers::XercesStream::cannot_parse(const DOMNode *node) const {
   
 bool ers::XercesStream::handleError(const DOMError& domError) {
     Issue issue = to_issue(domError); 
-    dispatch(&issue,true); 
+    StreamFactory::dispatch(&issue,true); 
     return true  ; 
 } //
 
@@ -141,41 +142,42 @@ std::string ers::XercesStream::get_text(const DOMElement *element) {
     return get_text(child); 
 }  // get_text
 
-/** Parses an element (i.e a tag like \<key\>)
-  * \li If the element is a key tag, its content is taken as a key name and put into parameter \c key
-  * \li If the element is a string tag, its content is taken as a value, and it is put with parameter \c key
-  * Into the \c values. 
-  * \param the element to parse
-  * \param key the last key 
-  * \values the table containing all key and values
+/** Parses a node
+  * Depending on the type of node, a different behaviour is taken.
+  * Elements are parsed further, text and comments are ignored. 
+  * This method recognises three types of elements: 
+  * \li \c \<key\> the text child of the element is handled as the name of a key and stored into variable \c key
+  * \li \c \<string\> the text child of the element is handled as a value, it is inserted into \c values with \c key
+  * \li \c \<issue\> the issue is parsed and its address written into \c cause
+  * \param node the node to parse 
+  * \param key string to use to store a key when recognised 
+  * \param values the key/value table used to store values
+  * \param cause address to use to store the pointer for cause issues
+  * \note if \c XERCES_STREAM_LOG_COMMENT is defined, comments are logged at level 3. 
+  * \note if the \c issue tag appears and the key is to set to \c CAUSE_PSEUDO_KEY, an exception is thrown
+  *       (this means that the issue was not specified after a key). 
+  * \note if multiple values are specified for a key, the last one will be kept. 
   */
 
-void ers::XercesStream::parse(const DOMElement *element, std::string &key, string_map_type &values) const {
-    ERS_PRE_CHECK_PTR(element); 
-    const XMLCh *x_tag = element->getTagName() ;  
-    std::string tag = to_string(x_tag); 
-    if (tag == ers::Core::XML_KEY_TAG) {
-	key = get_text(element); 
-	return ; 
-    } // Key 
-    if (tag == ers::Core::XML_STRING_VALUE_TAG) {
-	values[key] = get_text(element);
-	return ;
-    } // String value
-    throw ERS_PARSE_ERROR("Unknown tag type: %s",tag); 
-} // parse
-
-/** Parses a node 
-  * If the node is an element method \c parse is called with the converted parameter. 
-  * Text and comment nodes are ignored. 
-  */
-
-void ers::XercesStream::parse(const DOMNode *node, std::string &key, string_map_type &values) const {
+void ers::XercesStream::parse(const DOMNode *node, std::string &key, string_map_type &values, const ers::Issue **cause) const {
     ERS_PRE_CHECK_PTR(node); 
+    ERS_PRE_CHECK_PTR(cause); 
     if (node->getNodeType()==DOMNode::ELEMENT_NODE) {
 	const DOMElement *element = dynamic_cast <const DOMElement *> (node) ;
-	parse(element,key,values); 
-	return ; 
+	const XMLCh *x_tag = element->getTagName() ;  
+	std::string tag = to_string(x_tag); 
+	if (tag == ers::Core::XML_KEY_TAG) { // We have a key 
+	    key = get_text(element); 
+	    return ; 
+	} else if (tag == ers::Core::XML_STRING_VALUE_TAG) { // we have a string value 
+	    values[key] = get_text(element);
+	    return ;
+	} else if (tag== ers::Core::XML_ISSUE_TAG) { // we have a issue 
+	    ERS_ASSERT(key==ers::Issue::CAUSE_PSEUDO_KEY,"key for cause is %s, not %s",key.c_str(),ers::Issue::CAUSE_PSEUDO_KEY);
+	    *cause = receive(element) ; 
+	} else { // we don't know what we have... 
+	    throw ERS_PARSE_ERROR("Unknown tag type: %s",tag); 
+	} // default case
     } // Element node
     if (node->getNodeType()==DOMNode::TEXT_NODE) {
 	return ; 
@@ -200,18 +202,23 @@ ers::Issue *ers::XercesStream::receive(const DOMElement *issue_element_ptr) cons
     string_map_type values ;
     std::string key ;
     DOMNode *child = issue_element_ptr->getFirstChild() ; 
+    const ers::Issue *cause_ptr = 0 ; 
     while(child!=0) {
-	parse(child,key,values); 
+	parse(child,key,values,&cause_ptr); 
 	child=child->getNextSibling() ; 
     } //
     std::string class_name = values[Issue::CLASS_KEY] ; 
     Issue *issue_ptr = ers::IssueFactory::instance()->build(class_name,&values); 
+    if (issue_ptr && cause_ptr) {
+	issue_ptr->cause(cause_ptr); 
+    } // we have a cause issue
     return issue_ptr ;
 } // receive
 
 /** Reads an Issue out of DOM document 
   * \param document_ptr pointer to the root document where the issue should be 
   * \return an issue if it could be read, or a null pointer if there was no issue in the document 
+  * \pre \c document_ptr is a valid pointer
   */
 
 ers::Issue *ers::XercesStream::receive(const DOMDocument *document_ptr) const {
@@ -220,7 +227,7 @@ ers::Issue *ers::XercesStream::receive(const DOMDocument *document_ptr) const {
     if (! issue_node) return 0 ;     
     if (issue_node->getNodeType()!=DOMNode::ELEMENT_NODE) { cannot_parse(issue_node); }
     const DOMElement *issue_element = dynamic_cast <const DOMElement *> (issue_node) ;
-    ERS_PRE_CHECK_PTR(issue_element);
+    ERS_CHECK_PTR(issue_element);
     std::string issue_name = to_string(issue_element->getTagName()) ; 
     if (issue_name!=ers::Core::XML_ISSUE_TAG) {
     	throw ERS_PARSE_ERROR("Invalid root tag : %s (should be %s)",
@@ -252,6 +259,53 @@ ers::Issue *ers::XercesStream::receive() {
     } // else 
 } // receive
 
+/** Adds a simple string tag with the following format 
+  * &gt;<var>name</var&lt; <var>value</var> &gt;/<var>name</var>&lt;
+  * \param element_ptr the element where things should be added 
+  * \param name the name of the tag (should be a valid tag identifier, i.e no space). 
+  * \param value the textual value of the tag 
+  * \pre \c element_ptr is a valid pointer
+  * \pre \c name is a valid pointer
+  * \pre \c value is a valid point
+  */
+
+void ers::XercesStream::add_string_tag(DOMElement *element_ptr, const char *name, const char *value) {
+    ERS_PRE_CHECK_PTR(element_ptr);
+    ERS_PRE_CHECK_PTR(name);
+    ERS_PRE_CHECK_PTR(value);
+    DOMDocument *document_ptr = element_ptr->getOwnerDocument() ;
+    DOMElement *child_element = document_ptr->createElement(to_unicode(name)) ; 
+    DOMText *child_text = document_ptr->createTextNode(to_unicode(value)) ; 
+    child_element->appendChild((DOMNode *) child_text);
+    element_ptr->appendChild(child_element);
+} // send
+
+/** This method serializes an issue into a XML element.
+  * The method can recusively call itself to serialize cause issues 
+  * \param root_element the element in which to insert the issue content (i.e an issue tag).
+  * \param issue_ptr the issue to serialize 
+  * \pre \c root_element is a valid pointer
+  * \pre \c issue_ptr is a valid pointer
+  */
+
+void ers::XercesStream::serialize(DOMElement *root_element, const Issue *issue_ptr) {
+    ERS_PRE_CHECK_PTR(root_element);
+    ERS_PRE_CHECK_PTR(issue_ptr);
+    const string_map_type *table = issue_ptr->get_value_table(); 
+    ERS_CHECK_PTR(table); 
+    for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
+	add_string_tag(root_element,ers::Core::XML_KEY_TAG,pos->first.c_str()) ; 
+	add_string_tag(root_element,ers::Core::XML_STRING_VALUE_TAG,pos->second.c_str()) ; 
+    } // for
+    const Issue *cause = issue_ptr->cause();
+    if (cause) {
+	add_string_tag(root_element,ers::Core::XML_KEY_TAG,ers::Issue::CAUSE_PSEUDO_KEY) ;
+	DOMDocument *document_ptr = root_element->getOwnerDocument() ;
+	DOMElement *cause_element = document_ptr->createElement(to_unicode(ers::Core::XML_KEY_TAG)) ;
+	serialize(cause_element,cause);
+    } // cause
+} // send
+
 /** Sends an issue into DOM Document 
   * \param document_ptr pointer to the target DOM document 
   * \param issue_ptr the issue to send 
@@ -261,17 +315,7 @@ void ers::XercesStream::send(DOMDocument *document_ptr, const Issue *issue_ptr) 
     ERS_PRE_CHECK_PTR(document_ptr);
     ERS_PRE_CHECK_PTR(issue_ptr);
     DOMElement *root_element = document_ptr->getDocumentElement();
-    const string_map_type *table = issue_ptr->get_value_table(); 
-    for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
-	DOMElement *key_element = document_ptr->createElement(to_unicode(ers::Core::XML_KEY_TAG)) ; 
-	DOMText *key_text = document_ptr->createTextNode(to_unicode(pos->first.c_str())) ; 
-	key_element->appendChild((DOMNode *)key_text);
-	root_element->appendChild(key_element);
-	DOMElement *value_element = document_ptr->createElement(to_unicode(ers::Core::XML_STRING_VALUE_TAG)) ; 
-	DOMText *value_text = document_ptr->createTextNode(to_unicode(pos->second.c_str())) ;
-	value_element->appendChild((DOMNode *) value_text);
-	root_element->appendChild(value_element);
-    } // for 
+    serialize(root_element,issue_ptr); 
 } // send
 
 /** Sends an issue into the stream 

@@ -49,11 +49,6 @@ void ers::TabOutStream::serialize_start(const Issue *i) {
 
 void ers::TabOutStream::serialize_end(const Issue *i) {
     ERS_PRE_CHECK_PTR(m_stream);
-    const std::exception *cause = i->cause() ; 
-    if (cause) {
-	printf("%s %p\n",cause->what(),&cause); 
-	*m_stream << Issue::CAUSE_PSEUDO_KEY << "\t\"" << cause->what() << "\"" << std::endl ; 
-    } // cause
     *m_stream << std::endl ; 
 } // serialize_end
 

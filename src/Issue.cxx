@@ -64,21 +64,28 @@ const char* Issue::ISSUE_CLASS_NAME = "ers::issue" ;
 // Constructors
 // ====================================================
 
-
-
-
-
 /** Empty constructor, should only be used when deserialising issues 
   */
 
 Issue::Issue() {
     m_human_description = "" ; 
-    cause(); 
+    m_cause = 0 ; 
 } // Issue
+
+/** Copy constructor 
+  * The \c m_human_description and the \c m_value_table fields are simply copied
+  * The The issue in the \c m_cause pointer if present is cloned. 
+  * \param issue original for copy
+  */ 
 
 Issue::Issue(const Issue &issue){
     this->m_human_description = issue.m_human_description ;
-    this->m_value_table = issue.m_value_table ; 
+    this->m_value_table = issue.m_value_table ;
+    if (issue.m_cause) {
+	this->m_cause = issue.m_cause->clone(); 
+    } else {
+	this->m_cause = 0 ; 
+    } 
 } // Issue
 
 /** Builds an Issue out of a value table
@@ -128,9 +135,119 @@ Issue::Issue(const Context &context, ers_severity s, const std::exception *cause
     finish_setup(cause_exception->what()); 
 } // Issue
 
+/** Destructor. 
+  * If the \c m_cause pointer is not null, the pointed Issue is deleted 
+  */
+
+Issue::~Issue() throw() {
+    if (m_cause) delete m_cause ; 
+    m_cause = 0 ; 
+} // ~Issue
+
+
+// Operators and factory methods 
+// ====================================================
+
+
+/** Builds a clone of the object.
+  * The object is allocated on the stack, and should be deleted by the caller
+  * \return a new object that is a copy of the current object
+  */
+
 Issue *Issue::clone() const { 
     return IssueFactory::instance()->build(this) ; 
 } // clone
+
+
+Issue::operator std::string() const {
+    return m_human_description ;
+} // std::string()
+
+/** Copy operator 
+  * \param source the original issue
+  * \return the copy issue
+  * \note The \c m_cause member, if non null, is cloned 
+  */
+
+Issue Issue::operator=(const Issue &source) {
+    Issue target(source);
+    return target ; 
+} // operator=
+
+/** Comparison operator 
+  * \param a first Issue to compare
+  * \param b second Issue to compare 
+  * \return \c true if \c a and \c b are equal 
+  */
+
+bool Issue::operator==(Issue other) {
+    if (m_value_table != other.m_value_table) return false ; 
+    if (m_cause = other.m_cause) return true ; 
+    return (*m_cause) == *(other.m_cause) ; 
+} // operator==
+
+
+// ====================================================
+// Stream Operators
+// ====================================================
+
+
+/** Standard Streaming operator - puts the human description into the Stream. 
+* \param Stream the destination Stream 
+* \param Issue the Issue to Stream
+* @see Issue::human_description()
+*/
+
+std::ostream& ers::operator<<(std::ostream& s, const Issue& i) {
+    return s << i.human_description() ; 
+} // operator<<
+
+/** Sends the Issue into a Stream 
+* \param Stream the Stream to send the Issue into
+* \param Issue the Issue to send
+* @return the Stream
+* @see serialize_to() 
+*/
+
+Stream& ers::operator<<(Stream& s, const Issue& i) {
+    s.send(&i); 
+    return s ; 
+} // operator<< 
+
+
+// ====================================================
+// Manipulation of the m_cause field 
+// ====================================================
+
+/**
+  * \return the cause of the issue, if there is one, a null pointer otherwise 
+  */
+
+const Issue *Issue::cause() const throw() {
+    return m_cause ; 
+} // cause
+
+/** Sets the cause of the issue 
+  * If the cause is an Issue, it is cloned and stored in the \c m_cause pointer.
+  * In all cases, the description of the cause is stored in the value table using
+  * the \c CAUSE_TEXT_KEY key.
+  * If the cause pointer is null, the \c m_cause field is simply cleared. 
+  * \param c pointer to the cause exception 
+  */
+
+void Issue::cause(const std::exception *c) {
+    if (c==0) {
+	m_cause = 0 ; 
+	return ; 
+    } // No cause easy. 
+    const Issue *i = dynamic_cast<const Issue *>(c) ; 
+    if (i) {
+	m_cause = i->clone(); 
+    } else {
+	m_cause = 0 ; 
+    } // if
+    m_value_table[CAUSE_TEXT_KEY] = c->what(); 
+} // cause
 
 
 // Value Table manipulation Methods 
@@ -145,17 +262,27 @@ const string_map_type* Issue::get_value_table() const {
 } // get_value_table
 
 /** General method for querying properties of the Issue 
-* \param key the key to lookup
-* @return the string value for the key and empty string if the key is not found
-*/
+ * \param key the key to lookup
+ * @return the string value for the key and empty string if the key is not found
+ */
 
 const std::string Issue::get_value(const std::string &key) const {
     string_map_type::const_iterator pos = m_value_table.find(key);
     if (pos!=m_value_table.end()) {
         return pos->second ; 
-    }
+    } // if
     return "";
 } // get_value
+
+int Issue::get_int_value(const std::string &key) const {
+    std::string v = get_value(key) ; 
+    return atoi(v.c_str()); 
+} // get_int_value
+
+
+/** 
+  * \return the number of key/value pairs in the issue
+  */
 
 int Issue::values_number() const {
     return m_value_table.size(); 
@@ -171,7 +298,7 @@ void Issue::set_values(const string_map_type &values) {
 } // load_values
 
 /** Set a numerical value in the value table
-  * \param key the key to insert
+  * \param key the key to use for insertion
   * \param value the value to insert
   */
 
@@ -180,6 +307,15 @@ void Issue::set_value(const std::string &key, long value) {
     std::ostringstream stream ;
     stream << value ; 
     m_value_table[key] = stream.str();
+} // set_value
+
+/** Sets a string value in the value table
+  * \param key the key to use for insertion
+  * \param value the value to insert 
+  */
+
+void Issue::set_value(const std::string &key, const std::string &value) {
+    m_value_table[key] = value ; 
 } // set_value
 
 // ====================================================
@@ -210,13 +346,16 @@ void Issue::insert_hostname() {
 } // insert_hostname
 
 /** Inserts the current process id into the issue
-*/
+ */
 
 void Issue::insert_processid() {
     std::ostringstream pid_str ;
     pid_str << getpid() ; 
     m_value_table[PROCESS_ID_KEY] = pid_str.str(); 
 } // insert_processid
+
+/** Inserts the current user id into the issue
+  */
 
 void Issue::insert_userid() {
     std::ostringstream uid_str ;
@@ -236,7 +375,7 @@ void Issue::insert_time() {
     char *cr = strchr(time_buffer,'\n');
     if (cr) {
 	*cr = '\0' ;
-    }
+    } // carriage return 
     m_value_table[TIME_KEY] =  time_buffer ; 
 } // insert_time
 
@@ -267,16 +406,16 @@ void Issue::insert_env(const char*env_key, const char* issue_key) {
 // ====================================================
 
 /** This method sets up common fields for all Issues. 
-* In particular, it inserts all data concerning the Issue's context, this includes
-* \li Source code position (file/line)
-* \li Compiler version
-* \li Compilation time and date
-* \li Hostname 
-* \li Process id
-* \li OS and processor of the host
-*
-* \param context context where the exception occured, this should be the ERS_HERE macro. 
-*/
+  * In particular, it inserts all data concerning the Issue's context, this includes
+  * \li Source code position (file/line)
+  * \li Compiler version
+  * \li Compilation time and date
+  * \li Hostname 
+  * \li Process id
+  * \li OS and processor of the host
+  *
+  * \param context context where the exception occured, this should be the ERS_HERE macro. 
+  */
 
 void Issue::setup_common(const Context *context) {
     if (context) {
@@ -347,11 +486,18 @@ void Issue::severity(ers_severity s) {
     m_value_table[SEVERITY_KEY] = get_severity_text(s) ; 
 } // severity
 
+/** Is the issue either an error or a fatal error 
+  * \return \c true if the issue is either an error or a fatal 
+  */
+
 bool Issue::is_error() {
     ers_severity s = severity(); 
     return (s==ers_error || s== ers_fatal) ;
 } // is_error
 
+/**
+  * \return the string representing the severity of the issue 
+  */
 
 std::string Issue::severity_message() const {
     return get_value(SEVERITY_KEY);  
@@ -359,8 +505,8 @@ std::string Issue::severity_message() const {
 
 
 /** Gets the responsibility type of the Issue 
-* @return the responsibiliy value of the Issue 
-*/
+ * \return the responsibiliy value of the Issue 
+ */
 
 ers_responsibility Issue::responsibility() const throw() {
     std::string value = this->get_value(RESPONSIBILITY_KEY); 
@@ -368,8 +514,8 @@ ers_responsibility Issue::responsibility() const throw() {
 } // responsability
 
 /** Sets the responsbility of the Issue
-* \param r the responsibility type
-*/
+ * \param r the responsibility type
+ */
 
 void Issue::responsibility(ers_responsibility r) {
     m_value_table[RESPONSIBILITY_KEY] = get_responsibility_text(r) ; 
@@ -393,17 +539,6 @@ int Issue::transience() const throw () {
 } // transience
 
 
-const std::exception *Issue::cause() const throw() {
-    return 0 ; 
-} // cause
-
-void Issue::cause(const std::exception *c) {
-    if (c==0) {
-	return ; 
-    } // No cause easy. 
-    m_value_table[CAUSE_TEXT_KEY] = c->what(); 
-} // cause
-
 /** 
  * @return human description of the Issue 
  */
@@ -422,36 +557,8 @@ const char *Issue::what() const throw() {
 } // what();  
 
 
-Issue::operator std::string() const {
-    return m_human_description ;
-} // std::string()
-
-// ====================================================
-// Stream Operators
-// ====================================================
 
 
-/** Standard Streaming operator - puts the human description into the Stream. 
-  * \param Stream the destination Stream 
-  * \param Issue the Issue to Stream
-  * @see Issue::human_description()
-  */
-
-std::ostream& ers::operator<<(std::ostream& s, const Issue& i) {
-    return s << i.human_description() ; 
-} // operator<<
-
-/** Sends the Issue into a Stream 
-  * \param Stream the Stream to send the Issue into
-  * \param Issue the Issue to send
-  * @return the Stream
-  * @see serialize_to() 
-  */
-
-Stream& ers::operator<<(Stream& s, const Issue& i) {
-    s.send(&i); 
-    return s ; 
-} // operator<< 
 
 
 

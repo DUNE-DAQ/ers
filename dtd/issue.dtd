@@ -1,0 +1,3 @@
+<!ELEMENT issue (key,string,issue)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT string (#PCDATA)>

@@ -36,10 +36,11 @@ protected:
 	static std::string error_msg(const DOMNode *node); 
 
 	void cannot_parse(const DOMNode *node) const ; 
-	void parse(const DOMElement *element, std::string &key, string_map_type &values) const ; 
-	void parse(const DOMNode *node, std::string &key, string_map_type &values) const ;
+	void parse(const DOMNode *node, std::string &key, string_map_type &values, const ers::Issue **cause) const ;
 	Issue *receive(const DOMElement *issue_element_ptr) const ; 
 	Issue *receive(const DOMDocument *document_ptr) const ; 
+	void add_string_tag(DOMElement *element_ptr, const char*name, const char* value) ; 
+	void serialize(DOMElement *element_ptr, const Issue *issue_ptr); 
 	void send(DOMDocument *document_ptr, const Issue *issue_ptr) ; 
 public:
 	bool handleError(const DOMError& domError) ;

@@ -5,7 +5,7 @@
 #include "ers/Core.h"
 #include "ers/Assertion.h"
 
-const char* ers_severity_text_names[] = { "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "none" } ;
+const char* ers_severity_text_names[] = { "none", "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "maximum (illegal)" } ;
 const char* ers_responsibility_text_names[] = { "precondition", "internal", "subSystem" } ; 
 const char* boolean_names[] = { "false", "true" } ; 
 
