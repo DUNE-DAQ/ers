@@ -72,6 +72,16 @@ PosixIssue::PosixIssue(ers_severity s, const Context &context) : Issue(s,context
     setup_posix(errno);
 } // posix_issue
 
+PosixIssue::PosixIssue(const std::string &message, const std::exception *cause, ers_severity s, const Context &context) : Issue(cause,s,context) {
+    setup_posix(errno);
+    finish_setup(message);
+} // PosixIssue
+
+PosixIssue::PosixIssue(const std::exception *cause, ers_severity s, const Context &context) : Issue(cause,s,context) {
+    setup_posix(errno);
+}  // PosixIssue
+
+
 const char*PosixIssue::get_class_name() const throw() {return POSIX_ERROR_CLASS ; } 
 
 std::string PosixIssue::posix_message() const throw() {

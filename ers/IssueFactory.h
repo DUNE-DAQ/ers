@@ -1,5 +1,5 @@
 /*
- *  UssueFactory.h
+ *  IssueFactory.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 30.11.04.
@@ -12,6 +12,7 @@
 
 #include <string>
 #include <map>
+#include "ers/util.h"
 
 namespace ers {
 
@@ -37,6 +38,8 @@ public:
     static IssueFactory *instance() ;
     bool register_issue(const std::string &name, CreateIssueCallback creator) ;
     Issue *build(const std::string &name) const ; 
+    Issue *build(const std::string &name, const string_map_type *values) const ; 
+    Issue *build(const Issue *original); 
     } ; // IssueFactory
 } // ers
 

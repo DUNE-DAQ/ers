@@ -29,6 +29,7 @@ protected:
     static std::string error_message(int err);  
     void setup_posix(int err); 
     PosixIssue(ers_severity s, const Context &context); 
+    PosixIssue(const std::exception *cause, ers_severity s, const Context &context);
 public:
     static const char *POSIX_ERROR_MSG_KEY ;
     static const char *POSIX_ERROR_NBR_KEY ;
@@ -36,6 +37,7 @@ public:
     PosixIssue(); 
     PosixIssue(const std::string &message, ers_severity s, int err, const Context &context) ; 
     PosixIssue(const std::string &message, ers_severity s, const Context &context);
+    PosixIssue(const std::string &message, const std::exception *cause, ers_severity s, const Context &context);
     virtual const char*get_class_name() const throw() ;
     std::string posix_message() const throw() ; 
     ~PosixIssue() throw() {} ;    

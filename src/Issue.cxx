@@ -51,6 +51,9 @@ const char* Issue::TIME_KEY = "TIME" ;
 const char* Issue::TRANSIENCE_KEY = "TRANSIENCE" ; 
 const char* Issue::USER_ID_KEY = "USER_ID" ; 
 const char* Issue::USER_NAME_KEY = "USER_NAME" ; 
+const char* Issue::CAUSE_TEXT_KEY = "CAUSE_TEXT"  ;
+const char* Issue::CAUSE_PSEUDO_KEY = "CAUSE" ; 
+
 
 const char* Issue::ISSUE_CLASS_NAME = "ers::issue" ; 
 
@@ -58,18 +61,30 @@ const char* Issue::ISSUE_CLASS_NAME = "ers::issue" ;
 // ====================================================
 
 
+
+
+
 /** Empty constructor, should only be used when deserialising issues 
   */
 
-Issue::Issue() {}
+Issue::Issue() {
+    m_human_description = "" ; 
+    cause(); 
+} // Issue
 
+Issue::Issue(const Issue &issue){
+    this->m_human_description = issue.m_human_description ;
+    this->m_value_table = issue.m_value_table ; 
+} // Issue
 
 /** Builds an Issue out of a value table
   * @param values table of values for the issue
   */
 
 Issue::Issue(const string_map_type &values) {
+    cause(); 
     set_values(values); 
+    m_human_description = this->get_value(MESSAGE_KEY) ; 
 } // Issue
 
 
@@ -81,7 +96,7 @@ Issue::Issue(const string_map_type &values) {
 */
 
 Issue::Issue(const std::string &m, ers_severity s, const Context &context) {
-    m_cause = 0 ;
+    cause(); 
     setup_common(&context);
     severity(s);
     finish_setup(m); 
@@ -90,18 +105,23 @@ Issue::Issue(const std::string &m, ers_severity s, const Context &context) {
 /** @overload */
 
 Issue::Issue(ers_severity s,  const Context &context) {
-    m_cause = 0 ;    
+    cause();   
     setup_common(&context);
     severity(s);
 } // Issue
 
-/** @overload */
+/** Constructor - takes another exceptions as the cause for the current exception.
+ * 
+ * @param s the severity of the exception
+ * @param cause the exception that caused the current Issue
+ */
 
-Issue::Issue(ers_severity s, const std::exception *cause) { 
-    m_cause = cause ; 
-    setup_common(0);
+Issue::Issue(const std::exception *c, ers_severity s, const Context &context) { 
+    ERS_PRECONDITION(c!=0,"Null cause exception"); 
+    cause(c); 
+    setup_common(&context);
     severity(s);
-    finish_setup(cause->what()); 
+    finish_setup(c->what()); 
 } // Issue
 
 // Value Table manipulation Methods 
@@ -201,8 +221,8 @@ void Issue::insert_time() {
 */
 
 void Issue::insert_env(const char*env_key, const char* issue_key) {
-    ERS_ASSERT(env_key!=0,"Null pointer for Environnement key."); 
-    ERS_ASSERT(issue_key!=0,"Null pointer for Issue key."); 
+    ERS_PRECONDITION(env_key!=0,"Null pointer for Environnement key."); 
+    ERS_PRECONDITION(issue_key!=0,"Null pointer for Issue key."); 
     const char* value = getenv(env_key); 
     if (value) {
 	m_value_table[issue_key] = std::string(value); 
@@ -256,7 +276,7 @@ void Issue::finish_setup(const std::string &message) {
 /** Builds a human readable description of the Issue.
 * This is done using the human_Stream class. 
 * @return A string containing the human description. 
-* @see human_Stream
+* @see Human_Stream
 */
 
 std::string Issue::build_human_description() const {
@@ -294,6 +314,11 @@ void Issue::severity(ers_severity s) {
     m_value_table[SEVERITY_KEY] = get_severity_text(s) ; 
 } // severity
 
+std::string Issue::severity_message() const {
+    return get_value(SEVERITY_KEY);  
+} // severity_message
+
+
 /** Gets the responsibility type of the Issue 
 * @return the responsibiliy value of the Issue 
 */
@@ -327,6 +352,19 @@ int Issue::transience() const throw () {
     std::string value = this->get_value(TRANSIENCE_KEY); 
     return parse_boolean(value.c_str());
 } // transience
+
+
+const std::exception *Issue::cause() const throw() {
+    return 0 ; 
+} // cause
+
+
+void Issue::cause(const std::exception *c) {
+    if (c==0) {
+	return ; 
+    } // No cause easy. 
+    m_value_table[CAUSE_TEXT_KEY] = c->what(); 
+} // cause
 
 /** 
  * @return human description of the Issue 

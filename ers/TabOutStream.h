@@ -23,7 +23,7 @@ public:
     TabOutStream(const char* filename) ; 
     TabOutStream(); 
     void serialize_start(const Issue *i) ; 
-    void serialize_end(const Issue *i) ;
+    virtual void serialize_end(const Issue *i) ;
     void serialize(const std::string &key, const std::string &value) ; 
 } ; // Tab_Stream
 

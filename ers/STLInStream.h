@@ -19,15 +19,17 @@ namespace ers {
     
     class STLInStream : public Stream {
 protected:
-	std::istream *_stream ;           
-	bool delete_stream ;
-	bool read_properties(string_map_type &values) = 0; 
+	std::istream *m_stream ;           
+	bool m_delete_stream ;
+	virtual bool read_properties(string_map_type &values) = 0; 
 public:
 	void send(const Issue *i) ; 
 	Issue *receive() ; 
-	STLOutStream(std::istream *s);
-	STLOutStream(const char* filename) ; 
-	STLOutStream(); 
-	~STLOutStream() ; 
-    } ; // Stream_Stream
+	STLInStream(std::istream *s);
+	STLInStream(const char* filename) ; 
+	STLInStream(); 
+	~STLInStream() ; 
+    } ; 
 } // ers
+
+

@@ -19,7 +19,7 @@ ERS_HEADS = ers/util.h ers/Issue.h ers/IssueFactory.h ers/Context.h \
 	 ers/Precondition.h ers/Assertion.h  ers/NotImplemented.h \
 	 ers/Stream.h ers/STLOutStream.h ers/XMLOutStream.h \
 	 ers/HumanStream.h ers/SyncStream.h ers/TabOutStream.h \
-	 ers/PosixIssue.h ers/OpenFail.h 
+	 ers/PosixIssue.h ers/FileIssue.h ers/OpenFail.h 
 
 ERS_SRCS = ${ERS_HEADS:ers/%.h=src/%.cxx}
 
@@ -52,7 +52,7 @@ ${BUILD}/test.o: test/test.cxx
 ${BUILD}/%.o: src/%.cxx ${ERS_HEADS}
 	${CC} $<  -c -o $@
 	
-${BUILD}/test: ${BUILD}/test.o ${ERS_OBJS}
+${BINARY_BUILD}/test: ${BUILD}/test.o ${ERS_OBJS}
 	${CC} $< ${ERS_OBJS} -o $@
 		
 clean:

@@ -10,9 +10,10 @@ using namespace ers ;
 
 int main(int argc, char* argv[]) {
     try {
-	NOT_IMPLEMENTED(); 
-	int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
-	if (fd<0) throw OpenFail("/etc/forbidden",O_RDWR |  O_CREAT,ERS_HERE); 
+	// NOT_IMPLEMENTED(); 
+	// int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
+	// if (fd<0) throw OpenFail("/etc/forbidden",O_RDWR |  O_CREAT,ERS_HERE); 
+	XMLOutStream xml_crash("/etc/forbidden"); 
     } catch (Issue &e) {
         Stream::error(&e);
 	XMLOutStream xml("/tmp/out.xml");

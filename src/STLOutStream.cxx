@@ -9,6 +9,7 @@
 
 #include "ers/STLOutStream.h"
 #include "ers/Precondition.h"
+#include "ers/FileIssue.h"
 
 /** Builds a stream that writes into a file 
   * @param filename the name of the file
@@ -16,26 +17,33 @@
 
 ers::STLOutStream::STLOutStream(const char* filename) {
     ERS_PRECONDITION(filename!=0,"Null pointer for filename"); 
-    _stream = new std::ofstream(filename) ; 
-    delete_stream = true ; 
+    try {
+	this->m_stream = new std::ofstream(filename) ; 
+	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
+	m_delete_stream = true ; 
+    } catch (std::exception &e) {
+	printf("%s %p\n",e.what(),&e); 
+	throw FileIssue("Cannot open stream",filename,&e,ers::ers_error,ERS_HERE); 
+    } 
 } // Stream_Stream
 
 ers::STLOutStream::STLOutStream(std::ostream *s) {
-    _stream = s ; 
-     delete_stream = false ;
+    ERS_PRECONDITION(s!=0,"Null pointer for stream"); 
+    this->m_stream = s ; 
+    this->m_delete_stream = false ;
 } // STLOutStream
 
 ers::STLOutStream::STLOutStream() {
-    _stream = &std::cout ;
-    delete_stream = false ; 
+    m_stream = &std::cout ;
+    m_delete_stream = false ; 
 } // Stream_Stream
 
 ers::STLOutStream::~STLOutStream() {
-    ERS_PRECONDITION(_stream,"Destructor called with null stream");
-    if (delete_stream) {
-	delete(_stream); 
+    ERS_PRECONDITION(m_stream,"Destructor called with null stream");
+    if (m_delete_stream) {
+	delete(m_stream); 
     } // if 
-    _stream = 0 ; 
+    m_stream = 0 ; 
 } // ~Stream_Stream
 
 void ers::STLOutStream::send(const Issue *i) {

@@ -1,3 +1,12 @@
+/*
+ *  util.h
+ *  ers
+ *
+ *  Created by Matthias Wiesmann on 13.12.04.
+ *  Copyright 2004 CERN. All rights reserved.
+ *
+ */
+
 /** @file This files contains small utility functions and general definitions for ers.
   */
 

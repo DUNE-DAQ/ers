@@ -20,11 +20,11 @@ namespace ers {
     
     class STLOutStream : public Stream {
 protected:
-	std::ostream *_stream ;           
-	bool delete_stream ;
+	std::ostream *m_stream ;           
+	bool m_delete_stream ;
 	void serialize_separator(const Issue *i) ;          
-	void serialize_start(const Issue *i) ;
-	void serialize_end(const Issue *i) ;
+	virtual void serialize_start(const Issue *i) ;
+	virtual void serialize_end(const Issue *i) ;
 	virtual void serialize(const std::string &key, const std::string &value) = 0 ; 
 public:
 	void send(const Issue *i) ; 

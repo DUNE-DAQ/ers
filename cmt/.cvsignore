@@ -1,0 +1,4 @@
+*.sh
+*.csh
+*.make
+Makefile

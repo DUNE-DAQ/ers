@@ -30,7 +30,7 @@ namespace ers {
     
     class Issue : public std::exception  {  
 	friend class Stream ; 
-	friend class STL_Out_Stream ; 
+	friend class IssueFactory ; 
 public:	
 	static const char *CLASS_KEY ; 
 	static const char *COMPILATION_TIME_KEY ; 
@@ -51,12 +51,14 @@ public:
 	static const char *TRANSIENCE_KEY ; 
 	static const char *USER_ID_KEY ; 
 	static const char *USER_NAME_KEY ; 
+	static const char *CAUSE_PSEUDO_KEY ; 
+	static const char *CAUSE_TEXT_KEY ; 
 	
 	static const char *ISSUE_CLASS_NAME ; 
 protected:
 	std::string m_human_description ;                              /**< \brief Human readable description */
-	const std::exception *m_cause ;                                /**< \brief Pointer to Issue that is the cause of this Issue. */
 	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
+	void cause(const std::exception *cause=0);
 	void insert(const Context *context) ;                          /**< \brief Inserts the context */
 	void insert_hostname();                                        /**< \brief Inserts the hostname */
 	void insert_processid();                                       /**< \brief Inserts process id */
@@ -70,18 +72,21 @@ protected:
         void set_values(const string_map_type &values); 
 public:
 	Issue();  
+	Issue(const Issue &issue); 
         Issue(const string_map_type &values); 
 	Issue(const std::string &message, ers_severity s, const Context &context);   
-        Issue(ers_severity s, const std::exception *cause); 
+        Issue(const std::exception *cause, ers_severity s, const Context &context); 
 	const std::string get_value(const std::string &key) const ;   /**< \brief Reads the property list. */
 	virtual const char *get_class_name() const throw() ;          /**< \brief Get key for class (used for serialisation)*/
 	const string_map_type* get_value_table() const ; 
         ers_severity severity() const throw()  ;
         void severity(ers_severity s) ; 
+	std::string severity_message() const ; 
 	void responsibility(ers_responsibility r) ; 
         ers_responsibility responsibility() const throw() ; 
      	void transience(bool tr);
 	int transience() const throw() ; 
+	const std::exception *cause() const throw() ;
 	const std::string human_description() const throw()  ;        /**< \brief Human description message. */
         const char* what() const throw() ;                            /**< \brief Human description message. */
         virtual ~Issue() throw() {} ;

@@ -38,3 +38,19 @@ ers::Issue *ers::IssueFactory::build(const std::string &name) const {
     } // issue null 
     return issue ; 
 } // build
+
+ers::Issue *ers::IssueFactory::build(const std::string &name, const ers::string_map_type *values) const {
+    Issue *i = build(name);
+    if (i) {
+	i->set_values(*values); 
+    } // if i
+    return i ; 
+} // build
+
+ers::Issue *ers::IssueFactory::build(const Issue *original) {
+    const std::string name = original->get_class_name() ; 
+    const ers::string_map_type *values = original->get_value_table(); 
+    ers::Issue *clone_issue = build(name,values);
+    return clone_issue ; 
+}// build
+

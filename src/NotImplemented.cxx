@@ -22,7 +22,7 @@ ers::NotImplemented::NotImplemented() : Assertion() {}
 
 ers::NotImplemented::NotImplemented(ers_severity s, const Context &context) : Assertion(s,context) {
     this->setup(context.function(),"",true);  
-} 
+} // NotImplemented
  
 /** Builds the message for a the not implemented issue.
   * @param condition_text should contain the problem condition, i.e the part that is not implemented,

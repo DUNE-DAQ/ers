@@ -9,13 +9,14 @@
 
 #include "ers/STLInStream.h"
 #include "ers/Issue.h"
+#include "ers/IssueFactory.h"
 
-Issue *ers::STLInStream::receive() {
-    string_map_type values 
+ers::Issue *ers::STLInStream::receive() {
+    string_map_type values ;
     bool status=read_properties(values);
     if (status) {
 	std::string class_name = values[Issue::ISSUE_CLASS_NAME] ; 
-	return IssueFactory.instance()->build(class_name); 
+	return ers::IssueFactory::instance()->build(class_name); 
     } else {
 	return 0 ; 
     } // if read worked
