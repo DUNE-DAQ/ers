@@ -11,6 +11,17 @@
 #include <iostream>
 #include <sstream>
 
+/** Constructor - defines an Issue context.
+  * This constructor should generally not be called directly, instead use the macro \c ERS_HERE. 
+  * \param filename name of the source code file
+  * \param line_number line_number in the source code 
+  * \param function_name name of the function - either pretty printed or not
+  * \param compiler_name name of the compiler 
+  * \param compiler_version version of the compiler 
+  * \param compilation_time time of the compilation 
+  * \param compilation_date date of the compilation 
+  */
+
 ers::Context::Context(const std::string &filename, int line_number, const std::string &function_name, 
                       const std::string &compiler_name, const std::string &compiler_version, 
                       const std::string &compilation_time, const std::string &compilation_date) {
@@ -54,7 +65,11 @@ std::string ers::Context::compilation() const {
     return compilation_s.str(); 
 } // compilation
 
-std::string ers::Context::host_type() const {
+/** Tries to gues the host name 
+  * \return a string describing the host, in the form <var>architecture</var>-<var>operating-system</var>
+  */
+
+std::string ers::Context::host_type() {
     std::ostringstream plateform_s ;
 #ifdef __POWERPC__
     plateform_s << "powerpc" ; 

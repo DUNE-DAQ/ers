@@ -16,52 +16,54 @@
 
 using namespace ers ; 
 
-HumanStream::HumanStream() : STLOutStream(new std::ostringstream()) {
-    m_delete_stream = true ;
+HumanStream::HumanStream() : STLStream("") {
 } // HumanStream
 
-HumanStream::HumanStream(std::ostream *s) : STLOutStream(s) {
-    m_delete_stream = false ;
+HumanStream::HumanStream(std::ostream *s) : STLStream(s) {
 } // HumanStream
 
-HumanStream::HumanStream(const System::File &file) : STLOutStream(file) {} 
+HumanStream::HumanStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) {} 
 
-/** Constructor sets up the string-stream 
-  */
-
-std::string HumanStream::str() {
-    ERS_PRE_CHECK_PTR(m_stream); 
-    std::ostringstream *stream = dynamic_cast<std::ostringstream *>(m_stream) ; 
-    std::string s = stream->str();
-    return s ; 
-} // str
 
 /** Serializes a key-value pair. 
-  * @param key the key
-  * @param value the value
+  * \param issue pointer to the issue owning the pair
+  * \param key the key
+  * \param value the value
   */
 
-void HumanStream::serialize(const std::string &key, const std::string &value) {
-    (*m_stream)  << key << "=\"" << value << '\"';
+void HumanStream::serialize_pair(const Issue *issue, const std::string &key, const std::string &value) {
+    (*m_out_stream)  << key << "=\"" << value << '\"';
 } // serialize
+
+/** Starts serialisation of an issue
+  * \param issue the issue that is serialised 
+  */
 
 void HumanStream::serialize_start(const Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
-    ERS_PRE_CHECK_PTR(m_stream); 
+    ERS_PRE_CHECK_PTR(m_out_stream); 
     const std::string message_str = issue->get_value(Issue::MESSAGE_KEY) ;
     const std::string severity_str = issue->get_value(Issue::SEVERITY_KEY) ;
-    (*m_stream) << "issue: " << message_str << "(" << severity_str << ")[" ; 
+    (*m_out_stream) << "issue: " << message_str << "(" << severity_str << ")[" ; 
 } // serialize_start
+
+/** Ends serialisation of an issue 
+  * \param issue the issue that is serialised 
+  */
 
 void HumanStream::serialize_end(const Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
-    ERS_PRE_CHECK_PTR(m_stream);
-    (*m_stream) << "]" ; 
+    ERS_PRE_CHECK_PTR(m_out_stream);
+    (*m_out_stream) << "]" ; 
 } // serialize_end
+
+/** Serialises a separatar between key-value pairs 
+  * \param issue the issue that is serialised 
+  */
 
 void HumanStream::serialize_separator(const Issue *issue) {
     ERS_PRE_CHECK_PTR(issue); 
-    ERS_PRE_CHECK_PTR(m_stream);
-    (*m_stream) << ", " ; 
+    ERS_PRE_CHECK_PTR(m_out_stream);
+    (*m_out_stream) << ", " ; 
 } // serialize_separator
 

@@ -10,7 +10,7 @@
 #include "ers/StreamFactory.h"
 
 #include "ers/HumanStream.h"
-#include "ers/TabOutStream.h"
+#include "ers/TabStream.h"
 #include "ers/FIFOStream.h"
 
 #ifdef USE_TINY_XML
@@ -227,8 +227,8 @@ void ers::StreamFactory::dispatch(Issue *issue_ptr, bool throw_error) {
  */
 
 ers::Stream* ers::StreamFactory::factory(std::ostream *s, const std::string &type)  {
-    if (type==TAB_SUFFIX) return new TabOutStream(s); 
-    return new TabOutStream(s); 
+    if (type==TAB_SUFFIX) return new TabStream(s); 
+    return new TabStream(s); 
 } // factory
 
 /** This function builds a streams that writes into a file.
@@ -238,12 +238,12 @@ ers::Stream* ers::StreamFactory::factory(std::ostream *s, const std::string &typ
 
 ers::Stream* ers::StreamFactory::factory(const System::File &file) {
     if (file.extension()==XML_SUFFIX) {
-    	return new ers::XercesStream(file); 
+    	return new ers::XercesStream(file,false); 
     } // XML
     if (file.extension()==TAB_SUFFIX) {
-        return new TabOutStream(file); 
+        return new TabStream(file,false); 
     } // TAB
-    return new HumanStream(file); 
+    return new HumanStream(file,false); 
 } // factory
 
 
@@ -251,7 +251,7 @@ ers::Stream* ers::StreamFactory::factory(const System::File &file) {
 // --------------------------------------
 
 /** Gets stream for severity 
-  * \param severity the severity of the requested stream
+  * \param s the severity of the requested stream
   * \return the stream 
   */
 

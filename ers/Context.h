@@ -30,27 +30,30 @@ namespace ers {
  
 class Context {
 protected:
-        std::string file_name ; 
-        int line_number ; 
-        std::string function_name ; 
-        std::string compiler_name ; 
-        std::string compiler_version ; 
-        std::string compilation_date ; 
-        std::string compilation_time ; 
+        std::string file_name ;          /**< source file-name */
+        int line_number ;                /**< source line-number */
+        std::string function_name ;      /**< source function name (can be pretty printer or not) */
+        std::string compiler_name ;      /**< compiler name */
+        std::string compiler_version ;   /**< compiler version */
+        std::string compilation_date ;   /**< compilation date */
+        std::string compilation_time ;   /**< compilation time */
 public:
             Context(const std::string &filename, int line_number, const std::string &function_name, 
                     const std::string &compiler_name, const std::string &compiler_version, 
                     const std::string &compilation_time, const std::string &compilation_date) ;
-        std::string file() const ;
-        int line() const ;
-	const char* function() const ; 
-        std::string position() const ;
-        std::string compiler() const ; 
-        std::string compilation() const ; 
-        std::string host_type() const ; 
+        std::string file() const ;       /**< \return file-name */
+        int line() const ;               /**< \return line-number */
+	const char* function() const ;   /**< \return function name */
+        std::string position() const ;   /**< \return position (i.e file+line+function) */
+        std::string compiler() const ;   /**< \return compiler (compiler-name + compiler-version) */
+        std::string compilation() const ;/**< \return compilation time and date */
+        static std::string host_type()  ;  /**< \brief type of target host */
 } ; // Context
 
 } // ers 
+
+/** \def COMPILER_NAME defines the name of the compiler used */
+/** \def __VERSION__ defines the version of the compiler used */
 
 #ifdef __GNUC__
 #define COMPILER_NAME "gcc"

@@ -40,6 +40,11 @@ public:
     Assertion(const Context &context, ers_severity s, const char*condition, const std::string &message,  bool constant_expression=false) ;
 } ; 
 
+/** This structure is simply used to trigger compile-time assertion errors 
+  * The \c true template instanciation is implemented, but not the false, this means that if the template
+  * is instanciated with \c false, we get a compile-time error
+  */
+
 template <bool> struct Compile_time_error ; 
 template<> struct Compile_time_error<true> { };
 
@@ -63,11 +68,14 @@ template<> struct Compile_time_error<true> { };
  * If the compiler is gcc, then the transient field of the assertion is set according to the transcience of the expression. 
  * This means that if the expression is detected by the compiler as being constant, 
  */
-
+#ifndef N_DEBUG
 #ifdef __GNUC__
 #define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error, #expr,assertion_buffer,__builtin_constant_p(expr)) ; throw failed_assertion ; } }
 #else 
 #define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error,#expr,assertion_buffer,false) ; throw failed_assertion ; } }
+#endif
+#else 
+#define ERS_ASSERT(expr,...) ((void) expr) 
 #endif
 
 #endif

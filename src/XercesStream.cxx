@@ -16,7 +16,9 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
+#include <xercesc/framework/Wrapper4InputSource.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
+
 
 #include "ers/XercesStream.h"
 #include "ers/XercesString.h"
@@ -26,6 +28,8 @@
 #include "ers/NotImplemented.h"
 #include "ers/StreamFactory.h"
 
+#include "system/IOIssue.h"
+
 /** Stuff needed to initialise the DOM implementation. 
   * Probably a list off character sets 
   */
@@ -34,11 +38,15 @@ static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
 
 /** Constructor - builds a stream that will write into a file
   * \param file the file data will be written into 
+  * \param read_mode is the file used for reading 
   */
 
-ers::XercesStream::XercesStream(const System::File &file) : Stream() ,DOMErrorHandler() {
-    m_file_path = file.full_name(); 
+ers::XercesStream::XercesStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) ,DOMErrorHandler() {
+    m_file_path = file ; 
 } // XercesStream
+
+ers::XercesStream::XercesStream(const void* ptr) : STLStream(ptr) {} 
+
 
 /** Destructor 
   */
@@ -50,11 +58,14 @@ ers::XercesStream::~XercesStream() {} //~XercesStream
 // ----------------------
 
 /** Extracts an error message out of a node
-  * \param pointer to the node to information about
+  * \param node pointer to the node to information about
   * \return a string containg the name and the data for the node separated by a colon (:) 
   */
 
 std::string ers::XercesStream::error_msg(const DOMNode *node) {
+    if (!node) {
+	return "null node" ; 
+    } // no node
     const XMLCh* data = node->getNodeValue(); 
     const XMLCh* name = node->getNodeName() ; 
     std::ostringstream element_stream ; 
@@ -189,7 +200,7 @@ void ers::XercesStream::parse(const DOMNode *node, std::string &key, string_map_
 	ERS_DEBUG_3(text.c_str()) ; 
 #endif
 	return ; 
-    } // TEXT node
+    } // Comment node
     cannot_parse(node); 
 } // parse
 
@@ -252,7 +263,12 @@ ers::Issue *ers::XercesStream::receive() {
     parser->setErrorHandler((DOMErrorHandler *) this) ; 
     parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
     parser->resetDocumentPool();
-    DOMDocument *document = parser->parseURI(m_file_path.c_str()); 
+    
+    MemBufInputSource *src = get_source(); 
+    // src->setEncoding(to_unicode("utf-8")); 
+    Wrapper4InputSource wrapper(src,true); // We need to convert between formats because DOM seems not to support reading from memory.
+    DOMDocument *document = parser->parse(wrapper) ; // parseURI(m_file_path.c_str()); 
+    // delete(src); 
     if (document) {
 	return receive(document); 
     } else {
@@ -260,8 +276,42 @@ ers::Issue *ers::XercesStream::receive() {
     } // else 
 } // receive
 
-/** Adds a simple string tag with the following format 
-  * &gt;<var>name</var&lt; <var>value</var> &gt;/<var>name</var>&lt;
+/** Copies the content of the stream into a buffer that can be parsed.
+  * \return a Memory buffer for SAX/DOM
+  * \note Copy is very innefficient, for some wierd reason, readsome throws 
+  * exceptions, so reads have to be done one by one. 
+  * It would probably be more efficient to address the underlying buffer.
+  * Ideally, this stream should only 'consume' xml data for one issue 
+  */
+
+MemBufInputSource *ers::XercesStream::get_source() {
+    ERS_CHECK_PTR(m_in_stream);
+    char buffer[65000] ; 
+    char *p = buffer ; 
+    int total = 0 ; 
+    try { 
+    do {
+	const int space_left = sizeof(buffer)-total ; 
+	ERS_ASSERT(space_left>0,"Buffer overflow");
+	int byte_read = 1 ; // = m_in_stream->readsome(p,16); 
+	int c = m_in_stream->get();
+	if (c==EOF) break ;
+	(*p) = c ; 
+	p+=byte_read ; 
+	total+=byte_read ;
+    } while(m_in_stream->peek()!=EOF) ; 
+    const char *id = m_file_path.c_str();  
+    MemBufInputSource* memBufIS = new MemBufInputSource((const XMLByte*) buffer,total,id,false); 
+    return memBufIS ; 
+    } catch (std::ios_base::failure &e) {
+       throw SYSTEM_IOERROR("failure copying buffer from "+m_file_path,&e);
+    } 
+} // 
+
+/** Adds a simple string tag with the following format
+  * \verbatim
+  * <name>value</name>
+  * \endverbatim
   * \param element_ptr the element where things should be added 
   * \param name the name of the tag (should be a valid tag identifier, i.e no space). 
   * \param value the textual value of the tag 
@@ -332,7 +382,7 @@ void ers::XercesStream::send(const Issue *issue_ptr) {
     ERS_CHECK_PTR(document_ptr);
     document_ptr->setStandalone(true); 
     send(document_ptr,issue_ptr);  
-    XMLFormatTarget *form_target = new LocalFileFormatTarget(m_file_path.c_str());
+    XMLFormatTarget *form_target = this ; 
     ERS_CHECK_PTR(form_target);
     DOMWriter *writer_ptr = impl->createDOMWriter();
     ERS_CHECK_PTR(writer_ptr);
@@ -340,8 +390,15 @@ void ers::XercesStream::send(const Issue *issue_ptr) {
     writer_ptr->writeNode(form_target,*document_ptr);
     writer_ptr->release(); 
     document_ptr->release();
-    delete form_target ; 
+    // delete form_target ; 
 }// send
+
+void ers::XercesStream::writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter) {
+    const char* buffer = (const char*) toWrite ; 
+    m_out_stream->write(buffer,count); 
+} // writeChars
+
+
 
 
 

@@ -11,7 +11,7 @@
 #include <ostream>
 #include <sstream>
 
-#include "STLOutStream.h"
+#include "STLStream.h"
 
 namespace ers {
 
@@ -21,17 +21,16 @@ namespace ers {
   * \version 1.0
   */
     
-class HumanStream  : public STLOutStream {
+class HumanStream  : public STLStream {
 protected:
-    void serialize(const std::string &key, const std::string &value) ;
-    void serialize_start(const Issue *i) ; 
-    void serialize_end(const Issue *i) ; 
-    void serialize_separator(const Issue *i) ;
+    virtual void serialize_pair(const Issue *issue, const std::string &key, const std::string &value) ;
+    virtual void serialize_start(const Issue *issue) ; 
+    virtual void serialize_end(const Issue *issue) ; 
+    virtual void serialize_separator(const Issue *issue) ;
 public:
     HumanStream() ;
     HumanStream(std::ostream *s);
-    HumanStream(const System::File &file);
-    std::string str();        /**< \brief returns the string for the stream */
+    HumanStream(const System::File &file, bool read_mode);
 } ; // human_stream 
 
 } // namespace ers

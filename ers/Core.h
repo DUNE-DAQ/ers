@@ -1,5 +1,5 @@
 /*
- *  definitions.h
+ *  Core.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 13.12.04.
@@ -7,8 +7,8 @@
  *
  */
 
-/** @file This files contains small utility functions and general definitions for ers.
-  * @version 1.0 
+/** \file Core.h This files contains small utility functions and general definitions for ers.
+  * \version 1.0 
   */
 
 

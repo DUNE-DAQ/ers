@@ -65,10 +65,11 @@ const char* ers::Assertion::get_class_name() const throw (){
 } // get_class_name
 
 /** Builds the message associated with an assertion 
-  * @return message describing the failure of the assertion 
-  * @param condition_text the condition in textual form 
-  * @param message the message associated with the condition
-  * @return an human readable message 
+  * \return message describing the failure of the assertion 
+  * \param condition_text the condition in textual form 
+  * \param message the message associated with the condition
+  * \param constant_expression is the assertion a constant expression as detected by the compiler. 
+  * \return an human readable message 
   */
 
 std::string ers::Assertion::build_message(const char* condition_text, const std::string &message, bool constant_expression) {

@@ -44,7 +44,7 @@ std::string to_string(const XMLCh* data) {
 
 } // ers
 
-/** \macro to_unicode(str) converts a char* to unicode form */
+/** \def to_unicode(str) converts a char* to unicode form */
 
 #define to_unicode(str) XercesString(str).unicodeForm()
 

@@ -100,11 +100,10 @@ Issue::Issue(const string_map_type &values) {
 
 
 /** Constructor 
-* \param m message of the Issue
-* \param s severity of the Issue 
-* \param file file where Issue occured 
-* \param line line where Issue occured 
-*/
+ * \param context the context of the Issue, e.g where in the code did the issue appear 
+ * \param s severity of the Issue
+ * \param m message of the Issue
+ */
 
 Issue::Issue(const Context &context, ers_severity s, const std::string &m) {
     cause(); 
@@ -122,9 +121,9 @@ Issue::Issue(const Context &context, ers_severity s) {
 } // Issue
 
 /** Constructor - takes another exceptions as the cause for the current exception.
- * 
+ * \param context the context of the Issue, e.g where in the code did the issue appear  
  * \param s the severity of the exception
- * \param cause the exception that caused the current Issue
+ * \param cause_exception the exception that caused the current Issue
  */
 
 Issue::Issue(const Context &context, ers_severity s, const std::exception *cause_exception) {
@@ -175,9 +174,8 @@ Issue Issue::operator=(const Issue &source) {
 } // operator=
 
 /** Comparison operator 
-  * \param a first Issue to compare
-  * \param b second Issue to compare 
-  * \return \c true if \c a and \c b are equal 
+  * \param other issue to compare to
+  * \return \c true if \c this and \c other are equal 
   */
 
 bool Issue::operator==(Issue other) {
@@ -193,21 +191,21 @@ bool Issue::operator==(Issue other) {
 
 
 /** Standard Streaming operator - puts the human description into the Stream. 
-* \param Stream the destination Stream 
-* \param Issue the Issue to Stream
-* @see Issue::human_description()
-*/
+ * \param s the destination Stream 
+ * \param i the Issue to Stream
+ * \see Issue::human_description()
+ */
 
 std::ostream& ers::operator<<(std::ostream& s, const Issue& i) {
     return s << i.human_description() ; 
 } // operator<<
 
 /** Sends the Issue into a Stream 
-* \param Stream the Stream to send the Issue into
-* \param Issue the Issue to send
-* @return the Stream
-* @see serialize_to() 
-*/
+ * \param s the Stream to send the Issue into
+ * \param i the Issue to send
+ * \return the Stream
+ * \see serialize_to() 
+ */
 
 Stream& ers::operator<<(Stream& s, const Issue& i) {
     s.send(&i); 
@@ -290,7 +288,7 @@ int Issue::values_number() const {
 
 
 /** Sets the value table 
- * \param value the value table to load
+ * \param values the value table to load
  */
 
 void Issue::set_values(const string_map_type &values) {
@@ -454,7 +452,9 @@ void Issue::finish_setup(const std::string &message) {
 std::string Issue::build_human_description() const {
     HumanStream s ; 
     s.send(this);
-    return s.str(); 
+    const char* msg = s.str().c_str() ; 
+    std::string message = std::string(msg); 
+    return message ; 
 } // buildmm_human_description
 
 // ====================================================

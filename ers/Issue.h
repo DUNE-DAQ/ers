@@ -7,6 +7,12 @@
  *
  */
 
+/** \page ERS 
+  * The Error Reporting System package offers basic facilites to do error handling. 
+  * 
+  * 
+  */
+
 #ifndef ERS_Issue_
 #define ERS_Issue_
 
@@ -25,8 +31,11 @@ namespace ers {
     *  The object contains utility methods to allow the manipulation of those key / values and
     *  code to insert common values into it, like time, compilation information, host information etc.
     *  \author Matthias Wiesmann
-    *  \version 1.0
-    *  \bug Issue chaining is not implemented for the moment - we might need smart pointers. 
+    *  \version 1.1
+    *  \note Issue chaining is handled by copying the cause issue on the stack and keeping a pointer to it.
+    *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that 
+    *  correctly implement the factory methods required by the IssueFactory class
+    *  \see ers::IssueFactory
     */
     
     class Issue : public std::exception  {  
