@@ -10,6 +10,7 @@ manager	Matthias.Wiesmann@cern.ch
 
 use TDAQPolicy
 use TDAQExternal
+use system
 
 #use AtlasXercesC	AtlasXercesC-*	External
 
@@ -25,5 +26,6 @@ macro		instlibs		libers.so	\
 apply_pattern   install_libs            files=$(instlibs)
 
 application	ers_test 		-group=check -check		../test/test.cxx
-macro		ers_test_dependencies	"ers"
-macro		ers_testlinkopts	-lers
+macro		ers_test_dependencies	"ers" "system"
+macro           ers_test_cppflags	"-I../../../system/ -I$(xercesc_home_linux)/rh73_gcc323/include/"
+macro		ers_testlinkopts	"-lers -lsystem -lxerces-c -L$(xercesc_home_linux)/rh73_gcc323/lib"
