@@ -29,9 +29,7 @@ void foo(int n) {
 } // foo
 
 
-int main(int argc, char* argv[]) {
-    (void) argc ;  // so the compiler does not complain
-    (void) argv ;  // so the compiler does not complain  
+int main(int, char**) {
     Context::add_qualifier("ers_test") ;   // we add a qualifier to all issues 
     StreamFactory::set_stream(ers_debug_3,"null"); // we disable the stream for debugging level 3
     ERS_DEBUG_3("This should not be displayed"); 
