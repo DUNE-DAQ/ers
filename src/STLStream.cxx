@@ -79,7 +79,7 @@ void ers::STLStream::open_read(const System::File &file) {
 } // open_read
 
 void ers::STLStream::open_write(const System::File &file) {
-    m_out_stream = file.output(); 
+    m_out_stream = file.output(true); 
     m_delete_out_stream = true ;     
 } // open_write
 

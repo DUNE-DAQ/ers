@@ -411,13 +411,16 @@ void ers::XercesStream::send(const Issue *issue_ptr) {
     writer_ptr->writeNode(form_target,*document_ptr);
     writer_ptr->release(); 
     document_ptr->release();
-    // delete form_target ; 
+    m_out_stream->flush(); 
 }// send
+
+/** Method required for XML Format target
+  */
 
 void ers::XercesStream::writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter) {
     const char* buffer = (const char*) toWrite ; 
     m_out_stream->write(buffer,count); 
-} // writeChars
+} // write_chars
 
 
 
