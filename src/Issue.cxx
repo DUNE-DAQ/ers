@@ -19,7 +19,8 @@
 #include "ers/HumanStream.h"
 #include "ers/Precondition.h"
 #include "ers/InvalidReferenceIssue.h"
-#include "ers/File.h"
+#include "system/File.h"
+#include "system/Environnement.h"
 
 #define BUFFER_SIZE 256 
 
@@ -33,6 +34,7 @@ namespace {
 } 
 
 using namespace ers ; 
+using namespace System  ;
 
 const char* Issue::CLASS_KEY = "ISSUE_CLASS" ; 
 const char* Issue::COMPILATION_TIME_KEY = "COMPILATION_TIME" ; 
@@ -238,7 +240,7 @@ void Issue::insert_time() {
   */
 
 void Issue::insert_pwd() {
-    m_value_table[PROCESS_PWD_KEY] = ers::File::working_directory() ; 
+    m_value_table[PROCESS_PWD_KEY] = System::File::working_directory() ; 
 } // insert_pwd
 
 /** Inserts a environnement variable into the issue 
@@ -249,9 +251,9 @@ void Issue::insert_pwd() {
 void Issue::insert_env(const char*env_key, const char* issue_key) {
     ERS_PRE_CHECK_PTR(env_key);
     ERS_PRE_CHECK_PTR(issue_key);
-    const char* value = getenv(env_key); 
-    if (value) {
-	m_value_table[issue_key] = std::string(value); 
+    std::string value = Environnement::get(std::string(issue_key)); 
+    if (value!=Environnement::NO_VALUE) {
+	m_value_table[issue_key] = value; 
     } // value exists 
 } // insert_env
 
@@ -339,6 +341,12 @@ ers_severity Issue::severity() const throw() {
 void Issue::severity(ers_severity s) {
     m_value_table[SEVERITY_KEY] = get_severity_text(s) ; 
 } // severity
+
+bool Issue::is_error() {
+    ers_severity s = severity(); 
+    return (s==ers_error || s== ers_fatal) ;
+} // is_error
+
 
 std::string Issue::severity_message() const {
     return get_value(SEVERITY_KEY);  

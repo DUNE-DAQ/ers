@@ -1,17 +1,18 @@
 #include <iostream>
 #include <fcntl.h>
 
-#include "ers/OpenFail.h"
+#include <xercesc/util/PlatformUtils.hpp>
+
+
 #include "ers/TabOutStream.h"
 #include "ers/TabInStream.h"
-#include "ers/XMLStream.h"
+#include "ers/TinyXMLStream.h"
+#include "ers/XercesStream.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/InvalidReferenceIssue.h"
-#include "ers/Executable.h"
-#include "ers/AllocIssue.h"
-#include "ers/MapFile.h"
-#include "ers/Stream.h"
+
+#include "system/OpenFail.h"
 
 using namespace ers ; 
 
@@ -23,17 +24,21 @@ void test_write(const Issue &e, const char* path) {
 void test_read(const char* path) {
     TabInStream tab_in(path) ; 
     Issue *i = tab_in.receive() ; 
+    ERS_CHECK_PTR(i);
     throw *i ; 
 } // test_read
 
 void test_write2(const Issue &e, const char* path) {
-    XMLStream xml_out(path);
+    // TinyXMLStream xml_out(path);
+    XercesStream xml_out(path); 
     xml_out << e ; 
 } // test_write
 
 void test_read2(const char* path) {
-    XMLStream xml_in(path) ; 
+    // TinyXMLStream xml_in(path) ; 
+    XercesStream xml_in(path); 
     Issue *i = xml_in.receive() ; 
+    ERS_CHECK_PTR(i);
     throw *i ; 
 } // test_read
 
@@ -50,6 +55,7 @@ void test_issue(const Issue &e) {
 } // test_issue
 
 int main(int argc, char* argv[]) {
+    XMLPlatformUtils::Initialize(); 
     try {
 	int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
 	if (fd<0) throw OpenFail(ERS_HERE,O_RDWR |  O_CREAT, "/etc/forbidden"); 
@@ -103,6 +109,12 @@ if (fd<0) {
 	// string_vector params ; 
 	// params.push_back("hello world"); 
 	// f.start(params); 
+ 
+#include "ers/InvalidReferenceIssue.h"
+#include "ers/Executable.h"
+#include "ers/AllocIssue.h"
+#include "ers/MapFile.h"
+#include "ers/Stream.h"
  
  
  */

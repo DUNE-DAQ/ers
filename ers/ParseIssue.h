@@ -24,8 +24,11 @@ protected:
     ParseIssue(const Context &c, ers_severity s) ; 
 public:
     static const char *OFFENDING_LINE_KEY ;
+    static const char *OFFENDING_LINE_NUMBER_KEY ; 
     static const char *PARSE_ISSUE_CLASS_NAME ; 
     void offending_line(const std::string &line) ; 
+    void offending_line_number(int line); 
+    void file_name(std::string filename); 
     ParseIssue() ; 
     ParseIssue(const Context &c,ers_severity s, const std::string &message); 
     ParseIssue(const Context &c,ers_severity s, const std::string &message, const std::string &line); 

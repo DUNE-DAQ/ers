@@ -9,8 +9,14 @@
 
 #include "ers/STLOutStream.h"
 #include "ers/Precondition.h"
-#include "ers/OpenFail.h"
 #include "ers/InvalidReferenceIssue.h"
+
+#include "system/OpenFail.h"
+
+using namespace System ; 
+
+
+
 
 /** Builds an ERS stream that writes into a file 
   * \param filename the name of the file
@@ -25,7 +31,7 @@ ers::STLOutStream::STLOutStream(const std::string &filename) {
     open(filename.c_str());
 } // Stream_Stream
 
-ers::STLOutStream::STLOutStream(const ers::File &file) {
+ers::STLOutStream::STLOutStream(const File &file) {
     open(file.full_name().c_str());
 } // Stream_Stream
 

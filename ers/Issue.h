@@ -85,6 +85,7 @@ public:
 	const string_map_type* get_value_table() const ; 
         ers_severity severity() const throw()  ;
         void severity(ers_severity s) ; 
+	bool is_error(); 
 	std::string severity_message() const ; 
 	void responsibility(ers_responsibility r) ; 
         ers_responsibility responsibility() const throw() ; 

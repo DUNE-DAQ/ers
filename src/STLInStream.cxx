@@ -10,12 +10,14 @@
 #include "ers/STLInStream.h"
 #include "ers/Issue.h"
 #include "ers/IssueFactory.h"
-#include "ers/File.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
-#include "ers/OpenFail.h"
 #include "ers/InvalidReferenceIssue.h"
 
+#include "system/File.h"
+#include "system/OpenFail.h"
+
+using namespace System ; 
 
 ers::STLInStream::STLInStream(std::istream *s) {
     ERS_PRE_CHECK_PTR(s); 
@@ -31,7 +33,7 @@ ers::STLInStream::STLInStream(const std::string &filename) {
     open(filename.c_str());
 } // STLInStream
 
-ers::STLInStream::STLInStream(const ers::File& file) {
+ers::STLInStream::STLInStream(const File& file) {
     open(file.full_name().c_str());
 } // STLInStream
 

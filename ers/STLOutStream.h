@@ -10,10 +10,11 @@
 #ifndef ERS_STL_OUT_STREAM
 #define ERS_STL_OUT_STREAM
 
-#include "ers/Stream.h"
-#include "ers/File.h"
 #include <iostream>
 #include <fstream>
+
+#include "ers/Stream.h"
+#include "system/File.h"
 
 namespace ers {
     
@@ -37,7 +38,7 @@ public:
 	STLOutStream(std::ostream *s);
 	STLOutStream(const char* filename) ; 
 	STLOutStream(const std::string &filename); 
-	STLOutStream(const ers::File &file); 
+	STLOutStream(const System::File &file); 
 	STLOutStream(); 
 	~STLOutStream() ; 
     } ; // Stream_Stream

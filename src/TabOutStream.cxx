@@ -15,8 +15,9 @@
 
 ers::TabOutStream::TabOutStream() : ers::STLOutStream() {} 
 ers::TabOutStream::TabOutStream(const char* filename) : ers::STLOutStream(filename) {} 
+ers::TabOutStream::TabOutStream(std::ostream *s) : ers::STLOutStream(s) {} 
 ers::TabOutStream::TabOutStream(const std::string & filename) : ers::STLOutStream(filename) {} 
-ers::TabOutStream::TabOutStream(const ers::File & file) : ers::STLOutStream(file) {} 
+ers::TabOutStream::TabOutStream(const System::File & file) : ers::STLOutStream(file) {} 
 
 /** Serializes a key-value pair. 
   * This is done by: 

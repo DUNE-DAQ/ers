@@ -17,7 +17,7 @@
 ers::TabInStream::TabInStream() : ers::STLInStream() {} 
 ers::TabInStream::TabInStream(const char* filename) : ers::STLInStream(filename) {} 
 ers::TabInStream::TabInStream(const std::string &filename) : ers::STLInStream(filename) {}
-ers::TabInStream::TabInStream(const ers::File &file) : ers::STLInStream(file) {}
+ers::TabInStream::TabInStream(const System::File &file) : ers::STLInStream(file) {}
 
 /** This method parses the input stream and extracts key - values pairs from it
   * The parsing is done line after line, each line is supposed to contain a key, 

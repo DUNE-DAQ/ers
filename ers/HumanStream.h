@@ -29,6 +29,8 @@ protected:
     void serialize_separator(const Issue *i) ;
 public:
     HumanStream() ;
+    HumanStream(std::ostream *s);
+    HumanStream(const System::File &file);
     std::string str();        /**< \brief returns the string for the stream */
 } ; // human_stream 
 

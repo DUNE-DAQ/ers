@@ -8,8 +8,10 @@
  */
 
 #include "ers/ParseIssue.h"
+#include "system/FileIssue.h"
 
-const char *ers::ParseIssue::OFFENDING_LINE_KEY = "PARSE_ISSUE_LINE" ; 
+const char *ers::ParseIssue::OFFENDING_LINE_KEY = "PARSE_ISSUE_TEXT" ; 
+const char *ers::ParseIssue::OFFENDING_LINE_NUMBER_KEY = "PARSE_ISSUE_LINE_NUMBER" ; 
 const char *ers::ParseIssue::PARSE_ISSUE_CLASS_NAME = "ers::ParseIssue" ; 
 
 namespace {
@@ -34,6 +36,16 @@ const char* ers::ParseIssue::get_class_name() const throw() {
 } // get_class_name
 
 void ers::ParseIssue::offending_line(const std::string &line) {
-    this->m_value_table[OFFENDING_LINE_KEY] = line ; 
+    m_value_table[OFFENDING_LINE_KEY] = line ; 
 }// offending_line
+
+void ers::ParseIssue::offending_line_number(int line) {
+    set_value(OFFENDING_LINE_NUMBER_KEY,line); 
+} // offending_line_number
+    
+void ers::ParseIssue::file_name(std::string filename) {
+    m_value_table[System::FileIssue::PATH_KEY] = filename ; 
+} // file_name
+
+
 

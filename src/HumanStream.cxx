@@ -20,6 +20,12 @@ HumanStream::HumanStream() : STLOutStream(new std::ostringstream()) {
     m_delete_stream = true ;
 } // HumanStream
 
+HumanStream::HumanStream(std::ostream *s) : STLOutStream(s) {
+    m_delete_stream = false ;
+} // HumanStream
+
+HumanStream::HumanStream(const System::File &file) : STLOutStream(file) {} 
+
 /** Constructor sets up the string-stream 
   */
 
