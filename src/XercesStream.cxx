@@ -29,11 +29,12 @@
 #include "system/IOIssue.h"
 
 const char * const ers::XercesStream::XML_SUFFIX = "xml" ; 
-const char * const ers::XercesStream::XML_TAGS[] = { "issue", "key", "string" } ; 
+const char * const ers::XercesStream::XML_TAGS[] = { "issue", "key", "string", "issuelist" } ; 
 
 #define XML_ISSUE_TAG ers::XercesStream::XML_TAGS[0] 
-#define XML_KEY_TAG   ers::XercesStream::XML_TAGS[1] 
+#define XML_KEY_TAG ers::XercesStream::XML_TAGS[1] 
 #define XML_STRING_VALUE_TAG ers::XercesStream::XML_TAGS[2] 
+#define XML_LIST_TAG ers::XercesStream::XML_TAGS[3] 
 
 
 namespace {
@@ -65,14 +66,39 @@ static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
 
 ers::XercesStream::XercesStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) ,DOMErrorHandler() {
     m_file_path = file ; 
+    init(read_mode); 
 } // XercesStream
 
-ers::XercesStream::XercesStream(std::ostream *out_stream) : STLStream(out_stream) {}
+ers::XercesStream::XercesStream(std::ostream *out_stream) : STLStream(out_stream) {
+    init(false); 
+} // XercesStream
 
 /** Destructor 
   */
 
-ers::XercesStream::~XercesStream() {} //~XercesStream
+ers::XercesStream::~XercesStream() {
+    if (m_flush_write) {
+	commit_writes();
+    } 
+} //~XercesStream
+
+/** Internal initialisation method 
+  */
+
+void ers::XercesStream::init(bool read_mode) {
+    m_flush_write = false ; 
+    m_pretty_print = false ;  // putting this to true produces strange empty lines that break parsing 
+    m_dom_implementation_ptr = DOMImplementationRegistry::getDOMImplementation(gLS);
+    ERS_CHECK_PTR(m_dom_implementation_ptr) ; 
+    if (read_mode) {
+	m_document_ptr = 0 ; 
+    } else {
+	m_document_ptr = m_dom_implementation_ptr->createDocument(0,to_unicode(XML_LIST_TAG),0);
+	ERS_CHECK_PTR(m_document_ptr); 
+	m_document_ptr->setStandalone(true); 
+    } 
+} // init
+
 
 // ----------------------
 // Error Handling methods
@@ -197,6 +223,7 @@ void ers::XercesStream::parse(const DOMNode *node, std::string &key, string_map_
     ERS_PRE_CHECK_PTR(cause); 
     if (node->getNodeType()==DOMNode::ELEMENT_NODE) {
 	const DOMElement *element = dynamic_cast <const DOMElement *> (node) ;
+	// std::cerr << "Parsing " << get_text(element) << std::endl ; 
 	const XMLCh *x_tag = element->getTagName() ;  
 	std::string tag = to_string(x_tag); 
 	if (tag == XML_KEY_TAG) { // We have a key 
@@ -256,7 +283,9 @@ ers::Issue *ers::XercesStream::receive(const DOMElement *issue_element_ptr) cons
 
 ers::Issue *ers::XercesStream::receive(const DOMDocument *document_ptr) const {
     ERS_PRE_CHECK_PTR(document_ptr);
-    const DOMNode *issue_node = document_ptr->getFirstChild();
+    const DOMNode *root_node = document_ptr->getFirstChild();
+    if (! root_node) return 0 ; 
+    const DOMNode *issue_node = root_node->getFirstChild(); 
     if (! issue_node) return 0 ;     
     if (issue_node->getNodeType()!=DOMNode::ELEMENT_NODE) { cannot_parse(issue_node); }
     const DOMElement *issue_element = dynamic_cast <const DOMElement *> (issue_node) ;
@@ -274,15 +303,13 @@ ers::Issue *ers::XercesStream::receive(const DOMDocument *document_ptr) const {
   */
 
 ers::Issue *ers::XercesStream::receive() {
-    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
-    ERS_CHECK_PTR(impl);
-    DOMBuilder        *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+    DOMBuilder *parser = ((DOMImplementationLS*) m_dom_implementation_ptr)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
     ERS_CHECK_PTR(parser);
     parser->setFeature(XMLUni::fgDOMNamespaces, false);
     parser->setFeature(XMLUni::fgXercesSchema, false);
     parser->setFeature(XMLUni::fgDOMValidation, false);
     parser->setErrorHandler((DOMErrorHandler *) this) ; 
-    parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
+    // parser->setFeature(XMLUni::fgDOMDatatypeNormalization, false);
     parser->resetDocumentPool();
     
     MemBufInputSource *src = get_source(); 
@@ -311,21 +338,21 @@ MemBufInputSource *ers::XercesStream::get_source() {
     char *p = buffer ; 
     int total = 0 ; 
     try { 
-    do {
-	const int space_left = sizeof(buffer)-total ; 
-	ERS_ASSERT(space_left>0,"Buffer overflow");
-	int byte_read = 1 ; // = m_in_stream->readsome(p,16); 
-	int c = m_in_stream->get();
-	if (c==EOF) break ;
-	(*p) = c ; 
-	p+=byte_read ; 
-	total+=byte_read ;
-    } while(m_in_stream->peek()!=EOF) ; 
-    const char *id = m_file_path.c_str();  
-    MemBufInputSource* memBufIS = new MemBufInputSource((const XMLByte*) buffer,total,id,false); 
-    return memBufIS ; 
+	do {
+	    const int space_left = sizeof(buffer)-total ; 
+	    ERS_ASSERT(space_left>0,"Buffer overflow");
+	    int byte_read = 1 ; // = m_in_stream->readsome(p,16); 
+	    int c = m_in_stream->get();
+	    if (c==EOF) break ;
+	    (*p) = c ; 
+	    p+=byte_read ; 
+	    total+=byte_read ;
+	} while(m_in_stream->peek()!=EOF) ; 
+	const char *id = m_file_path.c_str();  
+	MemBufInputSource* memBufIS = new MemBufInputSource((const XMLByte*) buffer,total,id,false); 
+	return memBufIS ; 
     } catch (std::ios_base::failure &e) {
-       throw SYSTEM_IOERROR("failure copying buffer from "+m_file_path,&e);
+	throw SYSTEM_IOERROR("failure copying buffer from "+m_file_path,&e);
     } 
 } // 
 
@@ -345,9 +372,9 @@ void ers::XercesStream::add_string_tag(DOMElement *element_ptr, const char *name
     ERS_PRE_CHECK_PTR(element_ptr);
     ERS_PRE_CHECK_PTR(name);
     ERS_PRE_CHECK_PTR(value);
-    DOMDocument *document_ptr = element_ptr->getOwnerDocument() ;
-    DOMElement *child_element = document_ptr->createElement(to_unicode(name)) ; 
-    DOMText *child_text = document_ptr->createTextNode(to_unicode(value)) ; 
+    ERS_PRE_CHECK_PTR(m_document_ptr); 
+    DOMElement *child_element = m_document_ptr->createElement(to_unicode(name)) ; 
+    DOMText *child_text = m_document_ptr->createTextNode(to_unicode(value)) ; 
     child_element->appendChild((DOMNode *) child_text);
     element_ptr->appendChild(child_element);
 } // send
@@ -361,33 +388,25 @@ void ers::XercesStream::add_string_tag(DOMElement *element_ptr, const char *name
   */
 
 void ers::XercesStream::serialize(DOMElement *root_element, const Issue *issue_ptr) {
-    ERS_PRE_CHECK_PTR(root_element);
     ERS_PRE_CHECK_PTR(issue_ptr);
+    ERS_PRE_CHECK_PTR(m_document_ptr); 
+    ERS_CHECK_PTR(root_element);
+    DOMElement *issue_element = m_document_ptr->createElement(to_unicode(XML_ISSUE_TAG)) ;
+    ERS_CHECK_PTR(issue_element);
+    root_element->appendChild(issue_element);
     const string_map_type *table = issue_ptr->get_value_table(); 
     ERS_CHECK_PTR(table); 
     for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
-	add_string_tag(root_element,XML_KEY_TAG,pos->first.c_str()) ; 
-	add_string_tag(root_element,XML_STRING_VALUE_TAG,pos->second.c_str()) ; 
+	add_string_tag(issue_element,XML_KEY_TAG,pos->first.c_str()) ; 
+	add_string_tag(issue_element,XML_STRING_VALUE_TAG,pos->second.c_str()) ; 
     } // for
     const Issue *cause = issue_ptr->cause();
     if (cause) {
-	add_string_tag(root_element,XML_KEY_TAG,ers::Issue::CAUSE_PSEUDO_KEY) ;
-	DOMDocument *document_ptr = root_element->getOwnerDocument() ;
-	DOMElement *cause_element = document_ptr->createElement(to_unicode(XML_KEY_TAG)) ;
+	add_string_tag(issue_element,XML_KEY_TAG,ers::Issue::CAUSE_PSEUDO_KEY) ;
+	DOMElement *cause_element = m_document_ptr->createElement(to_unicode(XML_KEY_TAG)) ;
 	serialize(cause_element,cause);
     } // cause
-} // send
-
-/** Sends an issue into DOM Document 
-  * \param document_ptr pointer to the target DOM document 
-  * \param issue_ptr the issue to send 
-  */
-
-void ers::XercesStream::send(DOMDocument *document_ptr, const Issue *issue_ptr) {
-    ERS_PRE_CHECK_PTR(document_ptr);
-    ERS_PRE_CHECK_PTR(issue_ptr);
-    DOMElement *root_element = document_ptr->getDocumentElement();
-    serialize(root_element,issue_ptr); 
+    
 } // send
 
 /** Sends an issue into the stream 
@@ -397,22 +416,26 @@ void ers::XercesStream::send(DOMDocument *document_ptr, const Issue *issue_ptr) 
 
 void ers::XercesStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr);
-    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
-    ERS_CHECK_PTR(impl);
-    DOMDocument* document_ptr = impl->createDocument(0,to_unicode(XML_ISSUE_TAG),0);
-    ERS_CHECK_PTR(document_ptr);
-    document_ptr->setStandalone(true); 
-    send(document_ptr,issue_ptr);  
+    DOMElement *root_element = m_document_ptr->getDocumentElement();
+    ERS_CHECK_PTR(root_element); 
+    serialize(root_element,issue_ptr); 
+    m_flush_write = true ; 
+    // send(m_document_ptr,issue_ptr);  
+}// send
+
+void ers::XercesStream::commit_writes() {
     XMLFormatTarget *form_target = this ; 
     ERS_CHECK_PTR(form_target);
-    DOMWriter *writer_ptr = impl->createDOMWriter();
+    DOMWriter *writer_ptr = m_dom_implementation_ptr->createDOMWriter();
     ERS_CHECK_PTR(writer_ptr);
-    writer_ptr->setFeature(to_unicode("format-pretty-print"),true) ; 
-    writer_ptr->writeNode(form_target,*document_ptr);
+    writer_ptr->setFeature(to_unicode("format-pretty-print"),m_pretty_print) ; 
+    writer_ptr->writeNode(form_target,*m_document_ptr);
     writer_ptr->release(); 
-    document_ptr->release();
+    m_document_ptr->release();
+    m_document_ptr= 0 ; 
     m_out_stream->flush(); 
-}// send
+} // commit_writes
+
 
 /** Method required for XML Format target
   */

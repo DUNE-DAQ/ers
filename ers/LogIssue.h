@@ -31,6 +31,6 @@ public:
     } ; // LogIssue
 } // ers
 
-#define ERS_LOG_ISSUE(m,s) LogIssue(ERS_HERE,s,m) 
+#define ERS_LOG_ISSUE(s,m) LogIssue(ERS_HERE,s,m) 
 
 #endif

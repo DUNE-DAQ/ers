@@ -29,14 +29,14 @@ namespace ers {
 private:
 	STLStream(const STLStream &other) : Stream() {} 
 protected:
-	std::istream *m_in_stream ;                                    /**< internal input stream */
-	std::ostream *m_out_stream ;                                   /**< internal output stream */
-	bool m_delete_in_stream ;                                      /**< should input stream be deleted upon destruction */
-	bool m_delete_out_stream ;                                     /**< should output stream be deleted upon destruction */
-	void open_stderr();                                           
-	void open_stdin(); 
-	void open_read(const System::File &file) ;
-	void open_write(const System::File &file) ; 
+	std::istream *m_in_stream ;                                     /**< internal input stream */
+	std::ostream *m_out_stream ;                                    /**< internal output stream */
+	bool m_delete_in_stream ;                                       /**< should input stream be deleted upon destruction */
+	bool m_delete_out_stream ;                                      /**< should output stream be deleted upon destruction */
+	void open_stderr();                                             /**< \brief open and link standard error */
+	void open_stdin();                                              /**< \brief open and link standard input */
+	void open_read(const System::File &file) ;                      /**< \brief open a file in read mode */
+ 	void open_write(const System::File &file) ;                     /**< \brief open a file in write mode */
 	virtual void serialize_start(const Issue *issue_ptr) ;          /**< \brief serialise the start of an issue */
 	virtual void serialize_end(const Issue *issue_ptr) ;            /**< \brief serialise the end of an issue */
 	virtual void serialize_separator(const Issue *issue_ptr) ;      /**< \brief serialise a separator between a set of key / values */  

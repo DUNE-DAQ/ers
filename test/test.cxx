@@ -31,6 +31,7 @@ void test_write2(const Issue &e, const char* path) {
     System::File file(path); 
     XercesStream xml_out(file,false); 
     xml_out << e ; 
+    xml_out << ERS_LOG_ISSUE(ers::ers_debug_0,"Test"); 
 } // test_write
 
 void test_read2(const char* path) {

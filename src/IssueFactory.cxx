@@ -11,6 +11,7 @@
 
 #include "ers/IssueFactory.h"
 #include "ers/Issue.h"
+#include "ers/DefaultIssue.h"
 #include "ers/Precondition.h"
 #include "ers/IssueFactoryIssue.h"
 #include "ers/InvalidReferenceIssue.h"
@@ -21,7 +22,7 @@ ers::IssueFactory::IssueFactory() {} ;
 
 /** Finds the singleton instance of the factory.
   * If the instance is not allocated yet, it is. 
-  * @return a pointer to the singleton instance 
+  * \return a pointer to the singleton instance 
   */
 
 ers::IssueFactory *ers::IssueFactory::instance()  {
@@ -38,9 +39,9 @@ void ers::IssueFactory::print_registered() {
 
 
 /** Register an issue type with the factory 
-  * @param name the name that will be used to lookup new instances 
-  * @param creator a pointer to the function used to create new instance for that particular type of function
-  * @return \c true if the name was already present in the table
+  * \param name the name that will be used to lookup new instances 
+  * \param creator a pointer to the function used to create new instance for that particular type of function
+  * \return \c true if the name was already present in the table
   */
 
 bool ers::IssueFactory::register_issue(const std::string &name, CreateIssueCallback creator) {
@@ -48,14 +49,16 @@ bool ers::IssueFactory::register_issue(const std::string &name, CreateIssueCallb
 } // register_Issue
 
 /** Builds an issue out of the name it was registered with 
-  * @param name the name used to indentify the class 
-  * @return an newly allocated instance of this type
+  * \param name the name used to indentify the class 
+  * \return an newly allocated instance of type \c name or DefaultIssue 
+  * \note If the requested type cannot be resolved an instance of type DefaultIssue 
   */
 
 ers::Issue *ers::IssueFactory::build(const std::string &name) const {
     CallbackMap::const_iterator i = m_factory_map.find(name); 
     if (i == m_factory_map.end()) {
-	throw ERS_ISSUE_FACTORY_ERROR(name,"issue not registred") ; 
+	// throw ERS_ISSUE_FACTORY_ERROR(name,"issue not registred") ; 
+	return new DefaultIssue(name); 
     } // Not found
     ers::Issue *issue = (i->second)() ; 
     if (0==issue) {

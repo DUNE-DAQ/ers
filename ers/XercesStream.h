@@ -36,18 +36,23 @@ namespace ers {
     public XMLFormatTarget {
 	
 protected:
-	std::string m_file_path ;                                   /**< path of the file, if applicable, used for information only */                     
+	std::string m_file_path ;                                   /**< path of the file, if applicable, used for information only */  
+	bool m_pretty_print ;                                       /**< do we pretty print the xml ?*/
+	bool m_flush_write ; 
+	DOMImplementation *m_dom_implementation_ptr ;               /**< DOM implementation used for reading and writing */
+	DOMDocument*       m_document_ptr ;                         /**< DOM document associated with the stream */
 	static ers::Issue to_issue(const DOMError& domError); 
 	static std::string get_text(const DOMNode *node)  ; 
 	static std::string get_text(const DOMElement *node)  ; 
 	static std::string error_msg(const DOMNode *node); 
+	void init(bool read_mode) ; 
 	void cannot_parse(const DOMNode *node) const ; 
 	void parse(const DOMNode *node, std::string &key, string_map_type &values, const ers::Issue **cause) const ;
 	Issue *receive(const DOMElement *issue_element_ptr) const ; 
 	Issue *receive(const DOMDocument *document_ptr) const ; 
 	void add_string_tag(DOMElement *element_ptr, const char*name, const char* value) ; 
 	void serialize(DOMElement *element_ptr, const Issue *issue_ptr); 
-	void send(DOMDocument *document_ptr, const Issue *issue_ptr) ; 
+	void commit_writes(); 
 	MemBufInputSource *get_source() ; 
 public: 
 	static const char * const XML_TAGS[] ; 

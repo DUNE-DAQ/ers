@@ -21,7 +21,8 @@ class Issue ;
     /** This class implements the factory pattern for Issues.
       * The main responsability of this class is to keep track of the existing types of Issues
       * Each issue should register one factory method for instances of this class.
-      * This is needed for deserilizing of Issues. 
+      * This is needed for deserializing of Issues. 
+      * 
       * \author Matthias Wiesmann
       * \version 1.0
       * \brief Factory for all Issues 
