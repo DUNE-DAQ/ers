@@ -1,5 +1,5 @@
 /*
- *  util.h
+ *  definitions.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 13.12.04.

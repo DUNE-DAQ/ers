@@ -15,8 +15,8 @@
 namespace ers {
     
     /** This class represents an error while parsing data. 
-      * @author Matthias Wiesmann
-      * @version 1.0
+      * \author Matthias Wiesmann
+      * \version 1.0
       */
     
 class ParseIssue: public Issue {
@@ -29,6 +29,7 @@ public:
     ParseIssue() ; 
     ParseIssue(const Context &c,ers_severity s, const std::string &message); 
     ParseIssue(const Context &c,ers_severity s, const std::string &message, const std::string &line); 
+    virtual const char* get_class_name() const throw() ;
 } ; // ParseIssue
 
 } // ers

@@ -7,14 +7,17 @@
  *
  */
 
+#ifndef ERS_FILE_ISSUE
+#define ERS_FILE_ISSUE
+
 #include "ers/IOIssue.h"
 
 namespace ers {
     
     /** This class represents POSIX file issues.
-      * It is basically a Posix with an additional tag containing a file path 
-      * @author Matthias Wiesmann
-      * @version 1.0 
+      * It is basically a Posix Issue with an additional tag containing a file path 
+      * \author Matthias Wiesmann
+      * \version 1.0 
       */
     
     class FileIssue : public IOIssue {
@@ -38,5 +41,5 @@ public:
 
 #define ERS_FILEERROR(msg,...) ers::FileIssue(ERS_HERE,ers::ers_error,msg,__VA_ARGS__) 
 
-
+#endif
 

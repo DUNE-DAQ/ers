@@ -10,6 +10,8 @@
 #include "ers/SyncStream.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
+#include "ers/InvalidReferenceIssue.h"
+
 
 ers::SyncStream::SyncStream() : Stream() {} 
 ers::SyncStream::~SyncStream() {}
@@ -21,7 +23,7 @@ ers::SyncStream::~SyncStream() {}
   */
 
 void ers::SyncStream::send(const ers::Issue *i) {
-    ERS_PRECONDITION(i,"Null issue pointer") ;
+    ERS_PRE_CHECK_PTR(i); 
     NOT_IMPLEMENTED();
 } // send
 

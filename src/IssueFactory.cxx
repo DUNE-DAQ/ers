@@ -10,6 +10,8 @@
 #include "ers/IssueFactory.h"
 #include "ers/Issue.h"
 #include "ers/Precondition.h"
+#include "ers/IssueFactoryIssue.h"
+#include "ers/InvalidReferenceIssue.h"
 
 ers::IssueFactory  *ers::IssueFactory::s_factory = 0 ; 
 
@@ -45,13 +47,11 @@ bool ers::IssueFactory::register_issue(const std::string &name, CreateIssueCallb
 ers::Issue *ers::IssueFactory::build(const std::string &name) const {
     CallbackMap::const_iterator i = m_factory_map.find(name); 
     if (i == m_factory_map.end()) {
-	std::string message = "Cannot construct issue '"+name +"'"; 
-	throw ers::Issue(ERS_HERE,ers_error,message);
+	throw ERS_ISSUE_FACTORY_ERROR(name,"issue not registred") ; 
     } // Not found
     ers::Issue *issue = (i->second)() ; 
     if (0==issue) {
-	std::string message = "Factory for issue "+name+" returned null" ; 
-	throw ers::Issue(ERS_HERE,ers_error,message);
+	throw ERS_ISSUE_FACTORY_ERROR(name,"factory function returned null"); 
     } // issue null 
     return issue ; 
 } // build
@@ -78,7 +78,7 @@ ers::Issue *ers::IssueFactory::build(const std::string &name, const ers::string_
   */
 
 ers::Issue *ers::IssueFactory::build(const Issue *original) {
-    ERS_PRECONDITION(original!=0,"null original issue"); 
+    ERS_PRE_CHECK_PTR(original); 
     const std::string name = original->get_class_name() ; 
     const ers::string_map_type *values = original->get_value_table();
     ERS_ASSERT(values!=0,"null value table for original"); 

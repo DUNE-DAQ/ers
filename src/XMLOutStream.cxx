@@ -11,6 +11,8 @@
 
 #include "ers/XMLOutStream.h"
 #include "ers/Precondition.h"
+#include "ers/InvalidReferenceIssue.h"
+
 
 const char *ers::XMLOutStream::ISSUE_TAG = "issue" ; 
 const char *ers::XMLOutStream::KEY_TAG = "key" ; 
@@ -23,38 +25,38 @@ ers::XMLOutStream::XMLOutStream() : ers::STLOutStream() {
  } // XML_Stream
 
 void ers::XMLOutStream::tag_open(const std::string &tag) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     *m_stream << "<" << tag << ">" ; 
 } // tag_open
 
 void ers::XMLOutStream::tag_close(const std::string &tag) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     *m_stream << "</" << tag << ">" ; 
 } // tag_close
 
 void ers::XMLOutStream::tag(const std::string &tag, const std::string &content) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     tag_open(tag);
     *m_stream << content  ;
     tag_close(tag); 
 } // tag
 
 void ers::XMLOutStream::serialize(const std::string &key, const std::string &value) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     tag(KEY_TAG,key);
     tag(STRING_VALUE_TAG,value); 
     *m_stream << std::endl ; 
 } // serialize 
 
 void ers::XMLOutStream::serialize_start(const Issue *i) {
-    ERS_PRECONDITION(i!=0,"Null Issue"); 
-    ERS_PRECONDITION(m_stream!=0,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(i); 
+    ERS_PRE_CHECK_PTR(m_stream);
     tag_open(ISSUE_TAG);
 } // serialize_start
 
 void ers::XMLOutStream::serialize_end(const Issue *i) {
-    ERS_PRECONDITION(i!=0,"Null Issue"); 
-    ERS_PRECONDITION(m_stream!=0,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(i); 
+    ERS_PRE_CHECK_PTR(m_stream);
     const std::exception *cause = i->cause(); 
     if (cause) {
 	tag_open(ers::Issue::CAUSE_PSEUDO_KEY);

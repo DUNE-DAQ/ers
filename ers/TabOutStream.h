@@ -15,18 +15,19 @@
 namespace ers {
 
     /** Simple stream that writes data as tab separated entries
-      * @author Matthias Wiesmann
-      * @version 0.1
+      * \author Matthias Wiesmann
+      * \version 1.0
       */
     
 class TabOutStream : public STLOutStream {
-    
-public: 
-    TabOutStream(const char* filename) ; 
-    TabOutStream(); 
+protected:
     void serialize_start(const Issue *i) ; 
     virtual void serialize_end(const Issue *i) ;
     void serialize(const std::string &key, const std::string &value) ; 
+public: 
+    TabOutStream(const char* filename) ;  /**< \brief Builds a Tab format stream that writes into a file */
+    TabOutStream();                       /**< \brief Builds a Tab format stream that writes onto stderr */
+   
 } ; // Tab_Stream
 
 } // ers 

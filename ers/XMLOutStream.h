@@ -6,8 +6,8 @@
 namespace ers {
 
    /** Simple issue stream that writes the issues as xml entries into a file 
-    * @author Matthias Wiesmann
-    * @version 0.1 (test).
+    * \author Matthias Wiesmann
+    * \version 1.0 
     */
     
 class XMLOutStream : public STLOutStream {

@@ -14,13 +14,22 @@ LIB_PATH =  -L${LIBRARY_DIR} -L${BUILD}/
 CC      = ${GPP} ${CCFLAGS} ${INCLUDES}
 LD		= g++ ${LIB_PATH} ${LIBS}
 
-
-ERS_HEADS = ers/util.h ers/Issue.h ers/IssueFactory.h ers/Context.h \
-	 ers/Precondition.h ers/Assertion.h  ers/NotImplemented.h \
-	 ers/Stream.h ers/STLOutStream.h ers/XMLOutStream.h \
-	 ers/HumanStream.h ers/SyncStream.h ers/TabOutStream.h \
-	 ers/PosixIssue.h ers/IOIssue.h ers/FileIssue.h ers/OpenFail.h 
-
+ERS_HEADS = ers/Core.h  ers/Context.h \
+	 ers/Issue.h ers/IssueFactory.h \
+	 ers/Assertion.h ers/Precondition.h ers/NotImplemented.h \
+	 ers/InvalidReferenceIssue.h ers/ParseIssue.h ers/IssueFactoryIssue.h \
+	 ers/PosixIssue.h ers/IOIssue.h ers/FileIssue.h \
+	 ers/OpenFail.h ers/GetWDFail.h \
+	 ers/FStatFail.h ers/UnlinkFail.h \
+	 ers/RenameFail.h ers/ChmodFail.h \
+	 ers/Stream.h ers/SyncStream.h  \
+	 ers/STLInStream.h ers/STLOutStream.h \
+	 ers/TabInStream.h ers/TabOutStream.h \
+	 ers/XMLOutStream.h ers/HumanStream.h \
+	 ers/File.h
+	 
+ERS_UTIL_HEADS = util/File.h
+	 
 ERS_SRCS = ${ERS_HEADS:ers/%.h=src/%.cxx}
 
 ERS_OBJS = ${ERS_HEADS:ers/%.h=${BUILD}/%.o}
@@ -47,9 +56,12 @@ ${BUILD}/Issue.o: src/Issue.cxx ers/Issue.h ers/Context.h ers/IssueFactory.h ers
 	${CC} $<  -c -o $@
 	
 ${BUILD}/test.o: test/test.cxx
-	${CC} $< ${ERS_OBJS} -c -o $@
+	${CC} $<  -c -o $@
 	
 ${BUILD}/%.o: src/%.cxx ${ERS_HEADS}
+	${CC} $<  -c -o $@
+	
+${BUILD}/%.o: util/%.cxx ${ERS_HEADS}
 	${CC} $<  -c -o $@
 	
 ${BINARY_BUILD}/test: ${BUILD}/test.o ${ERS_OBJS}

@@ -7,14 +7,18 @@
  *
  */
 
-#include "ers/PosixIssue.h"
+#ifndef ERS_POSIX_ISSUE
+#define ERS_POSIX_ISSUE
+
 #include <ios>
+#include "ers/PosixIssue.h"
+
 
 namespace ers {
     
     /** This class represents POSIX input/output issues.
-      * @author Matthias Wiesmann
-      * @version 1.0 
+      * \author Matthias Wiesmann
+      * \version 1.0 
       */
     
     class IOIssue : public PosixIssue {
@@ -35,4 +39,5 @@ public:
 
 #define ERS_IOERROR(msg,...) IOIssue(ERS_HERE,ers_error,msg,__VA_ARGS__) 
 
+#endif
 

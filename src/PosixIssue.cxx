@@ -54,6 +54,7 @@ void PosixIssue::setup_posix(int err) {
     std::ostringstream error_num ;
     error_num << err ;
     m_value_table[POSIX_ERROR_NBR_KEY] = error_num.str() ; 
+    errno = 0 ; 
 } // setup_errno
 
 PosixIssue::PosixIssue() : Issue() {} 

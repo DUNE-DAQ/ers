@@ -11,6 +11,8 @@
 
 #include "ers/TabOutStream.h"
 #include "ers/Precondition.h"
+#include "ers/InvalidReferenceIssue.h"
+
 
 ers::TabOutStream::TabOutStream(const char* filename) : ers::STLOutStream(filename) {
 } // TabOutStream
@@ -19,16 +21,16 @@ ers::TabOutStream::TabOutStream() : ers::STLOutStream() {
 } // TabOutStream
 
 void ers::TabOutStream::serialize(const std::string &key, const std::string &value) {
-    ERS_PRECONDITION(m_stream!=0,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     *m_stream  << key << "\t\"" << value << "\"" << std::endl ; 
 } // serialize 
 
 void ers::TabOutStream::serialize_start(const Issue *i) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
 } // serialize_start
 
 void ers::TabOutStream::serialize_end(const Issue *i) {
-    ERS_PRECONDITION(m_stream,"Null STL stream pointer");
+    ERS_PRE_CHECK_PTR(m_stream);
     const std::exception *cause = i->cause() ; 
     if (cause) {
 	printf("%s %p\n",cause->what(),&cause); 

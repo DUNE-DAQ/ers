@@ -40,10 +40,15 @@ ers::FileIssue::FileIssue(const Context &c, ers_severity s, const std::string &m
     setup_file_issue(message,p); 
 } //  FileIssue
 
+/** Does the setup of the actual message for file issue 
+  * \param message description of the issue (without any severity related term like error).
+  * \param p the path of the file that cause the issue
+  */
+
 void ers::FileIssue::setup_file_issue(const std::string &message, const char* p) {
     path(p); 
     std::ostringstream full_message_str ;
-    full_message_str << message << ", " << severity_message() << " for file " << p << ": " << posix_message() ; 
+    full_message_str << message << ", " << severity_message() << " for file '" << p << "': " << posix_message() ; 
     this->finish_setup(full_message_str.str()); 
 } // setup_file_issue
 

@@ -17,8 +17,8 @@ namespace ers {
 
 /** This class streams an issue into an human readable string. 
   * It is uses by the issue class to display itself and to put it into standard stl streams. 
-  * @author Matthias Wiesmann
-  * @version 1.0
+  * \author Matthias Wiesmann
+  * \version 1.0
   */
     
 class HumanStream  : public STLOutStream {

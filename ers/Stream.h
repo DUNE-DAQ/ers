@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "ers/util.h"
+#include "ers/Core.h"
 
 #ifndef __ERS_ISSUE_STREAM__
 #define __ERS_ISSUE_STREAM__
@@ -22,8 +22,8 @@ namespace ers {
 /** Root issue stream.
   * This class is meant to be subclassed in order to implement concrete issue streams. 
   * This class silently discards issues.
-  * @author Matthias Wiesmann
-  * @version 1.0
+  * \author Matthias Wiesmann
+  * \version 1.0
   */
     
 class Stream {

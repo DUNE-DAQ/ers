@@ -18,6 +18,8 @@
 #include "ers/Issue.h"
 #include "ers/HumanStream.h"
 #include "ers/Precondition.h"
+#include "ers/InvalidReferenceIssue.h"
+#include "ers/File.h"
 
 #define BUFFER_SIZE 256 
 
@@ -38,7 +40,7 @@ const char* Issue::COMPILATION_TARGET_KEY = "COMPILATION_TARGET" ;
 const char* Issue::COMPILER_KEY = "COMPILER" ; 
 const char* Issue::CPP_CLASS_KEY = "ISSUE_CPP_CLASS" ; 
 const char* Issue::ERS_VERSION_KEY = "ERS_VERSION" ;
-const char* Issue::HOST_NAME_KEY = "HOSTNAME" ; 
+const char* Issue::HOST_NAME_KEY = "HOST_NAME" ; 
 const char* Issue::HOST_TYPE_KEY = "HOST_TYPE" ; 
 const char* Issue::MESSAGE_KEY = "MESSAGE" ; 
 const char* Issue::PROCESS_ID_KEY = "PROCESS_ID" ;
@@ -116,12 +118,12 @@ Issue::Issue(const Context &context, ers_severity s) {
  * @param cause the exception that caused the current Issue
  */
 
-Issue::Issue(const Context &context, ers_severity s, const std::exception *c) { 
-    ERS_PRECONDITION(c!=0,"Null cause exception"); 
-    cause(c); 
+Issue::Issue(const Context &context, ers_severity s, const std::exception *cause_exception) {
+    ERS_PRE_CHECK_PTR(cause_exception);
+    cause(cause_exception); 
     setup_common(&context);
     severity(s);
-    finish_setup(c->what()); 
+    finish_setup(cause_exception->what()); 
 } // Issue
 
 // Value Table manipulation Methods 
@@ -166,7 +168,7 @@ void Issue::set_values(const string_map_type &values) {
 */
 
 void Issue::insert(const Context *context) {
-    ERS_PRECONDITION(context!=0,"Null context pointer"); 
+    ERS_PRE_CHECK_PTR(context); 
     m_value_table[SOURCE_POSITION_KEY] = context->position();
     m_value_table[COMPILER_KEY] = context->compiler();
     m_value_table[COMPILATION_TIME_KEY] = context->compilation(); 
@@ -215,14 +217,22 @@ void Issue::insert_time() {
     m_value_table[TIME_KEY] =  time_buffer ; 
 } // insert_time
 
+/** Inserts the current working directory 
+  * This method should be called once all posix stuff is handled, as it accesses errno 
+  */
+
+void Issue::insert_pwd() {
+    m_value_table[PROCESS_PWD_KEY] = ers::File::working_directory() ; 
+} // insert_pwd
+
 /** Inserts a environnement variable into the issue 
 * @param env_key name of the environnement variable
 * @param issue_key key used to store the resulting value into the value table 
 */
 
 void Issue::insert_env(const char*env_key, const char* issue_key) {
-    ERS_PRECONDITION(env_key!=0,"Null pointer for Environnement key."); 
-    ERS_PRECONDITION(issue_key!=0,"Null pointer for Issue key."); 
+    ERS_PRE_CHECK_PTR(env_key);
+    ERS_PRE_CHECK_PTR(issue_key);
     const char* value = getenv(env_key); 
     if (value) {
 	m_value_table[issue_key] = std::string(value); 
@@ -253,7 +263,6 @@ void Issue::setup_common(const Context *context) {
     insert_processid(); 
     insert_time();
     insert_userid(); 
-    insert_env("PWD",PROCESS_PWD_KEY); 
     insert_env("HOSTTYPE",HOST_TYPE_KEY); 
 } // setup_common
 
@@ -271,6 +280,7 @@ void Issue::finish_setup(const std::string &message) {
     m_value_table[CLASS_KEY] = get_class_name(); 
     m_value_table[MESSAGE_KEY] = message ; 
     m_human_description=build_human_description();
+    insert_pwd(); 
 } // finish_setup
 
 /** Builds a human readable description of the Issue.
@@ -302,7 +312,7 @@ const char*Issue::get_class_name() const throw()  {
  */
 
 ers_severity Issue::severity() const throw() {
-    std::string value = this->get_value(SEVERITY_KEY); 
+    std::string value = get_value(SEVERITY_KEY); 
     return parse_severity(value);
 } // severity
 
@@ -382,6 +392,11 @@ const std::string Issue::human_description() const throw()  {
 const char *Issue::what() const throw() {
     return m_human_description.c_str(); 
 } // what();  
+
+
+Issue::operator std::string() const {
+    return m_human_description ;
+} // std::string()
 
 // ====================================================
 // Stream Operators

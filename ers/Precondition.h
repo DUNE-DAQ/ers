@@ -16,8 +16,8 @@ namespace ers {
     
     /** A precondition is a special type of assertion that checks the entry condition for a function.
      * Typically, precondition check entry values for function, and members state in object methods
-     * @author Matthias Wiesmann
-     * @version 1.0 
+     * \author Matthias Wiesmann
+     * \version 1.0 
      */
     
     class Precondition : public Assertion {

@@ -1,4 +1,5 @@
 *.sh
 *.csh
 *.make
+*.makesav
 Makefile

@@ -11,7 +11,7 @@
 
 #include "ers/Issue.h"
 #include "ers/TabOutStream.h"
-#include "ers/Precondition.h"
+#include "ers/InvalidReferenceIssue.h"
 
 using namespace ers ; 
 
@@ -25,7 +25,7 @@ Stream* Stream::error() {
 } // get_default
 
 void Stream::error(const Issue *i) {
-    ERS_PRECONDITION(i!=0,"Null Issue sending"); 
+    ERS_PRE_CHECK_PTR(i); 
     error()->send(i); 
 } // send
 

@@ -12,7 +12,7 @@
 
 #include <map>
 #include <string>
-#include "ers/util.h"
+#include "ers/Core.h"
 #include "ers/Stream.h"
 #include "ers/Context.h"
 #include "ers/IssueFactory.h"
@@ -24,8 +24,9 @@ namespace ers {
     *  as key - value paris (both strings). 
     *  The object contains utility methods to allow the manipulation of those key / values and
     *  code to insert common values into it, like time, compilation information, host information etc.
-    *  @author Matthias Wiesmann
-    *  @version 1.0
+    *  \author Matthias Wiesmann
+    *  \version 1.0
+    *  \bug Issue chaining is not implemented for the moment - we might need smart pointers. 
     */
     
     class Issue : public std::exception  {  
@@ -64,6 +65,7 @@ protected:
 	void insert_processid();                                       /**< \brief Inserts process id */
 	void insert_time() ;                                           /**< \brief Inserts current time */
 	void insert_userid(); 
+	void insert_pwd();                                             /**< \brief Inserts the current pwd */
 	void insert_env(const char*env_key, const char* issue_key);    /**< \brief Inserts environnement variable */
 	virtual std::string build_human_description() const;           /**< \brief Builds human description for Issue. */
         void setup_common(const Context *context) ;                    /**< \brief Sets up the common fields. */
@@ -90,6 +92,7 @@ public:
 	const std::string human_description() const throw()  ;        /**< \brief Human description message. */
         const char* what() const throw() ;                            /**< \brief Human description message. */
         virtual ~Issue() throw() {} ;
+	operator std::string() const ; 
     } ; // Issue
     
     std::ostream& operator<<(std::ostream&, const Issue&);

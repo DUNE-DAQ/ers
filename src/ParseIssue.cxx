@@ -28,6 +28,10 @@ ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &
 ers::ParseIssue::ParseIssue(const Context &c, ers_severity s,const std::string &message, const std::string &line )  : ers::Issue(c,s) {
     this->offending_line(line); 
 } // ParseIssue
+ 
+const char* ers::ParseIssue::get_class_name() const throw() {
+    return PARSE_ISSUE_CLASS_NAME ; 
+} // get_class_name
 
 void ers::ParseIssue::offending_line(const std::string &line) {
     this->m_value_table[OFFENDING_LINE_KEY] = line ; 

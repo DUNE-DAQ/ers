@@ -17,8 +17,8 @@ namespace ers {
 
 /** This class is the root class for Posix issues 
   * It knows how to build meaningfull messages out of errno
-  * @author Matthias Wiesmann
-  * @version 1.0
+  * \author Matthias Wiesmann
+  * \version 1.0
   */
 
 class PosixIssue : public Issue {

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string.h>
-#include "ers/util.h"
+#include "ers/Core.h"
 #include "ers/Assertion.h"
 
 const char* ers_severity_text_names[] = { "debug_0", "debug_1", "debug_2", "debug_3", "information", "notification", "warning", "error", "fatal", "none" } ;

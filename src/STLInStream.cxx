@@ -13,16 +13,17 @@
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
 #include "ers/OpenFail.h"
+#include "ers/InvalidReferenceIssue.h"
 
 
 ers::STLInStream::STLInStream(std::istream *s) {
-    ERS_PRECONDITION(s!=0,"Null pointer for stream"); 
+    ERS_PRE_CHECK_PTR(s); 
     this->m_stream = s ; 
     this->m_delete_stream = false ;
 } // STLInStream
 
 ers::STLInStream::STLInStream(const char* filename) {
-    ERS_PRECONDITION(filename!=0,"Null pointer for filename"); 
+    ERS_PRE_CHECK_PTR(filename); 
     try {
 	this->m_stream = new std::ifstream(filename) ; 
 	m_stream->exceptions(std::ios::failbit | std::ios::badbit); 
@@ -36,7 +37,7 @@ ers::STLInStream::STLInStream() {
 } // STLInStream
 
 ers::STLInStream::~STLInStream() {
-    ERS_PRECONDITION(m_stream,"Destructor called with null stream");
+    ERS_PRE_CHECK_PTR(m_stream); 
     if (m_delete_stream) {
 	delete(m_stream); 
     } // if 

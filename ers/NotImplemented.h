@@ -13,8 +13,8 @@ namespace ers {
     
     /** This special 'assertion' is used to mark a non implemented function or method. 
      *  Typically, this is marked using the NOT_IMPLEMENTED() macro. 
-     *  @author Matthias Wiesmann
-     *  @version 1.0
+     *  \author Matthias Wiesmann
+     *  \version 1.0
      */
     
     class NotImplemented : public Assertion {

@@ -7,24 +7,28 @@
  *
  */
 
+#ifndef ERS_TAB_IN
+#define ERS_TAB_IN
 
 #include "ers/STLInStream.h"
 
 namespace ers {    
     
-  /** Simple stream that writes data as tab separated entries
-    * @author Matthias Wiesmann
-    * @version 0.1
+  /** Simple stream that reads data as tab separated entries
+    * \author Matthias Wiesmann
+    * \version 1.0
     */
     
     class TabInStream : public STLInStream {
 	
 protected:
-	bool read_line(std::string &key, std::string &value) ; 
+	bool read_line(std::string &key, std::string &value) ;  /**< \brief reads one line and parses key and value */
 public: 
-	virtual bool read_properties(string_map_type *values) ;
-	TabInStream(const char* filename) ; 
-	TabInStream(); 
+	virtual bool read_properties(string_map_type *values) ; /**< \brief loads key and values into a value_table */
+	TabInStream(const char* filename) ;                     /**< \brief Builds a Tab format stream that reads from a file */
+	TabInStream();                                          /**< \brief Builds a Tab format stream that reads from stdin */
     } ; // TabInStream
     
 } // ers 
+
+#endif

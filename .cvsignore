@@ -5,6 +5,7 @@ i686-rh73-gcc32
 i686-rh73-gcc32-opt
 core.*
 ers.xcode
-cmt/*.makesav
+
+
 
 

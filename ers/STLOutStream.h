@@ -17,17 +17,18 @@
 namespace ers {
     
     /** This abstract class represents a Issue Stream that stream issues into a STL stream 
-      * @author Matthias Wiesmann
+      * \author Matthias Wiesmann
+      * \version 1.0
       */
     
     class STLOutStream : public Stream {
 protected:
-	std::ostream *m_stream ;           
-	bool m_delete_stream ;
-	void serialize_separator(const Issue *i) ;          
-	virtual void serialize_start(const Issue *i) ;
-	virtual void serialize_end(const Issue *i) ;
-	virtual void serialize(const std::string &key, const std::string &value) = 0 ; 
+	std::ostream *m_stream ;                       /**< \brief internal output stream */
+	bool m_delete_stream ;                         /**< \brief should the stream be destroyed when this object is destructed */
+	void serialize_separator(const Issue *i) ;     /**< \brief serialise a separator between a set of key / values */  
+	virtual void serialize_start(const Issue *i) ; /**< \brief serialise the start of an issue */
+	virtual void serialize_end(const Issue *i) ;   /**< \brief serialise the end of an issue */
+	virtual void serialize(const std::string &key, const std::string &value) = 0 ; /**< \brief serialise a key / value pair */
 public:
 	void send(const Issue *i) ; 
 	Issue *receive() ; 
