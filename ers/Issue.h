@@ -63,6 +63,7 @@ public:
 	static const char *const CAUSE_PSEUDO_KEY ;                        /**< \brief key used when serializing the cause issue, this key is not used in the value table */
 	static const char *const CAUSE_TEXT_KEY ;                          /**< \brief key used to store the cause issue's message */
 	static const char *const QUALIFIER_LIST_KEY ; 
+	static const char *const EXIT_VALUE_KEY ; 
 	static const char *const ISSUE_CLASS_NAME ;                        /**< \brief name of the class, used for serialisation */
 	
 protected:
@@ -94,7 +95,7 @@ public:
 	const std::string& operator[](const std::string &key) const throw(); 
 	
 	const std::string &get_value(const std::string &key) const throw() ;    /**< \brief Reads the property list. */
-	int get_int_value(const std::string &key) const throw() ;      /**< \brief Get a value of the table as an integer */
+	int get_int_value(const std::string &key, int def=0) const throw() ;      /**< \brief Get a value of the table as an integer */
 	int values_number() const ;                                    /**< \brief How many key / values */
 	void set_value(const std::string &key, long value) throw() ;   /**< \brief Sets a value (numerical) */
 	void set_value(const std::string &key, const std::string &value) throw() ; /**< \brief Sets a value (string) */
@@ -113,7 +114,7 @@ public:
 	const std::string &human_description() const throw()  ;        /**< \brief Human description message. */
         const char* what() const throw() ;                             /**< \brief Human description message. */
 	const std::string &message() const throw() ;                   /**< \brief Message */
-	
+	virtual int exit_value() const throw();                        /**< \brief value to pass to exit */
 	void add_qualifier(const std::string &qualif) ; 
 	std::vector<std::string> qualifiers() const ; 
     } ; // Issue

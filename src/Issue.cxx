@@ -63,6 +63,7 @@ const char* const Issue::USER_NAME_KEY = "USER_NAME" ;
 const char* const Issue::CAUSE_TEXT_KEY = "CAUSE_TEXT"  ;
 const char* const Issue::CAUSE_PSEUDO_KEY = "CAUSE" ;
 const char* const Issue::QUALIFIER_LIST_KEY = "QUALIFIERS" ; 
+const char* const Issue::EXIT_VALUE_KEY = "EXIT_VALUE" ; 
 
 const char* const Issue::ISSUE_CLASS_NAME = "ers::issue" ; 
 
@@ -289,9 +290,19 @@ const std::string &Issue::get_value(const std::string &key) const throw() {
     return ers::Core::empty_string;
 } // get_value
 
-int Issue::get_int_value(const std::string &key) const throw() {
+/** Get a property of an issue as an integer 
+  * \param key the key to search for 
+  * \param def the value to return if key is not found 
+  * \return value of key or \c def
+  */
+
+int Issue::get_int_value(const std::string &key, int def) const throw() {
     std::string v = get_value(key) ; 
-    return atoi(v.c_str()); 
+    if (! v.empty()) { // not empty 
+	return atoi(v.c_str());
+    } else { // empty 
+	return def ; 
+    } // empty 
 } // get_int_value
 
 
@@ -566,6 +577,10 @@ const char *Issue::what() const throw() {
 const std::string &Issue::message() const throw() {
     return get_value(MESSAGE_KEY) ; 
 } // message
+
+int Issue::exit_value() const throw() {
+    return get_int_value(EXIT_VALUE_KEY,1); 
+} // exit_value
 
 
 void Issue::add_qualifier(const std::string &qualif) {

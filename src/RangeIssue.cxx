@@ -12,7 +12,7 @@
 
 
 const char * const ers::RangeIssue::CLASS_NAME = "ers::RangeIssue" ; 
-const char * const ers::RangeIssue::INDEX_REFERENCE_TYPE = "index" ; 
+const char * const ers::RangeIssue::INDEX_REFERENCE_TYPE = "scalar" ; 
 const char * const ers::RangeIssue::RANGE_MIN_KEY = "REFERENCE_RANGE_MIN" ; 
 const char * const ers::RangeIssue::RANGE_MAX_KEY = "REFERENCE_RANGE_MAX" ;
 
@@ -31,12 +31,12 @@ void ers::RangeIssue::set_range(ers::Issue &issue, long index, long min_index, l
     issue.set_value(REFERENCE_VALUE_KEY,index) ; 
     issue.set_value(RANGE_MIN_KEY,min_index);
     issue.set_value(RANGE_MAX_KEY,max_index);
+    std::ostringstream reference_stream ;
+    reference_stream << INDEX_REFERENCE_TYPE ; 
     if (entity_name) {
-	std::string type = std::string(entity_name)+INDEX_REFERENCE_TYPE ;
-	issue.set_value(REFERENCE_TYPE_KEY,type) ; 
-    } else {
-	issue.set_value(REFERENCE_TYPE_KEY,INDEX_REFERENCE_TYPE) ; 
-    } // set_range
+	reference_stream << "(name=" << entity_name << ')' ; 
+    } 
+    issue.set_value(REFERENCE_TYPE_KEY,reference_stream.str()) ; 
 } // set_range
 
 ers::RangeIssue::RangeIssue() : ers::InvalidReferenceIssue() {} 
@@ -48,12 +48,13 @@ ers::RangeIssue::RangeIssue(const ers::Context &c, ers::ers_severity s) : ers::I
 ers::RangeIssue::RangeIssue(const ers::Context &c, ers::ers_severity s, long min_index, long index, long max_index, const char* entity_name) : ers::InvalidReferenceIssue(c,s) {
     set_range(*this,index,min_index,max_index,entity_name) ; 
     std::ostringstream message_stream ;
-    message_stream << "invalid " ; 
+    message_stream << "invalid index: " ; 
     if (entity_name) {
-	message_stream << entity_name << ' '; 
+	message_stream << entity_name << '='; 
     } // entity
-    message_stream << "reference: " << index << " is not in range " << min_index << '-' << max_index ;  
+    message_stream  << index << " is not in range " << min_index << '-' << max_index ;  
     finish_setup(message_stream.str()); 
 } // RangeIssue
 
+const char*ers::RangeIssue::get_class_name() const throw() { return CLASS_NAME ; } 
 

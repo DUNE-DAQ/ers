@@ -25,12 +25,16 @@ public:
 	static const char * const RANGE_MAX_KEY ; 
 	RangeIssue() ; 
 	RangeIssue(const ers::Context &c, ers::ers_severity s, long min_index, long index, long max_index, const char* entity_name=0) ; 
+	virtual const char*get_class_name() const throw() ;
 
     } ; // RangeIssue
     
 } ; // ers
 
+#if (!defined(N_ERS_ASSERT))
 #define ERS_RANGE_CHECK(min,value,max) ers::RangeIssue::check_range(ERS_HERE,min,value,max,#value)
-
+#else 
+#define ERS_RANGE_CHECK(min,value,max) 
+#endif
 #endif
 

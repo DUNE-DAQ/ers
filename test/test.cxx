@@ -61,6 +61,10 @@ void test_issue(const Issue &e) {
     } // try / catch 
 } // test_issue
 
+void foo(int n) {
+    ERS_RANGE_CHECK(0,n,42) ; 
+}
+
 int main(int argc, char* argv[]) {
     // std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
     ers::IssueFactory::print_registered(); 
@@ -72,10 +76,9 @@ int main(int argc, char* argv[]) {
         ERS_DEBUG_1("checking static assert");
 	ERS_STATIC_ASSERT(sizeof(int)==4); 
 	ERS_DEBUG_1("throwing custom issue");
+	foo(43); 
 	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {
-	e.add_qualifier("foo"); 
-	e.add_qualifier("bar"); 
 	test_issue(e); 
     }
     return 0 ; 
