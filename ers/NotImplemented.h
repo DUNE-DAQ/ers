@@ -36,3 +36,4 @@ public:
 #define ERS_NOT_IMPLEMENTED_FATAL() throw ers::NotImplemented(ERS_HERE,ers::ers_fatal)
 
 #endif
+

@@ -107,7 +107,7 @@ public:
 	int transience() const throw() ;                               /**< \brief is the issue transient */
 	const std::string human_description() const throw()  ;         /**< \brief Human description message. */
         const char* what() const throw() ;                             /**< \brief Human description message. */
-	
+	const std::string message() const throw() ;                    /**< \brief Message */
     } ; // Issue
     
     std::ostream& operator<<(std::ostream&, const Issue&);

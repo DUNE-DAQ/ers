@@ -79,7 +79,7 @@ Issue::Issue() {
   * \param issue original for copy
   */ 
 
-Issue::Issue(const Issue &issue){
+Issue::Issue(const Issue &issue) : std::exception() {
     this->m_human_description = issue.m_human_description ;
     this->m_value_table = issue.m_value_table ;
     if (issue.m_cause) {
@@ -181,7 +181,7 @@ Issue Issue::operator=(const Issue &source) {
 
 bool Issue::operator==(Issue other) {
     if (m_value_table != other.m_value_table) return false ; 
-    if (m_cause = other.m_cause) return true ; 
+    if (m_cause == other.m_cause) return true ; 
     return (*m_cause) == *(other.m_cause) ; 
 } // operator==
 
@@ -423,7 +423,12 @@ void Issue::setup_common(const Context *context) throw() {
 
 void Issue::finish_setup(const std::string &message) throw() {
     Issue *p = this ; 
-    set_value(CPP_CLASS_KEY,(typeid(*p)).name()); 
+#ifdef __GNUC__
+    std::string class_name = ers::Core::umangle_gcc_class_name((typeid(*p)).name()).c_str(); 
+#else
+    std::string class_name = typeid(*p).name() ; 
+#endif
+    set_value(CPP_CLASS_KEY,class_name); 
     set_value(CLASS_KEY, get_class_name()) ;
     set_value(MESSAGE_KEY,message); 
     m_human_description=build_human_description();
@@ -539,7 +544,9 @@ const char *Issue::what() const throw() {
     return m_human_description.c_str(); 
 } // what();  
 
-
+const std::string Issue::message() const throw() {
+    return get_value(MESSAGE_KEY) ; 
+} // message
 
 
 

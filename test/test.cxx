@@ -39,8 +39,7 @@ void test_read2(const char* path) {
     XercesStream xml_in(file,true); 
     Issue *i = xml_in.receive() ; 
     ERS_CHECK_PTR(i);
-    printf("Got Issue %s\n",i->what());
-    printf("Issue is of type %s\n",typeid(i).name()) ; 
+    printf("Got Issue <<%s>>\n",i->message().c_str());
     printf("----------------\n"); 
     throw *i ; 
 } // test_read
@@ -70,6 +69,7 @@ int main(int argc, char* argv[]) {
     try {
         printf("checking static assert\n");
 	ERS_STATIC_ASSERT(sizeof(int)==4); 
+	ERS_ASSERT(0,"dummy assert"); 
 	printf("throwing custom issue\n");
 	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {

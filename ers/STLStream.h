@@ -27,7 +27,7 @@ namespace ers {
     
     class STLStream : public Stream {
 private:
-	STLStream(const STLStream &other) {} 
+	STLStream(const STLStream &other) : Stream() {} 
 protected:
 	std::istream *m_in_stream ;                                    /**< internal input stream */
 	std::ostream *m_out_stream ;                                   /**< internal output stream */

@@ -44,3 +44,5 @@ std::string ers::NotImplemented::build_message(const char* condition_text, const
 
 
 const char* ers::NotImplemented::get_class_name() const throw () { return CLASS_NAME ;} 
+
+

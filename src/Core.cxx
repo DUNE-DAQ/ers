@@ -1,3 +1,5 @@
+#include <ctype.h>
+#include <string.h>
 
 #include <iostream>
 #include <sstream>
@@ -99,6 +101,49 @@ const char* ers::Core::to_string(bool b) throw () {
 } // to_string
 
 
+/** This method parses a string in the format used by gcc class names
+  * The string begins with the length of the string expressed in ascii encoded integer, 
+  * followed by the character data (no 0 character at the end). 
+  * \param ptr pointer to the character data pointer, this pointer is incremented by the parsing.
+  * \return a string containing the string data
+  */
+
+std::string ers::Core::parse_prefix_string(const char **ptr) throw() {
+    if (ptr==0 || *ptr==0 || **ptr=='\0') return "" ; 
+    int l = 0 ; 
+    while(isdigit(**ptr)) { // we parse the integer 
+	l*=10 ;
+	l+=(**ptr)-'0' ; 
+	(*ptr)++ ; 
+    } // 
+    std::string s(*ptr,l); // we create the string 
+    (*ptr)+=l ; 
+    return s ; 
+} // parse_gcc_string
+
+
+/** This method tries to unmangle GCC class names given by the RTTI system
+  * This works for GCC 3.2 and 3.4.
+  * It should not be used for anything else than human display or fallback mechanism.
+  * \param name the mangled name of the object 
+  * \return an unmangled name 
+  */
+
+std::string ers::Core::umangle_gcc_class_name(const char* name) throw() {
+    if (name==0 || strlen(name)==0) return "" ; 
+    const char *ptr = name ; 
+    std::ostringstream stream ; 
+    while (*ptr=='P') { // pointers are denoted with P
+	stream << "*" ;
+	ptr++ ; 
+    } // if
+    while (*ptr=='N') { // namespace are denoted by N+string 
+	ptr++ ; 
+	stream << parse_prefix_string(&ptr) << "::" ; 
+    } // 
+    stream << parse_prefix_string(&ptr);
+    return stream.str(); 
+} // umangle_gcc_class_name
 
 
 

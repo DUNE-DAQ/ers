@@ -33,15 +33,18 @@ namespace ers {
 	static const char* const SEVERITY_NAMES[] ;
 	static const char* const BOOLEAN_NAMES[] ; 
 	static const char* const RESPONSIBILITY_NAMES[] ; 
+protected:
 public:
-	static ers_severity parse_severity(const char *s) throw() ; 
-	static ers_severity parse_severity(const std::string &s) throw() ; 
-	static const char* to_string(ers_severity s) throw() ; 
-	static ers_responsibility parse_responsibility(const char *s) throw() ;
-	static ers_responsibility parse_responsibility(const std::string &s) throw() ;
-	static const char* to_string(ers_responsibility s) throw() ; 
-	static int parse_boolean(const char* s) throw() ; 
-	static const char* to_string(bool b) throw ();
+	static ers_severity parse_severity(const char *s) throw() ;                     /**< \brief string to severity */
+	static ers_severity parse_severity(const std::string &s) throw() ;              /**< \brief string to severity */
+	static const char* to_string(ers_severity s) throw() ;                          /**< \brief severity to string */
+	static ers_responsibility parse_responsibility(const char *s) throw() ;         /**< \brief string to responsibility */
+	static ers_responsibility parse_responsibility(const std::string &s) throw() ;  /**< \brief string to responsibility */
+	static const char* to_string(ers_responsibility s) throw() ;                    /**< \brief responsibility to string */
+	static int parse_boolean(const char* s) throw() ;                               /**< \brief string to boolean */
+	static const char* to_string(bool b) throw ();                                  /**< \brief boolean to string */
+	static std::string parse_prefix_string(const char **ptr) throw() ;                    /**< \brief prefix string data to string */
+	static std::string umangle_gcc_class_name(const char* name) throw() ;           /**< \brief unmangles gcc RTTI names */
     } ; // Core
 }
 
