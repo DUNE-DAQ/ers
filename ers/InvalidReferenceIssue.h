@@ -36,7 +36,7 @@ public:
 	InvalidReferenceIssue() ;
 	InvalidReferenceIssue(const Context &context, ers_severity s, const void* pointer, const std::string &message, ers_responsibility r = ers_resp_unknown) ; 
 	virtual const char*get_class_name() const throw() ;
-	static void check(const Context &context, ers_severity s, const void* pointer, const char* ptr_name, ers_responsibility r); 
+	static void check_reference(const Context &context, ers_severity s, const void* pointer, const char* ptr_name, ers_responsibility r); 
     } ; // InvalidReferenceIssue
     
 } // ers
@@ -46,7 +46,7 @@ public:
   */
 
 #ifndef N_DEBUG
-#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
+#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
 #else 
 #define ERS_PRE_CHECK_PTR(p) 
 #endif
@@ -56,7 +56,7 @@ public:
  */
 
 #ifndef N_DEBUG
-#define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
+#define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
 #else 
 #define ERS_CHECK_PTR(p) 
 #endif

@@ -45,7 +45,7 @@ void ers::InvalidReferenceIssue::pointer(const void *p) {
     set_value(REFERENCE_TYPE_KEY,REFERENCE_C_PTR_TYPE) ; 
 } // pointer
 
-void ers::InvalidReferenceIssue::check(const Context &context, ers_severity s, const void* p, const char* ptr_name, ers_responsibility r) {
+void ers::InvalidReferenceIssue::check_reference(const Context &context, ers_severity s, const void* p, const char* ptr_name, ers_responsibility r) {
     if (p==0) {
 	std::ostringstream message ;
 	message << "pointer '" << ptr_name << "' is null" ; 
