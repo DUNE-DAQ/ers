@@ -55,11 +55,11 @@
   <li>Preconditions and general assertions support variable number of parameters and \c fprintf like formatting</li>
   <li>Runtime assertion can detect if they are invariant conditions</li>
   </ul>
-  All macros throw Issues object as exceptions with a severity of \c ers_error.
+  All macros throw Issues object as exceptions with a severity_t of \c ers::error.
   \subsection LoggingMacros Logging Macros
   The ERS package offers a set of macros to do logging. Those macros construct an issue and send them to the relevant stream. 
   They all support multiple number of parameters with \c fprintf like patterns.
-  For each debug and warning severity level there is an associated macro:
+  For each debug and warning severity_t level there is an associated macro:
   <ul>
   <li>ERS_DEBUG_0</li>
   <li>ERS_DEBUG_1</li>

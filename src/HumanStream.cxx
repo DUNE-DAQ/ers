@@ -83,7 +83,7 @@ void ers::HumanStream::send(const Issue *issue_ptr) {
 	    } // for
 	    m_out_stream << "]" ; 
 	} catch (std::ios_base::failure &ex) {
-	    throw ers::Issue(ERS_HERE,ers_error,&ex); 
+	    throw ers::Issue(ERS_HERE,ers::error,&ex); 
 	} // catch generic I/O errors 
     } // if m_out_stream
 } // send

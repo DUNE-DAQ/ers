@@ -21,14 +21,14 @@ namespace ers {
     class EntityNotFoundIssue : public Issue {
 	
 protected:
-	EntityNotFoundIssue(const ers::Context &c, ers::ers_severity s) ; 
+	EntityNotFoundIssue(const ers::Context &c, ers::severity_t s) ; 
 public:
 	static const char* const CLASS_NAME ;            /**< \brief Class name */
 	static const char* const ENTITY_NAME_KEY ; 
 	static const char* const ENTITY_TYPE_KEY ; 
 	static const char* const ENTITY_CONTEXT_KEY ;
 	EntityNotFoundIssue();
-	EntityNotFoundIssue(const ers::Context &c, ers::ers_severity s, 
+	EntityNotFoundIssue(const ers::Context &c, ers::severity_t s, 
 			    const std::string &entity_name, 
 			    const std::string &entity_type,
 			    const std::string &entity_context) ; 

@@ -25,21 +25,21 @@ ers::Precondition::Precondition() : Assertion() {}
 
 /** Constructor used by subclasses 
  *  \param c context of the issue
- *  \param s severity of the issue 
+ *  \param s severity_t of the issue 
  *  \param c context of the issue 
  */
 
-ers::Precondition::Precondition(const Context &c, ers_severity s) : Assertion(c,s) {}  
+ers::Precondition::Precondition(const Context &c, severity_t s) : Assertion(c,s) {}  
 
 /** Main constructor, it should be used for building Precondition Issues
  * \param context context of the issue
- * \param s severity of the issue 
+ * \param s severity_t of the issue 
  * \param condition text of the condition of the precondition
  * \param msg message for condition 
  * \param constant_expression does compiler think expression is constant
  */
 
-ers::Precondition::Precondition(const Context &context, ers_severity s, const char*condition, const std::string &msg , bool constant_expression) : Assertion(context,s) {
+ers::Precondition::Precondition(const Context &context, severity_t s, const char*condition, const std::string &msg , bool constant_expression) : Assertion(context,s) {
     this->setup(condition,msg,constant_expression); 
 } // Precondition
 

@@ -54,7 +54,7 @@ public:
 	static const char *const PROCESS_PWD_KEY ;                         /**< \brief key for the process working directory */
 	static const char *const PROGRAM_NAME_KEY ;                        /**< \brief key for the name of the program */
 	static const char *const RESPONSIBILITY_KEY ;                      /**< \brief key for the responsibility of the issue (text) */
-	static const char *const SEVERITY_KEY ;                            /**< \brief key for the severity of the issue */
+	static const char *const SEVERITY_KEY ;                            /**< \brief key for the severity_t of the issue */
 	static const char *const SOURCE_POSITION_KEY ;                     /**< \brief key for position in the source code */
 	static const char *const TIME_KEY ;                                /**< \brief key for the time of the issue (text) */
 	static const char *const TRANSIENCE_KEY ;                          /**< \brief key for the transience of the issue (text) */
@@ -68,6 +68,7 @@ public:
 	
 protected:
 	Issue *m_cause ;                                               /**< \brief Issue that caused the current issue */
+	mutable std::string m_class_name ;                             /**< \brief class name */
 	mutable std::string m_human_description ;                      /**< \brief Human readable description (cache)*/
 	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
 	void insert(const Context *context) throw() ;                  /**< \brief Inserts the context */
@@ -75,14 +76,14 @@ protected:
 	
         void setup_common(const Context *context) throw() ;            /**< \brief Sets up the common fields. */
         void finish_setup(const std::string &message) throw() ;        /**< \brief Finishes the setup of the Issue */
-        Issue(const Context &context, ers_severity s);                 /**< \brief Constructor for subclasses */
+        Issue(const Context &context, severity_t s);                 /**< \brief Constructor for subclasses */
         void set_values(const string_map_type &values) throw();        /**< \brief sets the value table */
 public:
 	Issue();  
 	Issue(const Issue &issue); 
         Issue(const string_map_type &values); 
-	Issue(const Context &context, ers_severity s, const std::string &message);   
-        Issue(const Context &context, ers_severity s, const std::exception *cause); 
+	Issue(const Context &context, severity_t s, const std::string &message);   
+        Issue(const Context &context, severity_t s, const std::exception *cause); 
 	virtual ~Issue() throw() ;
 	Issue *clone() const ; 
 	
@@ -103,12 +104,12 @@ public:
 	
 	virtual const char *get_class_name() const throw() ;           /**< \brief Get key for class (used for serialisation)*/
 	const string_map_type* get_value_table() const ;               /**< \brief extract value table */
-        ers_severity severity() const throw()  ;                       /**< \brief severity of the issue */
-        void severity(ers_severity s) ;                                /**< \brief sets the severity of the issue */
+        severity_t severity() const throw()  ;                           /**< \brief severity_t of the issue */
+        void severity(severity_t s) ;                                    /**< \brief sets the severity_t of the issue */
 	bool is_error();                                               /**< \brief is the issue an error (or fatal). */
-	std::string severity_message() const ;                         /**< \brief message associated with the severity of the issue */
-	void responsibility(ers_responsibility r) ;                    /**< \brief set the responsability of the issue */
-        ers_responsibility responsibility() const throw() ;            /**< \brief get the responsability level of the issue */
+	std::string severity_message() const ;                         /**< \brief message associated with the severity_t of the issue */
+	void responsibility(responsibility_t r) ;                    /**< \brief set the responsability of the issue */
+        responsibility_t responsibility() const throw() ;            /**< \brief get the responsability level of the issue */
      	void transience(bool tr);                                      /**< \brief sets if the issue is transient */
 	int transience() const throw() ;                               /**< \brief is the issue transient */
 	const std::string &human_description() const throw()  ;        /**< \brief Human description message. */

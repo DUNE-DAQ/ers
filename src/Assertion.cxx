@@ -35,17 +35,17 @@ ers::Assertion::Assertion() : Issue() {}
 /** Constructor for subclasses 
   */
 
-ers::Assertion::Assertion(const Context &context, ers_severity s) : Issue(context,s) {} 
+ers::Assertion::Assertion(const Context &context, severity_t s) : Issue(context,s) {} 
 
 /** Constructor 
   * \param condition_text the text of the assertion's condition
   * \param msg message describing the assertion's condition 
-  * \param s severity of the assertion 
+  * \param s severity_t of the assertion 
   * \param context position in the code where the assertion failed, should be the MRS_HERE macro 
   * \param constant_expression is the expression constant (as detected by the compiler).
   */
 
-ers::Assertion::Assertion(const Context &context, ers_severity s, const char* condition_text, const std::string &msg, bool constant_expression) : Issue(context,s) {
+ers::Assertion::Assertion(const Context &context, severity_t s, const char* condition_text, const std::string &msg, bool constant_expression) : Issue(context,s) {
     setup(condition_text,msg,constant_expression);
 } // Assertion
 
@@ -54,7 +54,7 @@ ers::Assertion::Assertion(const Context &context, ers_severity s, const char* co
 
 void ers::Assertion::setup(const char *condition_text, const std::string &msg, bool constant_expression)  {
     m_value_table[ASSERT_CONDITION_KEY] = *condition_text ;
-    responsibility(ers_resp_server); 
+    responsibility(resp_server); 
     transience( ! constant_expression); 
     finish_setup(build_message(condition_text,msg,constant_expression));
 } // setup

@@ -26,7 +26,7 @@ namespace ers {
     class InvalidReferenceIssue : public Issue {
 protected:
 	void pointer(const void *p); 
-	InvalidReferenceIssue(const Context &context, ers_severity s) ; 
+	InvalidReferenceIssue(const Context &context, severity_t s) ; 
 public:
 	static const char* const CLASS_NAME ; 
 	static const char* const REFERENCE_VALUE_KEY ;
@@ -34,9 +34,9 @@ public:
 	static const char* const REFERENCE_NAME_KEY ; 
 	static const char* const REFERENCE_C_PTR_TYPE ; 
 	InvalidReferenceIssue() ;
-	InvalidReferenceIssue(const Context &context, ers_severity s, const void* pointer, const std::string &message, ers_responsibility r = ers_resp_unknown) ; 
+	InvalidReferenceIssue(const Context &context, severity_t s, const void* pointer, const std::string &message, responsibility_t  r = resp_unknown) ; 
 	virtual const char*get_class_name() const throw() ;
-	static void check_reference(const Context &context, ers_severity s, const void* pointer, const char* ptr_name, ers_responsibility r); 
+	static void check_reference(const Context &context, severity_t s, const void* pointer, const char* ptr_name, responsibility_t  r); 
     } ; // InvalidReferenceIssue
     
 } // ers
@@ -48,9 +48,9 @@ public:
 
 #if (!defined(N_ERS_ASSERT))
 #if (defined(__GNUC__))
-#define ERS_PRE_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
+#define ERS_PRE_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_client)
 #else 
-#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
+#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_client)
 #endif
 #else
 #define ERS_PRE_CHECK_PTR(p) 
@@ -63,9 +63,9 @@ public:
 
 #if (!defined(N_ERS_ASSERT))
 #if (defined(__GNUC__))
-#define ERS_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
+#define ERS_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_server)
 #else 
-#define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
+#define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::error,p,#p,ers::resp_server)
 #endif
 #else 
 #define ERS_CHECK_PTR(p) 

@@ -21,11 +21,11 @@ namespace ers {
     
     class LogIssue : public Issue {
 protected:
-	LogIssue(const ers::Context &c, ers_severity s); 
+	LogIssue(const ers::Context &c, severity_t s); 
 public:
 	static const char * const CLASS_NAME ;
 	LogIssue(); 
-	LogIssue(const ers::Context &c, ers_severity s, const std::string &message); 
+	LogIssue(const ers::Context &c, severity_t s, const std::string &message); 
 	virtual const char* get_class_name() const throw() ;
 
     } ; // LogIssue

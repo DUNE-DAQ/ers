@@ -24,12 +24,12 @@ namespace ers {
     class IssueFactoryIssue : public Issue {
 	
 protected:
-	IssueFactoryIssue(const Context &context, ers_severity s); 
+	IssueFactoryIssue(const Context &context, severity_t s); 
 public:
 	static const char* const CLASS_NAME ; 
 	
 	IssueFactoryIssue() ; 
-	IssueFactoryIssue(const Context &context, ers_severity s, const std::string&name, const std::string &message); 
+	IssueFactoryIssue(const Context &context, severity_t s, const std::string&name, const std::string &message); 
 	
 	const char *get_class_name() const throw() ; 
     } ; // IssueFactoryIssue
@@ -40,7 +40,7 @@ public:
 /** \def ERS_ISSUE_FACTORY_ERROR(name,message) Macro that inserts the ERS_HERE and the error value for IssueFactoryIssue constructor
   */
 
-#define ERS_ISSUE_FACTORY_ERROR(name,message) IssueFactoryIssue(ERS_HERE,ers::ers_error,name,message) 
+#define ERS_ISSUE_FACTORY_ERROR(name,message) IssueFactoryIssue(ERS_HERE,ers::error,name,message) 
 
 #endif
 

@@ -20,7 +20,7 @@ namespace {
 
 ers::NotImplemented::NotImplemented() : Assertion() {} 
 
-ers::NotImplemented::NotImplemented(const Context &c, ers_severity s) : Assertion(c,s) {
+ers::NotImplemented::NotImplemented(const Context &c, severity_t s) : Assertion(c,s) {
     this->setup(c.function().c_str(),"",true);  
 } // NotImplemented
  

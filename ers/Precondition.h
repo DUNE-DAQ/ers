@@ -24,11 +24,11 @@ namespace ers {
     class Precondition : public Assertion {
 protected:
 	virtual std::string build_message(const char* condition_text, const std::string &message, bool constant_expression = false) throw() ; 
-	Precondition(const Context &context, ers_severity s); 
+	Precondition(const Context &context, severity_t s); 
 public:
 	static const char* const PRECONDITION_CLASS ; 
 	Precondition();
-	Precondition(const Context &context, ers_severity s, const char*condition, const std::string &message , bool constant_expression=false) ;
+	Precondition(const Context &context, severity_t s, const char*condition, const std::string &message , bool constant_expression=false) ;
 	virtual const char*get_class_name() const throw();
     } ;  // Precondition
 } // ers
@@ -43,9 +43,9 @@ public:
 
 #ifndef N_ERS_ASSERT
 #ifdef __GNUC__
-#define ERS_PRECONDITION(expr,...) { if(!(expr)) { char precondition_buffer[256] ; snprintf(precondition_buffer,256, __VA_ARGS__) ; ers::Precondition failed_precondition(ERS_HERE,ers::ers_error,#expr,precondition_buffer,__builtin_constant_p(expr)) ; throw failed_precondition ; } }
+#define ERS_PRECONDITION(expr,...) { if(!(expr)) { char precondition_buffer[256] ; snprintf(precondition_buffer,256, __VA_ARGS__) ; ers::Precondition failed_precondition(ERS_HERE,ers::error,#expr,precondition_buffer,__builtin_constant_p(expr)) ; throw failed_precondition ; } }
 #else 
-#define ERS_PRECONDITION(expr,...) { if(!(expr)) { char precondition_buffer[256] ; snprintf(precondition_buffer,256, __VA_ARGS__) ; ers::Precondition failed_precondition(ERS_HERE,ers::ers_error,#expr,precondition_buffer,false) ; throw failed_precondition ; } }
+#define ERS_PRECONDITION(expr,...) { if(!(expr)) { char precondition_buffer[256] ; snprintf(precondition_buffer,256, __VA_ARGS__) ; ers::Precondition failed_precondition(ERS_HERE,ers::error,#expr,precondition_buffer,false) ; throw failed_precondition ; } }
 #endif
 #else 
 #define ERS_PRECONDITION(expr,...) 

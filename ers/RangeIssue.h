@@ -15,7 +15,7 @@
 namespace ers {
     class RangeIssue : public InvalidReferenceIssue {
 protected:
-	RangeIssue(const ers::Context &c, ers::ers_severity s) ; 
+	RangeIssue(const ers::Context &c, ers::severity_t s) ; 
 public:
 	static void set_range(ers::Issue &issue, long index, long min_index, long max_index, const char* entity_name=0) ;
 	static void check_range(const ers::Context &c, long min, long value, long max, const char* entity_name=0); 
@@ -24,7 +24,7 @@ public:
 	static const char * const RANGE_MIN_KEY ; 
 	static const char * const RANGE_MAX_KEY ; 
 	RangeIssue() ; 
-	RangeIssue(const ers::Context &c, ers::ers_severity s, long min_index, long index, long max_index, const char* entity_name=0) ; 
+	RangeIssue(const ers::Context &c, ers::severity_t s, long min_index, long index, long max_index, const char* entity_name=0) ; 
 	virtual const char*get_class_name() const throw() ;
 
     } ; // RangeIssue

@@ -99,11 +99,11 @@ Issue::Issue(const string_map_type &values) {
 
 /** Constructor 
  * \param context the context of the Issue, e.g where in the code did the issue appear 
- * \param s severity of the Issue
+ * \param s severity_t of the Issue
  * \param m message of the Issue
  */
 
-Issue::Issue(const Context &context, ers_severity s, const std::string &m) {
+Issue::Issue(const Context &context, severity_t s, const std::string &m) {
     cause(); 
     setup_common(&context);
     severity(s);
@@ -112,7 +112,7 @@ Issue::Issue(const Context &context, ers_severity s, const std::string &m) {
 
 /** @overload */
 
-Issue::Issue(const Context &context, ers_severity s) {
+Issue::Issue(const Context &context, severity_t s) {
     cause();   
     setup_common(&context);
     severity(s);
@@ -120,11 +120,11 @@ Issue::Issue(const Context &context, ers_severity s) {
 
 /** Constructor - takes another exceptions as the cause for the current exception.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
- * \param s the severity of the exception
+ * \param s the severity_t of the exception
  * \param cause_exception the exception that caused the current Issue
  */
 
-Issue::Issue(const Context &context, ers_severity s, const std::exception *cause_exception) {
+Issue::Issue(const Context &context, severity_t s, const std::exception *cause_exception) {
     ERS_PRE_CHECK_PTR(cause_exception);
     cause(cause_exception); 
     setup_common(&context);
@@ -445,13 +445,7 @@ void Issue::setup_common(const Context *context) throw() {
   */
 
 void Issue::finish_setup(const std::string &msg) throw() {
-    Issue *p = this ; 
-#ifdef __GNUC__
-    std::string class_name = ers::Core::umangle_gcc_class_name((typeid(*p)).name()).c_str(); 
-#else
-    std::string class_name = typeid(*p).name() ; 
-#endif
-    set_value(CPP_CLASS_KEY,class_name); 
+    // set_value(CPP_CLASS_KEY,class_name); 
     set_value(CLASS_KEY, get_class_name()) ;
     set_value(MESSAGE_KEY,msg); 
 } // finish_setup
@@ -463,27 +457,37 @@ void Issue::finish_setup(const std::string &msg) throw() {
 // ====================================================
 
 /** Returns the key used to describe this particular class when serializing 
+  * This method tries to build a meaningfull class name out of C++ RTTI.
+  * This depends on the compiler providing information in a format similar to gcc.
+  * For more safety. 
+  * If the gcc unmangling fails the default (ers::Issue) is used. 
   */
 
 const char*Issue::get_class_name() const throw()  {
-    return ISSUE_CLASS_NAME ; 
+    if (m_class_name.empty()) {
+	const Issue *p = this ;
+	m_class_name = ers::Core::umangle_gcc_class_name((typeid(*p)).name()).c_str(); 
+	if (m_class_name.empty()) {
+	     m_class_name=ISSUE_CLASS_NAME ; 
+	} // fall back 
+    } 
+    return m_class_name.c_str() ;
 } // get_class_name
 
-
-/** Gets the severity of the Issue 
- * @return severity of the Issue 
+/** Gets the severity_t of the Issue 
+ * @return severity_t of the Issue 
  */
 
-ers_severity Issue::severity() const throw() {
+severity_t Issue::severity() const throw() {
     std::string value = get_value(SEVERITY_KEY); 
     return ers::Core::parse_severity(value);
 } // severity
 
-/** Set the severity of the Issue 
- * \param s the severity level 
+/** Set the severity_t of the Issue 
+ * \param s the severity_t level 
  */
 
-void Issue::severity(ers_severity s) {
+void Issue::severity(severity_t s) {
     set_value(SEVERITY_KEY,ers::Core::to_string(s)); 
 } // severity
 
@@ -492,12 +496,12 @@ void Issue::severity(ers_severity s) {
   */
 
 bool Issue::is_error() {
-    ers_severity s = severity(); 
-    return (s==ers_error || s== ers_fatal) ;
+    severity_t s = severity(); 
+    return (s==ers::error || s== ers::fatal) ;
 } // is_error
 
 /**
-  * \return the string representing the severity of the issue 
+  * \return the string representing the severity_t of the issue 
   */
 
 std::string Issue::severity_message() const {
@@ -509,7 +513,7 @@ std::string Issue::severity_message() const {
  * \return the responsibiliy value of the Issue 
  */
 
-ers_responsibility Issue::responsibility() const throw() {
+responsibility_t  Issue::responsibility() const throw() {
     std::string value = this->get_value(RESPONSIBILITY_KEY); 
     return ers::Core::parse_responsibility(value);
 } // responsability
@@ -518,7 +522,7 @@ ers_responsibility Issue::responsibility() const throw() {
  * \param r the responsibility type
  */
 
-void Issue::responsibility(ers_responsibility r) {
+void Issue::responsibility(responsibility_t  r) {
     set_value(RESPONSIBILITY_KEY,ers::Core::to_string(r)) ; 
 } // responsability
 

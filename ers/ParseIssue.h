@@ -22,7 +22,7 @@ namespace ers {
     
 class ParseIssue: public Issue {
 protected:
-    ParseIssue(const Context &c, ers_severity s) ; 
+    ParseIssue(const Context &c, severity_t s) ; 
 public:
     static const char * const OFFENDING_LINE_KEY ;
     static const char * const OFFENDING_LINE_NUMBER_KEY ; 
@@ -31,14 +31,14 @@ public:
     void offending_line_number(int line); 
     void file_name(std::string filename); 
     ParseIssue() ; 
-    ParseIssue(const Context &c,ers_severity s, const std::string &message); 
-    ParseIssue(const Context &c,ers_severity s, const std::string &message, const std::string &line); 
+    ParseIssue(const Context &c,severity_t s, const std::string &message); 
+    ParseIssue(const Context &c,severity_t s, const std::string &message, const std::string &line); 
     virtual const char* get_class_name() const throw() ;
 } ; // ParseIssue
 
 } // ers
 
-#define ERS_PARSE_ERROR(message,...) ers::ParseIssue(ERS_HERE,ers::ers_error,__VA_ARGS__) 
+#define ERS_PARSE_ERROR(message,...) ers::ParseIssue(ERS_HERE,ers::error,__VA_ARGS__) 
 
 #endif
 

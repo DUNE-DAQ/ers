@@ -27,18 +27,18 @@ const char * ers::EntityNotFoundIssue::get_class_name() const throw() { return C
 ers::EntityNotFoundIssue::EntityNotFoundIssue() : ers::Issue() {} 
 
 /** \overload */
-ers::EntityNotFoundIssue::EntityNotFoundIssue(const ers::Context &c, ers::ers_severity s) : ers::Issue(c,s) {}
+ers::EntityNotFoundIssue::EntityNotFoundIssue(const ers::Context &c, ers::severity_t s) : ers::Issue(c,s) {}
 
 /** Constructor 
   * \brief entity not found constructor
   * \param c the ers context where the issue occured
-  * \param s the ers severity of the issue 
+  * \param s the ers severity_t of the issue 
   * \param entity_name the name of the entity that was not found 
   * \param entity_type the type of the entity that was not found 
   * \param entity_context the name of the context where the entity was searched for
   */
 
-ers::EntityNotFoundIssue::EntityNotFoundIssue(const ers::Context &c, ers::ers_severity s, const std::string &entity_name, const std::string &entity_type, const std::string &entity_context) : Issue(c,s) {
+ers::EntityNotFoundIssue::EntityNotFoundIssue(const ers::Context &c, ers::severity_t s, const std::string &entity_name, const std::string &entity_type, const std::string &entity_context) : Issue(c,s) {
     set_value(ENTITY_NAME_KEY,entity_name);
     set_value(ENTITY_TYPE_KEY,entity_type);
     set_value(ENTITY_CONTEXT_KEY,entity_context) ; 

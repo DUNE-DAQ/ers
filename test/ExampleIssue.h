@@ -20,12 +20,12 @@
 class ExampleIssue : public ers::Issue {
     
 protected:
-    ExampleIssue(const ers::Context& context, ers::ers_severity severity) ;
+    ExampleIssue(const ers::Context& context, ers::severity_t severity) ;
 public:
     static const char* const CLASS_NAME ; 
     static const char* const PROCRASTINATION_LEVEL_KEY ; 
     ExampleIssue();
-    ExampleIssue(const ers::Context& context, ers::ers_severity severity, int procrastination_level) ;
+    ExampleIssue(const ers::Context& context, ers::severity_t severity, int procrastination_level) ;
     virtual const char *get_class_name() const throw() ;
     int procrastination_level() const ; 
 } ; // ExempleIssue

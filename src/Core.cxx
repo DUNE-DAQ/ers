@@ -12,35 +12,35 @@ const char* const ers::Core::RESPONSIBILITY_NAMES[] = { "precondition", "interna
 const std::string ers::Core::empty_string = "" ;
 
 /** 
- * \brief Transforms a severity type into the corresponding string
+ * \brief Transforms a severity_t type into the corresponding string
  * \param s severity
  * \return pointer to string with associated text 
  */
 
-const char *ers::Core::to_string(ers::ers_severity s) throw() {
+const char *ers::Core::to_string(ers::severity_t s) throw() {
     const unsigned int index = (unsigned int) s ;
-    assert(index<=ers_severity_max); 
+    assert(index<=severity_max); 
     return ers::Core::SEVERITY_NAMES[index] ; 
 } // getSeverityText
 
-/** Parses a string and extracts a severity 
+/** Parses a string and extracts a severity_t 
  * \param s the string to parse 
- * \return a severity value
+ * \return a severity_t value
  */
 
-ers::ers_severity ers::Core::parse_severity(const char *s) throw() {
-    for(int i=0;i<ers_severity_max;i++) {
-        if (strcmp(s,ers::Core::SEVERITY_NAMES[i])==0) return (ers::ers_severity) i ; 
+ers::severity_t ers::Core::parse_severity(const char *s) throw() {
+    for(int i=0;i<severity_max;i++) {
+        if (strcmp(s,ers::Core::SEVERITY_NAMES[i])==0) return (ers::severity_t) i ; 
     }// for
-    return ers_severity_none ; 
+    return severity_none ; 
 } // parse_severity
 
-/** Parses a string and extracts a severity 
+/** Parses a string and extracts a severity_t 
  * \param s the string to parse 
- * \return a severity value
+ * \return a severity_t value
  */
 
-ers::ers_severity ers::Core::parse_severity(const std::string &s) throw() {
+ers::severity_t ers::Core::parse_severity(const std::string &s) throw() {
     return parse_severity(s.c_str());
 } // parse_severity
 
@@ -49,9 +49,9 @@ ers::ers_severity ers::Core::parse_severity(const std::string &s) throw() {
   * \return string with text for responsibility 
   */
 
-const char* ers::Core::to_string(ers::ers_responsibility r) throw() {
+const char* ers::Core::to_string(ers::responsibility_t  r) throw() {
     const unsigned int index = (unsigned int) r ;
-    assert(index<=ers_resp_max);
+    assert(index<=resp_max);
     return RESPONSIBILITY_NAMES[index] ;
 } // to_string
 
@@ -60,11 +60,11 @@ const char* ers::Core::to_string(ers::ers_responsibility r) throw() {
  * \return a responsibility value
  */
 
-ers::ers_responsibility ers::Core::parse_responsibility(const char *s) throw() {
-    for(int i=0;i<ers_resp_max;i++) {
-        if (strcmp(s,RESPONSIBILITY_NAMES[i])==0) return (ers::ers_responsibility) i ; 
+ers::responsibility_t  ers::Core::parse_responsibility(const char *s) throw() {
+    for(int i=0;i<resp_max;i++) {
+        if (strcmp(s,RESPONSIBILITY_NAMES[i])==0) return (ers::responsibility_t) i ; 
     } // for 
-    return ers_resp_unknown ;
+    return resp_unknown ;
 } // parse_responsability
 
 /** Parses a string and extracts a responsibility 
@@ -72,7 +72,7 @@ ers::ers_responsibility ers::Core::parse_responsibility(const char *s) throw() {
   * \return a responsibility value
   */
 
-ers::ers_responsibility ers::Core::parse_responsibility(const std::string &s) throw() {
+ers::responsibility_t  ers::Core::parse_responsibility(const std::string &s) throw() {
     return parse_responsibility(s.c_str()) ; 
 } // parse_responsability
 

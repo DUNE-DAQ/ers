@@ -21,8 +21,8 @@
 
 namespace ers {
     
-    typedef enum _ers_severity { ers_severity_none, ers_debug_0, ers_debug_1, ers_debug_2, ers_debug_3, ers_information, ers_notification, ers_warning, ers_error, ers_fatal,  ers_severity_max } ers_severity ; 
-    typedef enum _ers_responsibility { ers_resp_client, ers_resp_server, ers_resp_dependency , ers_resp_unknown, ers_resp_max } ers_responsibility ; 
+    typedef enum _severity_t { severity_none, debug_0, debug_1, debug_2, debug_3, information, notification, warning, error, fatal,  severity_max } severity_t  ; 
+    typedef enum _responsibility_t  { resp_client, resp_server, resp_dependency , resp_unknown, resp_max } responsibility_t ; 
     typedef std::map<std::string, std::string> string_map_type ;   
     typedef std::vector<std::string> string_vector ;
     
@@ -36,12 +36,12 @@ namespace ers {
 protected:
 public:
 	static const std::string empty_string ;
-	static ers_severity parse_severity(const char *s) throw() ;                     /**< \brief string to severity */
-	static ers_severity parse_severity(const std::string &s) throw() ;              /**< \brief string to severity */
-	static const char* to_string(ers_severity s) throw() ;                          /**< \brief severity to string */
-	static ers_responsibility parse_responsibility(const char *s) throw() ;         /**< \brief string to responsibility */
-	static ers_responsibility parse_responsibility(const std::string &s) throw() ;  /**< \brief string to responsibility */
-	static const char* to_string(ers_responsibility s) throw() ;                    /**< \brief responsibility to string */
+	static severity_t parse_severity(const char *s) throw() ;                     /**< \brief string to severity_t */
+	static severity_t parse_severity(const std::string &s) throw() ;              /**< \brief string to severity_t */
+	static const char* to_string(severity_t s) throw() ;                          /**< \brief severity_t to string */
+	static responsibility_t parse_responsibility(const char *s) throw() ;         /**< \brief string to responsibility */
+	static responsibility_t parse_responsibility(const std::string &s) throw() ;  /**< \brief string to responsibility */
+	static const char* to_string(responsibility_t s) throw() ;                    /**< \brief responsibility to string */
 	static int parse_boolean(const char* s) throw() ;                               /**< \brief string to boolean */
 	static const char* to_string(bool b) throw ();                                  /**< \brief boolean to string */
 	static std::string parse_prefix_string(const char **ptr) throw() ;                    /**< \brief prefix string data to string */

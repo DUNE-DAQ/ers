@@ -27,12 +27,12 @@ protected:
 public:
 	static const char* const CLASS_NAME ; 
 	NotImplemented();
-	NotImplemented(const Context &context, ers_severity s) ;
+	NotImplemented(const Context &context, severity_t s) ;
 	virtual const char*get_class_name() const throw();
     } ;  // Precondition
 } // ers
 
-#define ERS_NOT_IMPLEMENTED() throw ers::NotImplemented(ERS_HERE,ers::ers_error)
+#define ERS_NOT_IMPLEMENTED() throw ers::NotImplemented(ERS_HERE,ers::error)
 #define ERS_NOT_IMPLEMENTED_FATAL() throw ers::NotImplemented(ERS_HERE,ers::ers_fatal)
 
 #endif

@@ -30,7 +30,7 @@ namespace ers {
     class Assertion: public ers::Issue {
 protected:
     virtual std::string build_message(const char* condition_text, const std::string &msg, bool constant_expression=false) throw() ; 
-    Assertion(const Context &context, ers_severity s); 
+    Assertion(const Context &context, severity_t s); 
     void setup(const char *condition, const std::string &message, bool constant_expression); 
     static const char* const MESSAGE_ELEMENTS[] ; 
 public:
@@ -39,7 +39,7 @@ public:
      
     virtual const char*get_class_name() const throw() ;
     Assertion(); 
-    Assertion(const Context &context, ers_severity s, const char*condition, const std::string &message,  bool constant_expression=false) ;
+    Assertion(const Context &context, severity_t s, const char*condition, const std::string &message,  bool constant_expression=false) ;
 } ; 
 
 /** This structure is simply used to trigger compile-time assertion errors 
@@ -79,9 +79,9 @@ template<> struct Compile_time_error<true> { };
  */
 #ifndef N_ERS_ASSERT
 #ifdef __GNUC__
-#define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error, #expr,assertion_buffer,__builtin_constant_p(expr)) ; throw failed_assertion ; } }
+#define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::error, #expr,assertion_buffer,__builtin_constant_p(expr)) ; throw failed_assertion ; } }
 #else 
-#define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::ers_error,#expr,assertion_buffer,false) ; throw failed_assertion ; } }
+#define ERS_ASSERT(expr,...) { if(!(expr)) { char assertion_buffer[256] ; snprintf(assertion_buffer,sizeof(assertion_buffer), __VA_ARGS__) ; ers::Assertion failed_assertion(ERS_HERE, ers::error,#expr,assertion_buffer,false) ; throw failed_assertion ; } }
 #endif
 #else 
 #define ERS_ASSERT(expr,...) ((void) (expr))

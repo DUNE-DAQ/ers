@@ -50,7 +50,7 @@ void ers::DefaultStream::send(const Issue *issue_ptr) {
             } // for
             std::cerr << "-----------" << std::endl ; 
         } catch (std::ios_base::failure &ex) {
-            throw ers::Issue(ERS_HERE,ers_error,&ex); 
+            throw ers::Issue(ERS_HERE,ers::error,&ex); 
         } // catch generic I/O errors 
    
 } // send

@@ -24,9 +24,9 @@ namespace {
 
 ers::InvalidReferenceIssue::InvalidReferenceIssue() : Issue() {} 
 
-ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s) : Issue(context,s) {} 
+ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, severity_t s) : Issue(context,s) {} 
 
-ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s, const void* p, const std::string &msg, ers_responsibility r) : Issue(context,s) {
+ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, severity_t s, const void* p, const std::string &msg, responsibility_t  r) : Issue(context,s) {
     severity(s);
     pointer(p); 
     responsibility(r) ; 
@@ -46,7 +46,7 @@ void ers::InvalidReferenceIssue::pointer(const void *p) {
     set_value(REFERENCE_TYPE_KEY,REFERENCE_C_PTR_TYPE) ; 
 } // pointer
 
-void ers::InvalidReferenceIssue::check_reference(const Context &context, ers_severity s, const void* p, const char* ptr_name, ers_responsibility r) {
+void ers::InvalidReferenceIssue::check_reference(const Context &context, severity_t s, const void* p, const char* ptr_name, responsibility_t  r) {
     if (p==0) {
 	std::ostringstream message ;
 	message << "pointer '" << ptr_name << "' is null" ; 
