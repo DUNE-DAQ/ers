@@ -4,11 +4,10 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-#include "system/MapFile.h"
+#include "SystemTest.h"
 
 #include "ers/TabOutStream.h"
 #include "ers/TabInStream.h"
-#include "ers/TinyXMLStream.h"
 #include "ers/XercesStream.h"
 #include "ers/Precondition.h"
 #include "ers/NotImplemented.h"
@@ -19,6 +18,7 @@
 #include "system/OpenFail.h"
 
 #include "ExampleIssue.h"
+#include "SystemTest.h"
 
 using namespace ers ; 
 
@@ -57,75 +57,16 @@ void test_issue(const Issue &e) {
 	// XMLStream xml("/tmp/out.xml");
 	// xml << i ; 
 	StreamFactory::error(&i); 
-    }
+    } // try / catch 
 } // test_issue
 
 int main(int argc, char* argv[]) {
     XMLPlatformUtils::Initialize(); 
     try {
-	// ERS_DEBUG_0("creating file object");
-	int s = 4096 ;
-	MapFile f("~/tmp/maptest",s,0,true,false); 
-	// ERS_DEBUG_0("trying map"); 
-	f.map();
-	void *a = f.address() ;
-	printf("%p\n",a);
-	char *p = (char *) calloc(sizeof(char),1024); 
-	memcpy(p,a,1024);
-	p[64] = 0 ; 
-	printf("%s\n",p);
-	f.unmap();
+	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {
 	 test_issue(e); 
-	// StreamFactory::error(&e); 
     }
+    return 0 ; 
 } // main 
 
-// Stream::error(&e);
-
-/* 
-
-int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
-if (fd<0) throw OpenFail(ERS_HERE,O_RDWR |  O_CREAT, "/etc/forbidden"); 
-*/
-// ERS_ASSERT(n,"foo");
-//  ERS_PRECONDITION(3<2,"maths work %d %s",3<2,"argument");
-
-
-
-
-
-/*  
-if (fd<0) {
-    
-    issue_stream::error(&i);
-} // if
- */
-/*
- 
- printf("starting\n");	
-	 
- 
- // NOT_IMPLEMENTED(); 
-	// int fd = open("/etc/forbidden",O_RDWR |  O_CREAT,0); 
-	// if (fd<0) throw OpenFail("/etc/forbidden",O_RDWR |  O_CREAT,ERS_HERE); 
-	// XMLOutStream xml_crash("/etc/forbidden"); 
-	// size_t big = 0x100000000000 ; 
-	// void *p = malloc(big); 
-	// ERS_ALLOC_CHECK(p,big); 
-	// char  command[] = "/bin/echo" ; 
-	// char param[] = "Hello World" ; 
-	// char *array[] = { command, param, 0 } ; 
-	// execv(command,array);
-	// ers::Executable f("/bin/echo"); 
-	// string_vector params ; 
-	// params.push_back("hello world"); 
-	// f.start(params); 
- 
-#include "ers/InvalidReferenceIssue.h"
-#include "ers/Executable.h"
-#include "ers/AllocIssue.h"
-#include "ers/Stream.h"
- 
- 
- */

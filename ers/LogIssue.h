@@ -11,7 +11,8 @@
 
 namespace ers {
     class LogIssue : public Issue {
-	
+protected:
+	LogIssue(const ers::Context &c, ers_severity s); 
 public:
 	static const char *CLASS_NAME ;
 	LogIssue(); 
