@@ -62,7 +62,7 @@ public:
 	static const char *const USER_NAME_KEY ;                           /**< \brief key for the user-name of the owner of the process */
 	static const char *const CAUSE_PSEUDO_KEY ;                        /**< \brief key used when serializing the cause issue, this key is not used in the value table */
 	static const char *const CAUSE_TEXT_KEY ;                          /**< \brief key used to store the cause issue's message */
-	
+	static const char *const QUALIFIER_LIST_KEY ; 
 	static const char *const ISSUE_CLASS_NAME ;                        /**< \brief name of the class, used for serialisation */
 	
 protected:
@@ -113,6 +113,9 @@ public:
 	const std::string &human_description() const throw()  ;        /**< \brief Human description message. */
         const char* what() const throw() ;                             /**< \brief Human description message. */
 	const std::string &message() const throw() ;                   /**< \brief Message */
+	
+	void add_qualifier(const std::string &qualif) ; 
+	std::vector<std::string> qualifiers() const ; 
     } ; // Issue
     
     std::ostream& operator<<(std::ostream&, const Issue&);

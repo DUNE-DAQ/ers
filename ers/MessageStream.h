@@ -29,3 +29,5 @@ public:
 	virtual void send(const Issue *issue_ptr) ; /**< \brief sends the issue, displays the message */
     } ; // MessageStream
 } ; // ers
+
+

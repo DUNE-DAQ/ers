@@ -29,6 +29,7 @@ ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_se
 ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_severity s, const void* p, const std::string &msg, ers_responsibility r) : Issue(context,s) {
     severity(s);
     pointer(p); 
+    responsibility(r) ; 
     finish_setup(msg); 
 } // InvalidReferenceIssue
 

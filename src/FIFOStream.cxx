@@ -17,6 +17,7 @@ const char* const ers::FIFOStream::FIFO_STREAM_KEY = "fifo" ;
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	(void) uri ; // to shut up the compiler 
 	if (protocol==ers::FIFOStream::FIFO_STREAM_KEY) return new ers::FIFOStream() ; 
 	return 0 ;
     } 

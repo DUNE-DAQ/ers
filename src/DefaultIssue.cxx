@@ -24,3 +24,4 @@ ers::DefaultIssue::~DefaultIssue() throw() {}
 const char *ers::DefaultIssue::get_class_name() const throw() {
     return m_class_name.c_str(); 
 } // get_class_name
+

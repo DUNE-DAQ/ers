@@ -65,7 +65,6 @@ public:
     const std::string & compilation() const ; /**< \return compilation time and date */
     int stack_frames() const ; 
     const std::string &stack_frame(int i) const ; 
-
    } ; // Context
 
 } // ers 

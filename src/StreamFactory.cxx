@@ -68,6 +68,7 @@ ers::StreamFactory::StreamFactory() {
   */
 
 ers::StreamFactory::StreamFactory(const StreamFactory &other) {
+    (void) other ; // shut up the compiler 
     ERS_NOT_IMPLEMENTED(); 
 } // StreamFactory
 

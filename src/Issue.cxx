@@ -61,7 +61,8 @@ const char* const Issue::TRANSIENCE_KEY = "TRANSIENCE" ;
 const char* const Issue::USER_ID_KEY = "USER_ID" ; 
 const char* const Issue::USER_NAME_KEY = "USER_NAME" ; 
 const char* const Issue::CAUSE_TEXT_KEY = "CAUSE_TEXT"  ;
-const char* const Issue::CAUSE_PSEUDO_KEY = "CAUSE" ; 
+const char* const Issue::CAUSE_PSEUDO_KEY = "CAUSE" ;
+const char* const Issue::QUALIFIER_LIST_KEY = "QUALIFIERS" ; 
 
 const char* const Issue::ISSUE_CLASS_NAME = "ers::issue" ; 
 
@@ -565,6 +566,34 @@ const char *Issue::what() const throw() {
 const std::string &Issue::message() const throw() {
     return get_value(MESSAGE_KEY) ; 
 } // message
+
+
+void Issue::add_qualifier(const std::string &qualif) {
+    const std::string &qualif_s = get_value(QUALIFIER_LIST_KEY) ; 
+    std::string::size_type pos = qualif_s.find(qualif);
+    if (pos!=std::string::npos) return ; // already present
+    std::string n_qualif = qualif_s+qualif + " " ; 
+    set_value(QUALIFIER_LIST_KEY,n_qualif); 
+} // add_qualifier
+
+std::vector<std::string> Issue::qualifiers() const {
+    std::vector<std::string> qualif_vector ; 
+    const std::string &qualif_s = get_value(QUALIFIER_LIST_KEY) ; 
+    const std::string delimiters = (", \t"); 
+    std::string::size_type start_p, end_p ; 
+    start_p = qualif_s.find_first_not_of(delimiters) ; 
+    while(start_p != std::string::npos) {
+	end_p = qualif_s.find_first_of(delimiters,start_p) ;
+	if (end_p == std::string::npos) {
+	    end_p = qualif_s.length(); 
+	}
+	const std::string sub_str = qualif_s.substr(start_p,end_p);
+	qualif_vector.push_back(sub_str) ; 
+	start_p = qualif_s.find_first_not_of(delimiters,end_p) ;
+    } // while
+    return qualif_vector ; 
+} // qualifiers
+
 
 
 

@@ -106,18 +106,20 @@ bool ers::TabStream::deserialize(string_map_type *values) {
 
 void ers::TabStream::serialize_pair(const Issue *issue_ptr, const std::string &key, const std::string &value) {
     ERS_PRE_CHECK_PTR(m_out_stream);
+    (void) issue_ptr ; // shut up the compiler 
     *m_out_stream  << key << "\t\"" << value << "\"" << std::endl ; 
 } // serialize 
 
 /** Finishes the serialization
 * As this serialization method does not support for serializing causes, 
 * it adds a pseudo key with the description of the cause. 
-* \param i the issue to serialize
+* \param issue_ptr the issue to serialize
 * \bug at the moment cause exceptions are not supported, and the root exception adds the cause property by itself
 */
 
-void ers::TabStream::serialize_end(const Issue *i) {
+void ers::TabStream::serialize_end(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(m_out_stream);
+    (void) issue_ptr ; // shut up the compiler 
     *m_out_stream << std::endl ; 
 } // serialize_end
 

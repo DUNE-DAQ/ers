@@ -118,7 +118,10 @@ void ers::STLStream::serialize_pair(const Issue* issue_ptr, const std::string &k
 	(void) value ; 
 } // serialize_pair
 
-bool ers::STLStream::deserialize(string_map_type *values) { return false ;  }  
+bool ers::STLStream::deserialize(string_map_type *values) { 
+    (void) values ; // shut up the compiler 
+    return false ;  
+} //   deserialize
 
 
 

@@ -440,7 +440,8 @@ void ers::XercesStream::commit_writes() {
 /** Method required for XML Format target
   */
 
-void ers::XercesStream::writeChars(const XMLByte* const toWrite, const unsigned int count,XMLFormatter* const formatter) {
+void ers::XercesStream::writeChars(const XMLByte* const toWrite, const unsigned int count, XMLFormatter* const formatter) {
+    (void) formatter ; // shut up the compiler 
     const char* buffer = (const char*) toWrite ; 
     m_out_stream->write(buffer,count); 
 } // write_chars

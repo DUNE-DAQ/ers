@@ -74,7 +74,9 @@ int main(int argc, char* argv[]) {
 	ERS_DEBUG_1("throwing custom issue");
 	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {
-	 test_issue(e); 
+	e.add_qualifier("foo"); 
+	e.add_qualifier("bar"); 
+	test_issue(e); 
     }
     return 0 ; 
 } // main 
