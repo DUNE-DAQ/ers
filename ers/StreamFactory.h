@@ -46,18 +46,25 @@ namespace ers {
       * <li>The user can provide another stream for any severity simply by calling method \c set, either 
       *     by specifying the stream directly, or by providing a key.</li>
       * </ol>
-      * The string format used by key supports the following protocols:<ul>
+      * The string format used by key supports the following protocols by default:<ul>
+      * <li>null: issues are discarded</li>
+      * <li>default: issues are displayed on standard error stream</li>
+      * <li>fifo: writes into a FIFO stream, to be actually used the issues need to be read by another entity</li>
+      * </ul>
+      * More streams are offered by different packages, to make those stream availables link in the relevant packages:<br>
+      * <b>System</b> package: <ul>
       * <li>file: writes into a file</li>
       * <li>cerr: writes into the standard error stream</li>
-      * <li>fifo: writes into a FIFO stream, to be actually used the issues need to be read by another entity</li>
-      * <li>null: issues are silently discarded</li>
       * <li>syslog: issues are sent to syslog</li>
       * </ul> 
-      * The string format supports the following serializing encodings<ul>
+      * The string format supports the following serializing encodings for cerr and file streams<ul>
       * <li>XML - issues are serialized as XML data</li>
       * <li>TAB - issues are serialized as tabulated data</li>
       * <li>TXT - issues are serialized as single line of text</li>
       * </ul>
+      * <b>ersipc</b> package: <ul>
+      * <li>mrs: writes issues into the MRS system (q.v.) the rest of the uri in this case designates the IPC partition to use
+      *     for instance mrs://data
       * In order to add new stream implementations, one needs to register a factory function of type \c create_stream_callback.
       * This method takes two parameters, a protocol parameter, and an uri parameter, that basically contains everything except
       * the protocol part of the key. If the implementation can offer a stream that corresponds to the key it should return a 

@@ -16,7 +16,9 @@
 namespace ers {
 
 /** This class streams an issue into an human readable string. 
-  * It is uses by the issue class to display itself and to put it into standard stl streams. 
+  * It is uses by the issue class to display itself. 
+  * This stream can be specified for other uses, but the user is then responsible
+  * for reading data from the stream and clearing it. 
   * \author Matthias Wiesmann
   * \version 1.0
   * \brief Single line, human readable format stream. 
@@ -27,9 +29,10 @@ protected:
     std::ostringstream m_out_stream ; 
 public:
     static std::string to_string(const Issue *issue) throw() ; 
-    
+    static const char* const KEY ; 
     HumanStream() ;
     std::string to_string() ; 
+    void clear() ; 
     void send(const Issue *ptr); 
 } ; // human_stream 
 

@@ -20,6 +20,10 @@ std::string ers::Context::s_host_type  ;
 
 std::vector<std::string>  ers::Context::default_qualifiers ;
 
+/** Returns the empty instance 
+  * \return a pointer to the empty instance.
+  */ 
+
 const ers::Context *ers::Context::empty() {
     if (! empty_instance) {
 	empty_instance = new ers::Context("",0,"","","","","") ; 

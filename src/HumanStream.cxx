@@ -12,7 +12,22 @@
 #include "ers/HumanStream.h"
 
 
+const char* const ers::HumanStream::KEY = "human" ; 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+        (void) uri ;
+        if (protocol==ers::HumanStream::KEY) {
+	    return new ers::HumanStream() ;  
+        } 
+	return 0 ; 
+    } // 
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::HumanStream::KEY,create_stream) ;
+} // anonymous namespace
+
+
 /** Dumps the content of an issue into a string 
+  * This class is used internally by the Issue class to produce then description field. 
   * \param issue_ptr the Issue to serialise
   * \return string description 
   */
@@ -33,10 +48,19 @@ ers::HumanStream::HumanStream() : ers::Stream() {
 	
 } // HumanStream
 
+/** \return the content of the stream as a string 
+  */
+
 std::string ers::HumanStream::to_string() { 
      return m_out_stream.str(); 
 } // to_string
 
+/** Clears the content of the stream 
+  */
+
+void ers::HumanStream::clear() {
+    m_out_stream.str(""); 
+} // clear
 
 void ers::HumanStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr); 

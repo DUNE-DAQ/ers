@@ -10,7 +10,7 @@
 /** \file ers.h This file includes all the main headers of the Error Reporting System.
   * It does not declare anything <em>per se</em>
   * \author Matthias Wiesmann
-  * \version 1.0
+  * \version 1.1 Removed dependency on System package
   */
 
 #include "ers/Core.h"

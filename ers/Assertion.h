@@ -75,6 +75,7 @@ template<> struct Compile_time_error<true> { };
  * The msg is actually a formatting string, like printf, that can be used with subsequent parameters. 
  * If the compiler is gcc, then the transient field of the assertion is set according to the transcience of the expression. 
  * This means that if the expression is detected by the compiler as being constant, 
+ * \note This macro is disabled if the \c N_ERS_ASSERT macro is defined 
  */
 #ifndef N_ERS_ASSERT
 #ifdef __GNUC__

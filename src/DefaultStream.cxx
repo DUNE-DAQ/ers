@@ -12,7 +12,7 @@
 #include "ers/StreamFactory.h"
 #include "ers/InvalidReferenceIssue.h"
 
-
+/** The key for this stream is \c default the URI field is ignored */
 const char* const ers::DefaultStream::KEY = "default" ; 
 
 namespace {
@@ -29,6 +29,11 @@ namespace {
 ers::DefaultStream::DefaultStream() {} 
 ers::DefaultStream::~DefaultStream() {} 
 
+/** We print the stream in a semi-tabbed mode. 
+  * The message is first printed out, then a list of all properties. 
+  * \param issue_ptr reference to the issue to print
+  * \note The format produced by this class is subject to change! 
+  */
 
 void ers::DefaultStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr); 

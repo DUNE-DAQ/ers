@@ -28,7 +28,7 @@ namespace ers {
     
     class DefaultIssue : public Issue {
 protected:
-	std::string m_class_name ;  
+	std::string m_class_name ;  /**< \brief This field contains the name of the class that should be represented */
 public:
 	DefaultIssue(const std::string &name) ; 
 	~DefaultIssue() throw() ; 

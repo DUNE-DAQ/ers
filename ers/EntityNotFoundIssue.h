@@ -11,6 +11,13 @@
 
 namespace ers {
     
+    /** This class represents the issue where a entity was searched for but not found.
+      * Typically when a search fails, instances of this class (or subclasses) should be thrown or
+      * returned 
+      * \author Matthias Wiesmann
+      * \version 1.0 
+      */
+    
     class EntityNotFoundIssue : public Issue {
 	
 protected:

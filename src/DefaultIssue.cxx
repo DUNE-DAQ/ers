@@ -1,6 +1,6 @@
 /*
  *  DefaultIssue.cxx
- *  Test
+ *  ers
  *
  *  Created by Matthias Wiesmann on 14.02.05.
  *  Copyright 2005 CERN. All rights reserved.
@@ -20,6 +20,10 @@ ers::DefaultIssue::DefaultIssue(const std::string &name) : Issue() {
 
 ers::DefaultIssue::~DefaultIssue() throw() {} 
 
+/** This method does not return a value that is associated with the
+  * \c DefaultIssue class, instead in return the name of the class
+  * this issue should be representing. 
+  */
 
 const char *ers::DefaultIssue::get_class_name() const throw() {
     return m_class_name.c_str(); 

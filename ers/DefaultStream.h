@@ -14,11 +14,12 @@
 
 namespace ers {
 
-/** This class streams an issue into an human readable string. 
-  * It is uses by the issue class to display itself and to put it into standard stl streams. 
+/** This class displas an Issue on the standard error stream
+  * This class is meant to be used as default stream for simple on screen display.
+  * More advanced streams are offered in the \c System package 
   * \author Matthias Wiesmann
   * \version 1.0
-  * \brief Single line, human readable format stream. 
+  * \brief Default Issue display 
   */
     
 class DefaultStream  : public Stream {
