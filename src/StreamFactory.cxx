@@ -246,6 +246,11 @@ void ers::StreamFactory::dispatch(Issue *issue_ptr, bool throw_error) {
     stream_ptr->send(issue_ptr); 
 } // dispatch
 
+
+void ers::StreamFactory::set(ers_severity s, const std::string &key) {
+    instance()->set(s,key.c_str()) ; 
+} // set
+
 // Member methods
 // --------------------------------------
 

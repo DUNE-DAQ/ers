@@ -6,10 +6,10 @@
  *  Copyright 2004 CERN. All rights reserved.
  *
  */
-
-#include "ers/Context.h"
 #include <iostream>
 #include <sstream>
+#include "ers/Context.h"
+
 
 #if defined(__GNU_LIBRARY__)
 #include <execinfo.h>
@@ -17,6 +17,8 @@
 
 ers::Context *ers::Context::empty_instance = 0 ; 
 std::string ers::Context::s_host_type  ; 
+
+std::vector<std::string>  ers::Context::default_qualifiers ;
 
 const ers::Context *ers::Context::empty() {
     if (! empty_instance) {
@@ -34,6 +36,10 @@ std::string & ers::Context::host_type() {
     return s_host_type ; 
 } // plateform
 
+/** Gives the current debug level 
+  * \return debug level, or -1 if it cannot be determined 
+  */
+
 int ers::Context::debug_level() {
 #if defined(DEBUG_LEVEL) 
     return DEBUG_LEVEL ; 
@@ -41,6 +47,10 @@ int ers::Context::debug_level() {
     return -1 ; 
 #endif
 } // debug_level
+
+void ers::Context::add_qualifier(const std::string &qualif) {
+    default_qualifiers.push_back(qualif) ;
+} // add_qualifier
 
 /** Constructor - defines an Issue context.
   * This constructor should generally not be called directly, instead use the macro \c ERS_HERE. 
@@ -170,7 +180,7 @@ void ers::Context::build_host_type() {
    s_host_type=  plateform_s.str();
 } // build_host_type
 
-int ers::Context::stack_frames() const {
+int ers::Context::stack_frames() const throw() {
    return m_stack_frames.size();
 } // stack_frames
 
@@ -178,5 +188,8 @@ const std::string & ers::Context::stack_frame(int i) const {
    return m_stack_frames[i] ; 
 } // stack_frame
 
+std::vector<std::string>  ers::Context::qualifiers() const throw() {
+    return default_qualifiers ; 
+} // qualifiers
 
 

@@ -67,6 +67,7 @@ void foo(int n) {
 
 int main(int argc, char* argv[]) {
     // std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
+    ers::Context::add_qualifier("ers_test") ;
     ers::IssueFactory::print_registered(); 
     ers::StreamFactory::print_registered(); 
     ERS_DEBUG_1("loading Xerxes"); 

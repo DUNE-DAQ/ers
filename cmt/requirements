@@ -5,9 +5,6 @@ manager	Matthias.Wiesmann@cern.ch
 
 #What policy do we use? 
 
-#macro           xercesc_home_linux      "/afs/cern.ch/sw/lcg/external/XercesC/2.3.0"
-#use AtlasPolicy		AtlasPolicy-01-*
-
 use TDAQPolicy
 use TDAQExternal
 use system
@@ -25,13 +22,26 @@ macro   xerces_root     ""                                                  \
 macro lib_ers_cppflags	                "-I../ers -I$(xerces_root)/include/"
 
 private
+
+########################################################################################################
+#       ERS Library
+########################################################################################################
+
 	
-library		ers			ers $(lib_opts)			*.cxx
+library		ers			$(lib_opts)			*.cxx
+macro           ers_shlibflags          "-lsystem -lxerces-c -L$(xerces_root)/lib" 
+
+
 macro		instlibs		libers.so	\
 		lynxos			libers.a
 apply_pattern   install_libs            files=$(instlibs)
 
+########################################################################################################
+#       Test applications
+########################################################################################################
+
+
 application	ers_test 		 -group=check -check ../test/test.cxx ../test/ExampleIssue.cxx
 macro		ers_test_dependencies	"ers" "system"
 macro           ers_test_cppflags	"-I../../../system/ -I../../system/test/ -I$(xerces_root)/include/"
-macro		ers_testlinkopts	"-lers -lsystem -lxerces-c -L$(xerces_root)/lib"
+macro		ers_testlinkopts	"-lers"

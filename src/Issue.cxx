@@ -382,6 +382,11 @@ void Issue::insert(const Context *context) throw() {
 	    snprintf(key_buffer,sizeof(key_buffer),"SOURCE-STACK-%03x",i);
 	    set_value(key_buffer,context->stack_frame(i)); 
 	} // for
+	std::vector<std::string> qualifs = context->qualifiers() ;
+	std::vector<std::string>::const_iterator pos ; 
+	for(pos=qualifs.begin();pos!=qualifs.end();pos++) {
+	    add_qualifier(*pos) ; 
+ 	} // for
     } // if context 
 } // insert
 

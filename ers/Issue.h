@@ -115,8 +115,8 @@ public:
         const char* what() const throw() ;                             /**< \brief Human description message. */
 	const std::string &message() const throw() ;                   /**< \brief Message */
 	virtual int exit_value() const throw();                        /**< \brief value to pass to exit */
-	void add_qualifier(const std::string &qualif) ; 
-	std::vector<std::string> qualifiers() const ; 
+	void add_qualifier(const std::string &qualif) ;                /**< \brief adds a qualifier to the issue */
+	std::vector<std::string> qualifiers() const ;                  /**< \brief return array of qualifiers */
     } ; // Issue
     
     std::ostream& operator<<(std::ostream&, const Issue&);

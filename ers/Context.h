@@ -14,6 +14,7 @@
 #include <vector>
 
 namespace ers {
+    
 
 /** This class encapsulates Context information for an issue.
   * The context of an issue is the location in the code the issue was constructed. 
@@ -38,6 +39,7 @@ class Context {
 protected:
     static Context* empty_instance ; 
     static std::string s_host_type ;   /**< host_type */
+    static std::vector<std::string>    default_qualifiers ; /**< vector of default qualifiers */ 
     std::string m_file_name ;          /**< source file-name */
     int m_line_number ;                /**< source line-number */
     std::string m_function_name ;      /**< source function name (can be pretty printed or not) */
@@ -48,23 +50,25 @@ protected:
     mutable std::string m_compiler ;   /**< compilation string (cache) */
     mutable std::string m_position ;   /**< code position (cache) */
     mutable std::string m_compilation ; /**< compilation (cache) */
-    std::vector<std::string> m_stack_frames ;
+    std::vector<std::string> m_stack_frames ; /** stack frames */
     static void build_host_type() ;
 public:
     static const Context* empty() ;
     static std::string & host_type()  ; /**< \brief type of target host */
     static int debug_level(); 
+    static void add_qualifier(const std::string &qualif) ;
     Context(const std::string &filename, int line_number, const std::string &function_name, 
 	    const std::string &compiler_name, const std::string &compiler_version, 
 	    const std::string &compilation_time, const std::string &compilation_date) ;
-    const std::string & file() const ;       /**< \return file-name */
-    int line() const ;                       /**< \return line-number */
-    const std::string & function() const ;   /**< \return function name */
-    const std::string & position() const ;   /**< \return position (i.e file+line+function) */
-    const std::string & compiler() const ;   /**< \return compiler (compiler-name + compiler-version) */
+    const std::string & file() const ;        /**< \return file-name */
+    int line() const ;                        /**< \return line-number */
+    const std::string & function() const ;    /**< \return function name */
+    const std::string & position() const ;    /**< \return position (i.e file+line+function) */
+    const std::string & compiler() const ;    /**< \return compiler (compiler-name + compiler-version) */
     const std::string & compilation() const ; /**< \return compilation time and date */
-    int stack_frames() const ; 
-    const std::string &stack_frame(int i) const ; 
+    int stack_frames() const throw() ;        /**< \return number of stack frames */
+    const std::string &stack_frame(int i) const ; /**< \return stack frame with index */
+    std::vector<std::string>  qualifiers() const throw() ; /**< \return array of qualifiers */
    } ; // Context
 
 } // ers 
