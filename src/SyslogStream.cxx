@@ -20,7 +20,7 @@ namespace {
 	if (protocol==ers::SyslogStream::SYSLOG_KEY) return new ers::SyslogStream() ; 
 	return 0 ;
     } 
-    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::SyslogStream::SYSLOG_KEY,create_stream) ;
 } 
 
 ers::SyslogStream::SyslogStream() {}

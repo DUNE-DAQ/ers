@@ -18,6 +18,7 @@ namespace ers {
       * Those issue typically mean that a Issue object could not be deserialized. 
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Issue in the Issue factory mechanism. 
       */
     
     class IssueFactoryIssue : public Issue {

@@ -13,6 +13,23 @@
 
 const char* ers::TabStream::TAB_SUFFIX = "tab" ;     
 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::STLStream::FILE_KEY) {
+	    System::File file(uri); 
+	    std::string extension = file.extension(uri) ;
+	    if (extension==ers::TabStream::TAB_SUFFIX) return new ers::TabStream(file,false); 
+	} // tab file
+	if ((protocol==ers::STLStream::CERR_STREAM_KEY) && (uri==ers::TabStream::TAB_SUFFIX)) {
+	    return new ers::TabStream(&std::cerr); 
+	} // tab stream
+	return 0 ;
+    } // 
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::TabStream::TAB_SUFFIX,create_stream) ;
+} // anonymous namespace
+
+
 ers::TabStream::TabStream() : STLStream() {} 
 ers::TabStream::TabStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) {}
 ers::TabStream::TabStream(std::istream *in_stream) : STLStream(in_stream) {} 

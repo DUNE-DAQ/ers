@@ -15,10 +15,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "ers/Issue.h"
+#include "ers/ers.h"
 #include "ers/HumanStream.h"
-#include "ers/Precondition.h"
-#include "ers/InvalidReferenceIssue.h"
 #include "system/File.h"
 #include "system/Environnement.h"
 
@@ -291,7 +289,7 @@ int Issue::values_number() const {
  * \param values the value table to load
  */
 
-void Issue::set_values(const string_map_type &values) {
+void Issue::set_values(const string_map_type &values) throw() {
     m_value_table = values ;
     m_human_description=build_human_description();
 } // load_values
@@ -302,7 +300,7 @@ void Issue::set_values(const string_map_type &values) {
   */
 
 
-void Issue::set_value(const std::string &key, long value) {
+void Issue::set_value(const std::string &key, long value) throw() {
     std::ostringstream stream ;
     stream << value ; 
     m_value_table[key] = stream.str();
@@ -313,9 +311,9 @@ void Issue::set_value(const std::string &key, long value) {
   * \param value the value to insert 
   */
 
-void Issue::set_value(const std::string &key, const std::string &value) {
+void Issue::set_value(const std::string &key, const std::string &value) throw() {
     if (! value.empty()) {
-	m_value_table[key] = value ; 
+	m_value_table[key] = value ;
     }
 } // set_value
 
@@ -324,7 +322,7 @@ void Issue::set_value(const std::string &key, const std::string &value) {
   * \param value c-string, null pointer is ignored. 
   */
 
-void Issue::set_value(const std::string &key, const char* value) {
+void Issue::set_value(const std::string &key, const char* value) throw() {
     if (value) {
 	std::string value_str = std::string(value) ; 
 	set_value(key,value_str); 
@@ -339,18 +337,19 @@ void Issue::set_value(const std::string &key, const char* value) {
 * \param context pointer to context object
 */
 
-void Issue::insert(const Context *context) {
-    ERS_PRE_CHECK_PTR(context); 
-    set_value(SOURCE_POSITION_KEY,context->position()) ; 
-    set_value(COMPILER_KEY,context->compiler()) ; 
-    set_value(COMPILATION_TIME_KEY,context->compilation()) ; 
-    set_value(COMPILATION_TARGET_KEY,context->host_type()) ; 
+void Issue::insert(const Context *context) throw() {
+    if (context) {
+	set_value(SOURCE_POSITION_KEY,context->position()) ; 
+	set_value(COMPILER_KEY,context->compiler()) ; 
+	set_value(COMPILATION_TIME_KEY,context->compilation()) ; 
+	set_value(COMPILATION_TARGET_KEY,context->host_type()) ; 
+    } // if context 
 } // insert
 
 /** Inserts the current hostname into the issue  
 */
 
-void Issue::insert_hostname() {
+void Issue::insert_hostname() throw() {
     char host_buffer[BUFFER_SIZE] ;
     int status = gethostname(host_buffer,BUFFER_SIZE);
     if (0==status && (strlen(host_buffer)>0)) {
@@ -361,16 +360,16 @@ void Issue::insert_hostname() {
 /** Inserts the current process id into the issue
  */
 
-void Issue::insert_processid() {
+void Issue::insert_processid() throw() {
     std::ostringstream pid_str ;
-    pid_str << getpid() ; 
+    pid_str << ::getpid() ; 
     set_value(PROCESS_ID_KEY,pid_str.str()); 
 } // insert_processid
 
 /** Inserts the current user id into the issue
   */
 
-void Issue::insert_userid() {
+void Issue::insert_userid() throw() {
     std::ostringstream uid_str ;
     uid_str << getuid();
     set_value(USER_ID_KEY,uid_str.str()) ;
@@ -380,7 +379,7 @@ void Issue::insert_userid() {
 /** Inserts the current time into the issue 
 */
 
-void Issue::insert_time() {
+void Issue::insert_time() throw() {
     time_t now ;
     time(&now); 
     char time_buffer[BUFFER_SIZE] ; 
@@ -396,8 +395,12 @@ void Issue::insert_time() {
   * This method should be called once all posix stuff is handled, as it accesses errno 
   */
 
-void Issue::insert_pwd() {
-    set_value(PROCESS_PWD_KEY,System::File::working_directory()); 
+void Issue::insert_pwd() throw() {
+    try {
+	set_value(PROCESS_PWD_KEY,System::File::working_directory()); 
+    } catch (Issue &e) {
+	StreamFactory::warning(&e) ; 
+    } // catch 
 } // insert_pwd
 
 /** Inserts a environnement variable into the issue 
@@ -405,13 +408,17 @@ void Issue::insert_pwd() {
 * \param issue_key key used to store the resulting value into the value table 
 */
 
-void Issue::insert_env(const char*env_key, const char* issue_key) {
-    ERS_PRE_CHECK_PTR(env_key);
-    ERS_PRE_CHECK_PTR(issue_key);
-    std::string value = Environnement::get(std::string(issue_key)); 
-    if (value!=Environnement::NO_VALUE) {
-	set_value(issue_key,value); 
-    } // value exists 
+void Issue::insert_env(const char*env_key, const char* issue_key) throw() {
+    try {
+	ERS_PRE_CHECK_PTR(env_key);
+	ERS_PRE_CHECK_PTR(issue_key);
+	std::string value = Environnement::get(std::string(issue_key)); 
+	if (value!=Environnement::NO_VALUE) {
+	    set_value(issue_key,value); 
+	} // value exists 
+    } catch (Issue &e) {
+	StreamFactory::warning(&e) ; 
+    } // catch 
 } // insert_env
 
 // ====================================================
@@ -430,10 +437,8 @@ void Issue::insert_env(const char*env_key, const char* issue_key) {
   * \param context context where the exception occured, this should be the ERS_HERE macro. 
   */
 
-void Issue::setup_common(const Context *context) {
-    if (context) {
-        insert(context);
-    } // context
+void Issue::setup_common(const Context *context) throw() {
+    insert(context);
     insert_hostname(); 
     insert_processid(); 
     insert_time();
@@ -448,12 +453,17 @@ void Issue::setup_common(const Context *context) {
   * \param message human readable message 
   */
 
-void Issue::finish_setup(const std::string &message) {
-    set_value(CPP_CLASS_KEY,(typeid(this)).name()); 
-    set_value(CLASS_KEY, get_class_name()) ;
-    set_value(MESSAGE_KEY,message); 
-    m_human_description=build_human_description();
-    insert_pwd(); 
+void Issue::finish_setup(const std::string &message) throw() {
+    try {
+	Issue *p = this ; 
+	set_value(CPP_CLASS_KEY,(typeid(*p)).name()); 
+	set_value(CLASS_KEY, get_class_name()) ;
+	set_value(MESSAGE_KEY,message); 
+	m_human_description=build_human_description();
+	insert_pwd();
+    } catch (Issue &e) {
+	StreamFactory::warning(&e) ; 
+    } // try / catch 
 } // finish_setup
 
 /** Builds a human readable description of the Issue.
@@ -462,7 +472,7 @@ void Issue::finish_setup(const std::string &message) {
 * @see Human_Stream
 */
 
-std::string Issue::build_human_description() const {
+std::string Issue::build_human_description() const throw() {
     std::string message = HumanStream::to_string(this); 
     return message ; 
 } // buildmm_human_description

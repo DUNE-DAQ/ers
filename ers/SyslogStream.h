@@ -19,6 +19,7 @@ namespace ers {
       * \see ers::Issue::human_description()
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Stream to send data into syslog
       */
     
     class SyslogStream : public Stream {

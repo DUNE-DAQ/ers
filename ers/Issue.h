@@ -7,12 +7,6 @@
  *
  */
 
-/** \page ERS 
-  * The Error Reporting System package offers basic facilites to do error handling. 
-  * 
-  * 
-  */
-
 #ifndef ERS_Issue_
 #define ERS_Issue_
 
@@ -30,12 +24,14 @@ namespace ers {
     *  as key - value paris (both strings). 
     *  The object contains utility methods to allow the manipulation of those key / values and
     *  code to insert common values into it, like time, compilation information, host information etc.
+    *  For an example of how to build an actual subclass of issue look at the source of ExampleIssue.
     *  \author Matthias Wiesmann
     *  \version 1.1
     *  \note Issue chaining is handled by copying the cause issue on the stack and keeping a pointer to it.
     *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that 
     *  correctly implement the factory methods required by the IssueFactory class
     *  \see ers::IssueFactory
+    *  \see ExampleIssue
     *  \brief Root Issue class
     */
     
@@ -71,18 +67,18 @@ protected:
 	Issue *m_cause ;                                               /**< \brief Issue that caused the current issue */
 	std::string m_human_description ;                              /**< \brief Human readable description */
 	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
-	void insert(const Context *context) ;                          /**< \brief Inserts the context */
-	void insert_hostname();                                        /**< \brief Inserts the hostname */
-	void insert_processid();                                       /**< \brief Inserts process id */
-	void insert_time() ;                                           /**< \brief Inserts current time */
-	void insert_userid(); 
-	void insert_pwd();                                             /**< \brief Inserts the current pwd */
-	void insert_env(const char*env_key, const char* issue_key);    /**< \brief Inserts environnement variable */
-	virtual std::string build_human_description() const;           /**< \brief Builds human description for Issue. */
-        void setup_common(const Context *context) ;                    /**< \brief Sets up the common fields. */
-        void finish_setup(const std::string &message) ;                /**< \brief Finishes the setup of the Issue */
+	void insert(const Context *context) throw();                   /**< \brief Inserts the context */
+	void insert_hostname() throw();                                /**< \brief Inserts the hostname */
+	void insert_processid() throw();                               /**< \brief Inserts process id */
+	void insert_time() throw();                                    /**< \brief Inserts current time */
+	void insert_userid() throw() ;                                 /**< \brief Insert user-id */
+	void insert_pwd() throw() ;                                    /**< \brief Inserts the current pwd */
+	void insert_env(const char*env_key, const char* issue_key) throw() ;    /**< \brief Inserts environnement variable */
+	virtual std::string build_human_description() const throw();   /**< \brief Builds human description for Issue. */
+        void setup_common(const Context *context) throw() ;            /**< \brief Sets up the common fields. */
+        void finish_setup(const std::string &message) throw() ;        /**< \brief Finishes the setup of the Issue */
         Issue(const Context &context, ers_severity s);                 /**< \brief Constructor for subclasses */
-        void set_values(const string_map_type &values);                /**< \brief sets the value table */
+        void set_values(const string_map_type &values) throw();        /**< \brief sets the value table */
 public:
 	Issue();  
 	Issue(const Issue &issue); 
@@ -91,29 +87,29 @@ public:
         Issue(const Context &context, ers_severity s, const std::exception *cause); 
 	virtual ~Issue() throw() ;
 	Issue *clone() const ; 
-	const Issue *cause() const throw() ;
+	const Issue *cause() const throw() ;                           /**< \brief return the cause Issue of this Issue */
 	void cause(const std::exception *cause=0);                     /**< \brief Initialises the cause field */
-	operator std::string() const ; 
-	Issue operator=(const Issue &issue); 
-	bool operator==(Issue other) ; 
+	operator std::string() const ;                                 /**< \brief Converts the issue into a string */
+	Issue operator=(const Issue &issue);                           /**< \brief Affectation operator */
+	bool operator==(Issue other) ;                                 /**< \brief Equality operator */
 	const std::string get_value(const std::string &key) const ;    /**< \brief Reads the property list. */
-	int get_int_value(const std::string &key) const ; 
+	int get_int_value(const std::string &key) const ;              /**< \brief Get a value of the table as an integer */
 	int values_number() const ;                                    /**< \brief How many key / values */
-	void set_value(const std::string &key, long value);            /**< \brief Sets a value (numerical) */
-	void set_value(const std::string &key, const std::string &value); /**< \brief Sets a value (string) */
-	void set_value(const std::string &key, const char* value) ;    /**< \brief Sets a value (c-string) */
+	void set_value(const std::string &key, long value) throw() ;   /**< \brief Sets a value (numerical) */
+	void set_value(const std::string &key, const std::string &value) throw() ; /**< \brief Sets a value (string) */
+	void set_value(const std::string &key, const char* value) throw() ;        /**< \brief Sets a value (c-string) */
 	virtual const char *get_class_name() const throw() ;           /**< \brief Get key for class (used for serialisation)*/
-	const string_map_type* get_value_table() const ; 
-        ers_severity severity() const throw()  ;
-        void severity(ers_severity s) ; 
-	bool is_error(); 
-	std::string severity_message() const ; 
-	void responsibility(ers_responsibility r) ; 
-        ers_responsibility responsibility() const throw() ; 
-     	void transience(bool tr);
-	int transience() const throw() ; 
-	const std::string human_description() const throw()  ;        /**< \brief Human description message. */
-        const char* what() const throw() ;                            /**< \brief Human description message. */
+	const string_map_type* get_value_table() const ;               /**< \brief extract value table */
+        ers_severity severity() const throw()  ;                       /**< \brief severity of the issue */
+        void severity(ers_severity s) ;                                /**< \brief sets the severity of the issue */
+	bool is_error();                                               /**< \brief is the issue an error (or fatal). */
+	std::string severity_message() const ;                         /**< \brief message associated with the severity of the issue */
+	void responsibility(ers_responsibility r) ;                    /**< \brief set the responsability of the issue */
+        ers_responsibility responsibility() const throw() ;            /**< \brief get the responsability level of the issue */
+     	void transience(bool tr);                                      /**< \brief sets if the issue is transient */
+	int transience() const throw() ;                               /**< \brief is the issue transient */
+	const std::string human_description() const throw()  ;         /**< \brief Human description message. */
+        const char* what() const throw() ;                             /**< \brief Human description message. */
 	
     } ; // Issue
     

@@ -19,12 +19,8 @@ namespace {
 	if (protocol==ers::Stream::NULL_STREAM_KEY) return new ers::Stream() ; 
 	return 0 ;
     } 
-    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
-} 
-
-
-
-
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::Stream::NULL_STREAM_KEY,create_stream) ;
+} // anonymous namespace 
 
 // --------------
 // Member methods 

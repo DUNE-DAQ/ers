@@ -7,11 +7,15 @@
  *
  */
 
+#include <iostream>
 #include "ExampleIssue.h"
 
 namespace {
-    ers::Issue *create_issue() { return new ExampleIssue(); } 
-    bool registered = ers::IssueFactory::instance()->register_issue(ExampleIssue::CLASS_NAME,create_issue) ;
+    ers::Issue *create_example_issue() { 
+	ers::Issue *i = new ExampleIssue(); 
+	return i ; 
+    } // create_issue
+    bool registered = ers::IssueFactory::instance()->register_issue(ExampleIssue::CLASS_NAME,create_example_issue) ;
 } 
 
 const char *ExampleIssue::CLASS_NAME = "ExampleIssue" ; 

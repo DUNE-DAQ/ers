@@ -7,6 +7,9 @@
  *
  */
 
+#include <iostream>
+
+
 #include "ers/StreamFactory.h"
 
 #include "ers/ers.h"
@@ -37,7 +40,7 @@
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
     "null",                                                         // none
     "cerr:tab", "cerr:tab", "cerr:tab", "cerr:tab",                 // debug levels
-    "cerr:tab", "cerr:tab", "cerr:xml",                             // information, notification, warning
+    "cerr:tab", "cerr:tab", "cerr:tab",                             // information, notification, warning
     "cerr:tab", "cerr:tab",                                         // Errors and Fatals
     "null:"  } ;                                                    // max
 
@@ -80,6 +83,11 @@ ers::StreamFactory* ers::StreamFactory::instance() {
     } // if
     return s_instance ; 
 } // instance
+
+void ers::StreamFactory::print_registered() {
+    StreamFactory *factory = instance();
+    std::cerr << *factory ; 
+} // print_registered
 
 // Static methods
 // --------------------------------------
@@ -134,7 +142,7 @@ ers::Stream *ers::StreamFactory::create_stream(const std::string &key) {
     std::string protocol = System::File::protocol(key);
     std::string uri = System::File::uri(key);
     for(stream_factory_collection::const_iterator pos=m_factories.begin();pos!=m_factories.end();++pos) {
-	create_stream_callback callback = (*pos) ; 
+	create_stream_callback callback = pos->second; 
 	Stream *s = callback(protocol,uri); 
 	if (s!=0) return s ; 
     } // for
@@ -250,7 +258,6 @@ ers::Stream * ers::StreamFactory::get_stream(ers_severity s)  {
     if (m_streams[s]==0) {
 	m_streams[s]=create_stream(s) ; 
     } // if 
-
     return m_streams[s] ; 
 } // get_stream
 
@@ -317,12 +324,52 @@ ers::Stream* ers::StreamFactory::debug(ers_severity s)  {
 } // debug
 
 
-bool ers::StreamFactory::register_factory(create_stream_callback callback) {
-    m_factories.push_back(callback);
+/** Registers a factory function with the stream factory.
+  * The callback is function that takes two parameters <ol>
+  * <li>a string describing the protocol, for instance \c file </li>
+  * <li>a string describing a uri, can be a path, a suffix or anything</li>
+  * </ol>
+  * The function should return a heap allocated stream, or null if it does not
+  * understand the protocol. 
+  * \param name name of the stream type (human display only).
+  * \param callback the callback function
+  * \return \c true if the registration was sucessfull 
+  */
+
+bool ers::StreamFactory::register_factory(const std::string &name, create_stream_callback callback) {
+    m_factories[name] = callback ;
     return true  ;
 } // register_factory
 
+/** Writes a description of the factory to a stream. 
+  * This method gives a list of all registered stream types. 
+  * \param stream the stream to write into
+  */
 
+void ers::StreamFactory::write_to(std::ostream& stream) const {
+    stream << "Stream factory - registered streams\n" ; 
+    stream << "-----------------------------------\n" ; 
+    int i = 0 ; 
+    for(stream_factory_collection::const_iterator pos=m_factories.begin();pos!=m_factories.end();++pos) {
+	std::string name = pos->first; 
+	stream << i << ")\t" << name << std::endl; 
+	i++ ; 
+    } // for
+    stream << "-----------------------------------\n" ; 
+} // write_to
+
+
+/** Streaming operator
+  * \param stream destination stream
+  * \param factory the factory object to display
+  * \return the stream passed as first parameter
+  * \see ers::StreamFactory::write_to()
+  */
+
+std::ostream& ers::operator<<(std::ostream& stream, const StreamFactory& factory) {
+    factory.write_to(stream);
+    return stream ; 
+} // operator
 
 
 

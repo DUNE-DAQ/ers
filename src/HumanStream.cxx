@@ -8,15 +8,29 @@
  */
 
 #include <assert.h>
+#include "ers/ers.h"
 #include "ers/HumanStream.h"
-#include "ers/Issue.h"
-#include "ers/Precondition.h"
-#include "ers/InvalidReferenceIssue.h"
 
+const char* ers::HumanStream::TXT_SUFFIX = "txt" ; 
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::STLStream::FILE_KEY) {
+	    System::File file(uri); 
+	    std::string extension = file.extension(uri) ;
+	    if (extension==ers::HumanStream::TXT_SUFFIX) return new ers::HumanStream(file,false); 
+	} // tab file
+	if ((protocol==ers::STLStream::CERR_STREAM_KEY) && (uri==ers::HumanStream::TXT_SUFFIX)) {
+	    return new ers::HumanStream(&std::cerr); 
+	} // tab stream
+	return 0 ;
+    } // 
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::HumanStream::TXT_SUFFIX,create_stream) ;
+} // anonymous namespace
 
 using namespace ers ; 
 
-const char* HumanStream::TXT_SUFFIX = "txt" ; 
+
 
 std::string HumanStream::to_string(const Issue *issue_ptr) {
     std::ostringstream stl_stream ; 

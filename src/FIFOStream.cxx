@@ -3,7 +3,7 @@
  *  ers
  *
  *  Created by Matthias Wiesmann on 02.12.04.
- *  Copyright 2004 __MyCompanyName__. All rights reserved.
+ *  Copyright 2004 CERN. All rights reserved.
  *
  */
 
@@ -20,7 +20,7 @@ namespace {
 	if (protocol==ers::FIFOStream::FIFO_STREAM_KEY) return new ers::FIFOStream() ; 
 	return 0 ;
     } 
-    bool registered = ers::StreamFactory::instance()->register_factory(create_stream) ;
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::FIFOStream::FIFO_STREAM_KEY,create_stream) ;
 } 
 
 

@@ -7,6 +7,8 @@
  *
  */
 
+#include <iostream>
+
 #include "ers/IssueFactory.h"
 #include "ers/Issue.h"
 #include "ers/Precondition.h"
@@ -28,6 +30,12 @@ ers::IssueFactory *ers::IssueFactory::instance()  {
     } // creation needed
     return s_factory ; 
 } // instance
+
+void ers::IssueFactory::print_registered() {
+    IssueFactory *factory = instance() ; 
+    std::cerr << *factory; 
+} //print_registered_issues
+
 
 /** Register an issue type with the factory 
   * @param name the name that will be used to lookup new instances 
@@ -85,4 +93,23 @@ ers::Issue *ers::IssueFactory::build(const Issue *original) {
     ers::Issue *clone_issue = build(name,values);
     return clone_issue ; 
 }// build
+
+void ers::IssueFactory::write_to(std::ostream& stream) const {
+    stream << "Issue factory - registered issues\n" ; 
+    stream << "---------------------------------\n" ; 
+    int i = 0 ; 
+    for(CallbackMap::const_iterator pos=m_factory_map.begin();pos!=m_factory_map.end();++pos) {
+	std::string name = pos->first; 
+	stream << i << ")\t" << name << std::endl; 
+	i++ ; 
+    } // for
+    stream << "---------------------------------\n" ; 
+} // 
+
+std::ostream& ers::operator<<(std::ostream& stream, const IssueFactory& factory) {
+    factory.write_to(stream);
+    return stream ; 
+} // operator
+
+
 

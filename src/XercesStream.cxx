@@ -22,15 +22,29 @@
 
 #include "ers/XercesStream.h"
 #include "ers/XercesString.h"
-#include "ers/Precondition.h"
-#include "ers/InvalidReferenceIssue.h"
+#include "ers/ers.h"
+
 #include "ers/ParseIssue.h"
-#include "ers/NotImplemented.h"
-#include "ers/StreamFactory.h"
 
 #include "system/IOIssue.h"
 
 const char* ers::XercesStream::XML_SUFFIX = "xml" ; 
+
+
+namespace {
+    ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	if (protocol==ers::STLStream::FILE_KEY) {
+	    System::File file(uri); 
+	    std::string extension = file.extension(uri) ;
+	    if (ers::XercesStream::XML_SUFFIX) return new ers::XercesStream(file,false); 
+	} // tab file
+	if ((protocol==ers::STLStream::CERR_STREAM_KEY) && (uri==ers::XercesStream::XML_SUFFIX)) {
+	    return new ers::XercesStream(&std::cerr); 
+	} // tab stream
+	return 0 ;
+    } // 
+    bool registered = ers::StreamFactory::instance()->register_factory(ers::XercesStream::XML_SUFFIX,create_stream) ;
+} // anonymous namespace
 
 
 /** Stuff needed to initialise the DOM implementation. 

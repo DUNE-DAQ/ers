@@ -74,24 +74,24 @@ namespace ers {
 	
 public:
 	typedef Stream* (*create_stream_callback)(const std::string &, const std::string &);
-	typedef std::vector<create_stream_callback> stream_factory_collection ; 
+	typedef std::map<std::string, create_stream_callback> stream_factory_collection ; 
 protected:
-	static StreamFactory *s_instance ; 
-	static const char* DEFAULT_STREAMS[] ; 
-	static const char *key_for_severity(ers_severity s) ; 
-	static Stream *get_default_stream(ers_severity s) ;
+	static StreamFactory *s_instance ;                                        /**< \brief singleton instance */
+	static const char* DEFAULT_STREAMS[] ;                                    /**< \brief keys for default streams */
+	static const char *key_for_severity(ers_severity s) ;                     /**< \brief finds key for severity */
+	static Stream *get_default_stream(ers_severity s) ;                       /**< \brief builds default stream for severity */
 	
 	StreamFactory();
 	StreamFactory(const StreamFactory &other); 
 	
-	Stream *m_streams[ers_severity_max] ;  
-	stream_factory_collection m_factories ; 
+	Stream *m_streams[ers_severity_max] ;                                     /**< \brief array of pointers to streams per severity */
+	stream_factory_collection m_factories ;                                   /**< \brief collection of factories to build streams */
 	
-	Stream *create_stream(const std::string &key) ; 
-	Stream *create_stream(ers_severity s) ; 
-	Stream *get_stream(ers_severity s) ; 
+	Stream *create_stream(const std::string &key) ;                           /**< \brief create a stream from a key */
+	Stream *create_stream(ers_severity s) ;                                   /**< \brief create a stream for severity */
 public:
 	static StreamFactory *instance();                                         /**< \brief return the singleton */
+	static void print_registered(); 
 	static void fatal(Issue *i) ;                                             /**< \brief sends an issue to the fatal stream */
 	static void error(Issue *i) ;                                             /**< \brief sends an issue to the error stream */
 	static void warning(Issue *i);                                            /**< \brief sends an issue to the warning stream */
@@ -99,16 +99,18 @@ public:
 	static void debug(Issue *i, ers_severity) ;                               /**< \brief sends an Issue to the debug stream */
 	static void debug(const Context &c, const std::string &message, ers_severity s);  /**< \brief sends a debug message */
 	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity */	
-	
+	Stream *get_stream(ers_severity s) ;                                      /**< \brief get stream for severity */
 	void set(ers_severity severity, Stream *s) ;                              /**< \brief Sets the stream for a given severity */
 	void set(ers_severity severity, const char* key) ;                        /**< \brief Setup a stream for a given severity based on a key */
-	Stream *fatal() ;                                                    /**< \brief Fatal stream */
-	Stream *error()  ;                                                   /**< \brief Error stream */
-	Stream *warning()  ;                                                 /**< \brief Warning stream */
-	Stream* debug(ers_severity s)  ;                                     /**< \brief Debug stream for level*/
-	bool register_factory(create_stream_callback callback); 
-	
+	Stream *fatal() ;                                                         /**< \brief Fatal stream */
+	Stream *error()  ;                                                        /**< \brief Error stream */
+	Stream *warning()  ;                                                      /**< \brief Warning stream */
+	Stream* debug(ers_severity s)  ;                                          /**< \brief Debug stream for level*/
+	bool register_factory(const std::string &name, create_stream_callback callback); /**< \brief register a factory method */
+	void write_to(std::ostream& stream) const ;                               /**< \brief write content of factory to stream */
     } ; 
+    
+    std::ostream& operator<<(std::ostream&, const StreamFactory& factory);        /**< \brief streaming operator */
     
     /** Sends a debug message with level 0, the first parameter is a \c printf like pattern, the next are parameters for it */
 #define ERS_DEBUG_0(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_0) ; }
@@ -122,7 +124,7 @@ public:
     /** Sends a debug message with level 3, the first parameter is a \c printf like pattern, the next are parameters for it */
 #define ERS_DEBUG_3(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_3) ; }
     
-    /** Sends a warning1, the first parameter is a \c printf like pattern, the next are parameters for it */
+    /** Sends a warning, the first parameter is a \c printf like pattern, the next are parameters for it */
 #define ERS_WARN(...)    { char ers_warn_buf[256] ; snprintf(ers_warn_buf,sizeof(ers_warn_buf),__VA_ARGS__)    ; ers::StreamFactory::warning(ERS_HERE,ers_warn_buf) ; }
     
     

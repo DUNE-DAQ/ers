@@ -9,8 +9,7 @@
 
 #include "ers/Assertion.h"
 
-#ifndef ERS_PRECONDITION_
-#define ERS_PRECONDITION_
+#ifndef ERS_PRECONDITION
 
 namespace ers {
     

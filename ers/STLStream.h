@@ -22,6 +22,7 @@ namespace ers {
       * This class is the ancestor of HumanStream, TabStream XercesStream. 
       * \author Matthias Wiesmann
       * \version 1.0
+      * \brief Root STL stream. 
       */
     
     class STLStream : public Stream {

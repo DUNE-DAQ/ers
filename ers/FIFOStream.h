@@ -16,7 +16,7 @@ namespace ers {
       * \author Matthias Wiesmann
       * \version 1.0
       * \brief Queue stream 
-      * \note This stream is \b not thread safe. 
+      * \note This stream is \b not thread safe - it cannot depend on thread library. 
       */
     
     class FIFOStream : public Stream {

@@ -7,6 +7,7 @@
 #include "ers/TabStream.h"
 #include "ers/XercesStream.h"
 #include "ers/ers.h"
+#include "system/System.h"
 
 #include "ExampleIssue.h"
 
@@ -38,7 +39,9 @@ void test_read2(const char* path) {
     XercesStream xml_in(file,true); 
     Issue *i = xml_in.receive() ; 
     ERS_CHECK_PTR(i);
-    printf("Got Issue %s\n-------\n",i->what());
+    printf("Got Issue %s\n",i->what());
+    printf("Issue is of type %s\n",typeid(i).name()) ; 
+    printf("----------------\n"); 
     throw *i ; 
 } // test_read
 
@@ -59,6 +62,8 @@ void test_issue(const Issue &e) {
 
 int main(int argc, char* argv[]) {
     std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
+    ers::IssueFactory::print_registered(); 
+    ers::StreamFactory::print_registered(); 
     printf("loading Xerxes\n"); 
     XMLPlatformUtils::Initialize(); 
     printf("done\n");

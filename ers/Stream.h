@@ -29,6 +29,7 @@ namespace ers {
   * and silently discards sent issues. 
   * \author Matthias Wiesmann
   * \version 1.0
+  * \brief Root/Null issue stream
   */
     
 class Stream {

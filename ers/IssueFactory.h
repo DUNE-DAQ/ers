@@ -22,8 +22,9 @@ class Issue ;
       * The main responsability of this class is to keep track of the existing types of Issues
       * Each issue should register one factory method for instances of this class.
       * This is needed for deserilizing of Issues. 
-      * @author Matthias Wiesmann
-      * @version 1.0
+      * \author Matthias Wiesmann
+      * \version 1.0
+      * \brief Factory for all Issues 
       */
     
 class IssueFactory {
@@ -34,13 +35,19 @@ protected:
     IssueFactory(); 
     CallbackMap m_factory_map ; 
     static IssueFactory  *s_factory ; 
+     
 public:
-    static IssueFactory *instance() ;
-    bool register_issue(const std::string &name, CreateIssueCallback creator) ;
-    Issue *build(const std::string &name) const ; 
-    Issue *build(const std::string &name, const string_map_type *values) const ; 
-    Issue *build(const Issue *original); 
+    static IssueFactory *instance() ;                                             /**< \brief method to access singleton */
+    static void print_registered();                                               /**< \brief prints all registered issue types */
+    bool register_issue(const std::string &name, CreateIssueCallback creator) ;   /**< \brief register an issue factory */
+    Issue *build(const std::string &name) const ;                                 /**< \brief build an empty issue out of a name */
+    Issue *build(const std::string &name, const string_map_type *values) const ;  /**< \brief build a issue out of name and set values */
+    Issue *build(const Issue *original);                                          /**< \brief build a clone of an issue */
+    void write_to(std::ostream& stream) const ;                                   /**< \brief writes description to stream */
     } ; // IssueFactory
+
+    std::ostream& operator<<(std::ostream&, const IssueFactory& factory);         /**< \brief streaming operator */
+
 } // ers
 
 #endif
