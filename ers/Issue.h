@@ -89,7 +89,7 @@ public:
 	operator std::string() const ;                                 /**< \brief Converts the issue into a string */
 	
 	Issue operator=(const Issue &issue);                           /**< \brief Affectation operator */
-	bool operator==(Issue other) ;                                 /**< \brief Equality operator */
+	bool operator==(const Issue &other) const throw();             /**< \brief Equality operator */
 	const std::string& operator[](const std::string &key) const throw(); 
 	
 	const std::string &get_value(const std::string &key) const throw() ;    /**< \brief Reads the property list. */

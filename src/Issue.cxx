@@ -180,7 +180,7 @@ Issue Issue::operator=(const Issue &source) {
   * \return \c true if \c this and \c other are equal 
   */
 
-bool Issue::operator==(Issue other) {
+bool Issue::operator==(const Issue &other) const throw() {
     if (m_value_table != other.m_value_table) return false ; 
     if (m_cause == other.m_cause) return true ; 
     return (*m_cause) == *(other.m_cause) ; 

@@ -10,7 +10,7 @@
 #include "ers/InvalidReferenceIssue.h"
 #include <sstream>
 
-const char * const ers::InvalidReferenceIssue::CLASS = "ers::InvalidReferenceIssue" ; 
+const char * const ers::InvalidReferenceIssue::CLASS_NAME = "ers::InvalidReferenceIssue" ; 
 
 const char * const ers::InvalidReferenceIssue::REFERENCE_VALUE_KEY = "REFERENCE_VALUE" ; 
 const char * const ers::InvalidReferenceIssue::REFERENCE_TYPE_KEY = "REFERENCE_TYPE" ; 
@@ -19,7 +19,7 @@ const char * const ers::InvalidReferenceIssue::REFERENCE_C_PTR_TYPE = "C Pointer
 
 namespace {
     ers::Issue *create_issue() { return new ers::InvalidReferenceIssue(); } 
-    bool registered = ers::IssueFactory::instance()->register_issue(ers::InvalidReferenceIssue::CLASS,create_issue) ;
+    bool registered = ers::IssueFactory::instance()->register_issue(ers::InvalidReferenceIssue::CLASS_NAME,create_issue) ;
 } // anonymous context
 
 ers::InvalidReferenceIssue::InvalidReferenceIssue() : Issue() {} 
@@ -34,15 +34,15 @@ ers::InvalidReferenceIssue::InvalidReferenceIssue(const Context &context, ers_se
 
 
 const char* ers::InvalidReferenceIssue::get_class_name() const throw() {
-    return ers::InvalidReferenceIssue::CLASS ; 
+    return ers::InvalidReferenceIssue::CLASS_NAME ; 
 } // get_class_name
 
 
 void ers::InvalidReferenceIssue::pointer(const void *p) {
-    char buffer[256] ; 
+    char buffer[sizeof(void *)+1] ; // space needed to print a pointer
     snprintf(buffer,sizeof(buffer),"%p",p); 
-    m_value_table[REFERENCE_VALUE_KEY] = buffer ; 
-    m_value_table[REFERENCE_TYPE_KEY] = REFERENCE_C_PTR_TYPE ; 
+    set_value(REFERENCE_VALUE_KEY,buffer) ; 
+    set_value(REFERENCE_TYPE_KEY,REFERENCE_C_PTR_TYPE) ; 
 } // pointer
 
 void ers::InvalidReferenceIssue::check(const Context &context, ers_severity s, const void* p, const char* ptr_name, ers_responsibility r) {

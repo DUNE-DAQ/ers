@@ -28,7 +28,7 @@ protected:
 	void pointer(const void *p); 
 	InvalidReferenceIssue(const Context &context, ers_severity s) ; 
 public:
-	static const char* const CLASS ; 
+	static const char* const CLASS_NAME ; 
 	static const char* const REFERENCE_VALUE_KEY ;
 	static const char* const REFERENCE_TYPE_KEY ; 
 	static const char* const REFERENCE_NAME_KEY ; 

@@ -26,6 +26,7 @@
 #include "ers/InvalidReferenceIssue.h"
 #include "ers/NotImplemented.h"
 #include "ers/LogIssue.h"
+#include "ers/RangeIssue.h"
 
 /** \page ERS 
    The ERS package offers basic facilites to do error handling. 

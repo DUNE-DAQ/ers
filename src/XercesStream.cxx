@@ -65,7 +65,7 @@ static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
   */
 
 ers::XercesStream::XercesStream(const System::File &file, bool read_mode) : STLStream(file,read_mode) ,DOMErrorHandler() {
-    m_file_path = file ; 
+    m_file_path = file.full_name() ; 
     init(read_mode); 
 } // XercesStream
 

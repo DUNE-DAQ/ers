@@ -7,9 +7,10 @@
  *
  */
 
-#include "ers/Assertion.h"
-
 #ifndef ERS_PRECONDITION
+
+#include <stdio.h>
+#include "ers/Assertion.h"
 
 namespace ers {
     
