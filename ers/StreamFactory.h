@@ -97,8 +97,9 @@ public:
 	static void warning(const Context &c, const std::string &message);        /**< \brief sends a warning message */
 	static void debug(Issue *i, ers_severity) ;                               /**< \brief sends an Issue to the debug stream */
 	static void debug(const Context &c, const std::string &message, ers_severity s);  /**< \brief sends a debug message */
-	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity */	
-	static void set(ers_severity, const std::string &key) ;
+	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity */
+	static void dispatch(Issue &i, bool throw_error = false) ; 	
+	static void set_stream(ers_severity, const std::string &key) ;
 	Stream *get_stream(ers_severity s) ;                                      /**< \brief get stream for severity */
 	void set(ers_severity severity, Stream *s) ;                              /**< \brief Sets the stream for a given severity */
 	void set(ers_severity severity, const char* key) ;                        /**< \brief Setup a stream for a given severity based on a key */

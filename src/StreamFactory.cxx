@@ -83,6 +83,8 @@ ers::StreamFactory* ers::StreamFactory::instance() {
     return s_instance ; 
 } // instance
 
+/** Dumps all registered types of streams */
+
 void ers::StreamFactory::print_registered() {
     const StreamFactory *factory = instance();
     std::cerr << *factory ; 
@@ -253,9 +255,16 @@ void ers::StreamFactory::dispatch(Issue *issue_ptr, bool throw_error) {
 } // dispatch
 
 
-void ers::StreamFactory::set(ers_severity s, const std::string &key) {
+void ers::StreamFactory::dispatch(Issue &issue_ref, bool throw_error) {
+	dispatch(&issue_ref,throw_error); 
+} // dispatch
+
+
+void ers::StreamFactory::set_stream(ers_severity s, const std::string &key) {
     instance()->set(s,key.c_str()) ; 
 } // set
+
+
 
 // Member methods
 // --------------------------------------

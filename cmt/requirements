@@ -11,6 +11,12 @@ macro lib_ers_cppflags                  "-I../ers"
 
 private
 
+macro  ERS_LIB_SRC   "Assertion.cxx DefaultStream.cxx InvalidReferenceIssue.cxx  \ 
+                      LogIssue.cxx RangeIssue.cxx Context.cxx EntityNotFoundIssue.cxx \
+		      Issue.cxx NotImplemented.cxx  Stream.cxx Core.cxx FIFOStream.cxx  \
+		      IssueFactory.cxx ParseIssue.cxx StreamFactory.cxx DefaultIssue.cxx \
+		      HumanStream.cxx IssueFactoryIssue.cxx Precondition.cxx"
+
 ########################################################################################################
 #       ERS Library
 ########################################################################################################
