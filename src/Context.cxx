@@ -11,6 +11,10 @@
 #include <iostream>
 #include <sstream>
 
+#if defined(__GNU_LIBRARY__)
+#include <execinfo.h>
+#endif
+
 ers::Context *ers::Context::empty_instance = 0 ; 
 std::string ers::Context::s_host_type  ; 
 
@@ -20,6 +24,23 @@ const ers::Context *ers::Context::empty() {
     }
     return empty_instance ; 
 } // empty 
+
+/** Tries to gues the host name 
+* \return a string describing the host, in the form <var>architecture</var>-<var>operating-system</var>
+*/
+
+std::string & ers::Context::host_type() {
+    if (s_host_type.empty()) build_host_type() ; 
+    return s_host_type ; 
+} // plateform
+
+int ers::Context::debug_level() {
+#if defined(DEBUG_LEVEL) 
+    return DEBUG_LEVEL ; 
+#else 
+    return -1 ; 
+#endif
+} // debug_level
 
 /** Constructor - defines an Issue context.
   * This constructor should generally not be called directly, instead use the macro \c ERS_HERE. 
@@ -42,6 +63,15 @@ ers::Context::Context(const std::string &filename, int line_number, const std::s
     this->m_compiler_version = compiler_version ; 
     this->m_compilation_date = compilation_date ; 
     this->m_compilation_time = compilation_time ; 
+#if defined(__GNU_LIBRARY__)
+    void * array[128] ; 
+    const int n_size =  backtrace (array,128) ; 
+    char ** symbols = backtrace_symbols(array, n_size);
+    for (int i = 1; i < n_size; i++) { // we start at 1, current position is noise 
+	this->m_stack_frames.push_back(symbols[i]);
+    } // for
+    free(symbols);
+#endif
 } // Context
 
 /** The source code file name 
@@ -140,14 +170,13 @@ void ers::Context::build_host_type() {
    s_host_type=  plateform_s.str();
 } // build_host_type
 
-/** Tries to gues the host name 
-  * \return a string describing the host, in the form <var>architecture</var>-<var>operating-system</var>
-  */
+int ers::Context::stack_frames() const {
+   return m_stack_frames.size();
+} // stack_frames
 
-std::string & ers::Context::host_type() {
-    if (s_host_type.empty()) build_host_type() ; 
-    return s_host_type ; 
-} // plateform
+const std::string & ers::Context::stack_frame(int i) const {
+   return m_stack_frames[i] ; 
+} // stack_frame
 
 
 

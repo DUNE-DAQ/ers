@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
 #include "system/File.h"
@@ -40,6 +42,7 @@ using namespace System  ;
 const char* const Issue::CLASS_KEY = "ISSUE_CLASS" ; 
 const char* const Issue::COMPILATION_TIME_KEY = "COMPILATION_TIME" ; 
 const char* const Issue::COMPILATION_TARGET_KEY = "COMPILATION_TARGET" ; 
+const char* const Issue::COMPILATION_DEBUG_LVL_KEY = "COMPILATION_DEBUG_LVL" ; 
 const char* const Issue::COMPILER_KEY = "COMPILER" ; 
 const char* const Issue::CPP_CLASS_KEY = "ISSUE_CPP_CLASS" ; 
 const char* const Issue::ERS_VERSION_KEY = "ERS_VERSION" ;
@@ -357,6 +360,16 @@ void Issue::insert(const Context *context) throw() {
 	set_value(COMPILER_KEY,context->compiler()) ; 
 	set_value(COMPILATION_TIME_KEY,context->compilation()) ; 
 	set_value(COMPILATION_TARGET_KEY,context->host_type()) ; 
+	int lvl = ers::Context::debug_level();
+	if (lvl>=0) {
+	    set_value(COMPILATION_DEBUG_LVL_KEY,lvl); 
+	} // if
+	int frame_number = context->stack_frames();
+	for(int i=0;i<frame_number;i++) {
+	    char key_buffer[256] ; 
+	    snprintf(key_buffer,sizeof(key_buffer),"SOURCE-STACK-%03x",i);
+	    set_value(key_buffer,context->stack_frame(i)); 
+	} // for
     } // if context 
 } // insert
 

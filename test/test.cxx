@@ -27,7 +27,7 @@ void test_read1(const char* path) {
 } // test_read
 
 void test_write2(const Issue &e, const char* path) {
-    printf("writing to %s\n",path);
+    ERS_DEBUG_1("writing to %s",path);
     System::File file(path); 
     XercesStream xml_out(file,false); 
     xml_out << e ; 
@@ -35,13 +35,13 @@ void test_write2(const Issue &e, const char* path) {
 } // test_write
 
 void test_read2(const char* path) {
-    printf("Reading from %s\n",path);
+    ERS_DEBUG_1("Reading from %s",path);
     System::File file(path); 
     XercesStream xml_in(file,true); 
     Issue *i = xml_in.receive() ; 
     ERS_CHECK_PTR(i);
-    printf("Got Issue <<%s>>\n",i->message().c_str());
-    printf("----------------\n"); 
+    ERS_DEBUG_1("Got Issue <<%s>>",i->message().c_str());
+   
     throw *i ; 
 } // test_read
 
@@ -56,6 +56,7 @@ void test_issue(const Issue &e) {
     } catch (Issue &i) {
 	// XMLStream xml("/tmp/out.xml");
 	// xml << i ; 
+	printf("-----------------------------------\n"); 
 	StreamFactory::warning(&i); 
     } // try / catch 
 } // test_issue
@@ -64,13 +65,13 @@ int main(int argc, char* argv[]) {
     // std::set_terminate (__gnu_cxx::__verbose_terminate_handler);
     ers::IssueFactory::print_registered(); 
     ers::StreamFactory::print_registered(); 
-    ERS_DEBUG_1("loading Xerxes\n"); 
+    ERS_DEBUG_1("loading Xerxes"); 
     XMLPlatformUtils::Initialize(); 
-    ERS_DEBUG_1("done\n");
+    ERS_DEBUG_1("done");
     try {
-        ERS_DEBUG_1("checking static assert\n");
+        ERS_DEBUG_1("checking static assert");
 	ERS_STATIC_ASSERT(sizeof(int)==4); 
-	ERS_DEBUG_1("throwing custom issue\n");
+	ERS_DEBUG_1("throwing custom issue");
 	throw EXAMPLE_ERROR(5); 
     } catch (Issue &e) {
 	 test_issue(e); 

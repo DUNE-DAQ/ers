@@ -108,17 +108,29 @@ public:
 	bool register_factory(const std::string &name, create_stream_callback callback); /**< \brief register a factory method */
 	void write_to(std::ostream& stream) const ;                               /**< \brief write content of factory to stream */
     } ; 
-    
-    std::ostream& operator<<(std::ostream&, const StreamFactory& factory);        /**< \brief streaming operator */
+    std::ostream& operator<<(std::ostream&, const ers::StreamFactory& factory);        /**< \brief streaming operator */
+} // ers 
+
+
     
     /** Sends a debug message with level 0, the first parameter is a \c printf like pattern, the next are parameters for it */
+    
+#if ! defined(ERS_FAST_DEBUG)
 #define ERS_DEBUG_0(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_0) ; }
+#else 
+#define ERS_DEBUG_0(...) { fprintf(stderr,"debug-0 ") ; fprintf(stderr,__VA_ARGS__) ; fprintf(stderr,"\n") ; }
+#endif
+    
     
     /** Sends a debug message with level 1, the first parameter is a \c printf like pattern, the next are parameters for it */
-#if DEBUG_LEVEL>0
+#if (DEBUG_LEVEL>0) 
+#if (! defined(ERS_FAST_DEBUG))
 #define ERS_DEBUG_1(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_1) ; }
 #else 
-#define ERS_DEBUG_1
+#define ERS_DEBUG_1(...) { fprintf(stderr,"debug-1 ") ; fprintf(stderr,__VA_ARGS__) ; fprintf(stderr,"\n") ; }
+#endif
+#else 
+#define ERS_DEBUG_1(...) 
 #endif
     
     /** Sends a debug message with level 2, the first parameter is a \c printf like pattern, the next are parameters for it */
@@ -132,7 +144,7 @@ public:
 #if DEBUG_LEVEL>2
 #define ERS_DEBUG_3(...) { char ers_debug_buf[256] ; snprintf(ers_debug_buf,sizeof(ers_debug_buf),__VA_ARGS__) ; ers::StreamFactory::debug(ERS_HERE,ers_debug_buf,ers::ers_debug_3) ; }
 #else 
-#define ERS_DEBUG_3(...)
+#define ERS_DEBUG_3(...) 
 #endif
     
     
@@ -141,7 +153,6 @@ public:
     
     
     
-} // ers 
 
 #endif
 

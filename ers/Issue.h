@@ -43,6 +43,7 @@ public:
 	static const char *const COMPILATION_TIME_KEY ;                    /**< \brief key for compilation time */
 	static const char *const COMPILATION_TARGET_KEY ;                  /**< \brief key for compilation target */
 	static const char *const COMPILER_KEY ;                            /**< \brief key for compilator type */
+	static const char *const COMPILATION_DEBUG_LVL_KEY ;                
 	static const char *const CPP_CLASS_KEY ;                           /**< \brief key for c++ class (mangled) */
 	static const char *const ERS_VERSION_KEY ;                         /**< \brief key for ERS version */
 	static const char *const HOST_NAME_KEY ;                           /**< \brief key for hostname */

@@ -43,20 +43,30 @@ public:
 
 /** \def ERS_PRE_CHECK_PTR(p) checks that C/C++ pointer \c p is valid (non null) and throws an ers::InvalidReferenceIssue if not
   * If the pointer is invalid, this is considered as a client responsibility. 
+  * \note Do not use this to check constant pointers, as the check is compiled out if the pointer is constant 
   */
 
-#ifndef N_ERS_ASSERT
-#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
+#if (!defined(N_ERS_ASSERT))
+#if (defined(__GNUC__))
+#define ERS_PRE_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
 #else 
+#define ERS_PRE_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_client)
+#endif
+#else
 #define ERS_PRE_CHECK_PTR(p) 
 #endif
 
 /** \def ERS_CHECK_PTR(p) checks that C/C++ pointer \c p is valid (non null) and throws an ers::InvalidReferenceIssue if not
  * If the pointer is invalid, this is considered as a server responsibility. 
+ * \note Do not use this to check constant pointers, as the check is compiled out if the pointer is constant 
  */
 
-#ifndef N_ERS_ASSERT
+#if (!defined(N_ERS_ASSERT))
+#if (defined(__GNUC__))
+#define ERS_CHECK_PTR(p) if (! __builtin_constant_p(p)) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
+#else 
 #define ERS_CHECK_PTR(p) ers::InvalidReferenceIssue::check_reference(ERS_HERE,ers::ers_error,p,#p,ers::ers_resp_server)
+#endif
 #else 
 #define ERS_CHECK_PTR(p) 
 #endif

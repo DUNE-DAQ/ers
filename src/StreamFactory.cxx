@@ -39,8 +39,8 @@
 
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
     "null",                                                         // none
-    "cerr:tab", "cerr:tab", "cerr:tab", "cerr:tab",                 // debug levels
-    "cerr:tab", "cerr:tab", "cerr:tab",                             // information, notification, warning
+    "cerr:msg", "cerr:msg", "cerr:msg", "cerr:msg",                 // debug levels
+    "cerr:msg", "cerr:tab", "cerr:tab",                             // information, notification, warning
     "cerr:tab", "cerr:tab",                                         // Errors and Fatals
     "null:"  } ;                                                    // max
 
@@ -84,7 +84,7 @@ ers::StreamFactory* ers::StreamFactory::instance() {
 } // instance
 
 void ers::StreamFactory::print_registered() {
-    StreamFactory *factory = instance();
+    const StreamFactory *factory = instance();
     std::cerr << *factory ; 
 } // print_registered
 
@@ -323,6 +323,8 @@ ers::Stream* ers::StreamFactory::debug(ers_severity s)  {
 } // debug
 
 
+
+
 /** Registers a factory function with the stream factory.
   * The callback is function that takes two parameters <ol>
   * <li>a string describing the protocol, for instance \c file </li>
@@ -365,7 +367,7 @@ void ers::StreamFactory::write_to(std::ostream& stream) const {
   * \see ers::StreamFactory::write_to()
   */
 
-std::ostream& ers::operator<<(std::ostream& stream, const StreamFactory& factory) {
+std::ostream& ers::operator<<(std::ostream& stream, const ers::StreamFactory& factory) {
     factory.write_to(stream);
     return stream ; 
 } // operator
