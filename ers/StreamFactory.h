@@ -59,9 +59,11 @@ namespace ers {
       * <b>Supported Keys - ERS package</b>
       *
       * The ERS package supports by default the following keys:<ul>
-      * <li><tt>null:</tt> issues are discarded</li>
-      * <li><tt>default:</tt> issues are displayed on standard error stream</li>
-      * <li><tt>fifo:</tt> writes into a FIFO stream, to be actually used the issues need to be read by another entity</li>
+      * <li><tt>null:</tt> issues are discarded </li>
+      * <li><tt>default:</tt> issues are displayed on standard error stream </li>
+      * <li><tt>fifo:</tt> writes into a FIFO stream, to be actually used the issues need to be read by another entity </li>
+      * <li><tt>filter:</tt> filter stream, the Issues are filtered and if the filter accept them, passed on to another stream 
+	   (specified by another key in the stream description). 
       * </ul>
       * 
       * <b>Supported Keys - System package:</b>
@@ -70,11 +72,11 @@ namespace ers {
       * <li>file: writes into a file</li>
       * <li>cerr: writes into the standard error stream.<br>
       *     The file: and cerr: protocol support the following data encodings:<ul>
-      *     <li>XML - issues are serialized as XML data</li>
-      *     <li>TAB - issues are serialized as tabulated data</li>
-      *     <li>TXT - issues are serialized as single line of text</li>
+      *     <li>xml - issues are serialized as XML data </li>
+      *     <li>tab - issues are serialized as tabulated data </li>
+      *     <li>txt - issues are serialized as single line of text </li>
       *     </ul>
-      * <li>syslog: issues are sent to syslog</li>
+      * <li>syslog: issues are sent to syslog </li>
       * </ul> 
       *	  
       * <b>Supported Keys - ers-ipc package:</b>
@@ -144,6 +146,7 @@ public:
 	static void dispatch(Issue *i, bool throw_error = false) ;                /**< \brief Sends an issue to the appropriate stream according to its severity_t */
 	static void dispatch(Issue &i, bool throw_error = false) ; 	
 	static void set_stream(severity_t, const std::string &key) ;
+	~StreamFactory() ; 
 	Stream *create_stream(const std::string &key) const ;                   /**< \brief create a stream from a key */
 	Stream *get_stream(severity_t s) ;                                      /**< \brief get stream for severity_t */
 	void set(severity_t severity, Stream *s) ;                              /**< \brief Sets the stream for a given severity_t */
@@ -159,6 +162,7 @@ public:
 } // ers 
 
 #ifndef DEBUG_LEVEL
+ /** If no debug level is defined, we assume the highest level */
 #define DEBUG_LEVEL 3
 #endif
 

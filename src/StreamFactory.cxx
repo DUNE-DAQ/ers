@@ -15,19 +15,20 @@
 #include "ers/ers.h"
 
 
-
-
-
 /** This variable contains the default keys for building the default streams.
+  * The default is to use the default stream, in verbose mode for errors and fatals. 
   */
 
 const char* ers::StreamFactory::DEFAULT_STREAMS[] = {
-    "null:",                                                         // none
-    "default",  "default",  "default", "default",                 // debug levels
-    "default",  "default",  "default",                             // information, notification, warning
-    "default",  "default",                                         // Errors and Fatals
-    "null:"  } ;                                                    // max
+    "null:",                                                          // none
+    "default:",  "default:",  "default:", "default:",                 // debug levels
+    "default:",  "default:",  "default:",                             // information, notification, warning
+    "default:verbose",  "default:verbose",                            // Errors and Fatals
+    "null:"  } ;                                                      // max
 
+
+/** Pointer to the singleton instance 
+  */
 
 ers::StreamFactory *ers::StreamFactory::s_instance = 0 ; 
 
@@ -55,6 +56,21 @@ ers::StreamFactory::StreamFactory(const StreamFactory &other) {
     (void) other ; // shut up the compiler 
     ERS_NOT_IMPLEMENTED(); 
 } // StreamFactory
+
+/** Destructor - basic cleanup
+  * \note in practice this method should never be called, the singleton should never be deallocated
+  */
+
+ers::StreamFactory::~StreamFactory() {
+    for(int i= static_cast<int> (severity_none);i< static_cast<int> (severity_max);i++) {	
+	severity_t s = static_cast<severity_t> (i) ; 
+	if(m_streams[s]) {
+	    delete(m_streams[s]);
+	    m_streams[s]=0 ; 
+	} // if stream 
+    } // for*/
+} // ~StreamFactory
+
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 

@@ -36,7 +36,7 @@ int main(int, char**) {
 	ERS_DEBUG_3("This should not be displayed"); 
         ERS_DEBUG_0("checking static assert");
 	ERS_STATIC_ASSERT(sizeof(int)==4);            
-	ERS_DEBUG_0("dispatching custom issue (warning)"); 
+	ERS_DEBUG_0("dispatching custom issue to warning stream"); 
 	ExampleIssue issue(ERS_HERE,ers::warning,10); // we build an instance of our Issue
 	ers::StreamFactory::dispatch(issue);   // dispatch sends it to the correct stream based on severity
 	ERS_DEBUG_0("calling a method with wrong range"); 

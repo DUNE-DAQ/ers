@@ -60,7 +60,7 @@ void ers::Stream::print_to(std::ostream& stream) const {
     stream << NULL_STREAM_KEY << ':' ; 
 } // print_to
 
-std::ostream& operator<<(std::ostream& target, const ers::Stream & s) {
+std::ostream& ers::operator<<(std::ostream& target, const ers::Stream & s) {
     s.print_to(target); 
     return target ; 
 } // operator<<

@@ -48,7 +48,8 @@ int ExampleIssue::procrastination_level() const {
 } // procrastination_level
 
 /// This function returns the name of the Issue, this name should be the same as 
-/// the unmangled class name. If this function is not defined, the implementation 
+/// the unmangled class name. Here we given back the string defined in ExampleIssue::CLASS_NAME
+/// \note If this function is not defined, the implementation 
 /// the Issue root object tries to build a meaningfull name out of RTTI information, 
 /// but depending on the compiler this is unreliable. 
 /// \return name of the class 

@@ -45,10 +45,11 @@ public:
     virtual Issue *receive() ;                         /**< \brief Receives an issue from the stream */
     virtual void print_to(std::ostream& stream) const ; 
 } ; 
+std::ostream& operator<<(std::ostream& target, const ers::Stream & s);
 
 } // ers 
 
-std::ostream& operator<<(std::ostream& target, const ers::Stream & s);
+
 
 
 #endif
