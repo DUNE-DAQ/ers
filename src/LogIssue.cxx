@@ -22,9 +22,7 @@ ers::LogIssue::LogIssue() : Issue() {}
 ers::LogIssue::LogIssue(const ers::Context &c, severity_t s) : ers::Issue(c,s) {}
 
 ers::LogIssue::LogIssue(const ers::Context &c, severity_t s, const std::string &msg) : Issue(c,s) {
-    std::ostringstream stream ;
-    stream << ers::Core::to_string(s) << ": " << msg ;
-    finish_setup(stream.str()); 
+    finish_setup(msg); 
 } // 
 
 const char* ers::LogIssue::get_class_name() const throw() { return ers::LogIssue::CLASS_NAME ; }

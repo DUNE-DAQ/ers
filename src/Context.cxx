@@ -117,14 +117,24 @@ const std::string & ers::Context::function() const throw() {
 
 /** Pretty printed code position 
   * format: file_name:line_number (function_name)
-  * \return reference to string containing format 
+  * \return reference to string containing format
+  * \note the file name is truncated from the last slash 
   */
 
 const std::string & ers::Context::position() const {
     if (m_position.empty()) {
 	std::ostringstream position_s ;
+	if (! m_package_name.empty()) {
+	    position_s << m_package_name << ":" ; 
+	} 
 	if (! m_file_name.empty()) {
-	    position_s << m_file_name << ":" << m_line_number << " ";
+	    const std::string::size_type p = m_file_name.rfind('/') ; 
+	    if (std::string::npos == p) {
+		position_s << m_file_name ; 
+	    } else {
+		position_s << (m_file_name.substr(p+1)) ; 
+	    } //
+	    position_s << ":" << m_line_number << " ";
 	} 
 	if (! m_function_name.empty()) {
 	    position_s << "(" << m_function_name << ")" ;

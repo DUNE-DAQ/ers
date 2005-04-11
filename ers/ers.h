@@ -8,9 +8,11 @@
  */
 
 /** \file ers.h This file includes all the main headers of the Error Reporting System.
-  * It does not declare anything <em>per se</em>
+  * It does not declare anything <em>per se</em>, it does contains the doxygen code to
+  * generate all the general documentation for the package. 
   * \author Matthias Wiesmann
   * \version 1.1 Removed dependency on System package
+  * \brief ers header and documentation file 
   */
 
 #include "ers/Core.h"
@@ -68,17 +70,17 @@
   \see ers::Assertion
   \see ers::Precondition
   \see ers::InvalidReferenceIssue
+
   \subsection LoggingMacros Logging Macros
   The ERS package offers a set of macros to do logging. Those macros construct an issue and send them to the relevant stream. 
   They all support multiple number of parameters with \c fprintf like patterns.
   For each debug and warning severity_t level there is an associated macro:
-  <ul>
-  <li>ERS_DEBUG_0</li>
-  <li>ERS_DEBUG_1</li>
-  <li>ERS_DEBUG_2</li>
-  <li>ERS_DEBUG_3</li>
-  <li>ERS_WARN</li>
-  </ul>
+  \li ERS_DEBUG_0
+  \li ERS_DEBUG_1
+  \li ERS_DEBUG_2
+  \li ERS_DEBUG_3
+  \li ERS_WARN
+
   The actual behaviour of the macro can be set up either at compile or runtime. 
   Debug macros with levels larger than 0 can be disabled at compile time simply by defining the DEBUG_LEVEL.
   For instance, if DEBUG_LEVEL is 1, then ERS_DEBUG_2 and ERS_DEBUG_3 are compiled out. 
@@ -100,6 +102,27 @@
   Conceptualy, a stream is simply an object that can the user can use to send (or receive) Issues. 
   There is one stream associated with each severity level,
   those streams can be set or retrieved using methods of the ers::StreamFactory class. 
-  \see ers::StreamFactory 
+  \see ers::StreamFactory   
+  \section FAQ FAQ
+  \subsection Assertion-Precondition What is the difference between an assertion and a precondition?
+  An precondition is a condition that needs to be respected when \e entering a function, 
+  an assertion is a condition that needs to be respected \e inside a function. 
+  A failed precondition indicates that the problem lies outside of the function, a failed assertion
+  indicates that the problem lies inside the function. 
+  \see ers::Assertion
+  
+  \subsection ERS_HERE What is the macro ERS_HERE?
+  The macro ERS_HERE is used to insert all the context information to a ers issue. 
+  When constructing an issue one should always give the macro ERS_HERE as a first parameter. 
+  \see ers::Context
+
+  \subsection factory Do I need to implement the registration and factory methods for each of my Issues?
+  The registration and factory mechanism as implemented in the ExampleIssue class is needed for some functionality of ERS. 
+  If it is not present, the system will work but certain features will be disabled. 
+  In particular the absence of factory method means that ERS cannot dynamically build instance with the precise C++ type. 
+  For instance if you instanciate an CustomIssue that does not declare a factory method, if 
+  you serialise this issue to a file and then deserialise it, it will not have the type CustomIssue, but instead will have
+  the type DefaultIssue. The same happens if an Issue is caused by another issue, the cause issue is cloned into the 
+  second issue, so if there is no factory method, the clone issue will have the generic type. 
 
 */

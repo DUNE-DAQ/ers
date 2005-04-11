@@ -10,6 +10,10 @@
 #ifndef ERS_CONTEXT_
 #define ERS_CONTEXT_
 
+/** \file Context.h
+  * This file defines the ers::Context object, and the associated macros, like ERS_HERE.
+  */ 
+
 #include <string>
 #include <vector>
 
@@ -97,7 +101,7 @@ public:
 #ifdef TDAQ_PACKAGE_NAME
 #define ERS_PACK TDAQ_PACKAGE_NAME
 #else
-#define ERS_PACK "unknown_package"
+#define ERS_PACK ""
 #endif
 
 /** \def ERS_EMPTY macro to an empty context object used when no context is available */

@@ -18,10 +18,12 @@ const char* const ers::DefaultStream::VERBOSE_KEY = "verbose" ;
 
 namespace {
     ers::Stream *create_stream(const std::string &protocol, const std::string &uri) { 
+	
         if (protocol==ers::DefaultStream::KEY) {
 	    bool verbose = (uri == ers::DefaultStream::VERBOSE_KEY) ; 
 	    return new ers::DefaultStream(verbose) ;  
-        } 
+        } else {
+	} 
 	return 0 ; 
     } // 
     bool registered = ers::StreamFactory::instance()->register_factory(ers::DefaultStream::KEY,create_stream) ;
@@ -44,9 +46,11 @@ void ers::DefaultStream::send(const Issue *issue_ptr) {
     ERS_PRE_CHECK_PTR(issue_ptr); 
     try {
 	const string_map_type *table = issue_ptr->get_value_table(); 
-	const std::string message_str = issue_ptr->get_value(Issue::MESSAGE_KEY) ;
-	const std::string severity_str = issue_ptr->get_value(Issue::SEVERITY_KEY) ;
-	std::cerr << ">>> " << message_str << " (" << severity_str << ") <<<" << std::endl ; 
+	const std::string & message_str = issue_ptr->get_value(Issue::MESSAGE_KEY) ;
+	const std::string & severity_str = issue_ptr->get_value(Issue::SEVERITY_KEY) ;
+	const std::string & position_str = issue_ptr->get_value(Issue::SOURCE_POSITION_KEY) ; 
+	const std::string & date_str = issue_ptr->get_value(Issue::TIME_KEY); 
+	std::cerr << severity_str << " at " << position_str << " (" << date_str << "): " << message_str << std::endl ; 
 	if (m_verbose) {
 	    std::cerr << "-----------" << std::endl ; 
             for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {

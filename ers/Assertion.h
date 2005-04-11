@@ -7,7 +7,9 @@
  *
  */
 
-
+/** \file Assertion.h
+  * This file defines the assertion class and the associated macros. 
+  */
 
 #ifndef ERS_ASSERTION
 #define ERS_ASSERTION

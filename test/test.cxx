@@ -29,7 +29,10 @@ void foo(int n) {
 } // foo
 
 
-int main(int, char**) {
+int main(int argc, char** argv) {
+    for(int i=1;i<argc;i++) { // we add all parameters as qualifiers
+	ers::Context::add_qualifier(argv[i]) ; 
+    } // 
     ers::Context::add_qualifier("ers_test") ;   // we add a qualifier to all issues 
       try { // We need to work with a try/catch block 
 	ers::StreamFactory::set_stream(ers::debug_3,"filter:?!ers_test,ers_failure@default"); // we filter out all issue with qualifier ers_test at level debug_3

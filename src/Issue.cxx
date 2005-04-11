@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
@@ -48,6 +49,7 @@ const char* const Issue::PROGRAM_NAME_KEY = "PROGRAM_NAME";
 const char* const Issue::RESPONSIBILITY_KEY = "RESPONSIBILITY" ; 
 const char* const Issue::SEVERITY_KEY = "SEVERITY" ; 
 const char* const Issue::SOURCE_POSITION_KEY = "SOURCE_POSITION" ; 
+const char* const Issue::SOURCE_PACKAGE_KEY = "SOURCE_PACKAGE" ; 
 const char* const Issue::TIME_KEY = "TIME" ; 
 const char* const Issue::TRANSIENCE_KEY = "TRANSIENCE" ; 
 const char* const Issue::USER_ID_KEY = "USER_ID" ; 
@@ -190,7 +192,7 @@ bool Issue::operator==(const Issue &other) const throw() {
   */
 
 const std::string & Issue::operator[](const std::string &key) const throw() {
-    return get_value(key);
+    return get_value(key,"");
 } // operator[]
 
 
@@ -274,13 +276,21 @@ const string_map_type* Issue::get_value_table() const {
  * @return the string value for the key and empty string if the key is not found
  */
 
-const std::string &Issue::get_value(const std::string &key) const throw() {
+const std::string &Issue::get_value(const std::string &key, const std::string &def) const throw() {
     string_map_type::const_iterator pos = m_value_table.find(key);
     if (pos!=m_value_table.end()) {
         return pos->second ; 
     } // if
-    return ers::Core::empty_string;
+    return def ; 
 } // get_value
+
+/** \overload 
+  */
+
+const std::string &Issue::get_value(const std::string &key) const throw() {
+    return get_value(key,Core::empty_string) ; 
+} // get_value
+
 
 /** Get a property of an issue as an integer 
   * \param key the key to search for 
@@ -289,22 +299,56 @@ const std::string &Issue::get_value(const std::string &key) const throw() {
   */
 
 int Issue::get_int_value(const std::string &key, int def) const throw() {
-    std::string v = get_value(key) ; 
+    std::string v = get_value(key) ;      
     if (! v.empty()) { // not empty 
-	return atoi(v.c_str());
+	std::istringstream in(v) ;
+	int n ; 
+	in >> n ;
+	return n ; 
+	// return atoi(v.c_str());
     } else { // empty 
 	return def ; 
     } // empty 
 } // get_int_value
 
 
-/** 
-  * \return the number of key/value pairs in the issue
-  */
+/** Get a property of an issue as an long 
+* \param key the key to search for 
+* \param def the value to return if key is not found 
+* \return value of key or \c def
+*/
 
-int Issue::values_number() const {
-    return m_value_table.size(); 
-} // values_number
+long Issue::get_long_value(const std::string &key, long def) const throw() {
+    std::string v = get_value(key) ;      
+    if (! v.empty()) { // not empty 
+	std::istringstream in(v) ;
+	long n ; 
+	in >> n ;
+	return n ; 
+	// return atoi(v.c_str());
+    } else { // empty 
+	return def ; 
+    } // empty 
+} // get_long_value
+
+/** Get a property of an issue as an double 
+ * \param key the key to search for 
+ * \param def the value to return if key is not found - the default value for this parameter is NaN. 
+ * \return value of key or \c def
+ */
+
+double Issue::get_double_value(const std::string key, double def=nan("")) const throw() {
+    std::string v = get_value(key) ;      
+    if (! v.empty()) { // not empty 
+	std::istringstream in(v) ;
+	double n ; 
+	in >> n ;
+	return n ; 
+	// return atoi(v.c_str());
+    } else { // empty 
+	return def ; 
+    } // empty     
+} // get_double_value
 
 
 /** Sets the value table 
@@ -322,6 +366,26 @@ void Issue::set_values(const string_map_type &values) throw() {
 
 
 void Issue::set_value(const std::string &key, long value) throw() {
+    std::ostringstream stream ;
+    stream << value ; 
+    m_value_table[key] = stream.str();
+} // set_value
+
+/** \overload 
+  */
+
+void Issue::set_value(const std::string &key, int value) throw() {
+    std::ostringstream stream ;
+    stream << value ; 
+    m_value_table[key] = stream.str();
+} // set_value
+
+/** Set a numerical value in the value table
+ * \param key the key to use for insertion
+ * \param value the value to insert
+ */
+
+void Issue::set_value(const std::string &key, double value) throw() {
     std::ostringstream stream ;
     stream << value ; 
     m_value_table[key] = stream.str();
@@ -350,6 +414,28 @@ void Issue::set_value(const std::string &key, const char* value) throw() {
     } // if 
 } // set_value
 
+/** Sets a pointer in the value table 
+  * \param key the key to use for insertion
+  * \param ptr a pointer 
+  * \note the pointer is stored in hex format
+  */
+
+void Issue::set_value(const std::string &key, const void* ptr) throw() {
+    std::ostringstream stream ;
+    stream.setf(std::ios::hex,std::ios::basefield); 
+    stream << (unsigned long) ptr ; 
+    m_value_table[key] = stream.str();
+} // set_value
+
+
+/** 
+ * \return the number of key/value pairs in the issue
+ */
+
+int Issue::values_number() const {
+    return m_value_table.size(); 
+} // values_number
+
 // ====================================================
 // Insertions Methods
 // ====================================================
@@ -361,6 +447,7 @@ void Issue::set_value(const std::string &key, const char* value) throw() {
 void Issue::insert(const Context *context) throw() {
     if (context) {
 	set_value(SOURCE_POSITION_KEY,context->position()) ; 
+	set_value(SOURCE_PACKAGE_KEY,context->package_name()); 
 	set_value(COMPILER_KEY,context->compiler()) ; 
 	set_value(COMPILATION_TIME_KEY,context->compilation()) ; 
 	set_value(COMPILATION_TARGET_KEY,context->host_type()) ; 
@@ -573,6 +660,9 @@ int Issue::exit_value() const throw() {
     return get_int_value(EXIT_VALUE_KEY,1); 
 } // exit_value
 
+/** Add a qualifier to the qualifier list
+  * \param qualif the qualifier to add
+  */
 
 void Issue::add_qualifier(const std::string &qualif) {
     const std::string &qualif_s = get_value(QUALIFIER_LIST_KEY) ; 
@@ -581,6 +671,10 @@ void Issue::add_qualifier(const std::string &qualif) {
     std::string n_qualif = qualif_s+qualif + " " ; 
     set_value(QUALIFIER_LIST_KEY,n_qualif); 
 } // add_qualifier
+
+/** Gets the list of qualifiers 
+  * \return list of qualifiers 
+  */
 
 std::vector<std::string> Issue::qualifiers() const {
     const std::string &qualif_s = get_value(QUALIFIER_LIST_KEY) ; 

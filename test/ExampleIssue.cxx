@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include "ExampleIssue.h"
 
 namespace {
@@ -38,10 +39,25 @@ ExampleIssue::ExampleIssue() : ers::Issue() {}
 
 ExampleIssue::ExampleIssue(const ers::Context& context, ers::severity_t severity) : ers::Issue(context,severity) {}
 
+/** User constructor, this constructor should be used by the user.
+  * The prototype includes the two mandatory parameters, context and severity 
+  * plus whatever custome construction parameters are needed.
+  * \param context object representing the code-context where the issue originated, normally, this is the macro ERS_HERE
+  * \param severity the severity of the issue 
+  * \param procrastination_level this is a custom parameter needed by this example issue 
+  */
+
 ExampleIssue::ExampleIssue(const ers::Context& context, ers::severity_t severity, int procrastination_level) : ers::Issue(context,severity) {
     set_value(PROCRASTINATION_LEVEL_KEY,procrastination_level) ; 
-    finish_setup("Procrastinating"); 
+    std::ostringstream msg_str ; 
+    msg_str << "Procrastinating at level " << procrastination_level ; 
+    finish_setup(msg_str.str()); 
 } // ExampleIssue
+
+/** This method is an example of an accessor for a custom property in the issue
+  * It basically searches the value table for the right property and returns it.
+  * \return the value of the procrastination property
+  */
 
 int ExampleIssue::procrastination_level() const {
     return get_int_value(PROCRASTINATION_LEVEL_KEY); 

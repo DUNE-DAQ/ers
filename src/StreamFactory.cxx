@@ -143,18 +143,23 @@ const char* ers::StreamFactory::key_for_severity(severity_t s) {
 ers::Stream *ers::StreamFactory::create_stream(const std::string &key) const {
     std::string protocol ; 
     std::string uri ; 
-    std::string::size_type colon = key.find(":") ; 
+
+    std::string::size_type colon = key.find(':') ; 
     if (colon==std::string::npos) {
     	protocol = key ; 
     } else {
         protocol = key.substr(0,colon) ; 
-	uri = key.substr(colon+1) ; 
-    } 
+	std::string::size_type uri_start = colon+1 ; 
+	if (uri_start<key.size()) {
+	    uri = key.substr(uri_start) ; 
+	} // if
+    } // colon present 
     for(stream_factory_collection::const_iterator pos=m_factories.begin();pos!=m_factories.end();++pos) {
 	create_stream_callback callback = pos->second; 
 	Stream *s = callback(protocol,uri); 
 	if (s!=0) return s ; 
     } // for
+    fprintf(stderr,"Warning, could not find stream for key protocol=\"%s\" uri=\"%s\" (%s)\n",protocol.c_str(),uri.c_str(),key.c_str()); 
     return new DefaultStream(); 
 } // create_stream
 
