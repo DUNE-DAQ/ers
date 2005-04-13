@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <sysexits.h>
 
 #include "ers/ers.h"
 #include "ers/HumanStream.h"
@@ -657,7 +658,9 @@ const std::string &Issue::message() const throw() {
 } // message
 
 int Issue::exit_value() const throw() {
-    return get_int_value(EXIT_VALUE_KEY,1); 
+    int v = 1 ; 
+    if (transience()==1) v = EX_TEMPFAIL ; 
+    return get_int_value(EXIT_VALUE_KEY,v); 
 } // exit_value
 
 /** Add a qualifier to the qualifier list

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <sysexits.h>
 
 #include "ers/Assertion.h"
 #include "ers/Issue.h"
@@ -55,6 +56,7 @@ ers::Assertion::Assertion(const Context &context, severity_t s, const char* cond
 void ers::Assertion::setup(const char *condition_text, const std::string &msg, bool constant_expression)  {
     m_value_table[ASSERT_CONDITION_KEY] = *condition_text ;
     responsibility(resp_server); 
+    set_value(EXIT_VALUE_KEY,EX_SOFTWARE);
     transience( ! constant_expression); 
     finish_setup(build_message(condition_text,msg,constant_expression));
 } // setup

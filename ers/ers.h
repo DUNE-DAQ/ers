@@ -103,6 +103,24 @@
   There is one stream associated with each severity level,
   those streams can be set or retrieved using methods of the ers::StreamFactory class. 
   \see ers::StreamFactory   
+
+  \section Exit values 
+  The ERS system offers some facilities to give out standard compliant exit values for programs. 
+  That is, if a program exists because of an ers Issue, it can call the \c exit_value method on the issue
+  to possibly get an appropriate exit value (as defined in sysexits.h).
+  A typical main program would look like this:
+  \code 
+  int main(int argc, char** argv) {
+      try {
+	  do_stuff(); 
+      } catch (ers::Issue &e) {
+	  ers::StreamFactory::dispatch(e); // we send the issue to the appropriate stream 
+	  exit(e.exit_value());            // we get the actual exit value from the issue 
+      } // try / catch 
+  } // main 
+  \endcode
+  \see http://www.gsp.com/cgi-bin/man.cgi?section=3&topic=sysexits
+
   \section FAQ FAQ
   \subsection Assertion-Precondition What is the difference between an assertion and a precondition?
   An precondition is a condition that needs to be respected when \e entering a function, 
