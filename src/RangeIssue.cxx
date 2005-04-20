@@ -22,12 +22,12 @@ namespace {
     bool registered = ers::IssueFactory::instance()->register_issue(ers::RangeIssue::CLASS_NAME,create_issue) ;
 } // anonymous context
 
-void ers::RangeIssue::check_range(const ers::Context &c, long min, long value, long max, const char* entity_name) {
+void ers::RangeIssue::check_range(const ers::Context &c, int64_t min, int64_t value, int64_t max, const char* entity_name) {
     if ((value>max) || (value<min)) throw RangeIssue(c,ers::error,min,value,max,entity_name); 
 } // check_range
 
 
-void ers::RangeIssue::set_range(ers::Issue &issue, long index, long min_index, long max_index, const char* entity_name) {
+void ers::RangeIssue::set_range(ers::Issue &issue, int64_t index, int64_t min_index, int64_t max_index, const char* entity_name) {
     issue.set_value(REFERENCE_VALUE_KEY,index) ; 
     issue.set_value(RANGE_MIN_KEY,min_index);
     issue.set_value(RANGE_MAX_KEY,max_index);
@@ -45,7 +45,7 @@ ers::RangeIssue::RangeIssue(const ers::Context &c, ers::severity_t s) : ers::Inv
     set_value(REFERENCE_TYPE_KEY,INDEX_REFERENCE_TYPE) ;
 } // RangeIssue
 
-ers::RangeIssue::RangeIssue(const ers::Context &c, ers::severity_t s, long min_index, long index, long max_index, const char* entity_name) : ers::InvalidReferenceIssue(c,s) {
+ers::RangeIssue::RangeIssue(const ers::Context &c, ers::severity_t s, int64_t min_index, int64_t index, int64_t max_index, const char* entity_name) : ers::InvalidReferenceIssue(c,s) {
     set_range(*this,index,min_index,max_index,entity_name) ; 
     std::ostringstream message_stream ;
     message_stream << "invalid index: " ; 

@@ -155,7 +155,7 @@ std::vector<std::string> ers::Core::tokenize(const std::string &text, const std:
 	if (end_p == std::string::npos) {
 	    end_p = text.length(); 
 	}
-	const std::string sub_str = text.substr(start_p,end_p);
+	const std::string sub_str = text.substr(start_p,end_p-start_p);
 	result_vector.push_back(sub_str) ; 
 	start_p = text.find_first_not_of(separators,end_p) ;
     } // while

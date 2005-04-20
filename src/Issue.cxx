@@ -22,6 +22,8 @@
 
 #define BUFFER_SIZE 256 
 
+#define ISSUE_VALUE_SET_SCALAR(table,key,value) { std::ostringstream stream ; stream << value ;  table[key] = stream.str(); }
+
 /** This block insert the relevant function into the Issue Factory table.
   * This is needed to ensure that serialisation classes work 
   */
@@ -361,24 +363,54 @@ void Issue::set_values(const string_map_type &values) throw() {
 } // load_values
 
 /** Set a numerical value in the value table
-  * \param key the key to use for insertion
-  * \param value the value to insert
-  */
+ * \param key the key to use for insertion
+ * \param value the value to insert
+ */
 
-
-void Issue::set_value(const std::string &key, long value) throw() {
-    std::ostringstream stream ;
-    stream << value ; 
-    m_value_table[key] = stream.str();
+void Issue::set_value(const std::string &key, uint8_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
 } // set_value
 
-/** \overload 
-  */
+/** \overload */
 
-void Issue::set_value(const std::string &key, int value) throw() {
-    std::ostringstream stream ;
-    stream << value ; 
-    m_value_table[key] = stream.str();
+void Issue::set_value(const std::string &key, uint16_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, uint32_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, uint64_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, int8_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, int16_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, int32_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
+} // set_value
+
+/** \overload */
+
+void Issue::set_value(const std::string &key, int64_t value) throw() {
+    ISSUE_VALUE_SET_SCALAR(m_value_table,key,value); 
 } // set_value
 
 /** Set a numerical value in the value table

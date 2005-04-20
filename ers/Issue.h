@@ -12,6 +12,7 @@
 
 #include <map>
 #include <string>
+#include <stdint.h>
 
 #include "ers/Core.h"
 #include "ers/Stream.h"
@@ -101,8 +102,14 @@ public:
 	int get_int_value(const std::string &key, int def=0) const throw() ;       /**< \brief Get a value of the table as an integer */
 	long get_long_value(const std::string &key, long def=0) const throw() ;    /**< \brief Get a value of the table as a long integer */
 	double get_double_value(const std::string key, double def) const throw() ; /**< \brief Get a value of the table as double */
-	void set_value(const std::string &key, int value) throw() ;                /**< \brief Sets a value (integer) */
-	void set_value(const std::string &key, long value) throw() ;               /**< \brief Sets a value (long integer) */
+	void set_value(const std::string &key, uint8_t value) throw() ;            /**< \brief Sets a value 8 bit unsigned */
+	void set_value(const std::string &key, uint16_t value) throw() ; 
+	void set_value(const std::string &key, uint32_t value) throw() ;    
+	void set_value(const std::string &key, uint64_t value) throw() ;           
+	void set_value(const std::string &key, int8_t value) throw() ;            
+	void set_value(const std::string &key, int16_t value) throw() ; 
+	void set_value(const std::string &key, int32_t value) throw() ;    
+	void set_value(const std::string &key, int64_t value) throw() ;           	
 	void set_value(const std::string &key, double value) throw() ;             /**< \brief Sets a value (double float) */
 	void set_value(const std::string &key, const std::string &value) throw() ; /**< \brief Sets a value (string) */
 	void set_value(const std::string &key, const char* value) throw() ;        /**< \brief Sets a value (c-string) */
