@@ -1,16 +1,14 @@
 Doxyfile
 build
-doc
 i686-rh73-gcc32
 i686-rh73-gcc32-opt
 i686-rh73-icc8-dbg
+i686-slc3-icc8-opt
 i686-slc3-gcc323-opt
 core.*
-ers.xcode
-docs
+*.xcode
 tmp
 
 
 
 
-i686-slc3-icc8-opt
