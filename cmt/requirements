@@ -23,12 +23,13 @@ macro  ERS_LIB_SRC   "Assertion.cxx DefaultStream.cxx InvalidReferenceIssue.cxx 
 ########################################################################################################
 
 	
-library		ers			ers $(lib_opts)			*.cxx
+library		ers			$(lib_opts)			*.cxx
 macro           ers_shlibflags          "" 
 
 
 macro		instlibs		libers.so	\
-		lynxos			libers.a
+		lynxos			libers.a	\
+		osx			libers.dylib
 		
 apply_pattern   install_libs            files=$(instlibs)
 
