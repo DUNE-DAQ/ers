@@ -28,13 +28,21 @@ void foo(int n) {
     ERS_DEBUG_0("function foo called with value %d",n);
 } // foo
 
+void massive_test() { 
+    ers::StreamFactory::set_stream(ers::debug_2,"null");
+    ERS_DEBUG_0("dumping a lot of log issues"); 
+    for(int i=0;i<1000000;i++) {
+	ERS_DEBUG_2("dump %d",i); 
+    } // for 
+} // 
 
 int main(int argc, char** argv) {
     for(int i=1;i<argc;i++) { // we add all parameters as qualifiers
 	ers::Context::add_qualifier(argv[i]) ; 
     } // 
     ers::Context::add_qualifier("ers_test") ;   // we add a qualifier to all issues 
-      try { // We need to work with a try/catch block 
+    try { // We need to work with a try/catch block 
+	massive_test(); 
 	ers::StreamFactory::set_stream(ers::debug_3,"filter:?!ers_test,ers_failure@default"); // we filter out all issue with qualifier ers_test at level debug_3
 	ERS_DEBUG_3("This should not be displayed"); 
         ERS_DEBUG_0("checking static assert");
