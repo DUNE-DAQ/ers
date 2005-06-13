@@ -5,7 +5,7 @@ manager	Matthias.Wiesmann@cern.ch
 
 #What policy do we use? 
 
-use OnlinePolicy
+use TDAQCPolicy
 
 macro lib_ers_cppflags                  "-I../ers"
 
