@@ -50,19 +50,22 @@ void ers::DefaultStream::send(const Issue *issue_ptr) {
 	const std::string & severity_str = issue_ptr->get_value(Issue::SEVERITY_KEY) ;
 	const std::string & position_str = issue_ptr->get_value(Issue::SOURCE_POSITION_KEY) ; 
 	const std::string & date_str = issue_ptr->get_value(Issue::TIME_KEY); 
-	std::cerr << severity_str << " at " << position_str << " (" << date_str << "): " << message_str << std::endl ; 
+	
+        std::ostream & out = issue_ptr->severity() < warning ? std::cout : std::cerr;
+        
+        out << severity_str << " at " << position_str << " (" << date_str << "): " << message_str << std::endl ; 
 	if (m_verbose) {
-	    std::cerr << "-----------" << std::endl ; 
+	    out << "-----------" << std::endl ; 
             for(string_map_type::const_iterator pos = table->begin();pos!=table->end();++pos) {
                 const std::string &key = pos->first ; 
                 const std::string &value = pos->second ; 
-                std::cerr  << key << "=\t\"" << value << '\"' << std::endl ;
+                out << key << "=\t\"" << value << '\"' << std::endl ;
             } // for
-		std::cerr << "-----------" << std::endl ; 
+		out << "-----------" << std::endl ; 
 	} // if long format
-        } catch (std::ios_base::failure &ex) {
-            throw ers::Issue(ERS_HERE,ers::error,&ex); 
-        } // catch generic I/O errors 
+    } catch (std::ios_base::failure &ex) {
+	throw ers::Issue(ERS_HERE,ers::error,&ex);
+    } // catch generic I/O errors
    
 } // send
 
