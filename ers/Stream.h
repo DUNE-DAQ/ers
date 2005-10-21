@@ -3,54 +3,80 @@
  *  ers
  *
  *  Created by Matthias Wiesmann on 02.12.04.
+ *  Modified by Serguei Kolos on 02.08.05.
  *  Copyright 2004 CERN. All rights reserved.
  *
  */
 
 
-#ifndef __ERS_ISSUE_STREAM__
-#define __ERS_ISSUE_STREAM__
+#ifndef ERS_STREAM_H
+#define ERS_STREAM_H
 
 #include <string>
 #include <iostream>
+#include <memory>
 
-#include "ers/Core.h"
-#include "ers/Context.h"
+#include <ers/Issue.h>
 
-namespace ers {
-    
-    class Issue ; 
-
-/** Root issue stream.
-  * An ERS stream is a mean to send and receive issues. 
-  * The two core method to do so are \c send and \c receive.
-  * Certain subclasses of stream might implement only sending, or only receiving. 
-  * The root stream class implements a null stream, i.e a stream where no issue can be read from 
-  * and silently discards sent issues. 
-  * \author Matthias Wiesmann
-  * \version 1.0
-  * \brief Root/Null issue stream
+/** \file Stream.h Defines abstract interface for ERS streams.
+  * \author Serguei Kolos
+  * \brief ers header and documentation file 
   */
+
+namespace ers
+{
     
-class Stream {
-    friend class Issue ; 
-protected:
-public:    
-    static const char* const NULL_STREAM_KEY ;          /**< Key for discard stream */
-    Stream();
-    Stream(const Stream &other); 
-    operator std::string() const ; 
-    virtual ~Stream(); 
-    virtual void send(const Issue *i) ;                /**< \brief Sends an issue into the stream */
-    virtual Issue *receive() ;                         /**< \brief Receives an issue from the stream */
-    virtual void print_to(std::ostream& stream) const ; 
-} ; 
-std::ostream& operator<<(std::ostream& target, const ers::Stream & s);
+    class Issue; 
 
-} // ers 
+    /** ERS Issue stream interface.
+      * An ERS stream is a mean to send and receive issues.
+      * The two core method to do so are \c write and \c read.
+      * Certain subclasses of stream might implement only sending, or only receiving.
+      * \author Serguei Kolos
+      * \version 1.0
+      * \brief ERS Issue stream interface.
+      */
+    
+    class Stream
+    {
+      friend class StreamFactory;
+      
+      public:
+	virtual ~Stream()
+        { ; }
+        
+	virtual void write( const Issue & issue ) = 0;	/**< \brief Sends an issue into the stream */
+	virtual Issue * read() = 0;			/**< \brief Receives an issue from the stream */
+      
+      protected:
+        Stream( );
+                
+	Stream & chained( );
+        
+      private:
+	//
+	// Disable copying
+	//
+	Stream( const Stream & other );
+        Stream & operator=( const Stream & );
+        
+	void chained( Stream * stream );
+        
+      	std::auto_ptr<Stream> m_chained;
+    };
+};
 
+#include <ers/StreamFactory.h>
 
-
+#define ERS_REGISTER_STREAM( class, name, param ) \
+namespace { \
+    struct StreamRegistrator { \
+	static ers::Stream * create( const std::string & param ) \
+	{ return new class( param ); }  \
+        StreamRegistrator() \
+	{ ers::StreamFactory::instance().register_stream( name, create ); } \
+    } registrator; \
+}
 
 #endif
 

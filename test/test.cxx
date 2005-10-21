@@ -1,5 +1,5 @@
 /*
- *  ExampleIssue.h
+ *  test.cxx
  *  Test
  *
  *  Created by Matthias Wiesmann on 24.01.05.
@@ -7,56 +7,93 @@
  *
  */
 
-
-
-#include "ers/ers.h"
-#include "ExampleIssue.h"
-
-
+#include <ers/ExampleIssues.h>
+#include <ers/ers.h>
+#include <stdexcept>
 
 /** \file test.cxx 
   * This file contains a very simple example of using ERS. 
   * Basically, we use the custom issue defined in ExampleIssue. 
   */
 
-/** This function illustrates the usage of range checking macros.
-  * \param n an integer excepted to be between 0 and 42.
-  */
+void pass( int step )
+{
+    ERS_RANGE_CHECK( 0, step, 6 );
+    
+    ERS_DEBUG( 0, "performing step #" << step )
+    switch ( step )
+    {
+    	case 1:
+        {
+	    ers::PermissionDenied issue( ERS_HERE, "foo2", 0x777 );
+	    throw issue;
+        }
+        case 2:
+        {
+	    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+	    throw issue;
+        }
+        case 3:
+        {
+	    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+	    issue.add_qualifier( "ers_test" );
+	    throw issue;
+        }
+        case 4:
+        {
+            for ( int level = 0; level < 4; level++ )
+            	ERS_DEBUG( level, "Debug message with level " << level );
+        }
+        break;
+        case 5:
+        {
+            throw std::runtime_error( "std::out_of_range error" );
+        }
+        case 6:
+        {
+            struct UnhandledException {};
+            throw UnhandledException();
+        }
+        case 7:
+        {
+            ERS_ASSERT_MSG( step <= 6, "it is been checked that ERS_PRECONDITION works properly" );
+        }
+        default:
+        {
+            ERS_ASSERT_MSG( step <= 6, "ERS_PRECONDITION does not work properly" );
+        }
+    }
+}
 
-void foo(int n) {
-    ERS_RANGE_CHECK(0,n,42) ; 
-    ERS_DEBUG_0("function foo called with value %d",n);
-} // foo
-
-void massive_test() { 
-    ers::StreamFactory::set_stream(ers::debug_2,"null");
-    ERS_DEBUG_0("dumping a lot of log issues"); 
-    for(int i=0;i<1000000;i++) {
-	ERS_DEBUG_2("dump %d",i); 
-    } // for 
-} // 
-
-int main(int argc, char** argv) {
-    for(int i=1;i<argc;i++) { // we add all parameters as qualifiers
-	ers::Context::add_qualifier(argv[i]) ; 
-    } // 
-    ers::Context::add_qualifier("ers_test") ;   // we add a qualifier to all issues 
-    try { // We need to work with a try/catch block 
-	massive_test(); 
-	ers::StreamFactory::set_stream(ers::debug_3,"filter:?!ers_test,ers_failure@default"); // we filter out all issue with qualifier ers_test at level debug_3
-	ERS_DEBUG_3("This should not be displayed"); 
-        ERS_DEBUG_0("checking static assert");
-	ERS_STATIC_ASSERT(sizeof(int)==4);            
-	ERS_DEBUG_0("dispatching custom issue to warning stream"); 
-	ExampleIssue issue(ERS_HERE,ers::warning,10); // we build an instance of our Issue
-	ers::StreamFactory::dispatch(issue);   // dispatch sends it to the correct stream based on severity
-	ERS_DEBUG_0("calling a method with wrong range"); 
-	foo(43); 
-	ERS_DEBUG_0("done - if we reached this point, assertion have been disabled - this can be done by defining the N_DEBUG macro");
-	ERS_DEBUG_0("throwing custom issue");
-	throw ExampleIssue(ERS_HERE,ers::error,25); 
-    } catch (ers::Issue &e) { // we catch issues and send them to the warning stream 
-	ers::StreamFactory::warning(&e); 
+int main(int , char** )
+{
+    int step = 0;
+    while( step++ < 10 )
+    {
+	try
+	{
+	    pass( step );
+	}
+	catch ( ers::PermissionDenied & ex )
+	{
+	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+	    ers::warning( issue );
+	}
+	catch ( ers::FileDoesNotExist & ex )
+	{
+	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+	    ers::warning( issue );
+	}
+	catch ( ers::Issue & ex )
+	{
+	    ERS_DEBUG( 0, "Unknown issue caught: " << ex )
+            ers::error( ex );
+	}
+	catch ( std::exception & ex )
+	{
+	    ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
+	    ers::warning( issue );
+	}
     }
     return 0 ; 
 } // main 

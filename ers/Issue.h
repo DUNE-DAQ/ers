@@ -3,148 +3,264 @@
  *  ers
  *
  *  Created by Matthias Wiesmann on 08.12.04.
- *  Copyright 2004 CERN. All rights reserved.
+ *  Modified by Serguei Kolos on 02.08.05.
+ *  Copyright 2005 CERN. All rights reserved.
  *
  */
 
-#ifndef ERS_Issue_
-#define ERS_Issue_
+#ifndef ERS_ISSUE_H
+#define ERS_ISSUE_H
 
 #include <map>
 #include <string>
-#include <stdint.h>
+#include <iostream>
+#include <sstream>
+#include <memory>
 
-#include "ers/Core.h"
-#include "ers/Stream.h"
-#include "ers/Context.h"
-#include "ers/IssueFactory.h"
+#include <ers/Severity.h>
+#include <ers/Context.h>
+#include <ers/IssueFactory.h>
+#include <ers/Severity.h>
 
-namespace ers {
+
+/** \file Issue.h This file defines the ers::Issue class, 
+  * which is the base class for any user defined issue.
+  * \author Serguei Kolos
+  * \brief ers header and documentation file 
+  */
+
+namespace ers
+{
+    class Stream;
     
-    /** This class is the root Issue object.  
-    *  The class does not contain any fields with information, instead everything is stored in a hashmap 
-    *  as key - value paris (both strings). 
-    *  The object contains utility methods to allow the manipulation of those key / values and
-    *  code to insert common values into it, like time, compilation information, host information etc.
-    *  For an example of how to build an actual subclass of issue look at the source of ExampleIssue.
-    *  \author Matthias Wiesmann
-    *  \version 1.1
-    *  \note Issue chaining is handled by copying the cause issue on the stack and keeping a pointer to it.
-    *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that 
-    *  correctly implement the factory methods required by the IssueFactory class
-    *  \see ers::IssueFactory
-    *  \see ExampleIssue
-    *  \brief Root Issue class
-    */
-    
-    class Issue : public std::exception  {  
-	friend class Stream ; 
-	friend class IssueFactory ; 
-public:	
-        static const char *const CLASS_KEY ;                               /**< \brief key for class information */
-	static const char *const COMPILATION_TIME_KEY ;                    /**< \brief key for compilation time */
-	static const char *const COMPILATION_TARGET_KEY ;                  /**< \brief key for compilation target */
-	static const char *const COMPILER_KEY ;                            /**< \brief key for compilator type */
-	static const char *const COMPILATION_DEBUG_LVL_KEY ;            
-	static const char *const CPP_CLASS_KEY ;                           /**< \brief key for c++ class (might be mangled) */
-	static const char *const ERS_VERSION_KEY ;                         /**< \brief key for ERS version */
-	static const char *const HOST_NAME_KEY ;                           /**< \brief key for hostname */
-	static const char *const HOST_TYPE_KEY ;                           /**< \brief key for host type (architecture / os) */
-	static const char *const HOST_IP_ADDR_KEY ;                        /**< \brief key for host ip address */
-	static const char *const MESSAGE_KEY ;                             /**< \brief key for human readable */
-	static const char *const PROCESS_ID_KEY ;                          /**< \brief key for the process id (number)*/
-	static const char *const PROCESS_PWD_KEY ;                         /**< \brief key for the process working directory */
-	static const char *const PROGRAM_NAME_KEY ;                        /**< \brief key for the name of the program */
-	static const char *const RESPONSIBILITY_KEY ;                      /**< \brief key for the responsibility of the issue (text) */
-	static const char *const SEVERITY_KEY ;                            /**< \brief key for the severity_t of the issue */
-	static const char *const SOURCE_POSITION_KEY ;                     /**< \brief key for position in the source code */
-	static const char *const SOURCE_PACKAGE_KEY ;                      /**< \brief package name associated with source code */
-	static const char *const TIME_KEY ;                                /**< \brief key for the time of the issue (text) */
-	static const char *const TRANSIENCE_KEY ;                          /**< \brief key for the transience of the issue (text) */
-	static const char *const USER_ID_KEY ;                             /**< \brief key for the user-id of the owner of the process */
-	static const char *const USER_NAME_KEY ;                           /**< \brief key for the user-name of the owner of the process */
-	static const char *const CAUSE_PSEUDO_KEY ;                        /**< \brief key used when serializing the cause issue, this key is not used in the value table */
-	static const char *const CAUSE_TEXT_KEY ;                          /**< \brief key used to store the cause issue's message */
-	static const char *const QUALIFIER_LIST_KEY ;                      /**<Ê\brief key used to store the qualifier list */
-	static const char *const EXIT_VALUE_KEY ;                          /**< \brief key used to store the exit value */
-	static const char *const ISSUE_CLASS_NAME ;                        /**< \brief name of the class, used for serialisation */
-	
-protected:
-	    Issue *m_cause ;                                               /**< \brief Issue that caused the current issue */
-	mutable std::string m_class_name ;                             /**< \brief class name */
-	mutable std::string m_human_description ;                      /**< \brief Human readable description (cache)*/
-	string_map_type m_value_table  ;                               /**< \brief Optional properties. */
-	void insert(const Context *context) throw() ;                  /**< \brief Inserts the context */
-	void insert_time() throw() ;                                   /**< \brief Inserts current time */
-        void setup_common(const Context *context) throw() ;            /**< \brief Sets up the common fields. */
-        void finish_setup(const std::string &message) throw() ;        /**< \brief Finishes the setup of the Issue */
-        Issue(const Context &context, severity_t s);                 /**< \brief Constructor for subclasses */
-        void set_values(const string_map_type &values) throw();        /**< \brief sets the value table */
-public:
-	    Issue();  
-	Issue(const Issue &issue); 
-        Issue(const string_map_type &values); 
-	Issue(const Context &context, severity_t s, const std::string &message);   
-        Issue(const Context &context, severity_t s, const std::exception *cause); 
-	virtual ~Issue() throw() ;
-	Issue *clone() const ; 
-	
-	const Issue *cause() const throw() ;                           /**< \brief return the cause Issue of this Issue */
-	void cause(const std::exception *cause=0);                     /**< \brief Initialises the cause field */
-	operator std::string() const ;                                 /**< \brief Converts the issue into a string */
-	
-	Issue operator=(const Issue &issue);                           /**< \brief Affectation operator */
-	bool operator==(const Issue &other) const throw();             /**< \brief Equality operator */
-	const std::string& operator[](const std::string &key) const throw(); 
-	
-	const std::string &get_value(const std::string &key, const std::string &def) const throw() ;       /**< \brief Reads the property list. */
-	const std::string &get_value(const std::string &key) const throw(); 
-	int get_int_value(const std::string &key, int def=0) const throw() ;       /**< \brief Get a value of the table as an integer */
-	long get_long_value(const std::string &key, long def=0) const throw() ;    /**< \brief Get a value of the table as a long integer */
-	double get_double_value(const std::string key, double def) const throw() ; /**< \brief Get a value of the table as double */
-	void set_value(const std::string &key, uint8_t value) throw() ;            /**< \brief Sets a value 8 bit unsigned */
-	void set_value(const std::string &key, uint16_t value) throw() ; 
-	void set_value(const std::string &key, uint32_t value) throw() ;    
-	void set_value(const std::string &key, uint64_t value) throw() ;           
-	void set_value(const std::string &key, int8_t value) throw() ;            
-	void set_value(const std::string &key, int16_t value) throw() ; 
-	void set_value(const std::string &key, int32_t value) throw() ;    
-	void set_value(const std::string &key, int64_t value) throw() ;           	
-	void set_value(const std::string &key, double value) throw() ;             /**< \brief Sets a value (double float) */
-	void set_value(const std::string &key, const std::string &value) throw() ; /**< \brief Sets a value (string) */
-	void set_value(const std::string &key, const char* value) throw() ;        /**< \brief Sets a value (c-string) */
-	void set_value(const std::string &key, const void* ptr) throw() ; 
-	int values_number() const ;                                                /**< \brief How many key / values */
-	
-	virtual const char *get_class_name() const throw() ;           /**< \brief Get key for class (used for serialisation)*/
-	const string_map_type* get_value_table() const ;               /**< \brief extract value table */
-	severity_t severity() const throw()  ;                         /**< \brief severity_t of the issue */
-	void severity(severity_t s) ;                                  /**< \brief sets the severity_t of the issue */
-	bool is_error();                                               /**< \brief is the issue an error (or fatal). */
-	std::string severity_message() const ;                         /**< \brief message associated with the severity_t of the issue */
-	void responsibility(responsibility_t r) ;                      /**< \brief set the responsability of the issue */
-	responsibility_t responsibility() const throw() ;              /**< \brief get the responsability level of the issue */
-	void transience(bool tr);                                      /**< \brief sets if the issue is transient */
-	int transience() const throw() ;                               /**< \brief is the issue transient */
-	const std::string &human_description() const throw()  ;        /**< \brief Human description message. */
-	const char* what() const throw() ;                             /**< \brief Human description message. */
-	const std::string &message() const throw() ;                   /**< \brief Message */
-	virtual int exit_value() const throw();                        /**< \brief value to pass to exit */
-	void add_qualifier(const std::string &qualif) ;                /**< \brief adds a qualifier to the issue */
-	std::vector<std::string> qualifiers() const ;                  /**< \brief return array of qualifiers */
-    } ; // Issue
+    template<class T>
+    class IssueRegistrator
+    {
+	public:
+	IssueRegistrator()
+	{ ers::IssueFactory::instance().register_issue( T::get_uid(), create ); }
 
-std::ostream& operator<<(std::ostream&, const Issue&);
-Stream& operator<<(Stream&, const Issue&); 
+	static ers::Issue * create()
+	{ return new T(); }
+	
+	static IssueRegistrator<T> instance;
+	static const bool done = true;
+    };
+    
+    template <class T>
+    IssueRegistrator<T> IssueRegistrator<T>::instance;
+    
+    /** This class is the root Issue object.
+      *  The class does not contain any fields with information, instead everything is stored in a hashmap
+      *  as key - value paris (both strings).
+      *  The object contains utility methods to allow the manipulation of those key / values and
+      *  code to insert common values into it, like time, compilation information, host information etc.
+      *  For an example of how to build an actual subclass of issue look at the source of ExampleIssue.
+      *  \author Matthias Wiesmann
+      *  \version 1.1
+      *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that
+      *  correctly implement the factory methods required by the IssueFactory class
+      *  \see ers::IssueFactory
+      *  \see ExampleIssue
+      *  \brief Root Issue class
+      */
+    
+    class Issue : public std::exception
+    {
+	friend class StreamFactory; 
+	friend std::ostream & operator<<( std::ostream &, const ers::Issue & );
+
+	// Temporarely solution untill a real Time class will appear
+	struct Time
+	{
+	    Time();
+	    std::string time_;
+	};
+	        
+      public:
+	Issue(	const Context & context = ERS_EMPTY,
+		const std::string & message = std::string() ); 
+	
+	Issue(	const Context & context,
+		const std::exception & cause );
+	
+	Issue( const Issue & other )
+	  : std::exception( other ),
+	    m_cause( other.m_cause.get() ? other.m_cause->clone() : 0 ),
+	    m_context( other.m_context ),
+	    m_message( other.m_message ),
+	    m_qualifiers( other.m_qualifiers ),
+	    m_severity( other.m_severity ),
+	    m_time( other.m_time ),
+	    m_values( other.m_values )
+	{ ; }
+	      
+	virtual ~Issue() throw();
+	
+	virtual Issue * clone() const = 0; 				
+	
+        virtual const char * get_class_name() const = 0;	/**< \brief Get key for class (used for serialisation)*/
+       	
+        virtual void raise() const throw( std::exception ) = 0;
+	
+	void add_qualifier( const std::string & qualif );	/**< \brief adds a qualifier to the issue */
+	
+	const Issue * cause() const;				/**< \brief return the cause Issue of this Issue */
+	
+	const std::string & message() const;			/**< \brief General cause of the issue. */
+	
+	const std::vector<std::string> & qualifiers() const;	/**< \brief return array of qualifiers */
+	
+	ers::Severity severity() const;				/**< \brief severity of the issue */
+	
+	std::string time() const;				/**< \brief time of the issue */
+	
+	const char * what() const throw();			/**< \brief General cause of the issue. */
+      
+      protected:
+	template <typename T>
+	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */
+	void get_value( const std::string & key, const char * & value ) const;
+	
+	template <typename T>
+	void set_value( const std::string & key, T value );	/**< \brief Sets a value of any type, which defines the standard stream output operator*/
+
+	void set_message( const std::string & msg );
+	
+      private:        
+        //////////////////////////////////////
+        // Copy operation is not allowed
+        //////////////////////////////////////
+        Issue & operator=( const Issue & other );
+	
+        typedef std::map<std::string, std::string>	string_map; 
+	
+	ers::Severity set_severity( ers::Severity severity ) const;
+			  
+	std::auto_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
+	Context				m_context;		/**< \brief Context of the current issue */
+	std::string			m_message;		/**< \brief Issue's explanation text */
+	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated quilifiers */
+	mutable Severity		m_severity;		/**< \brief Issue's severity */
+	Time				m_time;			/**< \brief Time when issue was thrown */
+	string_map			m_values;		/**< \brief List of user defined attributes. */	
+    };
+
+    std::ostream & operator<<( std::ostream &, const ers::Issue & );
+    ers::Stream	 & operator<<( ers::Stream  &, const ers::Issue & );    
+    
 } // ers
 
-// This macro suppresses assertion if N_DEBUG is defined 
-// 
 
-#if defined(N_DEBUG)
-#define N_ERS_STATIC_ASSERT
-#define N_ERS_ASSERT
-#endif
+#include <boost/preprocessor/if.hpp>
+#include <boost/preprocessor/seq.hpp>
+#include <boost/preprocessor/tuple.hpp>
+#include <boost/preprocessor/logical.hpp>
+#include <boost/preprocessor/stringize.hpp>
+#include <boost/preprocessor/facilities/is_empty.hpp>
+
+#undef BOOST_PP_IS_EMPTY
+#undef BOOST_PP_IS_EMPTY_I
+#undef BOOST_PP_IS_EMPTY_II
+#undef BOOST_PP_IS_EMPTY_III
+#undef BOOST_PP_IS_EMPTY_HELPER
+#undef BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE
+#undef BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER
+
+#define BOOST_PP_IS_EMPTY(x) 				BOOST_PP_IS_EMPTY_I(BOOST_PP_IS_EMPTY_HELPER x)
+#define BOOST_PP_IS_EMPTY_I(contents) 			BOOST_PP_IS_EMPTY_II( contents() )
+#define BOOST_PP_IS_EMPTY_II(contents) 			BOOST_PP_IS_EMPTY_III( contents )
+#define BOOST_PP_IS_EMPTY_III(contents) 		BOOST_PP_TUPLE_ELEM( 2, 0, ( BOOST_PP_IS_EMPTY_DEF_ ## contents ) )
+#define BOOST_PP_IS_EMPTY_HELPER() 			BOOST_PP_IS_EMPTY_TRUE
+#define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE	1 ,
+#define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER	0 ,
+
+#define ERS_TYPE( tuple )				BOOST_PP_SEQ_HEAD(tuple)
+#define ERS_NAME( tuple )				BOOST_PP_SEQ_TAIL(tuple)
+
+#define ERS_ATTRIBUTE_NAME_TYPE( _, __, tuple )		, ERS_TYPE(tuple) \
+							  ERS_NAME(tuple)
+
+#define ERS_ATTRIBUTE_SERIALIZATION( _, __, tuple )	set_value( BOOST_PP_STRINGIZE(ERS_NAME(tuple)), \
+							ERS_NAME(tuple) );
+
+#define ERS_ATTRIBUTE_ACCESSORS( _, __, tuple )		ERS_TYPE(tuple) \
+							BOOST_PP_CAT( get_, ERS_NAME(tuple) ) () { \
+								ERS_TYPE(tuple) val; \
+								get_value( BOOST_PP_STRINGIZE(ERS_NAME(tuple)), val ); \
+								return val; \
+							}
+                                                                
+#define ERS_SET_MESSAGE( message )			std::ostringstream out;\
+							out << message;\
+							set_message( out.str() );
+
+#define	ERS_DECLARE( decl, attributes )			BOOST_PP_SEQ_FOR_EACH( decl, , attributes )
+
+#define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
+namespace namespace_name { \
+    class class_name : public ers::Issue { \
+	template <class> friend class ers::IssueRegistrator;\
+	class_name() { ; } \
+	virtual void raise() const throw( std::exception ) { throw *this; } \
+	static const bool registered = ers::IssueRegistrator< namespace_name::class_name >::instance.done; \
+	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
+	virtual const char * get_class_name() const { return get_uid(); } \
+	virtual ers::Issue * clone() const { return new namespace_name::class_name( *this ); } \
+      public: \
+	class_name( const ers::Context & context \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
+          : ers::Issue( context ) \
+	{ \
+          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
+	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+	} \
+	class_name( const ers::Context & context, \
+        	    const std::string & msg \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
+          : ers::Issue( context, msg ) \
+	{  \
+          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
+	} \
+	class_name( const ers::Context & context \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
+                    const std::exception & cause ) \
+          : ers::Issue( context, cause ) \
+	{  \
+          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
+	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+	} \
+	ERS_DECLARE( ERS_ATTRIBUTE_ACCESSORS, attributes ) \
+    }; \
+}
+
+ERS_DECLARE_ISSUE(  ers,
+		    NoValue,
+		    "value for the \"" << key << "\" key is not set ",
+		    ((std::string)key ) )
+
+namespace ers
+{
+    template <typename T>
+    void Issue::get_value( const std::string & key, T & value ) const
+    {
+	string_map::const_iterator it = m_values.find(key);
+	if ( it == m_values.end() )
+	{
+	    throw ers::NoValue( ERS_HERE, key );
+	}
+	std::istringstream in( it->second );
+	in >> value;
+    }
+
+    template <typename T>
+    void Issue::set_value( const std::string & key, T value )
+    {
+        std::ostringstream out;
+	out << value;
+	m_values[key] = out.str();
+    }
+}
 
 #endif
 

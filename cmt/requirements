@@ -3,32 +3,20 @@ package ers
 author  Matthias.Wiesmann@cern.ch
 manager	Serguei.Kolos@cern.ch
 
-#What policy do we use? 
-
 use TDAQCPolicy
-
-macro lib_ers_cppflags                  "-I../ers"
+use Boost	*  TDAQExternal
 
 private
-
-macro  ERS_LIB_SRC   "Assertion.cxx DefaultStream.cxx InvalidReferenceIssue.cxx  \ 
-                      LogIssue.cxx RangeIssue.cxx Context.cxx EntityNotFoundIssue.cxx \
-		      Issue.cxx NotImplemented.cxx  \
-		      Stream.cxx Core.cxx FIFOStream.cxx  FilterStream.cxx \
-		      IssueFactory.cxx ParseIssue.cxx StreamFactory.cxx DefaultIssue.cxx \
-		      HumanStream.cxx IssueFactoryIssue.cxx Precondition.cxx"
 
 ########################################################################################################
 #       ERS Library
 ########################################################################################################
 
-	
-library		ers			$(lib_opts)			*.cxx
-macro           ers_shlibflags          "" 
+library		ers			$(lib_opts)	"*.cxx"
+macro           ers_shlibflags          "-rdynamic" 
 
 
 macro		instlibs		libers.so	\
-		lynxos			libers.a	\
 		osx			libers.dylib
 		
 apply_pattern   install_libs            files=$(instlibs)
@@ -37,8 +25,13 @@ apply_pattern   install_libs            files=$(instlibs)
 #       Test applications
 ########################################################################################################
 
+application	ers_test 		"-group=check -check ../test/test.cxx"
+application	ers_pc 			"../bin/config.cxx"
 
-application	ers_test 		 -group=check -check ../test/test.cxx ../test/ExampleIssue.cxx
 macro		ers_test_dependencies	"ers" 
-macro           ers_test_cppflags	""
-macro		ers_testlinkopts	"-lers"
+macro		ers_testlinkopts	"-lers -rdynamic"
+
+macro		ers_pc_dependencies	"ers" 
+macro		ers_pclinkopts		"-lers -rdynamic"
+
+apply_pattern   install_apps            files="ers_pc"
