@@ -54,21 +54,21 @@ if( !(expression) ) \
 /** \def ERS_ASSERT(expression) This macro inserts an assertion than checks condition expression.
  * If expression is not true, then an issue of type ers::Asertion is thrown. It should be used
  * to check the internal attributes. 
- * \note This macro is disabled if the \c ERS_NO_DEBUG macro is defined
+ * \note This macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined
  */
 #define ERS_ASSERT( expression )	ERS_ASSERT_MSG( expression, "of bad internal state" )
 
 /** \def ERS_PRECONDITION(expression) This macro inserts an assertion than checks condition expression. 
  * If expression is not true, then an issue of type ers::Asertion is thrown. It should be used
  * to check the parameters, which are passed to functions. 
- * \note This macro is disabled if the \c ERS_NO_DEBUG macro is defined 
+ * \note This macro is defined to empty statement  if the \c ERS_NO_DEBUG macro is defined 
  */
 #define ERS_PRECONDITION( expression )	ERS_ASSERT_MSG( expression, "of bad external parameter" )
 
 /** \def ERS_RANGE_CHECK( min, val, max ) This macro inserts an assertion than checks 
  * the following condition \code ( min <= val ) && ( val <= max ) \endcode
  * If this expression is not true, then an issue of type ers::Asertion is thrown.
- * \note This macro is disabled if the \c ERS_NO_DEBUG macro is defined 
+ * \note This macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined 
  */
 #define ERS_RANGE_CHECK( min, val, max )		\
 	ERS_ASSERT_MSG( (min) <= (val) && (val) <= (max), \

@@ -52,28 +52,36 @@ namespace ers
 ERS_DECLARE_ISSUE( ers, Info, , )
 
 #ifndef ERS_NO_DEBUG
-#define ERS_DEBUG( level, args ) { \
+/** \def ERS_DEBUG( level, message) This macro sends the message to the ers::debug stream
+ * if level is less or equal to the TDAQ_ERS_DEBUG_LEVEL, which is equal to 0 by default.
+ * \note This macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined
+ */
+#define ERS_DEBUG( level, message ) { \
 if ( ers::debug_level() >= level ) \
 { \
     std::ostringstream out; \
-    out << args; \
+    out << message; \
     ers::debug( ers::Info( ERS_HERE, out.str() ), level ); \
 } }
 #else
-#define ERS_DEBUG( level, args )
+#define ERS_DEBUG( level, message )
 #endif
 
-#define ERS_INFO( args ) \
+/** \def ERS_INFO( message) This macro sends the message to the ers::info stream.
+ */
+#define ERS_INFO( message ) \
 { \
     std::ostringstream out; \
-    out << args; \
+    out << message; \
     ers::info( ers::Info( ERS_HERE, out.str() ) ); \
 }
 
-#define ERS_WARNING( args ) \
+/** \def ERS_DEBUG( message) This macro sends the message to the ers::warning stream.
+ */
+#define ERS_WARNING( message ) \
 { \
     std::ostringstream out; \
-    out << args; \
+    out << message; \
     ers::warning( ers::Info( ERS_HERE, out.str() ) ); \
 }
     	
@@ -110,12 +118,16 @@ if ( ers::debug_level() >= level ) \
   \subsection LoggingMacros Logging Macros
   The ERS package offers a set of macros to do logging. Those macros construct an 
   issue and send them to the relevant stream. 
-  They all support multiple number of parameters with \c fprintf like patterns.
   For each debug and warning severity_t level there is an associated macro:
   \li ERS_DEBUG - sends ers::Info issue to the ers::debug stream
   \li ERS_INFO - sends ers::Info issue to the ers::information stream
   \li ERS_WARNING - sends ers::Info issue to the ers::warning stream
-
+  The message argument of these macros must be any entity, which can be given to 
+  the standard C++ stream using the operator<<. This means that the message can be a single 
+  value of the type, for which the operator<< is defined, as well as a sequence of
+  output operations of such types. For example:
+  ERS_DEBUG( 1, "test debug output " << 123 << " which shows how to use debug macro" )
+  
   The actual behaviour of these macros depends on the configuration of respective streams. 
   Debug macros with levels larger than 0 can be disabled at run-time by defining the
   TDAQ_ERS_DEBUG_LEVEL environment variable to the highest possible debug level.
