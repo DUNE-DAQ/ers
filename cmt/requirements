@@ -4,7 +4,7 @@ author  Matthias.Wiesmann@cern.ch
 manager	Serguei.Kolos@cern.ch
 
 use TDAQCPolicy
-use Boost	*  TDAQExternal
+use Boost	*  TDAQCExternal
 
 private
 
