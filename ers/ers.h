@@ -76,7 +76,7 @@ if ( ers::debug_level() >= level ) \
     ers::info( ers::Info( ERS_HERE, out.str() ) ); \
 }
 
-/** \def ERS_DEBUG( message) This macro sends the message to the ers::warning stream.
+/** \def ERS_WARNING( message) This macro sends the message to the ers::warning stream.
  */
 #define ERS_WARNING( message ) \
 { \
@@ -119,14 +119,16 @@ if ( ers::debug_level() >= level ) \
   The ERS package offers a set of macros to do logging. Those macros construct an 
   issue and send them to the relevant stream. 
   For each debug and warning severity_t level there is an associated macro:
-  \li ERS_DEBUG - sends ers::Info issue to the ers::debug stream
-  \li ERS_INFO - sends ers::Info issue to the ers::information stream
-  \li ERS_WARNING - sends ers::Info issue to the ers::warning stream
-  The message argument of these macros must be any entity, which can be given to 
-  the standard C++ stream using the operator<<. This means that the message can be a single 
-  value of the type, for which the operator<< is defined, as well as a sequence of
-  output operations of such types. For example:
-  ERS_DEBUG( 1, "test debug output " << 123 << " which shows how to use debug macro" )
+  \li ERS_DEBUG( level, message ) - sends ers::Info issue to the ers::debug stream
+  \li ERS_INFO( message ) - sends ers::Info issue to the ers::information stream
+  \li ERS_WARNING( message ) - sends ers::Info issue to the ers::warning stream
+  
+  The \b message argument of these macros can be any entity, for which the operator<< to the
+  standard C++ output stream is defined. This means that the message can be a single 
+  value of a certain type as well as a sequence of output operations of appropriate types.
+  For example:
+  \code ERS_DEBUG( 1, "test debug output " << 123 << " which shows how to use debug macro" )
+  \endcode
   
   The actual behaviour of these macros depends on the configuration of respective streams. 
   Debug macros with levels larger than 0 can be disabled at run-time by defining the
@@ -184,6 +186,12 @@ if ( ers::debug_level() >= level ) \
   Note that attribute names may appear in the message expression. Also notice a special
   syntax of the attributes declaration, which must always be declared like \c ((attribute_type)attribute_name).
   All the brackets in this expression are essential. Do not put commas between different attributes.
+  The only requiremnt to the type of issue attributes is that such type must define the output 
+  operator to the standard C++ output stream and the input operator from the standard C++ input
+  stream. It is important to note that these operator must  unambiguously match each other, i.e.
+  the input operator must be able to unambiguously restore the state of the object from the stream,
+  which has been used to save the object's state using the output operator. Evidently all the
+  standard C++ types satisfy this criteria.
   The result of the ERS_DECLARE_ISSUE macro expansion will look like:
   \code
     namespace ers {
