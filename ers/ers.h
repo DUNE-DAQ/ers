@@ -97,19 +97,17 @@ if ( ers::debug_level() >= level ) \
   Basic ERS functionality can be exploited by using simple macros. 
   Those macros are available simply by including the ers/ers.h header file. 
   \subsection AssertionMacros Assertion Macros
-  The ERS package offers a set of macros to do basic checking. 
-  Those macros generally behave like the standard C assert macros:
-      <ul>
-      <li>General assertion (\c ERS_ASSERT)
-	  this macro can be used for checks that do not fit into any other category. 
-      <li>Preconditions (\c ERS_PRECONDITION) should be used to check condition when
-      		entering functions. For instance if you only accept certain values for
-                parameters precondtions should verify that those conditions are resepected. 
-      <li>Range precondition (\c ERS_RANGE_CHECK) this special type of pre-condition
-      	checks that a value is in a range between min and max values. 
-      <li>Strict range checking (\c ERS_STRICT_RANGE_CHECK) is similar to the ERS_RANGE_CHECK
-      	but does not allow the checked value to be equal to either min or max values. 
-      </ul>
+  The ERS package offers a set of macros to do basic checking. The behavior of these macros
+  is defined by the implementation of the ers::fatal stream, which can be configured by the user:
+  \li ERS_ASSERT( expression ) checks whether a given expression is valid. 
+  \li ERS_PRECONDITION( expression ) should be used to check condition when entering functions.
+  For instance if you only accept certain values for parameters precondtions should verify that
+  those conditions are resepected. 
+  \li ERS_RANGE_CHECK( min, val, max ) is a special type of pre-condition, which checks that a value
+  is in a range between min and max values. 
+  \li ERS_STRICT_RANGE_CHECK( min, val, max ) is similar to the ERS_RANGE_CHECK
+  but does not allow the checked value to be equal to either min or max values. 
+
   All macros create an object of the ers::Assertion class( which inherits ers::Issue) 
   and send it to the ers::fatal stream. Futher processing depends on the configuration of the
   ers::fatal stream. By default the issue is pronted to the standard error stream and then abort

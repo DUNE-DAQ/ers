@@ -178,6 +178,10 @@ namespace ers
 #define ERS_TYPE( tuple )				BOOST_PP_SEQ_HEAD(tuple)
 #define ERS_NAME( tuple )				BOOST_PP_SEQ_TAIL(tuple)
 
+#define ERS_CONST_HELPER_				0 ,
+#define ERS_CONST_HELPER_const				1 ,
+#define ERS_IS_CONST( x )				BOOST_PP_TUPLE_ELEM( 2, 0, BOOST_PP_CAT( ERS_CONST_HELPER_, x ) )
+
 #define ERS_ATTRIBUTE_NAME_TYPE( _, __, tuple )		, ERS_TYPE(tuple) \
 							  ERS_NAME(tuple)
 
@@ -200,10 +204,8 @@ namespace ers
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
 namespace namespace_name { \
     class class_name : public ers::Issue { \
-	template <class> friend class ers::IssueRegistrator;\
 	class_name() { ; } \
 	virtual void raise() const throw( std::exception ) { throw *this; } \
-	static const bool registered = ers::IssueRegistrator< namespace_name::class_name >::instance.done; \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	virtual const char * get_class_name() const { return get_uid(); } \
 	virtual ers::Issue * clone() const { return new namespace_name::class_name( *this ); } \
