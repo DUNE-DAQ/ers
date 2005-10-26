@@ -64,7 +64,7 @@ namespace ers
         
       	std::auto_ptr<Stream> m_chained;
     };
-};
+}
 
 #include <ers/StreamFactory.h>
 
