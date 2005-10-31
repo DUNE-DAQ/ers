@@ -171,14 +171,17 @@ if ( ers::debug_level() >= level ) \
   \li implement 3 pure virtual functions, declared in the ers:Issue class
   \li register new Issue using the ers::IssueFactory::register_issue function
   
-  ERS defines helper macro, which does all the 3 steps. The macro is called ERS_DECLARE_ISSUE
-  and can be used as shown on the following example: 
+  ERS defines two helper macros, which do all the 3 steps. The macros are called ERS_DECLARE_ISSUE
+  and ERS_DECLARE_ISSUE_BASE. The first one should be used to declare the issue class, which inherits
+  from the ers::Issue as it is shown on the following example: 
   \code
-  ERS_DECLARE_ISSUE(	ers,								// namespace name 
-			Assertion,							// issue name 
-			"Assertion (" << condition << ") failed because " << reason,	// message 
-			((const char *)condition )					// first attribute 
-			((const char *)reason ) )					// second attribute 
+  ERS_DECLARE_ISSUE(	ers,					// namespace name 
+			Assertion,				// issue name 
+			"Assertion (" << condition 
+                        << ") failed because " << reason,	// message 
+			((const char *)condition )		// first attribute 
+			((const char *)reason )			// second attribute 
+  		   )
   \endcode
 
   Note that attribute names may appear in the message expression. Also notice a special
@@ -244,6 +247,65 @@ if ( ers::debug_level() >= level ) \
   \endcode
   \see ers::Issue 
   \see ExampleIssues.h
+
+  The macro ERS_DECLARE_ISSUE_BASE has to be used in case one wants to declare the issue class,
+  which inherits from one of the issue classes declared with either this or ERS_DECLARE_ISSUE
+  macro. For example, the following class inherits from the ers::Assertion class defined above:
+  \code
+  ERS_DECLARE_ISSUE_BASE(	ers,							// namespace name 
+				Precondition,						// issue name 
+				ers::Assertion,						// base issue name 
+				"Precondition (" << condition 
+                        	<< ") located in " << location 
+                        	<< " failed because " << reason,			// message 
+				((const char *)condition ) ((const char *)reason ),	// base class attributes
+				((const char *)location )				// this class attributes
+			)
+  \endcode
+  
+  The result of the ERS_DECLARE_ISSUE_BASE macro expansion will look like:
+  \code
+    namespace ers {
+  	class Precondition : public ers::Assertion {
+	    template <class> friend class ers::IssueRegistrator;
+            Precondition() { ; }
+            static const bool registered = ers::IssueRegistrator< ers::Precondition >::instance.done;
+            static const char * get_uid() { return "ers::Precondition"; }
+
+            virtual void raise() const throw( std::exception ) { throw *this; }
+            virtual const char * get_class_name() const { return get_uid(); }
+            virtual ers::Issue * clone() const { return new ers::Precondition( *this ); }
+            
+          public:
+            Precondition( const ers::Context & context , const char * condition , const char * reason, const char * location )
+              : ers::Assertion( context, condition, reason ) {
+              	set_value( "location", location );
+                std::ostringstream out;
+                out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
+                set_message( out.str() );
+            }
+            
+            Precondition( const ers::Context & context, const std::string & msg , const char * condition , const char * reason, const char * location )
+              : ers::Assertion( context, msg, condition, reason ) {
+              	set_value( "location", location );
+            }
+            
+            Precondition( const ers::Context & context , const char * condition , const char * reason , const char * location, const std::exception & cause )
+              : ers::Assertion( context, condition, reason, cause ) {
+              	set_value( "location", location );
+                std::ostringstream out;
+                out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
+                set_message( out.str() );
+            }
+            
+            const char * get_location () {
+            	const char * val;
+                get_value( "location", val );
+                return val;
+            }
+	};
+    }
+
 
   \section Exception handling
   Functions, which can throw exceptions must be invoked insize the \c try...catch statement. The

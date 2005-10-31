@@ -21,31 +21,44 @@
  * not be opened by any reason. 
  */
 ERS_DECLARE_ISSUE( 	ers, // namespace
-			CantOpenFile, // issue class name
-			"Can not open \"" << file_name << "\" file", // message
+			File, // issue class name
+			, // no message
                         ((const char *)file_name ) // single attribute 
                  )
 
+/** \def ers::CantOpenFile This issue is reported when a certain file can 
+ * not be opened by any reason. 
+ */
+ERS_DECLARE_ISSUE_BASE( 	ers, // namespace
+				CantOpenFile, // issue class name
+                                ers::File, // base class name
+				"Can not open \"" << file_name << "\" file", // message
+                                ((const char *)file_name ), // base class attributes
+                        	 // no attributes in this class
+                 	)
 
 /** \def ers::FileDoesNotExist This issue is reported when a certain file does not exist. 
  */
-ERS_DECLARE_ISSUE( 	ers, // namespace
-			FileDoesNotExist, // issue class name
-			"File \"" << file_name << "\" does not exist", // message
-                        (( const char * )file_name ) // single attribute
-                 )
+ERS_DECLARE_ISSUE_BASE( 	ers, // namespace
+				FileDoesNotExist, // issue class name
+				ers::File, // base class name
+				"File \"" << file_name << "\" does not exist", // message
+                        	(( const char * )file_name ), // base class attributes
+				 // no attributes in this class
+                 	)
 
 /** \def ers::FileDoesNotExist This issue is reported when a certain file exists but
  * but not accessible for the current user. 
  */
-ERS_DECLARE_ISSUE( 	ers, 					// namespace
-			PermissionDenied, 			// issue class name
-			"You are not allowed to open \"" 
-                        << file_name << "\" file, which has " 
-                        << mode << " access mode",		// message
-                        ((const char *)file_name )		// first attribute
-			((int)mode )				// second attribute
-                 )
+ERS_DECLARE_ISSUE_BASE( 	ers, 					// namespace
+				PermissionDenied, 			// issue class name
+				ers::File, // base class name
+				"You are not allowed to open \"" 
+                        	<< file_name << "\" file, which has " 
+                        	<< mode << " access mode",		// message
+                        	((const char *)file_name ),		// base class attributes
+				((int)mode )				// attribute of this class
+                 	)
 
 
 

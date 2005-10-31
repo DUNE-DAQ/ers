@@ -175,12 +175,16 @@ namespace ers
 #define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE	1 ,
 #define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER	0 ,
 
+#define ERS_BASE_CLASSS( x )	BOOST_PP_IF( BOOST_PP_IS_EMPTY( x ), ers::Issue, x )
+
 #define ERS_TYPE( tuple )				BOOST_PP_SEQ_HEAD(tuple)
 #define ERS_NAME( tuple )				BOOST_PP_SEQ_TAIL(tuple)
 
 #define ERS_CONST_HELPER_				0 ,
 #define ERS_CONST_HELPER_const				1 ,
 #define ERS_IS_CONST( x )				BOOST_PP_TUPLE_ELEM( 2, 0, BOOST_PP_CAT( ERS_CONST_HELPER_, x ) )
+
+#define ERS_ATTRIBUTE_NAME( _, __, tuple )		, ERS_NAME(tuple)
 
 #define ERS_ATTRIBUTE_NAME_TYPE( _, __, tuple )		, ERS_TYPE(tuple) \
 							  ERS_NAME(tuple)
@@ -201,33 +205,34 @@ namespace ers
 
 #define	ERS_DECLARE( decl, attributes )			BOOST_PP_SEQ_FOR_EACH( decl, , attributes )
 
-#define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
+#define ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
-    class class_name : public ers::Issue { \
+    class class_name : public ERS_BASE_CLASSS( base_class_name ) { \
+      protected: \
 	class_name() { ; } \
 	virtual void raise() const throw( std::exception ) { throw *this; } \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	virtual const char * get_class_name() const { return get_uid(); } \
-	virtual ers::Issue * clone() const { return new namespace_name::class_name( *this ); } \
+	virtual ERS_BASE_CLASSS( base_class_name ) * clone() const { return new namespace_name::class_name( *this ); } \
       public: \
 	class_name( const ers::Context & context \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ers::Issue( context ) \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
+          : ERS_BASE_CLASSS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
 	{ \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
 	} \
 	class_name( const ers::Context & context, \
         	    const std::string & msg \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ers::Issue( context, msg ) \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
+          : ERS_BASE_CLASSS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
 	{  \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	} \
 	class_name( const ers::Context & context \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
                     const std::exception & cause ) \
-          : ers::Issue( context, cause ) \
+          : ERS_BASE_CLASSS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
 	{  \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
@@ -236,6 +241,9 @@ namespace namespace_name { \
     }; \
 }
 
+#define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
+	ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, , message, , attributes )
+        
 ERS_DECLARE_ISSUE(  ers,
 		    NoValue,
 		    "value for the \"" << key << "\" key is not set ",
