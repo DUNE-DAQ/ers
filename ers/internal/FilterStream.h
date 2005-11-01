@@ -53,6 +53,6 @@ namespace ers
 	std::vector<std::string> m_include;				/**< \brief include list */
 	std::vector<std::string> m_exclude;				/**< \brief exclude list */
     };
-};
+}
 
 #endif
