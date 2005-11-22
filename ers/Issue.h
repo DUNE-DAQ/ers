@@ -36,19 +36,14 @@ namespace ers
     template<class T>
     class IssueRegistrator
     {
-	public:
+      public:
 	IssueRegistrator()
 	{ ers::IssueFactory::instance().register_issue( T::get_uid(), create ); }
-
+        
+      private:
 	static ers::Issue * create()
 	{ return new T(); }
-	
-	static IssueRegistrator<T> instance;
-	static const bool done = true;
     };
-    
-    template <class T>
-    IssueRegistrator<T> IssueRegistrator<T>::instance;
     
     /** This class is the root Issue object.
       *  The class does not contain any fields with information, instead everything is stored in a hashmap
@@ -208,6 +203,7 @@ namespace ers
 #define ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
     class class_name : public ERS_BASE_CLASSS( base_class_name ) { \
+      template <class> friend class ers::IssueRegistrator;\
       protected: \
 	class_name() { ; } \
 	virtual void raise() const throw( std::exception ) { throw *this; } \
@@ -239,6 +235,9 @@ namespace namespace_name { \
 	} \
 	ERS_DECLARE( ERS_ATTRIBUTE_ACCESSORS, attributes ) \
     }; \
+} \
+namespace { \
+	const ers::IssueRegistrator<namespace_name::class_name> namespace_name##_##class_name##_instance; \
 }
 
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \

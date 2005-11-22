@@ -110,11 +110,11 @@ namespace ers
 	//
         // This context might be different for every file
         //
-        static const CompilerContext compiler_context(	COMPILER_NAME,
-							__VERSION__,
-							__DATE__,
-							__TIME__,
-							ERS_PACKAGE );
+        const CompilerContext compiler_context(	COMPILER_NAME,
+						__VERSION__,
+						__DATE__,
+						__TIME__,
+						ERS_PACKAGE );
     }
     
     class Context

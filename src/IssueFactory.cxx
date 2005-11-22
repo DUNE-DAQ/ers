@@ -33,12 +33,11 @@ void
 ers::IssueFactory::register_issue( const std::string & name, IssueCreator creator )
 {
     FunctionMap::const_iterator it = m_creators.find(name); 
-    if ( it != m_creators.end() )
+    if ( it == m_creators.end() )
     {
-	ERS_WARNING( "Creator for the \"" << name << "\" Issue has been already registered" )
+	m_creators[name] = creator;
     }
-    m_creators[name] = creator;
-} // register_Issue
+}
 
 /** Builds an issue out of the name it was registered with 
   * \param name the name used to indentify the class 
