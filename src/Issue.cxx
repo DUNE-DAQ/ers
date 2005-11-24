@@ -151,6 +151,12 @@ Issue::qualifiers() const
     return m_qualifiers;
 } // qualifiers
 
+const Issue::string_map &
+Issue::parameters() const
+{
+    return m_values;
+}
+
 /** Gets the string representation of this issue creation time
   * \return time string
   */

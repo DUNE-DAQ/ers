@@ -72,6 +72,8 @@ namespace ers
 	};
 	        
       public:
+        typedef std::map<std::string, std::string>	string_map;
+        
 	Issue(	const Context & context = ERS_EMPTY,
 		const std::string & message = std::string() ); 
 	
@@ -104,8 +106,10 @@ namespace ers
 	const std::string & message() const;			/**< \brief General cause of the issue. */
 	
 	const std::vector<std::string> & qualifiers() const;	/**< \brief return array of qualifiers */
-	
-	ers::Severity severity() const;				/**< \brief severity of the issue */
+        
+	const string_map & parameters() const;			/**< \brief return array of parameters */
+        
+        ers::Severity severity() const;				/**< \brief severity of the issue */
 	
 	std::string time() const;				/**< \brief time of the issue */
 	
@@ -128,13 +132,11 @@ namespace ers
         // Copy operation is not allowed
         //////////////////////////////////////
         Issue & operator=( const Issue & other );
-	
-        typedef std::map<std::string, std::string>	string_map; 
-				  
+					  
 	std::auto_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
 	Context				m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
-	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated quilifiers */
+	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
 	Time				m_time;			/**< \brief Time when issue was thrown */
 	string_map			m_values;		/**< \brief List of user defined attributes. */	

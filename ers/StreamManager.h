@@ -74,6 +74,7 @@ namespace ers
 	StreamManager( );
 
 	OutputStream * setup_stream( ers::severity severity );	
+	OutputStream * setup_stream( const std::vector<std::string> & streams );
         
         std::list<ers::InputStream *>	m_in_streams;               
 	ers::OutputStream *		m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */

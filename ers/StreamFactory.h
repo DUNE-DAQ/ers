@@ -64,8 +64,7 @@ namespace ers
         InputStream * create_in_stream( const std::string & stream, 
         				const std::string & filter ) const;	/**< \brief create new stream */
 	
-        OutputStream * create_out_stream( const std::string & format,
-					  const std::string & default_format ) const;	/**< \brief create new stream */
+        OutputStream * create_out_stream( const std::string & format ) const;	/**< \brief create new stream */
 	
       private:	
 	StreamFactory( )

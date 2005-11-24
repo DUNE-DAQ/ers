@@ -10,6 +10,7 @@ namespace
 {
     const std::string SEPARATOR = ":";
     const std::string DefaultLibraryName = "ErsBaseStreams";
+    const std::string MRSStreamLibraryName = "mrsStream";
     const char * const EnvironmentName = "TDAQ_ERS_STREAM_LIBS";
 }
 
@@ -62,6 +63,15 @@ namespace ers
         std::vector<std::string> libs;
     	ers::tokenize( config, SEPARATOR, libs );
         
+	try
+	{
+	    libraries_[MRSStreamLibraryName] = new SharedLibrary( MRSStreamLibraryName );
+	}
+	catch( PluginException & ex )
+	{
+	    ERS_INTERNAL_DEBUG( 1, "Library " << MRSStreamLibraryName << " can not be loaded because " << ex.reason() )
+	}
+        
 	for ( size_t i = 0; i < libs.size(); i++ )
 	{
 	    LibMap::iterator it = libraries_.find( libs[i] );
@@ -73,7 +83,7 @@ namespace ers
                 }
                 catch( PluginException & ex )
                 {
-		    ERS_INTERNAL_DEBUG( 1, "Library " << libs[i] << " can not be loaded because " << ex.reason() )
+		    ERS_INTERNAL_ERROR( "Library " << libs[i] << " can not be loaded because " << ex.reason() )
                 }
 	    }
 	}

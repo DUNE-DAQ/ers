@@ -43,8 +43,7 @@ ers::StreamFactory::instance()
   * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
   */
 ers::OutputStream *
-ers::StreamFactory::create_out_stream(	const std::string & format,
-					const std::string & default_format ) const
+ers::StreamFactory::create_out_stream( const std::string & format ) const
 {
     std::string key = format;
     std::string param;
@@ -66,15 +65,7 @@ ers::StreamFactory::create_out_stream(	const std::string & format,
     
     ERS_INTERNAL_ERROR( "Creator for the \"" << key << "\" stream is not found" )
     
-    it = m_out_factories.find( default_format );
-    if( it != m_out_factories.end() )
-    {
-	return it->second( std::string() );
-    }
-    
-    ERS_INTERNAL_ERROR( "Creator for the \"" << default_format << "\" base stream is not found" )
-    
-    return new ers::NullStream(); 
+    return 0; 
 }
 
 /** Builds a stream from a textual key 

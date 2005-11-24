@@ -19,6 +19,7 @@
 #include <ers/ers.h>
 #include <ers/internal/Util.h>
 #include <ers/internal/PluginManager.h>
+#include <ers/internal/NullStream.h>
 
 namespace
 {
@@ -101,15 +102,47 @@ ers::StreamManager::setup_stream( ers::severity severity )
     std::vector<std::string> streams;
     ers::tokenize( config, SEPARATORS, streams );
 
-    ers::OutputStream * main = m_out_streams[severity] = ers::StreamFactory::instance().create_out_stream( streams[0], DefaultOutputStreams[severity] );
-    for ( size_t i = 1; i < streams.size(); i++ )
+    ers::OutputStream * main = setup_stream( streams );
+    
+    if ( !main )
     {
-       ers::OutputStream * chained = ers::StreamFactory::instance().create_out_stream( streams[i], DefaultOutputStreams[severity] );
-       main->chained( chained );
-       main = chained;
+	std::vector<std::string> default_streams;
+	ers::tokenize( DefaultOutputStreams[severity], SEPARATORS, default_streams );
+    	main = setup_stream( default_streams );
+    }   
+    return ( main ? main : new ers::NullStream() );
+}
+
+ers::OutputStream * 
+ers::StreamManager::setup_stream( const std::vector<std::string> & streams )
+{    
+    size_t cnt = 0;
+    ers::OutputStream * main = 0;
+    for ( ; cnt < streams.size(); ++cnt )
+    {
+	main = ers::StreamFactory::instance().create_out_stream( streams[cnt] );
+        if ( main )
+            break;
+    }
+    
+    if ( !main )
+    {
+    	return 0;
+    }
+    
+    ers::OutputStream * head = main;
+    for ( ++cnt; cnt < streams.size(); ++cnt )
+    {
+	ers::OutputStream * chained = ers::StreamFactory::instance().create_out_stream( streams[cnt] );
+       
+	if ( chained )
+	{
+	    head->chained( chained );
+	    head = chained;
+        }
     }
         
-    return m_out_streams[severity];
+    return main;
 }
 
 /** Sends an Issue to the error stream 
