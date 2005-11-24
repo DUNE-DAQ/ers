@@ -1,5 +1,5 @@
 /*
- *  Stream.h
+ *  OutputStream.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 02.12.04.
@@ -9,16 +9,14 @@
  */
 
 
-#ifndef ERS_STREAM_H
-#define ERS_STREAM_H
+#ifndef ERS_OUTPUT_STREAM_H
+#define ERS_OUTPUT_STREAM_H
 
 #include <string>
-#include <iostream>
 #include <memory>
-
 #include <ers/Issue.h>
 
-/** \file Stream.h Defines abstract interface for ERS streams.
+/** \file OutputStream.h Defines abstract interface for ERS output streams.
   * \author Serguei Kolos
   * \brief ers header and documentation file 
   */
@@ -37,44 +35,43 @@ namespace ers
       * \brief ERS Issue stream interface.
       */
     
-    class Stream
+    class OutputStream
     {
-      friend class StreamFactory;
+      friend class StreamManager;
       
       public:
-	virtual ~Stream()
+	virtual ~OutputStream()
         { ; }
         
 	virtual void write( const Issue & issue ) = 0;	/**< \brief Sends an issue into the stream */
-	virtual Issue * read() = 0;			/**< \brief Receives an issue from the stream */
       
       protected:
-        Stream( );
+        OutputStream( );
                 
-	Stream & chained( );
+	OutputStream & chained( );
         
       private:
 	//
 	// Disable copying
 	//
-	Stream( const Stream & other );
-        Stream & operator=( const Stream & );
+	OutputStream( const OutputStream & other );
+        OutputStream & operator=( const OutputStream & );
         
-	void chained( Stream * stream );
+	void chained( OutputStream * stream );
         
-      	std::auto_ptr<Stream> m_chained;
+      	std::auto_ptr<OutputStream> m_chained;
     };
 }
 
 #include <ers/StreamFactory.h>
 
-#define ERS_REGISTER_STREAM( class, name, param ) \
+#define ERS_REGISTER_OUTPUT_STREAM( class, name, param ) \
 namespace { \
-    struct StreamRegistrator { \
-	static ers::Stream * create( const std::string & param ) \
+    struct OutputStreamRegistrator { \
+	static ers::OutputStream * create( const std::string & param ) \
 	{ return new class( param ); }  \
-        StreamRegistrator() \
-	{ ers::StreamFactory::instance().register_stream( name, create ); } \
+        OutputStreamRegistrator() \
+	{ ers::StreamFactory::instance().register_out_stream( name, create ); } \
     } registrator; \
 }
 

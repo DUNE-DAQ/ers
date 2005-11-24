@@ -1,5 +1,5 @@
 /*
- *  Stream.cxx
+ *  OutputStream.cxx
  *  ers
  *
  *  Created by Serguei Kolos on 01.08.05.
@@ -7,15 +7,15 @@
  *
  */
 
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
 #include <ers/internal/NullStream.h>
 
 
-ers::Stream::Stream( )
+ers::OutputStream::OutputStream( )
 { ; }
 
-ers::Stream &
-ers::Stream::chained( )
+ers::OutputStream &
+ers::OutputStream::chained( )
 {
     if ( !m_chained.get() )
     {
@@ -25,7 +25,7 @@ ers::Stream::chained( )
 }
 
 void
-ers::Stream::chained( Stream * stream )
+ers::OutputStream::chained( OutputStream * stream )
 {
     m_chained.reset( stream );
 }

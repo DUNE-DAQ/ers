@@ -10,7 +10,7 @@
 #ifndef ERS_THROW_STREAM_H
 #define ERS_THROW_STREAM_H
 
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
 
 namespace ers
 {
@@ -24,13 +24,10 @@ namespace ers
       * \brief Throws issues as exceptions
       */
     
-    struct ThrowStream : public Stream
+    struct ThrowStream : public OutputStream
     {
-	void write( const Issue & issue );		/**< \brief Sends an issue into the stream */
-
-	Issue * read()					/**< \brief Receives an issue from the stream */
-        { return 0; }	
-    } ;
+	void write( const Issue & issue );	/**< \brief Sends an issue into the stream */
+    };
 }
 
 #endif

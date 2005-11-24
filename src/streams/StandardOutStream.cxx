@@ -10,7 +10,7 @@
 #include <iostream>
 #include <ers/internal/StandardOutStream.h>
 
-ERS_REGISTER_STREAM( ers::StandardOutStream, "stdout", )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardOutStream, "stdout", )
 
 void ers::StandardOutStream::write( const Issue & issue )
 {

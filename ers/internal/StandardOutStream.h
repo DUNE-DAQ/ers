@@ -10,7 +10,7 @@
 #ifndef ERS_STANDARD_OUT_STREAM_H
 #define ERS_STANDARD_OUT_STREAM_H
 
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
 
 namespace ers
 {
@@ -21,12 +21,9 @@ namespace ers
       * \brief Single line, human readable format stream.
       */
 
-    struct StandardOutStream : public Stream
+    struct StandardOutStream : public OutputStream
     {
         void write( const Issue & issue );
-        	
-        Issue * read( )
-        { return 0; }
     };
 }
 

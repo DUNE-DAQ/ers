@@ -20,7 +20,8 @@
 #define ERS_ERS_H
 
 #include <sstream>
-#include <ers/StreamFactory.h>
+#include <ers/StreamManager.h>
+#include <ers/Configuration.h>
 #include <ers/Issue.h>
 #include <ers/Assertion.h>
 #include <ers/Severity.h>
@@ -28,25 +29,25 @@
 namespace ers
 {
     inline int debug_level( )
-    { return StreamFactory::instance().debug_level( ); }
+    { return Configuration::instance().debug_level( ); }
     
     inline void debug( const Issue & issue, int level = debug_level() )
-    { StreamFactory::instance().debug( issue, level ); }
+    { StreamManager::instance().debug( issue, level ); }
     
     inline void error( const Issue & issue )
-    { StreamFactory::instance().error( issue ); }
+    { StreamManager::instance().error( issue ); }
     
     inline void fatal( const Issue & issue )
-    { StreamFactory::instance().fatal( issue ); }
+    { StreamManager::instance().fatal( issue ); }
     
     inline void info( const Issue & issue )
-    { StreamFactory::instance().information( issue ); }
+    { StreamManager::instance().information( issue ); }
     
     inline int verbosity_level( )
-    { return StreamFactory::instance().verbosity_level( ); }
+    { return Configuration::instance().verbosity_level( ); }
 
     inline void warning( const Issue & issue )
-    { StreamFactory::instance().warning( issue ); }
+    { StreamManager::instance().warning( issue ); }
 }
 
 ERS_DECLARE_ISSUE( ers, Info, , )

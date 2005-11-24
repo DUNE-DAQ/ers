@@ -13,7 +13,7 @@
 #include <ers/StreamFactory.h>
 #include <algorithm>
 
-ERS_REGISTER_STREAM( ers::FilterStream, "filter", format )
+ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
 
 namespace
 {

@@ -10,7 +10,7 @@
 #include <ers/internal/AbortStream.h>
 #include <stdlib.h>
 
-ERS_REGISTER_STREAM( ers::AbortStream, "abort", )
+ERS_REGISTER_OUTPUT_STREAM( ers::AbortStream, "abort", )
 
 void ers::AbortStream::write( const Issue & issue )
 {

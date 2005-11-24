@@ -79,7 +79,7 @@ namespace ers
     
     void ErrorHandler::SignalHandler::action( int signal, siginfo_t *, void * )
     {
-	StreamFactory::instance().verbosity_level() = 3;
+	Configuration::instance().verbosity_level() = 3;
         ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
     }   
     
@@ -102,7 +102,7 @@ namespace ers
     
     void ErrorHandler::terminate_handler()
     {
-	StreamFactory::instance().verbosity_level() = 3;
+	Configuration::instance().verbosity_level() = 3;
     	try
         {
             throw;

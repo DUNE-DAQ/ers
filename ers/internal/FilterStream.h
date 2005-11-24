@@ -11,7 +11,7 @@
 #ifndef ERS_STREAM_FILTER_H 
 #define ERS_STREAM_FILTER_H
 
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
 
 namespace ers
 {    
@@ -36,22 +36,19 @@ namespace ers
       * \brief filtering stream 
       */
     
-    class FilterStream : public Stream
+    class FilterStream : public OutputStream
     {
       public:
 	FilterStream( const std::string & format ); 
 	
         void write( const Issue & issue );		/**< \brief write method */
         
-	Issue * read( )
-        { return 0; } 
-
       private:	
         
         bool is_accepted( const ers::Issue & issue );
         
-	std::vector<std::string> m_include;				/**< \brief include list */
-	std::vector<std::string> m_exclude;				/**< \brief exclude list */
+	std::vector<std::string> m_include;		/**< \brief include list */
+	std::vector<std::string> m_exclude;		/**< \brief exclude list */
     };
 }
 

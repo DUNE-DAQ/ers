@@ -43,7 +43,7 @@ int main( int argc, char** argv )
     }
     else
     {
-	std::cout << ers::StreamFactory::instance();
+	std::cout << ers::StreamManager::instance();
     }
     return 0; 
 }

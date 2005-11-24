@@ -12,12 +12,14 @@ private
 #       ERS Library
 ########################################################################################################
 
-library		ers			$(lib_opts)	"*.cxx"
-macro           ers_shlibflags          "-rdynamic" 
+library		ers				$(lib_opts)	"*.cxx"
+macro           ers_shlibflags          	"" 
 
+library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
+macro           ErsBaseStreams_shlibflags          " -lers" 
 
-macro		instlibs		libers.so	\
-		osx			libers.dylib
+macro		instlibs		"libers.so libErsBaseStreams.so"	\
+		osx			"libers.dylib libErsBaseStreams.dylib"
 		
 apply_pattern   install_libs            files=$(instlibs)
 
@@ -29,9 +31,9 @@ application	ers_test 		"-group=check -check ../test/test.cxx"
 application	ers_pc 			"../bin/config.cxx"
 
 macro		ers_test_dependencies	"ers" 
-macro		ers_testlinkopts	"-lers -rdynamic"
+macro		ers_testlinkopts	"-lers "
 
 macro		ers_pc_dependencies	"ers" 
-macro		ers_pclinkopts		"-lers -rdynamic"
+macro		ers_pclinkopts		"-lers "
 
 apply_pattern   install_apps            files="ers_pc"

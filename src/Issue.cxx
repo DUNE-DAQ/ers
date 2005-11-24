@@ -16,7 +16,7 @@
 
 #include <ers/Issue.h>
 #include <ers/IssueFactory.h>
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
 #include <ers/ers.h>
 
 using namespace ers;
@@ -169,16 +169,16 @@ Issue::set_severity( ers::Severity severity ) const
 }
 
 // ====================================================
-// Stream Operators
+// OutputStream Operators
 // ====================================================
 
 #define FIELD_SEPARATOR "\n\t"
 namespace ers
 {
     
-    /** Standard Streaming operator - puts the human description into the Stream.
-     * \param out the destination Stream
-     * \param issue the Issue to Stream
+    /** Standard Streaming operator - puts the human description into the OutputStream.
+     * \param out the destination OutputStream
+     * \param issue the Issue to OutputStream
      */
     std::ostream & operator<<( std::ostream & out, const ers::Issue & issue )
     {
@@ -217,18 +217,6 @@ namespace ers
         }
         
 	return out;
-    }
-
-    /** Sends the Issue into a Stream
-     * \param stream the Stream to send the Issue into
-     * \param issue the Issue to send
-     * \return the Stream
-     */
-    ers::Stream &
-    operator<<( ers::Stream & stream, const ers::Issue & issue )
-    {
-	stream.write( issue );
-	return stream;
     }
 }
 

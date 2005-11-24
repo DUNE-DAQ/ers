@@ -10,7 +10,8 @@
 #ifndef ERS_NULL_STREAM_H
 #define ERS_NULL_STREAM_H
 
-#include <ers/Stream.h>
+#include <ers/OutputStream.h>
+#include <ers/InputStream.h>
 
 namespace ers
 {
@@ -25,13 +26,10 @@ namespace ers
       * \brief Null stream
       */
     
-    struct NullStream : public Stream
+    struct NullStream : public OutputStream
     {        	
-        void write( const Issue & )		/**< \brief Sends an issue into the stream */
-        { return  ; }
-
-	Issue * read()				/**< \brief Receives an issue from the stream */
-        { return 0; }	
+        void write( const Issue & )	/**< \brief Sends an issue into the stream */
+        { ; }
     };
 }
 

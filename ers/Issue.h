@@ -31,7 +31,7 @@
 
 namespace ers
 {
-    class Stream;
+    class OutputStream;
     
     template<class T>
     class IssueRegistrator
@@ -62,7 +62,6 @@ namespace ers
     
     class Issue : public std::exception
     {
-	friend class StreamFactory; 
 	friend std::ostream & operator<<( std::ostream &, const ers::Issue & );
 
 	// Temporarely solution untill a real Time class will appear
@@ -112,6 +111,8 @@ namespace ers
 	
 	const char * what() const throw();			/**< \brief General cause of the issue. */
       
+	ers::Severity set_severity( ers::Severity severity ) const;
+
       protected:
 	template <typename T>
 	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */
@@ -129,9 +130,7 @@ namespace ers
         Issue & operator=( const Issue & other );
 	
         typedef std::map<std::string, std::string>	string_map; 
-	
-	ers::Severity set_severity( ers::Severity severity ) const;
-			  
+				  
 	std::auto_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
 	Context				m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
@@ -141,9 +140,7 @@ namespace ers
 	string_map			m_values;		/**< \brief List of user defined attributes. */	
     };
 
-    std::ostream & operator<<( std::ostream &, const ers::Issue & );
-    ers::Stream	 & operator<<( ers::Stream  &, const ers::Issue & );    
-    
+    std::ostream & operator<<( std::ostream &, const ers::Issue & );    
 } // ers
 
 
