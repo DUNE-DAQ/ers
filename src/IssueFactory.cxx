@@ -51,9 +51,11 @@ ers::IssueFactory::create(	const std::string & name,
     FunctionMap::const_iterator it = m_creators.find(name); 
     if ( it == m_creators.end() )
     {
-	return new DefaultIssue( context );
+	ERS_DEBUG( 1, "Issue creator for the \"" << name << "\" issue is not found" );
+        return new DefaultIssue( context );
     }
     
+    ERS_DEBUG( 2, "Creating the \"" << name << "\" issue" );
     return (it->second)( context ); 
 }
 
