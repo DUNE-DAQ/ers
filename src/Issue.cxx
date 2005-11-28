@@ -140,24 +140,30 @@ namespace ers
 	    {
 		out << FIELD_SEPARATOR << it->first << "=\"" << it->second << "\" ";
 	    }
+        }
+	
+        if ( ers::verbosity_level() > 1 )
+	{
+	    out << FIELD_SEPARATOR << "host = " << issue.context().host_name()
+		<< FIELD_SEPARATOR << "user = " << issue.context().user_name()
+				   << " (" << issue.context().user_id() << ")"
+		<< FIELD_SEPARATOR << "process id = " << issue.context().process_id()
+		<< FIELD_SEPARATOR << "process wd = " << issue.context().cwd();
+	}
         
-	    if ( ers::verbosity_level() > 1 )
+	if ( ers::verbosity_level() > 2 )
+	{
+            out << FIELD_SEPARATOR << "compiled by " << issue.context().compiler() 
+                << " at " << issue.context().compiled_at();
+	}
+        
+	if ( ers::verbosity_level() > 3 )
+	{
+	    std::vector<std::string> stack = issue.context().stack();
+	    for( size_t i = 0; i < stack.size(); i++ )
 	    {
-		out << FIELD_SEPARATOR << "host = " << issue.context().host_name()
-		    << FIELD_SEPARATOR << "user = " << issue.context().user_name()
-				       << " (" << issue.context().user_id() << ")"
-		    << FIELD_SEPARATOR << "process id = " << issue.context().process_id()
-		    << FIELD_SEPARATOR << "process wd = " << issue.context().cwd();
-
-		if ( ers::verbosity_level() > 2 )
-		{
-		    std::vector<std::string> stack = issue.context().stack();
-		    for( size_t i = 0; i < stack.size(); i++ )
-		    {
-			out << FIELD_SEPARATOR << "#" << std::setw(3) << std::left << i << stack[i];
-		    }
-		}
-            }
+		out << FIELD_SEPARATOR << "#" << std::setw(3) << std::left << i << stack[i];
+	    }
 	}
         
         if ( issue.cause() )
