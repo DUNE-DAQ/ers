@@ -42,12 +42,12 @@ namespace ers
       public:
 	virtual ~InputStream()
         { ; }
-        
-	void receive( const Issue & issue );	/**< \brief Must be called when the new issue is received */
-      
+              
       protected:
         InputStream( );
                         
+	void receive( const Issue & issue );	/**< \brief Must be called when the new issue is received */
+      
       private:
 	//
 	// Disable copying
@@ -67,8 +67,8 @@ namespace ers
 #define ERS_REGISTER_INPUT_STREAM( class, name, param ) \
 namespace { \
     struct InputStreamRegistrator { \
-	static ers::InputStream * create( ers::severity severity, const std::string & param ) \
-	{ return new class( severity, param ); }  \
+	static ers::InputStream * create( const std::string & param ) \
+	{ return new class( param ); }  \
         InputStreamRegistrator() \
 	{ ers::StreamFactory::instance().register_in_stream( name, create ); } \
     } registrator; \

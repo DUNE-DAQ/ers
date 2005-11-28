@@ -45,14 +45,32 @@ ers::IssueFactory::register_issue( const std::string & name, IssueCreator creato
   * \note If the requested type cannot be resolved an instance of type DefaultIssue 
   */
 ers::Issue * 
-ers::IssueFactory::create( const std::string & name ) const
+ers::IssueFactory::create(	const std::string & name,
+				const ers::Context & context ) const
 {
     FunctionMap::const_iterator it = m_creators.find(name); 
     if ( it == m_creators.end() )
     {
-	return new DefaultIssue( ERS_HERE );
+	return new DefaultIssue( context );
     }
     
-    return (it->second)(); 
-} // build
+    return (it->second)( context ); 
+}
+
+
+ers::Issue *
+ers::IssueFactory::create(	const std::string & name,
+				const ers::Context & context,
+                                long time,
+				const std::string & message,
+				const std::vector<std::string> & qualifiers,
+				const ers::string_map & parameters ) const
+{
+    ers::Issue * issue = create( name, context );
+    issue->m_message = message;
+    issue->m_qualifiers = qualifiers;
+    issue->m_values = parameters;
+    issue->m_time = ers::Issue::Time( time );
+    return issue;
+}
 

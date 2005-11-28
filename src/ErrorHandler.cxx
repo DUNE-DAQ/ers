@@ -12,8 +12,8 @@
 #include <iomanip>
 #include <iostream>
 
-#ifdef NDEBUG
-#undef NDEBUG
+#ifdef ERS_NO_DEBUG
+#undef ERS_NO_DEBUG
 #endif
 
 #include <ers/Issue.h>

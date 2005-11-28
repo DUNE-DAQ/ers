@@ -12,172 +12,51 @@
 #define ERS_CONTEXT_H
 
 /** \file Context.h
-  * This file defines the ers::Context object, and the associated macros, like ERS_HERE.
+  * This file defines the ers::Context interface.
   */ 
 
 #include <string>
 #include <vector>
 
-#include <execinfo.h>
-
-/** \def COMPILER_NAME defines the name of the compiler used */
-/** \def __VERSION__ defines the version of the compiler used */
-
-#ifdef __GNUC__
-#define COMPILER_NAME "gcc"
-#endif
-
-#ifdef __INTEL_COMPILER
-#define COMPILER_NAME "icc" 
-#endif
-
-#ifndef COMPILER_NAME
-#define COMPILER_NAME "unknown"
-#endif
-
-#ifndef __VERSION__
-#define __VERSION__ "unknown"
-#endif
-
-#ifdef TDAQ_PACKAGE_NAME
-#define ERS_PACKAGE TDAQ_PACKAGE_NAME
-#else
-#define ERS_PACKAGE "unknown"
-#endif
-
 namespace ers
 {   
-    /** This class encapsulates Context information for an issue.
-      * The context of an issue is the location in the code the issue was constructed.
-      * The context acts as an encapsulator for compilator generted information like:
-      * - source file
-      * - source line
-      * - function name
-      * - compilation date and time
-      * - compilator type
+    /** This class provides an abstract interface for the Context information of an issue.
+      * The implementation might be different depending on wether the current context is
+      * local. i.e. produced in the current process or it was received as part of the
+      * issue, which has been cretaed in another process.
       *
-      * The current context can be obtained using the macro \c ERS_HERE
-      * An empty context can be obtained using the macro \c ERS_EMPTY
-      *
-      * \author Matthias Wiesmann, Serguei Kolos
-      * \brief Source context for Issue.
+      * \author Serguei Kolos
+      * \brief Context interface for Issue.
       */
-    
-    struct CompilerContext
-    {
-	CompilerContext( const char * const name,
-        		 const char * const version,
-			 const char * const date,
-                         const char * const time,
-                         const char * const package )
-          : m_name( name ),
-            m_version( version ),
-            m_date( date ),
-            m_time( time ),
-            m_package( package )
-        { ; }
-        
-        const char * const m_name;	/**< compiler name */
-	const char * const m_version;	/**< compiler version */
-	const char * const m_date;	/**< compilation date */
-	const char * const m_time;	/**< compilation time */
-	const char * const m_package;	/**< CMT package name */
-    };
-    
-    struct ProcessContext
-    {
-	ProcessContext(	const char * const host_name,
-			int pid,
-			const char * const cwd,
-			int uid,
-			const char * const uname )
-	  : m_host_name( host_name ),
-            m_process_id( pid ),
-            m_cwd( cwd ),
-            m_user_id( uid ),
-            m_user_name( uname )
-        { ; }
-        
-	const char * const	m_host_name;	/**< host name */
-	const int 		m_process_id;	/**< process id */
-	const char * const	m_cwd;		/**< process cwd */
-	const int		m_user_id;	/**< user id */
-	const char * const	m_user_name;	/**< user name */
-    };
-    
-    namespace
-    {
-	//
-        // This context might be different for every file
-        //
-        const CompilerContext compiler_context(	COMPILER_NAME,
-						__VERSION__,
-						__DATE__,
-						__TIME__,
-						ERS_PACKAGE );
-    }
-    
     class Context
     {
       public:
 
 	static const Context EmptyInstance;
 
-	/** Constructor - defines an Issue context.
-	  * This constructor should generally not be called directly, instead use the macro \c ERS_HERE.
-	  * \param filename name of the source code file
-	  * \param line_number line_number in the source code
-	  * \param function_name name of the function - either pretty printed or not
-	  * \param compiler_name name of the compiler
-	  * \param compiler_version version of the compiler
-	  * \param compilation_time time of the compilation
-	  * \param compilation_date date of the compilation
-	  */
-	Context( const char * filename, int line_number, const char * function_name )
-	  : m_compiler( compiler_context ),
-	    m_file_name( filename ),
-	    m_function_name( function_name ),
-	    m_line_number( line_number ),
-#ifndef NDEBUG            
-	    m_stack_size( backtrace( m_stack, 128 ) )
-#else
-	    m_stack_size( 0 )
-#endif
-	{ ; }
-
-	std::string position() const;
-	std::string compiler() const;
-	std::string compiled_at() const;
-	std::vector<std::string> stack( ) const;	/**< \return stack frames vector*/
-
-	const CompilerContext	m_compiler;		/**< compiler information */
-        const char * const	m_file_name;		/**< source file-name */
-	const char * const	m_function_name;	/**< source function name (can be pretty printed or not) */
-	const int		m_line_number;		/**< source line-number */
+	std::string position() const;				/**< \return position in the code */
+	std::string compiler() const;				/**< \return full compiler information */
+	std::string compiled_at() const;			/**< \return compilation time */
+	std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
 	
-        static const ProcessContext	c_process;
-
-      private:
-	Context()
-	  : m_compiler( compiler_context ),
-	    m_file_name( "" ),
-	    m_function_name( "" ),
-	    m_line_number( -1 ),
-	    m_stack_size( 0 )
-	{ ; }
-        
-        void *		m_stack[128];	/** stack frames */
-	const int	m_stack_size;	/** stack frames number */
-    }; // Context
-
-} // ers 
-
-/** \def ERS_EMPTY macro to an empty context object used when no context is available */
-#define ERS_EMPTY (ers::Context::EmptyInstance) 
-
-/** \def ERS_HERE This macro constructs a context object with all the current values 
-  */ 
-#define ERS_HERE ers::Context(__FILE__,__LINE__,__PRETTY_FUNCTION__)
+        virtual Context * clone() const = 0;				/**< \return copy of the current context */
+        virtual const char * const compiler_name() const = 0;		/**< \return compiler name */
+        virtual const char * const compiler_version() const = 0;	/**< \return compiler version */
+        virtual const char * const compilation_date() const = 0;	/**< \return compilation date */
+        virtual const char * const compilation_time() const = 0;	/**< \return compilation time */
+        virtual const char * const cwd() const = 0;			/**< \return current working directory of the process */
+        virtual const char * const file_name() const = 0;		/**< \return name of the file which created the issue */
+        virtual const char * const function_name() const = 0;		/**< \return name of the function which created the issue */
+        virtual const char * const host_name() const = 0;		/**< \return host where the process is running */
+        virtual int line_number() const = 0;				/**< \return line number, in which the issue has been created */
+        virtual const char * const package_name() const = 0;		/**< \return CMT package name */
+        virtual int process_id() const = 0;				/**< \return process id */
+        virtual void * const * stack_symbols() const = 0;		/**< \return stack frames */
+        virtual int stack_size() const = 0;				/**< \return number of frames in stack */
+        virtual int user_id() const = 0;				/**< \return user id */
+        virtual const char * const user_name() const = 0;		/**< \return user name */
+    };
+}
 
 #endif
 

@@ -92,7 +92,7 @@ ers::StreamManager::add_receiver( const std::string & stream,
 {
     ers::InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
     in->set_receiver( receiver );
-    m_in_streams.push_back(  );
+    m_in_streams.push_back( in );
 }
 
 ers::OutputStream * 

@@ -17,9 +17,12 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace ers
 {
+    typedef std::map<std::string, std::string>	string_map;
+    
     void tokenize(	const std::string & text,
     			const std::string & separators,
                         std::vector<std::string> & tokens );

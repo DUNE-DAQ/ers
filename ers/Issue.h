@@ -18,9 +18,11 @@
 #include <memory>
 
 #include <ers/Severity.h>
-#include <ers/Context.h>
+#include <ers/LocalContext.h>
+#include <ers/RemoteContext.h>
 #include <ers/IssueFactory.h>
 #include <ers/Severity.h>
+#include <ers/internal/Util.h>
 
 
 /** \file Issue.h This file defines the ers::Issue class, 
@@ -32,7 +34,7 @@
 namespace ers
 {
     class OutputStream;
-    
+        
     template<class T>
     class IssueRegistrator
     {
@@ -41,8 +43,8 @@ namespace ers
 	{ ers::IssueFactory::instance().register_issue( T::get_uid(), create ); }
         
       private:
-	static ers::Issue * create()
-	{ return new T(); }
+	static ers::Issue * create( const Context & context )
+	{ return new T( context ); }
     };
     
     /** This class is the root Issue object.
@@ -62,19 +64,18 @@ namespace ers
     
     class Issue : public std::exception
     {
-	friend std::ostream & operator<<( std::ostream &, const ers::Issue & );
+	friend class IssueFactory;
 
 	// Temporarely solution untill a real Time class will appear
 	struct Time
 	{
 	    Time();
+	    Time( long tt );
 	    std::string time_;
 	};
 	        
-      public:
-        typedef std::map<std::string, std::string>	string_map;
-        
-	Issue(	const Context & context = ERS_EMPTY,
+      public:        
+	Issue(	const Context & context,
 		const std::string & message = std::string() ); 
 	
 	Issue(	const Context & context,
@@ -83,7 +84,7 @@ namespace ers
 	Issue( const Issue & other )
 	  : std::exception( other ),
 	    m_cause( other.m_cause.get() ? other.m_cause->clone() : 0 ),
-	    m_context( other.m_context ),
+	    m_context( other.m_context->clone() ),
 	    m_message( other.m_message ),
 	    m_qualifiers( other.m_qualifiers ),
 	    m_severity( other.m_severity ),
@@ -91,9 +92,10 @@ namespace ers
 	    m_values( other.m_values )
 	{ ; }
 	      
-	virtual ~Issue() throw();
+	virtual ~Issue() throw()
+        { ; }
 	
-	virtual Issue * clone() const = 0; 				
+	virtual Issue * clone() const = 0;
 	
         virtual const char * get_class_name() const = 0;	/**< \brief Get key for class (used for serialisation)*/
        	
@@ -101,23 +103,34 @@ namespace ers
 	
 	void add_qualifier( const std::string & qualif );	/**< \brief adds a qualifier to the issue */
 	
-	const Issue * cause() const;				/**< \brief return the cause Issue of this Issue */
-	
-	const std::string & message() const;			/**< \brief General cause of the issue. */
-	
-	const std::vector<std::string> & qualifiers() const;	/**< \brief return array of qualifiers */
+	const Issue * cause() const				/**< \brief return the cause Issue of this Issue */
+	{ return m_cause.get(); }
         
-	const string_map & parameters() const;			/**< \brief return array of parameters */
+	const Context & context() const				/**< \brief Context of the issue. */
+        { return *(m_context.get()); }
         
-        ers::Severity severity() const;				/**< \brief severity of the issue */
-	
-	std::string time() const;				/**< \brief time of the issue */
-	
-	const char * what() const throw();			/**< \brief General cause of the issue. */
-      
+        const std::string & message() const			/**< \brief General cause of the issue. */
+	{ return m_message; }
+        
+	const std::vector<std::string> & qualifiers() const	/**< \brief return array of qualifiers */
+        { return m_qualifiers; }
+        
+	const string_map & parameters() const			/**< \brief return array of parameters */
+        { return m_values; }
+        
+        ers::Severity severity() const				/**< \brief severity of the issue */
+	{ return m_severity; }
+        
+	std::string time() const				/**< \brief time of the issue */
+	{ return m_time.time_; }
+        
+	const char * what() const throw()			/**< \brief General cause of the issue. */
+	{ return m_message.c_str(); }
+        
 	ers::Severity set_severity( ers::Severity severity ) const;
 
       protected:
+        
 	template <typename T>
 	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */
 	void get_value( const std::string & key, const char * & value ) const;
@@ -125,8 +138,9 @@ namespace ers
 	template <typename T>
 	void set_value( const std::string & key, T value );	/**< \brief Sets a value of any type, which defines the standard stream output operator*/
 
-	void set_message( const std::string & msg );
-	
+	void set_message( const std::string & message )
+	{ m_message = message; }
+        
       private:        
         //////////////////////////////////////
         // Copy operation is not allowed
@@ -134,7 +148,7 @@ namespace ers
         Issue & operator=( const Issue & other );
 					  
 	std::auto_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
-	Context				m_context;		/**< \brief Context of the current issue */
+	std::auto_ptr<Context>		m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
@@ -152,6 +166,7 @@ namespace ers
 #include <boost/preprocessor/logical.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
+#include <boost/preprocessor/comparison.hpp>
 
 #undef BOOST_PP_IS_EMPTY
 #undef BOOST_PP_IS_EMPTY_I
@@ -169,7 +184,7 @@ namespace ers
 #define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE	1 ,
 #define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER	0 ,
 
-#define ERS_BASE_CLASSS( x )	BOOST_PP_IF( BOOST_PP_IS_EMPTY( x ), ers::Issue, x )
+#define ERS_BASE_CLASS( x )				BOOST_PP_IF( BOOST_PP_IS_EMPTY( x ), ers::Issue, x )
 
 #define ERS_TYPE( tuple )				BOOST_PP_SEQ_HEAD(tuple)
 #define ERS_NAME( tuple )				BOOST_PP_SEQ_TAIL(tuple)
@@ -201,37 +216,41 @@ namespace ers
 
 #define ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
-    class class_name : public ERS_BASE_CLASSS( base_class_name ) { \
+    class class_name : public ERS_BASE_CLASS( base_class_name ) { \
       template <class> friend class ers::IssueRegistrator;\
       protected: \
-	class_name() { ; } \
+	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), class_name( const ers::Context & context ) : ERS_BASE_CLASS( base_class_name )( context ) { ; } )\
+        \
 	virtual void raise() const throw( std::exception ) { throw *this; } \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	virtual const char * get_class_name() const { return get_uid(); } \
-	virtual ERS_BASE_CLASSS( base_class_name ) * clone() const { return new namespace_name::class_name( *this ); } \
+	virtual ERS_BASE_CLASS( base_class_name ) * clone() const { return new namespace_name::class_name( *this ); } \
       public: \
 	class_name( const ers::Context & context \
         	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ERS_BASE_CLASSS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
+          : ERS_BASE_CLASS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
 	{ \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
 	} \
+        \
 	class_name( const ers::Context & context, \
         	    const std::string & msg \
         	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ERS_BASE_CLASSS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
+          : ERS_BASE_CLASS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
 	{  \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	} \
+        \
 	class_name( const ers::Context & context \
         	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
                     const std::exception & cause ) \
-          : ERS_BASE_CLASSS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
+          : ERS_BASE_CLASS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
 	{  \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
 	} \
+        \
 	ERS_DECLARE( ERS_ATTRIBUTE_ACCESSORS, attributes ) \
     }; \
 } \

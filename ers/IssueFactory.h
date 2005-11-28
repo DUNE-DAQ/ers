@@ -12,7 +12,10 @@
 #define ERS_ISSUE_FACTORY
 
 #include <string>
+#include <vector>
 #include <map>
+#include <ers/internal/Util.h>
+#include <ers/Context.h>
 
 /** \file IssueFactory.h This file defines the IssueFactory class, 
   * which is responsible for registration and creation of user defined issues.
@@ -37,14 +40,22 @@ namespace ers
     
     class IssueFactory
     {
-	typedef Issue * (*IssueCreator)();
+	typedef Issue * (*IssueCreator)( const ers::Context & );
 	typedef std::map<std::string,IssueCreator> FunctionMap;
 
       public:
 	static IssueFactory & instance();					/**< \brief method to access singleton */
 
-	Issue * create( const std::string & name ) const ;			/**< \brief build an empty issue out of a name */
-	void register_issue( const std::string & name, IssueCreator creator );	/**< \brief register an issue factory */
+	Issue * create( const std::string & name,
+        		const Context & context ) const ;			/**< \brief build an empty issue for a given name */
+	Issue * create( const std::string & name,
+        		const Context & context,
+                        long  time,
+                        const std::string & message,
+                        const std::vector<std::string> & qualifiers,
+                        const ers::string_map & parameters ) const ;		/**< \brief build issue out of all the given parameters */
+	
+        void register_issue( const std::string & name, IssueCreator creator );	/**< \brief register an issue factory */
       
       private:
 	IssueFactory()
