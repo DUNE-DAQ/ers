@@ -67,13 +67,13 @@ ers::Context::stack( ) const
 std::string
 ers::Context::position() const {
     std::ostringstream out;
-    char * pos = strchr( file_name(), '/' );
+    const char * filename = file_name();
+    char * pos = strstr( filename, "../" );
     out << "<" << function_name() << "> at ";
-    out << package_name() << "/";
-    if ( !pos ) {
-	out << file_name();
+    if ( pos == filename ) {
+	out << package_name() << (pos + 2);
     } else {
-	out << ++pos;
+	out << file_name();
     } //
     out << ":" << line_number();
     return out.str();
