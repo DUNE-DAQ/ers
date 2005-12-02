@@ -48,6 +48,9 @@ namespace ers
         int verbosity_level() const 			/**< \brief returns current verbosity level */
         { return m_verbosity_level; }
         
+        int & debug_level() 				/**< \brief can be used to set the current debug level */
+        { return m_debug_level; }
+        
         int & verbosity_level() 			/**< \brief can be used to set the current verbosity level */
         { return m_verbosity_level; }
         
