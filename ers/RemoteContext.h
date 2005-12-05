@@ -19,34 +19,6 @@
 
 namespace ers
 {   
-    struct RemoteCompilerContext
-    {
-	/** Constructor - defines an Issue Compilation context.
-	  * \param name name of the compiler
-	  * \param version version of the compiler
-	  * \param date date of the compilation
-	  * \param time time of the compilation
-	  * \param package name of the current CMT package
-	  */
-	RemoteCompilerContext(	const std::string & name,
-        		 	const std::string & version,
-			 	const std::string & date,
-                         	const std::string & time,
-                         	const std::string & package )
-          : m_name( name ),
-            m_version( version ),
-            m_date( date ),
-            m_time( time ),
-            m_package( package )
-        { ; }
-        
-        const std::string m_name;	/**< compiler name */
-	const std::string m_version;	/**< compiler version */
-	const std::string m_date;	/**< compilation date */
-	const std::string m_time;	/**< compilation time */
-	const std::string m_package;	/**< CMT package name */
-    };
-    
     struct RemoteProcessContext
     {
 	RemoteProcessContext(	const std::string & host_name,
@@ -78,14 +50,14 @@ namespace ers
 	  * \param line_number line_number in the source code
 	  * \param function_name name of the function - either pretty printed or not
 	  */
-	RemoteContext(	const std::string & filename,
+	RemoteContext(	const std::string & package,
+        		const std::string & filename,
         		int line_number,
                         const std::string & function_name,
-                        const RemoteCompilerContext & cc,
                         const RemoteProcessContext & pc )
-	  : m_compiler( cc ),
-            m_process( pc ),
-	    m_file_name( filename ),
+	  : m_process( pc ),
+	    m_package_name( package ),
+            m_file_name( filename ),
 	    m_function_name( function_name ),
 	    m_line_number( line_number )
 	{ ; }
@@ -95,18 +67,6 @@ namespace ers
 
         virtual Context * clone() const			/**< \return copy of the current context */
         { return new RemoteContext( *this ); }
-        
-        const char * const compiler_name() const	/**< \return compiler name */
-        { return m_compiler.m_name.c_str(); }
-        
-        const char * const compiler_version() const	/**< \return compiler version */        
-        { return m_compiler.m_version.c_str(); }
-        
-        const char * const compilation_date() const	/**< \return compilation date */
-        { return m_compiler.m_date.c_str(); }
-        
-        const char * const compilation_time() const	/**< \return compilation time */
-        { return m_compiler.m_time.c_str(); }
         
         const char * const cwd() const			/**< \return current working directory of the process */
         { return m_process.m_cwd.c_str(); }
@@ -124,7 +84,7 @@ namespace ers
         { return m_line_number; }
         
         const char * const package_name() const		/**< \return CMT package name */
-        { return m_compiler.m_package.c_str(); }
+        { return m_package_name.c_str(); }
         
         int process_id() const				/**< \return process id */
         { return m_process.m_pid; }
@@ -142,11 +102,11 @@ namespace ers
         { return m_process.m_uname.c_str(); }
 
       private:
-	const RemoteCompilerContext	m_compiler;		/**< compiler information */
         const RemoteProcessContext	m_process;		/**< process information */
-        const std::string		m_file_name;		/**< source file-name */
+        const std::string		m_package_name;		/**< source package name */
+        const std::string		m_file_name;		/**< source file name */
 	const std::string		m_function_name;	/**< source function name */
-	const int			m_line_number;		/**< source line-number */	
+	const int			m_line_number;		/**< source line number */	
     };
 }
 

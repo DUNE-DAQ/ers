@@ -35,26 +35,20 @@ namespace ers
 	static const Context EmptyInstance;
 
 	std::string position() const;				/**< \return position in the code */
-	std::string compiler() const;				/**< \return full compiler information */
-	std::string compiled_at() const;			/**< \return compilation time */
 	std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
 	
-        virtual Context * clone() const = 0;				/**< \return copy of the current context */
-        virtual const char * const compiler_name() const = 0;		/**< \return compiler name */
-        virtual const char * const compiler_version() const = 0;	/**< \return compiler version */
-        virtual const char * const compilation_date() const = 0;	/**< \return compilation date */
-        virtual const char * const compilation_time() const = 0;	/**< \return compilation time */
-        virtual const char * const cwd() const = 0;			/**< \return current working directory of the process */
-        virtual const char * const file_name() const = 0;		/**< \return name of the file which created the issue */
-        virtual const char * const function_name() const = 0;		/**< \return name of the function which created the issue */
-        virtual const char * const host_name() const = 0;		/**< \return host where the process is running */
-        virtual int line_number() const = 0;				/**< \return line number, in which the issue has been created */
-        virtual const char * const package_name() const = 0;		/**< \return CMT package name */
-        virtual int process_id() const = 0;				/**< \return process id */
-        virtual void * const * stack_symbols() const = 0;		/**< \return stack frames */
-        virtual int stack_size() const = 0;				/**< \return number of frames in stack */
-        virtual int user_id() const = 0;				/**< \return user id */
-        virtual const char * const user_name() const = 0;		/**< \return user name */
+        virtual Context * clone() const = 0;			/**< \return copy of the current context */
+        virtual const char * const cwd() const = 0;		/**< \return current working directory of the process */
+        virtual const char * const file_name() const = 0;	/**< \return name of the file which created the issue */
+        virtual const char * const function_name() const = 0;	/**< \return name of the function which created the issue */
+        virtual const char * const host_name() const = 0;	/**< \return host where the process is running */
+        virtual int line_number() const = 0;			/**< \return line number, in which the issue has been created */
+        virtual const char * const package_name() const = 0;	/**< \return CMT package name */
+        virtual int process_id() const = 0;			/**< \return process id */
+        virtual void * const * stack_symbols() const = 0;	/**< \return stack frames */
+        virtual int stack_size() const = 0;			/**< \return number of frames in stack */
+        virtual int user_id() const = 0;			/**< \return user id */
+        virtual const char * const user_name() const = 0;	/**< \return user name */
     };
 }
 

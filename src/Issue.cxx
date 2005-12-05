@@ -153,12 +153,6 @@ namespace ers
         
 	if ( ers::verbosity_level() > 2 )
 	{
-            out << FIELD_SEPARATOR << "compiled by " << issue.context().compiler() 
-                << " at " << issue.context().compiled_at();
-	}
-        
-	if ( ers::verbosity_level() > 3 )
-	{
 	    std::vector<std::string> stack = issue.context().stack();
 	    for( size_t i = 0; i < stack.size(); i++ )
 	    {

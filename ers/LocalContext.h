@@ -18,22 +18,6 @@
 #include <ers/Context.h>
 #include <execinfo.h>
 
-#ifdef __GNUC__
-#define COMPILER_NAME "gcc"
-#endif
-
-#ifdef __INTEL_COMPILER
-#define COMPILER_NAME "icc" 
-#endif
-
-#ifndef COMPILER_NAME
-#define COMPILER_NAME "unknown"
-#endif
-
-#ifndef __VERSION__
-#define __VERSION__ "unknown"
-#endif
-
 #ifdef TDAQ_PACKAGE_NAME
 #define ERS_PACKAGE TDAQ_PACKAGE_NAME
 #else
@@ -42,34 +26,6 @@
 
 namespace ers
 {   
-    struct LocalCompilerContext
-    {
-	/** Constructor - defines an Issue Compilation context.
-	  * \param name name of the compiler
-	  * \param version version of the compiler
-	  * \param date date of the compilation
-	  * \param time time of the compilation
-	  * \param package name of the current CMT package
-	  */
-	LocalCompilerContext(	const char * const name,
-        		 	const char * const version,
-			 	const char * const date,
-                         	const char * const time,
-                         	const char * const package )
-          : m_name( name ),
-            m_version( version ),
-            m_date( date ),
-            m_time( time ),
-            m_package( package )
-        { ; }
-        
-        const char * const m_name;	/**< compiler name */
-	const char * const m_version;	/**< compiler version */
-	const char * const m_date;	/**< compilation date */
-	const char * const m_time;	/**< compilation time */
-	const char * const m_package;	/**< CMT package name */
-    };
-    
     struct LocalProcessContext
     {
 	LocalProcessContext(	const char * const host_name,
@@ -91,18 +47,6 @@ namespace ers
 	const char * const	m_uname;	/**< user name */
     };
     
-    namespace
-    {
-	//
-        // This context might be different for every file
-        //
-        const LocalCompilerContext g_compiler(	COMPILER_NAME,
-						__VERSION__,
-						__DATE__,
-						__TIME__,
-						ERS_PACKAGE );
-    }
-    
     class LocalContext : public Context
     {
       public:
@@ -113,8 +57,12 @@ namespace ers
 	  * \param line_number line_number in the source code
 	  * \param function_name name of the function - either pretty printed or not
 	  */
-	LocalContext( const char * filename, int line_number, const char * function_name )
-	  : m_file_name( filename ),
+	LocalContext(	const char * package_name,
+        		const char * filename,
+                        int line_number,
+                        const char * function_name )
+	  : m_package_name( package_name ),
+            m_file_name( filename ),
 	    m_function_name( function_name ),
 	    m_line_number( line_number ),
 #ifndef ERS_NO_DEBUG            
@@ -129,18 +77,6 @@ namespace ers
 
         virtual Context * clone() const			/**< \return copy of the current context */
         { return new LocalContext( *this ); }
-        
-        const char * const compiler_name() const	/**< \return compiler name */
-        { return g_compiler.m_name; }
-        
-        const char * const compiler_version() const	/**< \return compiler version */        
-        { return g_compiler.m_version; }
-        
-        const char * const compilation_date() const	/**< \return compilation date */
-        { return g_compiler.m_date; }
-        
-        const char * const compilation_time() const	/**< \return compilation time */
-        { return g_compiler.m_time; }
         
         const char * const cwd() const			/**< \return current working directory of the process */
         { return c_process.m_cwd; }
@@ -158,7 +94,7 @@ namespace ers
         { return m_line_number; }
         
         const char * const package_name() const		/**< \return CMT package name */
-        { return g_compiler.m_package; }
+        { return m_package_name; }
         
         int process_id() const				/**< \return process id */
         { return c_process.m_pid; }
@@ -178,6 +114,7 @@ namespace ers
       private:
         static const LocalProcessContext	c_process;
 
+	const char * const			m_package_name; /**< source package name */
         const char * const			m_file_name;	/**< source file-name */
 	const char * const			m_function_name;/**< source function name */
 	const int				m_line_number;	/**< source line-number */	
@@ -188,7 +125,7 @@ namespace ers
 
 /** \def ERS_HERE This macro constructs a context object with all the current values 
   */ 
-#define ERS_HERE ers::LocalContext( __FILE__, __LINE__, __PRETTY_FUNCTION__ )
+#define ERS_HERE ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
 
 #endif
 

@@ -78,25 +78,3 @@ ers::Context::position() const {
     out << ":" << line_number();
     return out.str();
 }
-
-/** Pretty printed compiler name 
-  * \return reference to string containing format 
-  */
-std::string
-ers::Context::compiler() const
-{
-    std::ostringstream out;
-    out << compiler_name() << " " << compiler_version();
-    return out.str();
-}
-
-/** Pretty printed compilation time description
-  * \return reference to string containing description
-  */
-std::string
-ers::Context::compiled_at() const
-{
-    std::ostringstream out;
-    out << compilation_date() << " " << compilation_time();
-    return out.str();
-}
