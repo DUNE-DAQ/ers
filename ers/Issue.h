@@ -141,6 +141,8 @@ namespace ers
 	void set_message( const std::string & message )
 	{ m_message = message; }
         
+	void prepend_message( const std::string & message );
+        
       private:        
         //////////////////////////////////////
         // Copy operation is not allowed
@@ -210,7 +212,7 @@ namespace ers
                                                                 
 #define ERS_SET_MESSAGE( message )			std::ostringstream out;\
 							out << message;\
-							set_message( out.str() );
+							prepend_message( out.str() );
 
 #define	ERS_DECLARE( decl, attributes )			BOOST_PP_SEQ_FOR_EACH( decl, , attributes )
 

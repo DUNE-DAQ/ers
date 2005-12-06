@@ -111,9 +111,15 @@ Issue::add_qualifier( const std::string & qualifier )
 ers::Severity
 Issue::set_severity( ers::Severity severity ) const
 {
-   ers::Severity old_severity = m_severity;
-   m_severity = severity;
-   return old_severity;
+    ers::Severity old_severity = m_severity;
+    m_severity = severity;
+    return old_severity;
+}
+
+void
+Issue::prepend_message( const std::string & msg )
+{
+    m_message = msg + m_message;
 }
 
 // ====================================================
