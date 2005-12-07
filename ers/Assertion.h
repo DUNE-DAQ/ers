@@ -36,8 +36,9 @@ ERS_DECLARE_ISSUE(	ers,					// namespace
 
 #ifndef ERS_NO_DEBUG
 #include <boost/preprocessor/comparison.hpp>
+#include <ers/ers.h>
 
-/*\hideinitializer
+/** \hideinitializer
 */
 #define ERS_ASSERT_MSG( expression, message ) { \
 if( !(expression) ) \
