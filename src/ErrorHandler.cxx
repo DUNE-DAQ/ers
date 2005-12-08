@@ -85,12 +85,15 @@ namespace ers
     
     ErrorHandler::ErrorHandler()
     {
-        handlers[SIGSEGV] = new SignalHandler( SIGSEGV, "Segmentation fault (invalid memory reference)" );
-    	handlers[SIGBUS]  = new SignalHandler( SIGBUS, "Bus error (bad memory access)" );
-    	handlers[SIGILL]  = new SignalHandler( SIGILL, "Illegal Instruction" );
-    	handlers[SIGFPE]  = new SignalHandler( SIGFPE, "Floating point exception" );
-	std::set_terminate( terminate_handler );
-	std::set_unexpected( terminate_handler );
+        if ( !::getenv( "TDAQ_ERS_NO_SIGNAL_HANDLERS" ) )
+        {
+	    handlers[SIGSEGV] = new SignalHandler( SIGSEGV, "Segmentation fault (invalid memory reference)" );
+	    handlers[SIGBUS]  = new SignalHandler( SIGBUS, "Bus error (bad memory access)" );
+	    handlers[SIGILL]  = new SignalHandler( SIGILL, "Illegal Instruction" );
+	    handlers[SIGFPE]  = new SignalHandler( SIGFPE, "Floating point exception" );
+	    std::set_terminate( terminate_handler );
+	    std::set_unexpected( terminate_handler );
+        }
     }
     
     ErrorHandler::~ErrorHandler()
