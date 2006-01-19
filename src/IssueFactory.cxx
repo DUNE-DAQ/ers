@@ -51,7 +51,7 @@ ers::IssueFactory::create(	const std::string & name,
     FunctionMap::const_iterator it = m_creators.find(name); 
     if ( it == m_creators.end() )
     {
-	ERS_DEBUG( 1, "Issue creator for the \"" << name << "\" issue is not found" );
+	ERS_DEBUG( 1, "Creator for the \"" << name << "\" issue is not found" );
         return new DefaultIssue( context );
     }
     
@@ -72,7 +72,7 @@ ers::IssueFactory::create(	const std::string & name,
     issue->m_message = message;
     issue->m_qualifiers = qualifiers;
     issue->m_values = parameters;
-    issue->m_time = ers::Issue::Time( time );
+    issue->m_time = boost::posix_time::from_time_t( time );
     return issue;
 }
 

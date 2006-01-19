@@ -24,6 +24,7 @@
 #include <ers/Severity.h>
 #include <ers/internal/Util.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
@@ -66,14 +67,6 @@ namespace ers
     {
 	friend class IssueFactory;
 
-	// Temporarely solution untill a real Time class will appear
-	struct Time
-	{
-	    Time();
-	    Time( long tt );
-	    std::string time_;
-	};
-	        
       public:        
 	Issue(	const Context & context,
 		const std::string & message = std::string() ); 
@@ -122,9 +115,15 @@ namespace ers
 	{ return m_severity; }
         
 	std::string time() const				/**< \brief time of the issue */
-	{ return m_time.time_; }
+	{ return boost::posix_time::to_simple_string( m_time ); }
         
-	const char * what() const throw()			/**< \brief General cause of the issue. */
+	std::time_t time_t() const				/**< \brief time in seconds since 1 Jan 1970 */
+	{ return ( ( m_time - boost::posix_time::from_time_t( 0 ) ).total_seconds() ); }
+        
+	boost::posix_time::ptime ptime() const			/**< \brief boost Posix time of the issue */
+	{ return m_time; }
+        
+        const char * what() const throw()			/**< \brief General cause of the issue. */
 	{ return m_message.c_str(); }
         
 	ers::Severity set_severity( ers::Severity severity ) const;
@@ -154,7 +153,7 @@ namespace ers
 	std::string			m_message;		/**< \brief Issue's explanation text */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
-	Time				m_time;			/**< \brief Time when issue was thrown */
+	boost::posix_time::ptime	m_time;			/**< \brief Time when issue was thrown */
 	string_map			m_values;		/**< \brief List of user defined attributes. */	
     };
 

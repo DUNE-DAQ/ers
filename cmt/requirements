@@ -8,14 +8,12 @@ use Boost	*  TDAQCExternal
 
 private
 
-macro build_dependencies	'$(cmtexe) -quiet -tag=$(tags) build dependencies'
-
 ########################################################################################################
 #       ERS Library
 ########################################################################################################
 
 library		ers				$(lib_opts)	"*.cxx"
-macro           ers_shlibflags          	"" 
+macro           ers_shlibflags          	" -lboost_date_time-$(boost_libsuffix)" 
 
 library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags          " -lers" 
@@ -34,11 +32,11 @@ application	ers_pc 			"../bin/config.cxx"
 application	ers_receiver 		"../test/receiver.cxx"
 
 macro		ers_test_dependencies	"ers" 
-macro		ers_testlinkopts	"-lers "
-macro		ers_receiverlinkopts	"-lers "
+macro		ers_testlinkopts	"-lers -lboost_date_time-$(boost_libsuffix)"
+macro		ers_receiverlinkopts	"-lers -lboost_date_time-$(boost_libsuffix)"
 
 macro		ers_pc_dependencies	"ers" 
-macro		ers_pclinkopts		"-lers "
+macro		ers_pclinkopts		"-lers -lboost_date_time-$(boost_libsuffix)"
 
 apply_pattern   install_apps            files="ers_pc ers_receiver"
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\

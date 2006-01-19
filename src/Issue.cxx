@@ -22,33 +22,6 @@
 using namespace ers;
 
 ERS_DECLARE_ISSUE( ers, StdIssue, , )
-
-// Constructors
-// ====================================================
-Issue::Time::Time()
-{
-    time_t now;
-    ::time(&now); 
-    char time_buffer[256];
-    ctime_r( &now, time_buffer );
-    char * cr = strchr(time_buffer,'\n');
-    if (cr) {
-	*cr = '\0' ;
-    } // carriage return 
-    time_ = time_buffer;
-}
-
-Issue::Time::Time( long tt )
-{
-    char time_buffer[256];
-    ctime_r( &tt, time_buffer );
-    char * cr = strchr(time_buffer,'\n');
-    if (cr) {
-	*cr = '\0' ;
-    } // carriage return 
-    time_ = time_buffer;
-}
-
 /** Constructor - takes another exceptions as the cause for the current exception.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
  * \param message the user message associated with this issue
@@ -59,7 +32,8 @@ Issue::Issue(	const Context & context,
   : m_cause( 0 ),
     m_context( context.clone() ),
     m_message( message ),
-    m_severity( ers::Error )
+    m_severity( ers::Error ),
+    m_time( boost::posix_time::second_clock::local_time() )
 {
 }
 
@@ -71,7 +45,8 @@ Issue::Issue(	const Context & context,
 Issue::Issue(	const Context & context,
                 const std::exception & cause )
   : m_context( context.clone() ),
-    m_severity( ers::Error )
+    m_severity( ers::Error ),
+    m_time( boost::posix_time::second_clock::local_time() )
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );

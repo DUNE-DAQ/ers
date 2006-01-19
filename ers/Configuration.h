@@ -40,25 +40,25 @@ namespace ers
         
       public:
 	        
-  	static Configuration & instance();		/**< \brief return the singleton */
+  	static Configuration & instance();	/**< \brief return the singleton */
         
-        int debug_level() const 			/**< \brief returns current debug level */
+        int debug_level() const			/**< \brief returns current debug level */
         { return m_debug_level; }
         
-        int verbosity_level() const 			/**< \brief returns current verbosity level */
+        int verbosity_level() const		/**< \brief returns current verbosity level */
         { return m_verbosity_level; }
         
-        int & debug_level() 				/**< \brief can be used to set the current debug level */
+        int & debug_level()			/**< \brief can be used to set the current debug level */
         { return m_debug_level; }
         
-        int & verbosity_level() 			/**< \brief can be used to set the current verbosity level */
+        int & verbosity_level()			/**< \brief can be used to set the current verbosity level */
         { return m_verbosity_level; }
         
       private:	
 	Configuration( );
 
-    	int		m_debug_level;			/**< \brief current active level for the debug stream */	
-    	int		m_verbosity_level;		/**< \brief current verbosity level for all streams */
+    	int m_debug_level;		/**< \brief current active level for the debug stream */	
+    	int m_verbosity_level;		/**< \brief current verbosity level for all streams */
     };
     
     std::ostream & operator<<( std::ostream &, const ers::Configuration & );
