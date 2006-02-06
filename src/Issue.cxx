@@ -35,6 +35,7 @@ Issue::Issue(	const Context & context,
     m_severity( ers::Error ),
     m_time( boost::posix_time::second_clock::local_time() )
 {
+    add_qualifier( m_context->package_name() );
 }
 
 /** Constructor - takes another exceptions as the cause for the current exception.
@@ -50,7 +51,7 @@ Issue::Issue(	const Context & context,
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
-    m_qualifiers.push_back( m_context->package_name() );
+    add_qualifier( m_context->package_name() );
 }
 
 void 
