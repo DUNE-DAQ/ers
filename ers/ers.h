@@ -113,6 +113,7 @@ if ( ers::debug_level() >= level ) \
   and send it to the ers::fatal stream. Futher processing depends on the configuration of the
   ers::fatal stream. By default the issue is pronted to the standard error stream and then abort
   function is called.
+  \note All These macro are defined to empty statement if the \c ERS_NO_DEBUG macro is defined at compilation time.
 
   \subsection LoggingMacros Logging Macros
   The ERS package offers a set of macros to do logging. Those macros construct an 
@@ -121,6 +122,7 @@ if ( ers::debug_level() >= level ) \
   \li ERS_DEBUG( level, message ) - sends ers::Info issue to the ers::debug stream
   \li ERS_INFO( message ) - sends ers::Info issue to the ers::information stream
   \li ERS_WARNING( message ) - sends ers::Info issue to the ers::warning stream
+  \note ERS_DEBUG macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined at compilation time.
   
   The \b message argument of these macros can be any entity, for which the operator<< to the
   standard C++ output stream is defined. This means that the message can be a single 
