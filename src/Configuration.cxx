@@ -48,8 +48,13 @@ ers::Configuration::Configuration()
   : m_debug_level( 0 ),
     m_verbosity_level( 0 )
 {
-    read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
-    read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+    static bool initialised = false;
+    if ( !initialised )
+    {
+	initialised = true;
+        read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
+	read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+    }
 }
 
 
