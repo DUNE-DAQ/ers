@@ -37,7 +37,7 @@ namespace ers
     {        
         class SignalHandler
         {
-	    int			signal_;
+            int			signal_;
             std::string		name_;
 	    struct sigaction	old_action_;
                        
@@ -79,7 +79,12 @@ namespace ers
     
     void ErrorHandler::SignalHandler::action( int signal, siginfo_t *, void * )
     {
-	Configuration::instance().verbosity_level() = 13;
+	static bool same_shit_different_time = false;
+	if ( !same_shit_different_time )
+	    same_shit_different_time = true;
+        else
+	    ::abort();
+        Configuration::instance().verbosity_level() = 13;
         ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
     }   
     
