@@ -82,7 +82,7 @@ namespace ers
 	static bool same_shit_different_time = false;
 	if ( !same_shit_different_time )
 	    same_shit_different_time = true;
-        else
+	else
 	    ::abort();
         Configuration::instance().verbosity_level() = 13;
         ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );

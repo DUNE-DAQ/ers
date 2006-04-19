@@ -10,11 +10,23 @@
 #include <ers/ExampleIssues.h>
 #include <ers/ers.h>
 #include <stdexcept>
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
 
 /** \file test.cxx 
   * This file contains a very simple example of using ERS. 
   * Basically, we use the custom issue defined in ExampleIssue. 
   */
+  
+void test_function( int index )
+{
+    for( int i = 0; i < 100; i++ )
+    {
+	ERS_DEBUG( 0, "performing step # " << i << " in thread " << index )
+	ERS_WARNING( "warning #" << i << " in thread " << index )
+	usleep( 1 );
+    }
+}
 
 void pass( int step )
 {
@@ -68,6 +80,14 @@ void pass( int step )
 int main(int , char** )
 {
     int step = 0;
+    
+    ERS_DEBUG( 0, "Testing output produced by different threads ... " );
+    boost::thread thr1( boost::bind(test_function,1) );
+    boost::thread thr2( boost::bind(test_function,2) );
+    boost::thread thr3( boost::bind(test_function,3) );
+    boost::thread thr4( boost::bind(test_function,4) );
+    sleep( 10 );
+    
     while( step++ < 10 )
     {
 	try

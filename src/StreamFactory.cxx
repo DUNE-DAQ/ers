@@ -60,10 +60,19 @@ ers::StreamFactory::create_out_stream( const std::string & format ) const
     
     if( it != m_out_factories.end() )
     {
-	return it->second( param );
+	try
+        {
+            return it->second( param );
+        }
+        catch( ers::Issue & issue )
+        {
+            std::cerr << issue << std::endl;
+        }
     }
-    
-    ERS_INTERNAL_ERROR( "Creator for the \"" << key << "\" stream is not found" )
+    else
+    {
+    	ERS_INTERNAL_ERROR( "Creator for the \"" << key << "\" stream is not found" )
+    }
     
     return 0; 
 }
@@ -73,8 +82,8 @@ ers::StreamFactory::create_out_stream( const std::string & format ) const
   * In certain cases, the path will be empty. 
   * For instance to write in XML format to the error stream, the key is: 
   * \c cerr:.xml 
-  * \param format the format, which describes new stream
-  * \param default_format the key, which will be used for the new stream creation if the format could ot be parsed successfully
+  * \param stream stream type, which defines what stream implementation has to be used
+  * \param filter defines what messages have to be received
   * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
   */
 ers::InputStream *
@@ -99,7 +108,7 @@ ers::StreamFactory::create_in_stream(	const std::string & stream,
   * The function should return a heap allocated stream, or null if it does not
   * understand the protocol. 
   * \param name name of the stream type (human display only).
-  * \param callback the callback function
+  * \param callback the creator function
   */
 void
 ers::StreamFactory::register_in_stream( const std::string & name, InputStreamCreator callback )
@@ -115,7 +124,7 @@ ers::StreamFactory::register_in_stream( const std::string & name, InputStreamCre
   * The function should return a heap allocated stream, or null if it does not
   * understand the protocol. 
   * \param name name of the stream type (human display only).
-  * \param callback the callback function
+  * \param callback the creator function
   */
 void
 ers::StreamFactory::register_out_stream( const std::string & name, OutputStreamCreator callback )

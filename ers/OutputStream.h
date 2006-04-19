@@ -63,17 +63,7 @@ namespace ers
     };
 }
 
-#include <ers/StreamFactory.h>
-
-#define ERS_REGISTER_OUTPUT_STREAM( class, name, param ) \
-namespace { \
-    struct OutputStreamRegistrator { \
-	static ers::OutputStream * create( const std::string & param ) \
-	{ return new class( param ); }  \
-        OutputStreamRegistrator() \
-	{ ers::StreamFactory::instance().register_out_stream( name, create ); } \
-    } registrator; \
-}
+#include <ers/internal/macro.h>
 
 #endif
 

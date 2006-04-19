@@ -30,11 +30,11 @@ namespace
     
     const char * const DefaultOutputStreams[] =
     {
-	"stdout",		// Debug
-	"stdout",		// Information
-	"stderr",		// Warning
-        "stderr",		// Error
-        "stderr,abort"		// Fatal
+	"lstdout",	// Debug
+	"lstdout",	// Information
+	"lstderr",	// Warning
+        "lstderr",	// Error
+        "lstderr,exit"	// Fatal
     };
     
     const char *
@@ -75,7 +75,6 @@ ers::StreamManager::StreamManager()
 }
 
 /** Destructor - basic cleanup
-  * \note in practice this method should never be called, the singleton should never be deallocated
   */
 ers::StreamManager::~StreamManager()
 {
