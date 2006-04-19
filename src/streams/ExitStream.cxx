@@ -21,11 +21,6 @@ ers::ExitStream::ExitStream( const std::string & exit_code )
 
 void ers::ExitStream::write( const Issue & issue )
 {
-    chained().write( issue );
-    ERS_INTERNAL_INFO( "Exiting with code " << exit_code_ )
     ::exit( exit_code_ );
 }
-
-
-
 

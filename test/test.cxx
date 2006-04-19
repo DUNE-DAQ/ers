@@ -30,50 +30,53 @@ void test_function( int index )
 
 void pass( int step )
 {
-    ERS_RANGE_CHECK( 0, step, 6 );
+    ERS_RANGE_CHECK( 0, step, 8 );
     
     ERS_DEBUG( 0, "performing step #" << step )
     switch ( step )
     {
     	case 1:
-        {
-	    ers::PermissionDenied issue( ERS_HERE, "foo2", 0x777 );
-	    throw issue;
-        }
+	    {
+		ers::PermissionDenied issue( ERS_HERE, "foo2", 0x777 );
+		throw issue;
+	    }
         case 2:
-        {
-	    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
-	    throw issue;
-        }
+	    {
+		ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+		throw issue;
+	    }
         case 3:
-        {
-	    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
-	    issue.add_qualifier( "ers_test" );
-	    throw issue;
-        }
+	    {
+		ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+		issue.add_qualifier( "ers_test" );
+		throw issue;
+	    }
         case 4:
-        {
-            for ( int level = 0; level < 4; level++ )
-            	ERS_DEBUG( level, "Debug message with level " << level );
-        }
-        break;
+	    {
+		for ( int level = 0; level < 4; level++ )
+		    ERS_DEBUG( level, "Debug message with level " << level );
+	    }
+	    break;
         case 5:
-        {
-            throw std::runtime_error( "std::out_of_range error" );
-        }
+	    {
+		throw std::runtime_error( "std::out_of_range error" );
+	    }
         case 6:
-        {
-            struct UnhandledException {};
-            throw UnhandledException();
-        }
+	    {
+		ERS_ASSERT_MSG( step <= 6, "it is been checked that ERS_PRECONDITION works properly" );
+	    }
+	    break;
         case 7:
-        {
-            ERS_ASSERT_MSG( step <= 6, "it is been checked that ERS_PRECONDITION works properly" );
-        }
+	    {
+		ERS_ASSERT_MSG( step > 6, "it is been checked that ERS_PRECONDITION works properly" );
+	    }
+	    break;
         default:
-        {
-            ERS_ASSERT_MSG( step <= 6, "ERS_PRECONDITION does not work properly" );
-        }
+	    {
+		ERS_INFO( "Unhandled exception will be thrown now. This is intentional !!! Program will be aborted. " );
+		struct UnhandledException {};
+		throw UnhandledException();
+	    }
     }
 }
 

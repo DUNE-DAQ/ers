@@ -27,7 +27,7 @@ apply_pattern   install_libs            files=$(instlibs)
 #       Test applications
 ########################################################################################################
 
-application	ers_test 		"-group=check -check ../test/test.cxx"
+application	ers_test 		"../test/test.cxx"
 application	ers_pc 			"../bin/config.cxx"
 application	ers_receiver 		"../test/receiver.cxx"
 
@@ -42,3 +42,5 @@ apply_pattern   install_apps            files="ers_pc ers_receiver"
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\
                                                                 files="*.h" \
                                                                 target_dir="internal"
+
+action 		check "../check_target.sh $(bin)"
