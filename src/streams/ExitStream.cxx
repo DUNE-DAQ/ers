@@ -19,7 +19,7 @@ ers::ExitStream::ExitStream( const std::string & exit_code )
     in >> exit_code_;
 }
 
-void ers::ExitStream::write( const Issue & issue )
+void ers::ExitStream::write( const Issue & )
 {
     ::exit( exit_code_ );
 }

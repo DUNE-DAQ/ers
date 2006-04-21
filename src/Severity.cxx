@@ -24,7 +24,7 @@ ERS_DECLARE_ISSUE(	ers,
  * \param s severity
  * \return reference to string with associated text 
  */
-const std::string
+std::string
 ers::to_string( ers::severity severity )
 {
     ERS_RANGE_CHECK( ers::Debug, severity, ers::Fatal )
@@ -36,7 +36,7 @@ ers::to_string( ers::severity severity )
  * \param s severity
  * \return pointer to string with associated text 
  */
-const std::string
+std::string
 ers::to_string( ers::Severity severity )
 {
     ERS_RANGE_CHECK( ers::Debug, severity, ers::Fatal )
@@ -57,11 +57,11 @@ ers::to_string( ers::Severity severity )
 ers::severity
 ers::parse( const std::string & string, ers::severity & s )
 {
-    for( ers::Severity ss = ers::Debug; ss <= ers::Fatal; ++((size_t&)ss) )
+    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {
 	if ( string == SeverityNames[ss] )
 	{
-            return ( s = ss );
+            return ( s = (ers::severity)ss );
 	}
     }
     throw ers::BadSeverity( ERS_HERE, string ); 

@@ -68,9 +68,9 @@ ers::StreamManager::instance()
   */
 ers::StreamManager::StreamManager()
 {
-    for( ers::severity ss = ers::Debug; ss <= ers::Fatal; ++((size_t&)ss) )
+    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-       m_out_streams[ss] = setup_stream( ss );
+       m_out_streams[ss] = setup_stream( (ers::severity)ss );
     }
 }
 
@@ -78,7 +78,7 @@ ers::StreamManager::StreamManager()
   */
 ers::StreamManager::~StreamManager()
 {
-    for( ers::severity ss = ers::Debug; ss <= ers::Fatal; ++((size_t&)ss) )
+    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
        delete m_out_streams[ss];
     }
@@ -207,9 +207,9 @@ ers::StreamManager::information( const Issue & issue )
 std::ostream & 
 ers::operator<<( std::ostream & out, const ers::StreamManager & )
 {
-    for( ers::severity ss = ers::Debug; ss <= ers::Fatal; ++((size_t&)ss) )
+    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-	out << ss << "\t\"" << get_stream_description( ss ) << "\"" << std::endl;
+	out << (ers::severity)ss << "\t\"" << get_stream_description( (ers::severity)ss ) << "\"" << std::endl;
     }
     return out;
 }

@@ -65,7 +65,8 @@ ers::Context::stack( ) const
   * \note the file name is truncated from the last slash 
   */
 std::string
-ers::Context::position() const {
+ers::Context::position() const
+{
     std::ostringstream out;
     const char * filename = file_name();
     char * pos = strstr( filename, "../" );

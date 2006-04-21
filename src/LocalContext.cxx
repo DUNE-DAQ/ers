@@ -14,7 +14,7 @@
 
 namespace
 {
-    const char * const get_cwd( )
+    const char * get_cwd( )
     {
 	static std::string buf;
 	if ( buf.empty() )
@@ -26,7 +26,7 @@ namespace
 	return buf.c_str();
     }
 
-    const char * const get_user_name()
+    const char * get_user_name()
     {
 	static std::string buf;
 	if ( buf.empty() )
@@ -38,7 +38,7 @@ namespace
 	return buf.c_str();
     }
 
-    const char * const get_host_name()
+    const char * get_host_name()
     {
 	static std::string buf;
 	if ( buf.empty() )

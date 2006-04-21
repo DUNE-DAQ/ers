@@ -39,10 +39,10 @@ namespace ers
         unsigned short	rank;
     };
         
-    severity 		parse( const std::string & s, severity & );	/**< \brief string to severity */
-    Severity 		parse( const std::string & s, Severity & );	/**< \brief string to severity */
-    const std::string	to_string( severity s );			/**< \brief severity to string */
-    const std::string   to_string( Severity s );			/**< \brief severity to string */
+    severity 	parse( const std::string & s, severity & );	/**< \brief string to severity */
+    Severity 	parse( const std::string & s, Severity & );	/**< \brief string to severity */
+    std::string	to_string( severity s );			/**< \brief severity to string */
+    std::string	to_string( Severity s );			/**< \brief severity to string */
 
     inline std::ostream & operator<<( std::ostream & out, ers::severity severity )
     {
