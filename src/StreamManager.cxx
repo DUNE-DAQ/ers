@@ -20,6 +20,7 @@
 #include <ers/internal/Util.h>
 #include <ers/internal/PluginManager.h>
 #include <ers/internal/NullStream.h>
+#include <ers/internal/SingletonCreator.h>
 
 namespace
 {
@@ -49,6 +50,11 @@ namespace
     }
 }
 
+namespace
+{
+    ers::SingletonCreator<ers::StreamManager>	_creator_;
+}
+
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a pointer to the singleton instance 
@@ -58,9 +64,12 @@ ers::StreamManager::instance()
 {
     /**Singleton instance
       */
-    static ers::PluginManager plugins;
-    static ers::StreamManager instance;
-    return instance;
+    static ers::PluginManager * plugins = new ers::PluginManager;
+    static ers::StreamManager * instance = new ers::StreamManager;
+    
+    _creator_.dummy();
+    
+    return *instance;
 } // instance
 
 /** Private constructor - can not be called by user code, use the \c instance() method instead

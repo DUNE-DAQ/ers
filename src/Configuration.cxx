@@ -11,6 +11,7 @@
 
 #include <ers/Configuration.h>
 #include <ers/ers.h>
+#include <ers/internal/SingletonCreator.h>
 
 namespace
 {
@@ -28,6 +29,12 @@ namespace
     }
 }
 
+
+namespace
+{
+    ers::SingletonCreator<ers::Configuration>	_creator_;
+}
+
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a pointer to the singleton instance 
@@ -37,8 +44,11 @@ ers::Configuration::instance()
 {
     /**Singleton instance
       */
-    static ers::Configuration instance;
-    return instance;
+    static ers::Configuration * instance = new ers::Configuration;
+    
+    _creator_.dummy();
+    
+    return *instance;
 } // instance
 
 /** Private constructor - can not be called by user code, use the \c instance() method instead

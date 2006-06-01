@@ -8,9 +8,9 @@
 
 namespace
 {
-    const std::string SEPARATOR = ":";
-    const std::string DefaultLibraryName = "ErsBaseStreams";
-    const std::string MRSStreamLibraryName = "mrsStream";
+    const char * const SEPARATOR = ":";
+    const char * const DefaultLibraryName = "ErsBaseStreams";
+    const char * const MRSStreamLibraryName = "mrsStream";
     const char * const EnvironmentName = "TDAQ_ERS_STREAM_LIBS";
 }
 
@@ -58,7 +58,7 @@ namespace ers
     PluginManager::PluginManager( )
     {
 	const char * env = ::getenv( EnvironmentName );
-        std::string config( env ? env + SEPARATOR + DefaultLibraryName : DefaultLibraryName );
+        std::string config( env ? std::string( env ) + SEPARATOR + DefaultLibraryName : DefaultLibraryName );
         
         std::vector<std::string> libs;
     	ers::tokenize( config, SEPARATOR, libs );

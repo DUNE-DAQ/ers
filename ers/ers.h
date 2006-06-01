@@ -202,7 +202,6 @@ if ( ers::debug_level() >= level ) \
   	class Assertion : public ers::Issue {
 	    template <class> friend class ers::IssueRegistrator;
             Assertion() { ; }
-            static const bool registered = ers::IssueRegistrator< ers::Assertion >::instance.done;
             static const char * get_uid() { return "ers::Assertion"; }
 
             virtual void raise() const throw( std::exception ) { throw *this; }

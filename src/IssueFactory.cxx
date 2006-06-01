@@ -12,8 +12,14 @@
 #include <ers/StreamFactory.h>
 #include <ers/Issue.h>
 #include <ers/ers.h>
+#include <ers/internal/SingletonCreator.h>
 
 ERS_DECLARE_ISSUE( ers, DefaultIssue, , )
+
+namespace
+{
+    ers::SingletonCreator<ers::IssueFactory>	_creator_;
+}
 
 /** Returns the singleton instance of the factory.
   * \return a pointer to the singleton instance 
@@ -21,8 +27,11 @@ ERS_DECLARE_ISSUE( ers, DefaultIssue, , )
 ers::IssueFactory &
 ers::IssueFactory::instance()
 {
-    static ers::IssueFactory instance;
-    return instance;
+    static ers::IssueFactory * instance = new ers::IssueFactory;
+    
+    _creator_.dummy();
+    
+    return *instance;
 } // instance
 
 /** Register an issue type with the factory 

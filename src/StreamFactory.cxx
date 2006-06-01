@@ -19,6 +19,12 @@
 #include <ers/internal/NullStream.h>
 #include <ers/internal/PluginManager.h>
 #include <ers/internal/macro.h>
+#include <ers/internal/SingletonCreator.h>
+
+namespace
+{
+    ers::SingletonCreator<ers::StreamFactory>	_creator_;
+}
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
@@ -29,8 +35,11 @@ ers::StreamFactory::instance()
 {
     /**Singleton instance
       */
-    static ers::StreamFactory instance;
-    return instance;
+    static ers::StreamFactory * instance = new ers::StreamFactory;
+    
+    _creator_.dummy();
+    
+    return *instance;
 } // instance
 
 /** Builds a stream from a textual key 
