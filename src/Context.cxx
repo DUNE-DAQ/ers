@@ -31,7 +31,7 @@ namespace
 	    *function_end = 0;
 	    char * name = abi::__cxa_demangle( function_begin, 0, 0, &status );
 	    std::ostringstream out;
-	    out << ( name ? name : function_begin ) << "() from " << module;
+	    out << ( name ? name : function_begin ) << " from " << module;
 	    if ( name )
 		free( name );
 	    return out.str();

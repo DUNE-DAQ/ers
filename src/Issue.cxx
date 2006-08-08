@@ -25,7 +25,6 @@ ERS_DECLARE_ISSUE( ers, StdIssue, , )
 /** Constructor - takes another exceptions as the cause for the current exception.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
  * \param message the user message associated with this issue
- * \param cause_exception the exception that caused the current Issue
  */
 Issue::Issue(	const Context & context,
 		const std::string & message )
@@ -40,12 +39,29 @@ Issue::Issue(	const Context & context,
 
 /** Constructor - takes another exceptions as the cause for the current exception.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
- * \param message the user message associated with this issue
- * \param cause_exception the exception that caused the current Issue
+ * \param cause exception that caused the current Issue
  */
 Issue::Issue(	const Context & context,
                 const std::exception & cause )
   : m_context( context.clone() ),
+    m_severity( ers::Error ),
+    m_time( boost::posix_time::second_clock::local_time() )
+{
+    const Issue * issue = dynamic_cast<const Issue *>( &cause );
+    m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
+    add_qualifier( m_context->package_name() );
+}
+
+/** Constructor - takes another exceptions as the cause for the current exception.
+ * \param context the context of the Issue, e.g where in the code did the issue appear  
+ * \param message the user message associated with this issue
+ * \param cause exception that caused the current Issue
+ */
+Issue::Issue(	const Context & context,
+		const std::string & message,
+		const std::exception & cause )
+  : m_context( context.clone() ),
+    m_message( message ),
     m_severity( ers::Error ),
     m_time( boost::posix_time::second_clock::local_time() )
 {

@@ -73,6 +73,10 @@ namespace ers
 	
 	Issue(	const Context & context,
 		const std::exception & cause );
+
+	Issue(	const Context & context,
+		const std::string & message,
+                const std::exception & cause ); 	
 	
 	Issue( const Issue & other )
 	  : std::exception( other ),
@@ -243,6 +247,15 @@ namespace namespace_name { \
           ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
 	} \
         \
+	class_name( const ers::Context & context, \
+        	    const std::string & msg \
+        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
+                    const std::exception & cause ) \
+          : ERS_BASE_CLASS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
+	{  \
+          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
+	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+	} \
 	class_name( const ers::Context & context \
         	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
                     const std::exception & cause ) \
@@ -256,7 +269,7 @@ namespace namespace_name { \
     }; \
 } \
 namespace { \
-	const ers::IssueRegistrator<namespace_name::class_name> namespace_name##_##class_name##_instance; \
+	ers::IssueRegistrator<namespace_name::class_name> namespace_name##_##class_name##_instance; \
 }
 
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \

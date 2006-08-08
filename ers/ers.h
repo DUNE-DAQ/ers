@@ -50,7 +50,11 @@ namespace ers
     { StreamManager::instance().warning( issue ); }
 }
 
-ERS_DECLARE_ISSUE( ers, Info, , )
+ERS_DECLARE_ISSUE( ers, DEBUG, , )
+ERS_DECLARE_ISSUE( ers, INFO, , )
+ERS_DECLARE_ISSUE( ers, WARNING, , )
+ERS_DECLARE_ISSUE( ers, ERROR, , )
+ERS_DECLARE_ISSUE( ers, FATAL, , )
 
 #ifndef ERS_NO_DEBUG
 /** \def ERS_DEBUG( level, message) This macro sends the message to the ers::debug stream
@@ -62,7 +66,7 @@ if ( ers::debug_level() >= level ) \
 { \
     std::ostringstream out; \
     out << message; \
-    ers::debug( ers::Info( ERS_HERE, out.str() ), level ); \
+    ers::debug( ers::DEBUG( ERS_HERE, out.str() ), level ); \
 } }
 #else
 #define ERS_DEBUG( level, message )
@@ -74,7 +78,7 @@ if ( ers::debug_level() >= level ) \
 { \
     std::ostringstream out; \
     out << message; \
-    ers::info( ers::Info( ERS_HERE, out.str() ) ); \
+    ers::info( ers::INFO( ERS_HERE, out.str() ) ); \
 }
 
 /** \def ERS_WARNING( message) This macro sends the message to the ers::warning stream.
@@ -83,7 +87,25 @@ if ( ers::debug_level() >= level ) \
 { \
     std::ostringstream out; \
     out << message; \
-    ers::warning( ers::Info( ERS_HERE, out.str() ) ); \
+    ers::warning( ers::WARNING( ERS_HERE, out.str() ) ); \
+}
+    	
+/** \def ERS_ERROR( message) This macro sends the message to the ers::error stream.
+ */
+#define ERS_ERROR( message ) \
+{ \
+    std::ostringstream out; \
+    out << message; \
+    ers::error( ers::ERROR( ERS_HERE, out.str() ) ); \
+}
+    	
+/** \def ERS_FATAL( message) This macro sends the message to the ers::error stream.
+ */
+#define ERS_FATAL( message ) \
+{ \
+    std::ostringstream out; \
+    out << message; \
+    ers::fatal( ers::FATAL( ERS_HERE, out.str() ) ); \
 }
     	
 #endif

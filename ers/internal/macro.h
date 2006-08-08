@@ -20,7 +20,7 @@ if ( ers::debug_level() >= level ) \
 { \
     std::ostringstream out; \
     out << message; \
-    ers::Info info( ERS_HERE, out.str() ); \
+    ers::DEBUG info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Severity( ers::Debug, level ) ); \
     std::cout << info << std::endl; \
 } }
@@ -28,7 +28,7 @@ if ( ers::debug_level() >= level ) \
 #define ERS_INTERNAL_INFO( message ) { \
     std::ostringstream out; \
     out << message; \
-    ers::Info info( ERS_HERE, out.str() ); \
+    ers::INFO info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Information ); \
     std::cerr << info << std::endl; \
 }
@@ -36,7 +36,7 @@ if ( ers::debug_level() >= level ) \
 #define ERS_INTERNAL_WARNING( message ) { \
     std::ostringstream out; \
     out << message; \
-    ers::Info info( ERS_HERE, out.str() ); \
+    ers::WARNING info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Warning ); \
     std::cerr << info << std::endl; \
 }
@@ -44,7 +44,7 @@ if ( ers::debug_level() >= level ) \
 #define ERS_INTERNAL_ERROR( message ) { \
     std::ostringstream out; \
     out << message; \
-    ers::Info info( ERS_HERE, out.str() ); \
+    ers::ERROR info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Error ); \
     std::cerr << info << std::endl; \
 }
