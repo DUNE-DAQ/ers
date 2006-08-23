@@ -20,7 +20,7 @@
   
 void test_function( int index )
 {
-    for( int i = 0; i < 100; i++ )
+    for( int i = 0; i < 10; i++ )
     {
 	ERS_DEBUG( 0, "performing step # " << i << " in thread " << index )
 	ERS_WARNING( "warning #" << i << " in thread " << index )
@@ -100,11 +100,13 @@ int main(int , char** )
 	catch ( ers::PermissionDenied & ex )
 	{
 	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
-	    ers::warning( issue );
+	    issue.add_qualifier( "q1" );
+            ers::warning( issue );
 	}
 	catch ( ers::FileDoesNotExist & ex )
 	{
 	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+	    issue.add_qualifier( "q2" );
 	    ers::warning( issue );
 	}
 	catch ( ers::Issue & ex )
@@ -115,6 +117,7 @@ int main(int , char** )
 	catch ( std::exception & ex )
 	{
 	    ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
+	    issue.add_qualifier( "q3" );
 	    ers::warning( issue );
 	}
     }

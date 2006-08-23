@@ -28,6 +28,8 @@
 
 namespace ers
 {
+    typedef Issue Exception;
+    
     inline int debug_level( )
     { return Configuration::instance().debug_level( ); }
     

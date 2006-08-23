@@ -17,17 +17,23 @@
 #include <ers/Severity.h>
 #include <ers/Configuration.h>
 #include <ers/ers.h>
+#include <ers/internal/macro.h>
 #include <ers/internal/Util.h>
 #include <ers/internal/PluginManager.h>
 #include <ers/internal/NullStream.h>
 #include <ers/internal/SingletonCreator.h>
+
+ERS_DECLARE_ISSUE(      ers,
+                        BadConfiguration,
+                        "The stream configuration string \"" << config << "\" has syntax errors.",
+                        ((std::string)config) )
 
 namespace
 {
     /** This variable contains the default keys for building the default streams.
       * The default is to use the default stream, in verbose mode for errors and fatals.
       */
-    const char * const SEPARATORS = ",";
+    const char SEPARATOR = ',';
     
     const char * const DefaultOutputStreams[] =
     {
@@ -47,6 +53,43 @@ namespace
 	env_name += ers::to_string( severity );
 	const char * env = ::getenv( env_name.c_str() );
 	return env ? env : DefaultOutputStreams[severity];
+    }
+    
+    void
+    parse_stream_definition(	const std::string & text,
+				std::vector<std::string> & result ) throw ( ers::BadConfiguration )
+    {
+	std::string::size_type start_p = 0, end_p = 0;
+	short brackets_open = 0;
+	while ( end_p < text.length() )
+	{
+	    switch ( text[end_p] )
+	    {
+		case '(':
+		    ++brackets_open;
+		    break;
+		case ')':
+		    --brackets_open;
+		    break;
+		case SEPARATOR:
+		    if ( !brackets_open )
+		    {
+			result.push_back( text.substr( start_p, end_p - start_p ) );
+			start_p = end_p + 1;
+		    }
+		default:
+		    break;
+	    }
+	    end_p++;
+	}
+        if ( brackets_open )
+        {
+            throw ers::BadConfiguration( ERS_HERE, text );
+        }
+        if ( start_p != end_p )
+        {
+	    result.push_back( text.substr( start_p, end_p - start_p ) );
+        }
     }
 }
 
@@ -108,15 +151,30 @@ ers::StreamManager::setup_stream( ers::severity severity )
 {    
     std::string config = get_stream_description( severity );
     std::vector<std::string> streams;
-    ers::tokenize( config, SEPARATORS, streams );
+    try
+    {
+    	parse_stream_definition( config, streams );
+    }
+    catch ( ers::BadConfiguration & ex )
+    {
+	ERS_INTERNAL_ERROR(	"Configuration for the \"" << severity << "\" stream is invalid. "
+        			"Default configuration will be used." );
+    }
 
     ers::OutputStream * main = setup_stream( streams );
     
     if ( !main )
     {
 	std::vector<std::string> default_streams;
-	ers::tokenize( DefaultOutputStreams[severity], SEPARATORS, default_streams );
-    	main = setup_stream( default_streams );
+	try
+	{
+	    parse_stream_definition( DefaultOutputStreams[severity], default_streams );
+	    main = setup_stream( default_streams );
+        }
+	catch ( ers::BadConfiguration & ex )
+	{
+	    ERS_INTERNAL_ERROR( "Can not configure the \"" << severity << "\" stream because of the following issue {" << ex << "}" );
+	}
     }   
     return ( main ? main : new ers::NullStream() );
 }

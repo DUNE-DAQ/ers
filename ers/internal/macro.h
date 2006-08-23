@@ -49,4 +49,13 @@ if ( ers::debug_level() >= level ) \
     std::cerr << info << std::endl; \
 }
  
+#define ERS_INTERNAL_FATAL( message ) { \
+    std::ostringstream out; \
+    out << message; \
+    ers::FATAL info( ERS_HERE, out.str() ); \
+    info.set_severity( ers::Fatal ); \
+    std::cerr << info << std::endl; \
+    exit( 13 ); \
+}
+ 
 #endif
