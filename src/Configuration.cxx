@@ -56,7 +56,8 @@ ers::Configuration::instance()
   */
 ers::Configuration::Configuration()
   : m_debug_level( 0 ),
-    m_verbosity_level( 0 )
+    m_verbosity_level( 0 ),
+    m_function_detail_level( 1 )
 {
     static bool initialised = false;
     if ( !initialised )
@@ -64,6 +65,7 @@ ers::Configuration::Configuration()
 	initialised = true;
         read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
 	read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+	read_environment( "TDAQ_ERS_FUNCTION_DETAIL_LEVEL", m_function_detail_level );
     }
 }
 
@@ -71,6 +73,7 @@ ers::Configuration::Configuration()
 std::ostream & 
 ers::operator<<( std::ostream & out, const ers::Configuration & conf )
 {
-    out << "debug level = " << conf.m_debug_level << " verbosity level = " << conf.m_verbosity_level;
+    out << "debug level = " << conf.m_debug_level << " verbosity level = " << conf.m_verbosity_level
+    	<< "function detail level = " << m_function_detail_level;
     return out;
 }

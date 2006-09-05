@@ -38,6 +38,19 @@ namespace
 	}
 	return std::string( mangled );
     }
+    
+    void
+    print_function( std::ostream & out, const char * function )
+    {
+	const char * pos = strchr( function, '(' );
+	if ( pos )
+	{
+	    out.write( function_name(), pos - function );
+	    out << "(...)";
+	} else {
+	    out << function_name();
+	}
+    }
 }
 
 std::vector<std::string>
@@ -68,14 +81,19 @@ std::string
 ers::Context::position() const
 {
     std::ostringstream out;
-    const char * filename = file_name();
-    char * pos = strstr( filename, "../" );
-    out << "<" << function_name() << "> at ";
-    if ( pos == filename ) {
-	out << package_name() << (pos + 2);
+    out << "<";
+    print_function( out, function_name() );
+    out << "> at ";
+    
+    const char * file = file_name();
+    if (    file[0] == '.'
+    	&&  file[0] == '.'
+        &&  file[0] == '/' ) // file name starts with "../"
+    {
+	out << package_name() << (file + 2);
     } else {
-	out << file_name();
-    } //
+	out << file;
+    }
     out << ":" << line_number();
     return out.str();
 }

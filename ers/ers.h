@@ -71,7 +71,7 @@ if ( ers::debug_level() >= level ) \
     ers::debug( ers::DEBUG( ERS_HERE, out.str() ), level ); \
 } }
 #else
-#define ERS_DEBUG( level, message )
+#define ERS_DEBUG( level, message ) { }
 #endif
 
 /** \def ERS_INFO( message) This macro sends the message to the ers::info stream.
