@@ -57,7 +57,7 @@ namespace ers
         int & verbosity_level()			/**< \brief can be used to set the current verbosity level */
         { return m_verbosity_level; }
         
-        int & function_detail_level() const	/**< \brief can be used to set the  current state of the function signature print configuration */
+        int & function_detail_level()		/**< \brief can be used to set the  current state of the function signature print configuration */
         { return m_function_detail_level; }
         
       private:	

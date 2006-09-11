@@ -15,6 +15,7 @@
 #include <execinfo.h>
 
 #include <ers/Context.h>
+#include <ers/Configuration.h>
 
 namespace
 {
@@ -42,13 +43,19 @@ namespace
     void
     print_function( std::ostream & out, const char * function )
     {
-	const char * pos = strchr( function, '(' );
+	if ( ers::Configuration::instance().function_detail_level() )
+        {
+	    out << function;
+            return;
+        }
+        
+        const char * pos = strchr( function, '(' );
 	if ( pos )
 	{
-	    out.write( function_name(), pos - function );
+	    out.write( function, pos - function );
 	    out << "(...)";
 	} else {
-	    out << function_name();
+	    out << function;
 	}
     }
 }
@@ -75,7 +82,6 @@ ers::Context::stack( ) const
 /** Pretty printed code position 
   * format: package_name/file_name:line_number <function_name>
   * \return reference to string containing format
-  * \note the file name is truncated from the last slash 
   */
 std::string
 ers::Context::position() const

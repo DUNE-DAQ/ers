@@ -74,6 +74,6 @@ std::ostream &
 ers::operator<<( std::ostream & out, const ers::Configuration & conf )
 {
     out << "debug level = " << conf.m_debug_level << " verbosity level = " << conf.m_verbosity_level
-    	<< "function detail level = " << m_function_detail_level;
+    	<< "function detail level = " << conf.m_function_detail_level;
     return out;
 }

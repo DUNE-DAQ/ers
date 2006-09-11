@@ -13,10 +13,16 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-/** \file test.cxx 
-  * This file contains a very simple example of using ERS. 
-  * Basically, we use the custom issue defined in ExampleIssue. 
-  */
+template <class ClassParameterType1, class ClassParameterType2>
+struct Test
+{
+    template <class FunctionParameterType1, class FunctionParameterType2>
+    static void
+    function( FunctionParameterType1 , FunctionParameterType2 )
+    {
+    	ERS_WARNING( "test the details level of the issue location printout" );
+    }
+};  
   
 void test_function( int index )
 {
@@ -90,6 +96,9 @@ int main(int , char** )
     boost::thread thr3( boost::bind(test_function,3) );
     boost::thread thr4( boost::bind(test_function,4) );
     sleep( 10 );
+    
+    Test<int,float>::function( 1, 2 );
+    Test<int,float>::function( 1.1, 2.2 );
     
     while( step++ < 10 )
     {
