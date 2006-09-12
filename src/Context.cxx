@@ -43,7 +43,7 @@ namespace
     void
     print_function( std::ostream & out, const char * function )
     {
-	if ( ers::Configuration::instance().function_detail_level() )
+	if ( ers::Configuration::instance().verbosity_level() )
         {
 	    out << function;
             return;

@@ -48,24 +48,17 @@ namespace ers
         int verbosity_level() const		/**< \brief returns current verbosity level */
         { return m_verbosity_level; }
         
-        int function_detail_level() const	/**< \brief returns current state of the function signature print configuration */
-        { return m_function_detail_level; }
-        
         int & debug_level()			/**< \brief can be used to set the current debug level */
         { return m_debug_level; }
         
         int & verbosity_level()			/**< \brief can be used to set the current verbosity level */
         { return m_verbosity_level; }
         
-        int & function_detail_level()		/**< \brief can be used to set the  current state of the function signature print configuration */
-        { return m_function_detail_level; }
-        
       private:	
 	Configuration( );
 
     	int m_debug_level;		/**< \brief current active level for the debug stream */	
     	int m_verbosity_level;		/**< \brief current verbosity level for all streams */
-    	int m_function_detail_level;	/**< \brief whether to print complete function sugnature or just the function name  */
     };
     
     std::ostream & operator<<( std::ostream &, const ers::Configuration & );

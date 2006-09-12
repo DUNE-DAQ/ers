@@ -129,9 +129,9 @@ namespace ers
     std::ostream & operator<<( std::ostream & out, const ers::Issue & issue )
     {
 	out << ers::to_string( issue.severity() ) << " " << issue.time() << " ["
-	    << issue.context().position() << "] \"" << issue.message() << "\"";
+	    << issue.context().position() << "] " << issue.message();
 	
-	if ( ers::verbosity_level() > 0 )
+	if ( ers::verbosity_level() > 1 )
 	{
 	    ers::string_map::const_iterator it = issue.parameters().begin();
             for ( ; it != issue.parameters().end(); ++it )
@@ -140,7 +140,7 @@ namespace ers
 	    }
         }
 	
-        if ( ers::verbosity_level() > 1 )
+        if ( ers::verbosity_level() > 2 )
 	{
 	    out << FIELD_SEPARATOR << "host = " << issue.context().host_name()
 		<< FIELD_SEPARATOR << "user = " << issue.context().user_name()
@@ -149,7 +149,7 @@ namespace ers
 		<< FIELD_SEPARATOR << "process wd = " << issue.context().cwd();
 	}
         
-	if ( ers::verbosity_level() > 2 )
+	if ( ers::verbosity_level() > 3 )
 	{
 	    std::vector<std::string> stack = issue.context().stack();
 	    for( size_t i = 0; i < stack.size(); i++ )
