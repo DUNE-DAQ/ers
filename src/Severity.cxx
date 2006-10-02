@@ -27,7 +27,7 @@ ERS_DECLARE_ISSUE(	ers,
 std::string
 ers::to_string( ers::severity severity )
 {
-    ERS_RANGE_CHECK( ers::Debug, severity, ers::Fatal )
+    assert( ers::Debug <= severity && severity <= ers::Fatal );
     return SeverityNames[severity];
 }
 
@@ -39,7 +39,7 @@ ers::to_string( ers::severity severity )
 std::string
 ers::to_string( ers::Severity severity )
 {
-    ERS_RANGE_CHECK( ers::Debug, severity, ers::Fatal )
+    assert( ers::Debug <= severity && severity <= ers::Fatal );
 
     if ( severity.type == ers::Debug )
     {

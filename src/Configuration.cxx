@@ -12,6 +12,7 @@
 #include <ers/Configuration.h>
 #include <ers/ers.h>
 #include <ers/internal/SingletonCreator.h>
+#include <ers/internal/macro.h>
 
 namespace
 {
@@ -23,7 +24,7 @@ namespace
 	{
 	    if ( sscanf( env, "%d", &value ) != 1 )
 	    {
-		ERS_WARNING( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
+		ERS_INTERNAL_WARNING( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
 	    }
 	}
     }

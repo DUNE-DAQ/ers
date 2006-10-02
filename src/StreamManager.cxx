@@ -47,7 +47,7 @@ namespace
     const char *
     get_stream_description( ers::severity severity )
     {
-	ERS_RANGE_CHECK( ers::Debug, severity, ers::Fatal )
+	assert( ers::Debug <= severity && severity <= ers::Fatal );
         
 	std::string env_name( "TDAQ_ERS_" );
 	env_name += ers::to_string( severity );
