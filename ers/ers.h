@@ -58,6 +58,13 @@ ERS_DECLARE_ISSUE( ers, WARNING, , )
 ERS_DECLARE_ISSUE( ers, ERROR, , )
 ERS_DECLARE_ISSUE( ers, FATAL, , )
 
+#define ERS_REPORT_IMPL( stream, issue, message ) \
+{ \
+    std::ostringstream ers_report_impl_out_buffer; \
+    ers_report_impl_out_buffer << message; \
+    stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) ); \
+}
+
 #ifndef ERS_NO_DEBUG
 /** \def ERS_DEBUG( level, message) This macro sends the message to the ers::debug stream
  * if level is less or equal to the TDAQ_ERS_DEBUG_LEVEL, which is equal to 0 by default.
@@ -66,48 +73,38 @@ ERS_DECLARE_ISSUE( ers, FATAL, , )
 #define ERS_DEBUG( level, message ) { \
 if ( ers::debug_level() >= level ) \
 { \
-    std::ostringstream out; \
-    out << message; \
-    ers::debug( ers::DEBUG( ERS_HERE, out.str() ), level ); \
+    ERS_REPORT_IMPL( ers::debug, ers::DEBUG, message ); \
 } }
 #else
 #define ERS_DEBUG( level, message ) { }
 #endif
 
-/** \def ERS_INFO( message) This macro sends the message to the ers::info stream.
+/** \def ERS_INFO( message ) This macro sends the message to the ers::info stream.
  */
 #define ERS_INFO( message ) \
 { \
-    std::ostringstream out; \
-    out << message; \
-    ers::info( ers::INFO( ERS_HERE, out.str() ) ); \
+    ERS_REPORT_IMPL( ers::info, ers::INFO, message ); \
 }
 
-/** \def ERS_WARNING( message) This macro sends the message to the ers::warning stream.
+/** \def ERS_WARNING( message ) This macro sends the message to the ers::warning stream.
  */
 #define ERS_WARNING( message ) \
 { \
-    std::ostringstream out; \
-    out << message; \
-    ers::warning( ers::WARNING( ERS_HERE, out.str() ) ); \
+    ERS_REPORT_IMPL( ers::warning, ers::WARNING, message ); \
 }
     	
-/** \def ERS_ERROR( message) This macro sends the message to the ers::error stream.
+/** \def ERS_ERROR( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_ERROR( message ) \
 { \
-    std::ostringstream out; \
-    out << message; \
-    ers::error( ers::ERROR( ERS_HERE, out.str() ) ); \
+    ERS_REPORT_IMPL( ers::error, ers::ERROR, message ); \
 }
     	
-/** \def ERS_FATAL( message) This macro sends the message to the ers::error stream.
+/** \def ERS_FATAL( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_FATAL( message ) \
 { \
-    std::ostringstream out; \
-    out << message; \
-    ers::fatal( ers::FATAL( ERS_HERE, out.str() ) ); \
+    ERS_REPORT_IMPL( ers::fatal, ers::FATAL, message ); \
 }
     	
 #endif
