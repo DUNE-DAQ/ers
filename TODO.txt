@@ -1,2 +1,1 @@
-1. Define separate issues for debug, information and warning macros
-2. Use smart pointer for storing streams and reuse already existing streams instead of creating new ones
+1. Use smart pointer for storing streams and reuse already existing streams instead of creating new ones
