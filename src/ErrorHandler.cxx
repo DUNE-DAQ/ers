@@ -86,6 +86,7 @@ namespace ers
 	    ::abort();
         Configuration::instance().verbosity_level() = 13;
         ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
+	abort();
     }   
     
     ErrorHandler::ErrorHandler()
@@ -123,6 +124,7 @@ namespace ers
         {
             ers::fatal( UnhandledException( ERS_HERE, "unknown" ) );
         }
+	abort();
     }
 }
 

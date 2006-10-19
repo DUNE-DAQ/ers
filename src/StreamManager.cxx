@@ -41,7 +41,7 @@ namespace
 	"lstdout",	// Information
 	"lstderr",	// Warning
         "lstderr",	// Error
-        "lstderr,exit"	// Fatal
+        "lstderr"	// Fatal
     };
     
     const char *
