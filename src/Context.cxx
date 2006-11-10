@@ -87,14 +87,13 @@ std::string
 ers::Context::position() const
 {
     std::ostringstream out;
-    out << "<";
     print_function( out, function_name() );
-    out << "> at ";
+    out << " at ";
     
     const char * file = file_name();
     if (    file[0] == '.'
-    	&&  file[0] == '.'
-        &&  file[0] == '/' ) // file name starts with "../"
+    	&&  file[1] == '.'
+        &&  file[2] == '/' ) // file name starts with "../"
     {
 	out << package_name() << (file + 2);
     } else {
