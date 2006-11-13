@@ -28,7 +28,7 @@ namespace
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
-  * \return a pointer to the singleton instance 
+  * \return a reference to the singleton instance 
   */
 ers::StreamFactory &
 ers::StreamFactory::instance()
@@ -43,12 +43,11 @@ ers::StreamFactory::instance()
 } // instance
 
 /** Builds a stream from a textual key 
-  * The key should have the format \c protocol:path.extension
-  * In certain cases, the path will be empty. 
-  * For instance to write in XML format to the error stream, the key is: 
-  * \c cerr:.xml 
+  * The key should have the format \c stream_name[(stream_parameters)]
+  * For some streams parameters can be ommitted. 
+  * For instance to write to the error stream, the key is: 
+  * \c stderr
   * \param format the format, which describes new stream
-  * \param default_format the key, which will be used for the new stream creation if the format could ot be parsed successfully
   * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
   */
 ers::OutputStream *
@@ -87,12 +86,11 @@ ers::StreamFactory::create_out_stream( const std::string & format ) const
 }
 
 /** Builds a stream from a textual key 
-  * The key should have the format \c protocol:path.extension
-  * In certain cases, the path will be empty. 
-  * For instance to write in XML format to the error stream, the key is: 
-  * \c cerr:.xml 
-  * \param stream stream type, which defines what stream implementation has to be used
-  * \param filter defines what messages have to be received
+  * The key should have the format \c stream_name[(stream_parameters)]
+  * For some streams parameters can be ommitted. 
+  * For instance to write to the error stream, the key is: 
+  * \c stderr
+  * \param format the format, which describes new stream
   * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
   */
 ers::InputStream *
