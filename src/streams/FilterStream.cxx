@@ -18,7 +18,7 @@ ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
 namespace
 {
     const char NOT = '!';
-    const char * const SEPARATORS = "," ;
+    const char * const SEPARATORS = ";" ;
 } // anonymous namespace 
 
 /** Constructor 

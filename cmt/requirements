@@ -16,7 +16,7 @@ library		ers				$(lib_opts)	"*.cxx"
 macro           ers_shlibflags          	" -lboost_date_time-$(boost_libsuffix)" 
 
 library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
-macro           ErsBaseStreams_shlibflags          " -lers -lboost_thread-$(boost_libsuffix)" 
+macro           ErsBaseStreams_shlibflags	" -lers -lboost_thread-$(boost_libsuffix) -lboost_regex-$(boost_libsuffix)" 
 
 macro		instlibs		"libers.so libErsBaseStreams.so"	\
 		osx			"libers.dylib libErsBaseStreams.dylib"

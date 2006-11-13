@@ -405,7 +405,7 @@ if ( ers::debug_level() >= level ) \
   by the "ipc" CMT package (for example by the libipc.so library), will be given to the "throw"
   stream. Errors from all the other CMT packages will be only printed to the standard error
   stream. One can also define complex and reversed filters like in the following example:
-  \code > export TDAQ_ERS_ERROR="stderr,filter(!ipc,!is),throw" \endcode
+  \code > export TDAQ_ERS_ERROR="stderr,filter(!ipc;!is),throw" \endcode
   This configuration will throw all the errors, which are neither from "ipc" nor from "is"
   CMT packages.
   
