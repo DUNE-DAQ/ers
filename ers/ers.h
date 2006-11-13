@@ -26,6 +26,10 @@
 #include <ers/Assertion.h>
 #include <ers/Severity.h>
 
+#include <boost/preprocessor/logical/not.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/facilities/is_empty.hpp>
+
 namespace ers
 {
     typedef Issue Exception;
@@ -58,11 +62,12 @@ ERS_DECLARE_ISSUE( ers, WARNING, , )
 ERS_DECLARE_ISSUE( ers, ERROR, , )
 ERS_DECLARE_ISSUE( ers, FATAL, , )
 
-#define ERS_REPORT_IMPL( stream, issue, message ) \
+#define ERS_REPORT_IMPL( stream, issue, message, level ) \
 { \
     std::ostringstream ers_report_impl_out_buffer; \
     ers_report_impl_out_buffer << message; \
-    stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) ); \
+    stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) \
+	    BOOST_PP_COMMA_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( level ) ) ) level ); \
 }
 
 #ifndef ERS_NO_DEBUG
@@ -73,7 +78,7 @@ ERS_DECLARE_ISSUE( ers, FATAL, , )
 #define ERS_DEBUG( level, message ) { \
 if ( ers::debug_level() >= level ) \
 { \
-    ERS_REPORT_IMPL( ers::debug, ers::DEBUG, message ); \
+    ERS_REPORT_IMPL( ers::debug, ers::DEBUG, message, level ); \
 } }
 #else
 #define ERS_DEBUG( level, message ) { }
@@ -83,28 +88,28 @@ if ( ers::debug_level() >= level ) \
  */
 #define ERS_INFO( message ) \
 { \
-    ERS_REPORT_IMPL( ers::info, ers::INFO, message ); \
+    ERS_REPORT_IMPL( ers::info, ers::INFO, message, ); \
 }
 
 /** \def ERS_WARNING( message ) This macro sends the message to the ers::warning stream.
  */
 #define ERS_WARNING( message ) \
 { \
-    ERS_REPORT_IMPL( ers::warning, ers::WARNING, message ); \
+    ERS_REPORT_IMPL( ers::warning, ers::WARNING, message, ); \
 }
     	
 /** \def ERS_ERROR( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_ERROR( message ) \
 { \
-    ERS_REPORT_IMPL( ers::error, ers::ERROR, message ); \
+    ERS_REPORT_IMPL( ers::error, ers::ERROR, message, ); \
 }
     	
 /** \def ERS_FATAL( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_FATAL( message ) \
 { \
-    ERS_REPORT_IMPL( ers::fatal, ers::FATAL, message ); \
+    ERS_REPORT_IMPL( ers::fatal, ers::FATAL, message, ); \
 }
     	
 #endif
