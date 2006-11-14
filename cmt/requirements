@@ -17,11 +17,12 @@ macro           ers_shlibflags          	" -lboost_date_time-$(boost_libsuffix)"
 
 library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags	" -lers -lboost_thread-$(boost_libsuffix) -lboost_regex-$(boost_libsuffix)" 
+macro		ErsBaseStreams_dependencies	"ers" 
 
-macro		instlibs		"libers.so libErsBaseStreams.so"	\
-		osx			"libers.dylib libErsBaseStreams.dylib"
+macro		instlibs			"libers.so libErsBaseStreams.so"	\
+		osx				"libers.dylib libErsBaseStreams.dylib"
 		
-apply_pattern   install_libs            files=$(instlibs)
+apply_pattern   install_libs            	files=$(instlibs)
 
 ########################################################################################################
 #       Test applications
@@ -31,12 +32,14 @@ application	ers_test 		"../test/test.cxx"
 application	ers_pc 			"../bin/config.cxx"
 application	ers_receiver 		"../test/receiver.cxx"
 
-macro		ers_test_dependencies	"ers" 
-macro		ers_testlinkopts	"-lers -lboost_date_time-$(boost_libsuffix) -lboost_thread-$(boost_libsuffix)"
-macro		ers_receiverlinkopts	"-lers -lboost_date_time-$(boost_libsuffix)"
+macro		ers_test_dependencies		"ers" 
+macro		ers_testlinkopts		"-lers -lboost_date_time-$(boost_libsuffix) -lboost_thread-$(boost_libsuffix)"
 
-macro		ers_pc_dependencies	"ers" 
-macro		ers_pclinkopts		"-lers -lboost_date_time-$(boost_libsuffix)"
+macro		ers_receiver_dependencies	"ers" 
+macro		ers_receiverlinkopts		"-lers -lboost_date_time-$(boost_libsuffix)"
+
+macro		ers_pc_dependencies		"ers" 
+macro		ers_pclinkopts			"-lers -lboost_date_time-$(boost_libsuffix)"
 
 apply_pattern   install_apps            files="ers_pc ers_receiver"
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\
