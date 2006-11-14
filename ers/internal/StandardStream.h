@@ -7,6 +7,11 @@
  *
  */
  
+/** \file StandardErrStream.h This file defines StandardErrStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_STANDARD_ERR_STREAM_H
 #define ERS_STANDARD_ERR_STREAM_H
 

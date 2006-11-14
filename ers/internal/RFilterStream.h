@@ -7,6 +7,11 @@
  *
  */
 
+/** \file RFilterStream.h This file defines RFilterStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_STREAM_RFILTER_H 
 #define ERS_STREAM_RFILTER_H
 

@@ -7,6 +7,11 @@
  *
  */
 
+/** \file ExitStream.h This file defines ExitStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_EXIT_STREAM_H
 #define ERS_EXIT_STREAM_H
 

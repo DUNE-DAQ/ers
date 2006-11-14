@@ -7,6 +7,11 @@
  *
  */
 
+/** \file Configuration.h This file defines ERS Configuration class.
+  * \author Serguei Kolos
+  * \brief ers header and documentation file
+  */
+
 #ifndef ERS_CONFIGURATION_H
 #define ERS_CONFIGURATION_H
 

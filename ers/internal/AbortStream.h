@@ -7,6 +7,11 @@
  *
  */
 
+/** \file AbortStream.h This file defines AbortStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_ABORT_STREAM_H
 #define ERS_ABORT_STREAM_H
 

@@ -1,6 +1,11 @@
 #ifndef ERS_SINGLETON_CREATOR_H
 #define ERS_SINGLETON_CREATOR_H
 
+/** \file SingletonCreator.h This file defines SingletonCreator ERS class.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 /*
  *  SingletonCreator.h
  *  ers

@@ -7,6 +7,11 @@
  *
  */
 
+/** \file StreamManager.h This file defines StreamManager class for ERS.
+  * \author Serguei Kolos
+  * \brief ers header and documentation file
+  */
+
 #ifndef ERS_STREAM_MANAGER_H
 #define ERS_STREAM_MANAGER_H
 

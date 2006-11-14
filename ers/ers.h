@@ -30,28 +30,59 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
 
+/*! \namespace ers
+ *  This is a wrapping namespace for all ERS classes and global functions.
+ */
+
 namespace ers
 {
     typedef Issue Exception;
     
+    /*! 
+     *  This function returns the current debug level for ERS.
+     */
     inline int debug_level( )
     { return Configuration::instance().debug_level( ); }
     
+    /*! 
+     *  This function sends the issue to the ERS DEBUG stream which corresponds to the given debug level.
+     *  \param issue the issue to be reported
+     *  \level debug level which will be associated with the reported issue
+     */
     inline void debug( const Issue & issue, int level = debug_level() )
     { StreamManager::instance().debug( issue, level ); }
     
+    /*! 
+     *  This function sends the issue to the ERS ERROR stream.
+     *  \param issue the issue to be reported
+     */
     inline void error( const Issue & issue )
     { StreamManager::instance().error( issue ); }
     
+    /*! 
+     *  This function sends the issue to the ERS FATAL stream.
+     *  \param issue the issue to be reported
+     */
     inline void fatal( const Issue & issue )
     { StreamManager::instance().fatal( issue ); }
     
+    /*! 
+     *  This function sends the issue to the ERS INFO stream.
+     *  \param issue the issue to be reported
+     */
     inline void info( const Issue & issue )
     { StreamManager::instance().information( issue ); }
     
+    /*! 
+     *  This function returns the current verbosity level for ERS.
+     */
     inline int verbosity_level( )
     { return Configuration::instance().verbosity_level( ); }
 
+    /*! 
+     *  This function sends the issue to the ERS WARNING stream.
+     *  \param issue the issue to be reported
+     */
     inline void warning( const Issue & issue )
     { StreamManager::instance().warning( issue ); }
 }
@@ -114,7 +145,7 @@ if ( ers::debug_level() >= level ) \
     	
 #endif
 
-/** \page ERSHowTo How to use the ERS package
+/** \page main How to use the ERS package
   The goal of the Error Reporting System is to offer tool to simplify and unify error 
   handling and error reporting in TDAQ applications. 
   This package can be used at different levels. At the lowest level, one can simply 

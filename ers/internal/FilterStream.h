@@ -8,6 +8,11 @@
  *
  */
 
+/** \file FilterStream.h This file defines FilterStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_STREAM_FILTER_H 
 #define ERS_STREAM_FILTER_H
 

@@ -7,6 +7,11 @@
  *
  */
 
+/** \file PluginManager.h This file defines PluginManager ERS class.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_PLUGIN_MANAGER_H
 #define ERS_PLUGIN_MANAGER_H
 

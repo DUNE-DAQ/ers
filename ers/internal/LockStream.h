@@ -7,6 +7,11 @@
  *
  */
  
+/** \file LockStream.h This file defines LockStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_LOCK_STREAM_H
 #define ERS_LOCK_STREAM_H
 

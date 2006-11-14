@@ -7,6 +7,11 @@
  *
  */
 
+/** \file NullStream.h This file defines NullStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_NULL_STREAM_H
 #define ERS_NULL_STREAM_H
 

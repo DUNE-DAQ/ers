@@ -7,6 +7,11 @@
  *
  */
 
+/** \file ThrowStream.h This file defines ThrowStream ERS stream.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #ifndef ERS_THROW_STREAM_H
 #define ERS_THROW_STREAM_H
 

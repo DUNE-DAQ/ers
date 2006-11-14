@@ -1,6 +1,11 @@
 #ifndef ERS_MACRO_H
 #define ERS_MACRO_H
 
+/** \file macro.h This file defines some internal ERS macros.
+  * \author Serguei Kolos
+  * \brief ers header file 
+  */
+
 #include <ers/ers.h>
 #include <ers/StreamFactory.h>
 #include <boost/preprocessor/cat.hpp>
