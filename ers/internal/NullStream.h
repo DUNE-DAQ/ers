@@ -35,6 +35,9 @@ namespace ers
     {        	
         void write( const Issue & )	/**< \brief Sends an issue into the stream */
         { ; }
+        
+        bool isNull() const
+        { return true; }
     };
 }
 

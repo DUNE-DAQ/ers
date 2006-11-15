@@ -50,6 +50,8 @@ namespace ers
                 
 	OutputStream & chained( );
         
+        virtual bool isNull() const;
+        
       private:
 	//
 	// Disable copying

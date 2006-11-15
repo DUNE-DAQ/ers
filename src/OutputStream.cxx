@@ -29,3 +29,9 @@ ers::OutputStream::chained( OutputStream * stream )
 {
     m_chained.reset( stream );
 }
+
+bool
+ers::OutputStream::isNull() const
+{
+    return false;
+}

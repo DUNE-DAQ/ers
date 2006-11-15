@@ -8,10 +8,23 @@
  */
 
 #include <ers/ExampleIssues.h>
+#include <ers/OutputStream.h>
+#include <ers/StreamManager.h>
+
 #include <ers/ers.h>
 #include <stdexcept>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+
+struct MyStream : public ers::OutputStream
+{
+    void write( const ers::Issue & ex )
+    {
+    	std::cout << "------------------------------- My ad hoc stream -------------------------------" << std::endl;
+    	std::cout << ex << std::endl;
+    	std::cout << "--------------------------------------------------------------------------------" << std::endl;
+    }
+};
 
 template <class ClassParameterType1, class ClassParameterType2>
 struct Test
@@ -89,6 +102,8 @@ void pass( int step )
 int main(int , char** )
 {
     int step = 0;
+    
+    ers::StreamManager::instance().add_output_stream( ers::Warning, new MyStream );
     
     ERS_DEBUG( 0, "Testing output produced by different threads ... " );
     boost::thread thr1( boost::bind(test_function,1) );

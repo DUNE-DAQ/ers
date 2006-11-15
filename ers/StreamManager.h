@@ -74,6 +74,8 @@ namespace ers
         void add_receiver(	const std::string & stream,
         			const std::string & filter,
                                 ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
+	
+        void add_output_stream( ers::severity severity, ers::OutputStream * new_stream );	
       
       private:	
 	StreamManager( );

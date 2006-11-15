@@ -137,6 +137,26 @@ ers::StreamManager::~StreamManager()
 }
 
 void
+ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream * new_stream )
+{    
+    ers::OutputStream * parent = m_out_streams[severity];
+    if ( parent && !parent->isNull() )
+    {
+	for (	ers::OutputStream * stream = &parent->chained(); 
+        	!stream->isNull();
+                 parent = stream, stream = &parent->chained() 
+            );
+                 
+	parent->chained( new_stream );
+    }
+    else
+    {
+    	delete m_out_streams[severity];
+        m_out_streams[severity] = new_stream;
+    }
+}	
+
+void
 ers::StreamManager::add_receiver( const std::string & stream,
 				  const std::string & filter,
                                   ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat )
