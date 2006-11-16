@@ -17,12 +17,9 @@
 #include <sstream>
 #include <memory>
 
-#include <ers/Severity.h>
-#include <ers/LocalContext.h>
-#include <ers/RemoteContext.h>
 #include <ers/IssueFactory.h>
+#include <ers/LocalContext.h>
 #include <ers/Severity.h>
-#include <ers/internal/Util.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -36,6 +33,8 @@ namespace ers
 {
     class OutputStream;
         
+    typedef std::map<std::string, std::string>	string_map;
+    
     template<class T>
     class IssueRegistrator
     {
@@ -78,16 +77,7 @@ namespace ers
 		const std::string & message,
                 const std::exception & cause ); 	
 	
-	Issue( const Issue & other )
-	  : std::exception( other ),
-	    m_cause( other.m_cause.get() ? other.m_cause->clone() : 0 ),
-	    m_context( other.m_context->clone() ),
-	    m_message( other.m_message ),
-	    m_qualifiers( other.m_qualifiers ),
-	    m_severity( other.m_severity ),
-	    m_time( other.m_time ),
-	    m_values( other.m_values )
-	{ ; }
+	Issue( const Issue & other );
 	      
 	virtual ~Issue() throw()
         { ; }
@@ -112,7 +102,7 @@ namespace ers
 	const std::vector<std::string> & qualifiers() const	/**< \brief return array of qualifiers */
         { return m_qualifiers; }
         
-	const string_map & parameters() const			/**< \brief return array of parameters */
+	const string_map & parameters() const /**< \brief return array of parameters */
         { return m_values; }
         
         ers::Severity severity() const				/**< \brief severity of the issue */

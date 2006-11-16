@@ -22,6 +22,20 @@
 using namespace ers;
 
 ERS_DECLARE_ISSUE( ers, StdIssue, , )
+
+
+Issue::Issue( const Issue & other )
+  : std::exception( other ),
+    m_cause( other.m_cause.get() ? other.m_cause->clone() : 0 ),
+    m_context( other.m_context->clone() ),
+    m_message( other.m_message ),
+    m_qualifiers( other.m_qualifiers ),
+    m_severity( other.m_severity ),
+    m_time( other.m_time ),
+    m_values( other.m_values )
+{ ; }
+
+
 /** Constructor - takes another exceptions as the cause for the current exception.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
  * \param message the user message associated with this issue

@@ -27,12 +27,12 @@
   * \version 1.0
   */
 
-ERS_DECLARE_ISSUE(	ers,					// namespace
-			Assertion,				// issue name
+ERS_DECLARE_ISSUE(	ers,					
+			Assertion,				
 			"Assertion (" << condition 
-                        << ") failed because " << reason,	// message
-			((const char *)condition )		// first attribute
-			((const char *)reason ) )		// second attribute
+                        << ") failed because " << reason,	
+			((const char *)condition )		
+			((const char *)reason ) )		
 
 #ifndef ERS_NO_DEBUG
 #include <boost/preprocessor/comparison.hpp>

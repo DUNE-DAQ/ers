@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
+#include <execinfo.h>
 
 #include <ers/LocalContext.h>
 
@@ -50,6 +51,23 @@ namespace
 	return buf.c_str();
     }
 }
+
+
+ers::LocalContext::LocalContext(
+    const char * package_name,
+    const char * filename,
+    int line_number,
+    const char * function_name )
+  : m_package_name( package_name ),
+    m_file_name( filename ),
+    m_function_name( function_name ),
+    m_line_number( line_number ),
+#ifndef ERS_NO_DEBUG
+    m_stack_size( backtrace( m_stack, 128 ) )
+#else
+    m_stack_size( 0 )
+#endif
+{ ; }
 
 const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(), 
 							 	getpid(), 

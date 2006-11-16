@@ -16,7 +16,6 @@
   */ 
 
 #include <ers/Context.h>
-#include <execinfo.h>
 
 #ifdef TDAQ_PACKAGE_NAME
 #define ERS_PACKAGE TDAQ_PACKAGE_NAME
@@ -60,17 +59,7 @@ namespace ers
 	LocalContext(	const char * package_name,
         		const char * filename,
                         int line_number,
-                        const char * function_name )
-	  : m_package_name( package_name ),
-            m_file_name( filename ),
-	    m_function_name( function_name ),
-	    m_line_number( line_number ),
-#ifndef ERS_NO_DEBUG            
-	    m_stack_size( backtrace( m_stack, 128 ) )
-#else
-	    m_stack_size( 0 )
-#endif
-	{ ; }
+                        const char * function_name );
 
         virtual ~LocalContext()
         { ; }

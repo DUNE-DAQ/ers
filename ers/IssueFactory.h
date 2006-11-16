@@ -14,8 +14,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <ers/internal/Util.h>
-#include <ers/Context.h>
 
 /** \file IssueFactory.h This file defines the IssueFactory class, 
   * which is responsible for registration and creation of user defined issues.
@@ -27,6 +25,7 @@ namespace ers
 {
 
     class Issue; 
+    class Context;
     
     /** This class implements the factory pattern for Issues.
       * The main responsability of this class is to keep track of the existing types of Issues
@@ -48,12 +47,13 @@ namespace ers
 
 	Issue * create( const std::string & name,
         		const Context & context ) const ;			/**< \brief build an empty issue for a given name */
-	Issue * create( const std::string & name,
+	
+        Issue * create( const std::string & name,
         		const Context & context,
                         long  time,
                         const std::string & message,
                         const std::vector<std::string> & qualifiers,
-                        const ers::string_map & parameters ) const ;		/**< \brief build issue out of all the given parameters */
+                        const std::map<std::string, std::string> & parameters ) const ;		/**< \brief build issue out of all the given parameters */
 	
         void register_issue( const std::string & name, IssueCreator creator );	/**< \brief register an issue factory */
       
