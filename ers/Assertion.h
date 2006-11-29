@@ -48,7 +48,7 @@ if( !(expression) ) \
     std::string reason = out.str(); \
     ers::Assertion ass( ERS_HERE, #expression, reason.c_str() ); \
     ers::fatal( ass ); \
-    abort(); \
+    ::abort(); \
 }}
 #else 
 #define ERS_ASSERT_MSG( expression, message )

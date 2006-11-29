@@ -60,7 +60,7 @@ if ( ers::debug_level() >= level ) \
     ers::FATAL info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Fatal ); \
     std::cerr << info << std::endl; \
-    exit( 13 ); \
+    ::exit( 13 ); \
 }
  
 #endif
