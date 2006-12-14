@@ -122,7 +122,7 @@ namespace ers
         }
         catch( std::exception & ex )
         {
-            ers::fatal( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
+            ers::fatal( UnhandledException( ERS_HERE, "std::exception", ex ) );
         }
         catch(...)
         {
