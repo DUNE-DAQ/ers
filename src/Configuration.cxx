@@ -24,7 +24,11 @@ namespace
 	{
 	    if ( sscanf( env, "%d", &value ) != 1 )
 	    {
-		ERS_INTERNAL_WARNING( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
+//		ERS_INTERNAL_WARNING( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
+//		Unfortunately this macro does not work here because if this function is called from the
+//		constructor of the Configuration class. The reason is that this macro uses the Configuration
+//		singleton which results in the recursive initialization
+		std::cerr << "ERROR [ers::Configuration] Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" << std::endl;
 	    }
 	}
     }

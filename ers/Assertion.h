@@ -43,9 +43,9 @@ ERS_DECLARE_ISSUE(	ers,
 #define ERS_ASSERT_MSG( expression, message ) { \
 if( !(expression) ) \
 { \
-    std::ostringstream out; \
-    out << BOOST_PP_IF( BOOST_PP_IS_EMPTY( message ), "of unknown reason", message ); \
-    std::string reason = out.str(); \
+    std::ostringstream ers_report_impl_out_buffer; \
+    ers_report_impl_out_buffer << BOOST_PP_IF( BOOST_PP_IS_EMPTY( message ), "of unknown reason", message ); \
+    std::string reason = ers_report_impl_out_buffer.str(); \
     ers::Assertion ass( ERS_HERE, #expression, reason.c_str() ); \
     ers::fatal( ass ); \
     ::abort(); \
