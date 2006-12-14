@@ -120,6 +120,10 @@ namespace ers
         {
             ers::fatal( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
         }
+        catch( std::exception & ex )
+        {
+            ers::fatal( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
+        }
         catch(...)
         {
             ers::fatal( UnhandledException( ERS_HERE, "unknown" ) );
