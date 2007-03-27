@@ -142,9 +142,23 @@ namespace ers
      */
     std::ostream & operator<<( std::ostream & out, const ers::Issue & issue )
     {
-	out << ers::to_string( issue.severity() ) << " " << issue.time() << " ["
-	    << issue.context().position() << "] " << issue.message();
-	
+        if ( ers::verbosity_level() > -3 )
+	{
+	    out << ers::to_string( issue.severity() ) << " ";
+	}
+        
+        if ( ers::verbosity_level() > -2 )
+	{
+	    out << issue.time() << " ";
+	}
+        
+        if ( ers::verbosity_level() > -1 )
+	{
+	    out << "[" << issue.context().position() << "] ";
+	}
+        
+	out << issue.message();
+        
 	if ( ers::verbosity_level() > 1 )
 	{
 	    ers::string_map::const_iterator it = issue.parameters().begin();

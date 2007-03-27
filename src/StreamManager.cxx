@@ -105,7 +105,7 @@ namespace
 ers::StreamManager &
 ers::StreamManager::instance()
 {
-    /**Singleton instance
+    /**Singleton instance of PluginManager is always created before the StreamManager
       */
     static ers::PluginManager * plugins = new ers::PluginManager;
     static ers::StreamManager * instance = new ers::StreamManager;

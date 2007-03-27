@@ -33,7 +33,7 @@ struct Test
     static void
     function( FunctionParameterType1 , FunctionParameterType2 )
     {
-    	ERS_WARNING( "test the details level of the issue location printout" );
+    	ERS_INFO( "test the details level of the issue location printout" );
     }
 };  
   
@@ -42,7 +42,7 @@ void test_function( int index )
     for( int i = 0; i < 10; i++ )
     {
 	ERS_DEBUG( 0, "performing step # " << i << " in thread " << index )
-	ERS_WARNING( "warning #" << i << " in thread " << index )
+	ERS_INFO( "info #" << i << " in thread " << index )
 	usleep( 1 );
     }
 }
@@ -110,7 +110,7 @@ int main(int , char** )
     boost::thread thr2( boost::bind(test_function,2) );
     boost::thread thr3( boost::bind(test_function,3) );
     boost::thread thr4( boost::bind(test_function,4) );
-    sleep( 10 );
+    sleep( 2 );
     
     Test<int,float>::function( 1, 2 );
     Test<int,float>::function( 1.1, 2.2 );

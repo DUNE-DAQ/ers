@@ -87,11 +87,7 @@ namespace ers
     { StreamManager::instance().warning( issue ); }
 }
 
-ERS_DECLARE_ISSUE( ers, DEBUG, , )
-ERS_DECLARE_ISSUE( ers, INFO, , )
-ERS_DECLARE_ISSUE( ers, WARNING, , )
-ERS_DECLARE_ISSUE( ers, ERROR, , )
-ERS_DECLARE_ISSUE( ers, FATAL, , )
+ERS_DECLARE_ISSUE( ers, Message, , )
 
 #define ERS_REPORT_IMPL( stream, issue, message, level ) \
 { \
@@ -109,7 +105,7 @@ ERS_DECLARE_ISSUE( ers, FATAL, , )
 #define ERS_DEBUG( level, message ) { \
 if ( ers::debug_level() >= level ) \
 { \
-    ERS_REPORT_IMPL( ers::debug, ers::DEBUG, message, level ); \
+    ERS_REPORT_IMPL( ers::debug, ers::Message, message, level ); \
 } }
 #else
 #define ERS_DEBUG( level, message ) { }
@@ -119,28 +115,7 @@ if ( ers::debug_level() >= level ) \
  */
 #define ERS_INFO( message ) \
 { \
-    ERS_REPORT_IMPL( ers::info, ers::INFO, message, ); \
-}
-
-/** \def ERS_WARNING( message ) This macro sends the message to the ers::warning stream.
- */
-#define ERS_WARNING( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::warning, ers::WARNING, message, ); \
-}
-    	
-/** \def ERS_ERROR( message ) This macro sends the message to the ers::error stream.
- */
-#define ERS_ERROR( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::error, ers::ERROR, message, ); \
-}
-    	
-/** \def ERS_FATAL( message ) This macro sends the message to the ers::error stream.
- */
-#define ERS_FATAL( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::fatal, ers::FATAL, message, ); \
+    ERS_REPORT_IMPL( ers::info, ers::Message, message, ); \
 }
     	
 #endif
@@ -364,10 +339,10 @@ if ( ers::debug_level() >= level ) \
             }
 	};
     }
+  \endcode
 
-
-  \section Exception handling
-  Functions, which can throw exceptions must be invoked insize the \c try...catch statement. The
+  \section Exception Exception handling
+  Functions, which can throw exceptions must be invoked inside the \c try...catch statement. The
   following example shows how one can handle ERS exceptions.
   First of all one has to declare once all the possible exceptions:
   \see ExampleIssues.h
@@ -419,11 +394,11 @@ if ( ers::debug_level() >= level ) \
   Several streams can be associated with each severity level. If there is more then one stream
   defined for a certain severity then every issue will be passed sequentially to all of those
   stream. In the current ERS version the default configuration of the ERS streams looks like:
-  \li ers::debug - "stdout" - prints issues to the standard C++ output stream
-  \li ers::information - "stdout" - prints issues to the standard C++ output stream
-  \li ers::warning - "stderr" - prints issues to the standard C++ error stream
-  \li ers::error - "stderr" - prints issues to the standard C++ error stream
-  \li ers::fatal - "stderr,abort" - prints issues to the standard C++ error stream and calls abort function
+  \li ers::debug - "lstdout" - prints issues to the standard C++ output stream
+  \li ers::info - "lstdout" - prints issues to the standard C++ output stream
+  \li ers::warning - "lstderr" - prints issues to the standard C++ error stream
+  \li ers::error - "lstderr" - prints issues to the standard C++ error stream
+  \li ers::fatal - "lstderr" - prints issues to the standard C++ error stream
 
   In order to change the default configuration for any ERS stream one has to define
   the TDAQ_ERS_<SEVERITY> environment variable. For example the following command:
@@ -441,8 +416,7 @@ if ( ers::debug_level() >= level ) \
   CMT packages.
   
 
-  \section FAQ FAQ  
-  \subsection ERS_HERE What is the macro ERS_HERE?
+  \section ERS_HERE ERS_HERE macro
   The macro ERS_HERE is used to insert all the context information to a ers issue. 
   When constructing an issue one should always give the macro ERS_HERE as a first parameter. 
   \see ers::Context

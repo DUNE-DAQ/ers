@@ -1,3 +1,6 @@
+#ifndef ERS_CONFIGURATION_H
+#define ERS_CONFIGURATION_H
+
 /*
  *  Configuration.h
  *  ers
@@ -12,26 +15,16 @@
   * \brief ers header and documentation file
   */
 
-#ifndef ERS_CONFIGURATION_H
-#define ERS_CONFIGURATION_H
-
-
 #include <iostream>
-
-/** \file StreamFactory.h This file defines the StreamFactory class, 
-  * which is responsible for registration and creation of ERS streams.
-  * \author Serguei Kolos
-  * \brief ers header and documentation file 
-  */
 
 namespace ers
 {
     
-    /** The \c Configuration class is responsible for configuring the ERS outout.
+    /** The \c Configuration class provides API for configuring ERS output streams.
       * 
       * \author Serguei Kolos
       * \version 1.2
-      * \brief Manager of ERS streams. 
+      * \brief Manager of ERS streams configuration. 
       * \see ers::debug
       * \see ers::error
       * \see ers::fatal
