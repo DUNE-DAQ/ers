@@ -45,6 +45,7 @@ namespace ers
         virtual int line_number() const = 0;			/**< \return line number, in which the issue has been created */
         virtual const char * const package_name() const = 0;	/**< \return CMT package name */
         virtual int process_id() const = 0;			/**< \return process id */
+        virtual int thread_id() const = 0;			/**< \return thread id */
         virtual void * const * stack_symbols() const = 0;	/**< \return stack frames */
         virtual int stack_size() const = 0;			/**< \return number of frames in stack */
         virtual int user_id() const = 0;			/**< \return user id */

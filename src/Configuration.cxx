@@ -2,7 +2,7 @@
  *  Configuration.cxx
  *  ERS
  *
- *  Created by Matthias Wiesmann on 21.01.05.
+ *  Created by Serguei Kolos on 21.01.05.
  *  Copyright 2005 CERN. All rights reserved.
  *
  */
@@ -71,7 +71,6 @@ ers::Configuration::Configuration()
 	read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
     }
 }
-
 
 std::ostream & 
 ers::operator<<( std::ostream & out, const ers::Configuration & conf )

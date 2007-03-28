@@ -70,7 +70,8 @@ ers::LocalContext::LocalContext(
 { ; }
 
 const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(), 
-							 	getpid(), 
+							 	getpid(),
+                                                                pthread_self(), 
                                                 	 	get_cwd(), 
                                                 	 	geteuid(), 
                                                 	 	get_user_name() );

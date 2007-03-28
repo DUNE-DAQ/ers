@@ -23,11 +23,13 @@ namespace ers
     {
 	RemoteProcessContext(	const std::string & host_name,
 				int pid,
+				int tid,
 				const std::string & cwd,
 				int uid,
 				const std::string & uname )
 	  : m_host_name( host_name ),
             m_pid( pid ),
+            m_tid( tid ),
             m_cwd( cwd ),
             m_uid( uid ),
             m_uname( uname )
@@ -35,6 +37,7 @@ namespace ers
         
 	const std::string	m_host_name;	/**< host name */
 	const int 		m_pid;		/**< process id */
+	const int 		m_tid;		/**< thread id */
 	const std::string	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const std::string	m_uname;	/**< user name */
@@ -88,6 +91,9 @@ namespace ers
         
         int process_id() const				/**< \return process id */
         { return m_process.m_pid; }
+        
+        int thread_id() const				/**< \return thread id */
+        { return m_process.m_tid; }
         
         void * const *  stack_symbols() const		/**< \return stack frames */
         { return 0; }

@@ -53,8 +53,15 @@ namespace ers
       * \see ers::warning
       */
     
+    namespace thread
+    {
+    	class LocalStream;
+    }
+    
     class StreamManager
     {	
+      friend class ers::thread::LocalStream;
+      
       public:
 	
         ~StreamManager();
@@ -79,6 +86,7 @@ namespace ers
       
       private:	
 	StreamManager( );
+	void report_issue( ers::severity type, const Issue & issue );
 
 	OutputStream * setup_stream( ers::severity severity );	
 	OutputStream * setup_stream( const std::vector<std::string> & streams );

@@ -2,7 +2,7 @@
  *  IssueFactory.cxx
  *  ers
  *
- *  Created by Matthias Wiesmann on 30.11.04.
+ *  Created by Serguei Kolos on 30.11.04.
  *  Modified by Serguei Kolos on 10.08.05.
  *  Copyright 2005 CERN. All rights reserved.
  *

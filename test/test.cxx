@@ -16,37 +16,6 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-struct MyStream : public ers::OutputStream
-{
-    void write( const ers::Issue & ex )
-    {
-    	std::cout << "------------------------------- My ad hoc stream -------------------------------" << std::endl;
-    	std::cout << ex << std::endl;
-    	std::cout << "--------------------------------------------------------------------------------" << std::endl;
-    }
-};
-
-template <class ClassParameterType1, class ClassParameterType2>
-struct Test
-{
-    template <class FunctionParameterType1, class FunctionParameterType2>
-    static void
-    function( FunctionParameterType1 , FunctionParameterType2 )
-    {
-    	ERS_INFO( "test the details level of the issue location printout" );
-    }
-};  
-  
-void test_function( int index )
-{
-    for( int i = 0; i < 10; i++ )
-    {
-	ERS_DEBUG( 0, "performing step # " << i << " in thread " << index )
-	ERS_INFO( "info #" << i << " in thread " << index )
-	usleep( 1 );
-    }
-}
-
 void pass( int step )
 {
     ERS_RANGE_CHECK( 0, step, 8 );
@@ -99,21 +68,54 @@ void pass( int step )
     }
 }
 
+void test_function( int index )
+{
+    ERS_INFO( "starting thread #" << index )
+    sleep( 1 );
+    ers::thread::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
+    sleep( 1 );
+    ers::thread::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
+    sleep( 1 );
+    ers::thread::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
+    ERS_INFO( "finishing thread #" << index )
+}
+
+struct IssueCatcher
+{
+    void handler( const ers::Issue & issue )
+    {
+    	std::cout << "IssueCatcher has been called for the following issue:" << std::endl;
+        std::cout << "\t" << issue << std::endl;
+    }
+};
+
 int main(int , char** )
 {
     int step = 0;
+       
+    test_function( 0 );
+    test_function( 0 );
     
-    ers::StreamManager::instance().add_output_stream( ers::Warning, new MyStream );
+    IssueCatcher catcher;
+    try
+    {
+    	ers::thread::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
+    }
+    catch( ers::thread::IssueCatcherAlreadySet & ex )
+    {
+    	ers::fatal( ex );
+        return 1;
+    }
     
     ERS_DEBUG( 0, "Testing output produced by different threads ... " );
     boost::thread thr1( boost::bind(test_function,1) );
     boost::thread thr2( boost::bind(test_function,2) );
     boost::thread thr3( boost::bind(test_function,3) );
     boost::thread thr4( boost::bind(test_function,4) );
-    sleep( 2 );
+    sleep( 4 );
     
-    Test<int,float>::function( 1, 2 );
-    Test<int,float>::function( 1.1, 2.2 );
+    test_function( 0 );
+    test_function( 0 );
     
     while( step++ < 10 )
     {

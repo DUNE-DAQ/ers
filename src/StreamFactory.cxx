@@ -2,7 +2,7 @@
  *  StreamFactory.cxx
  *  ERS
  *
- *  Created by Matthias Wiesmann on 21.01.05.
+ *  Created by Serguei Kolos on 21.01.05.
  *  Modified by Serguei Kolos on 21.11.05.
  *  Copyright 2005 CERN. All rights reserved.
  *

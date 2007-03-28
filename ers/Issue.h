@@ -199,7 +199,7 @@ namespace ers
 #define ERS_ATTRIBUTE_ACCESSORS( _, __, tuple )		ERS_TYPE(tuple) \
 							BOOST_PP_CAT( get_, ERS_NAME(tuple) ) () { \
 								ERS_TYPE(tuple) val; \
-								get_value( BOOST_PP_STRINGIZE(ERS_NAME(tuple)), val ); \
+								ers::Issue::get_value( BOOST_PP_STRINGIZE(ERS_NAME(tuple)), val ); \
 								return val; \
 							}
                                                                 

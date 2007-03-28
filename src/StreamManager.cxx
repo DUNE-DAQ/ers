@@ -3,6 +3,7 @@
  *  ERS
  *
  *  Created by Matthias Wiesmann on 21.01.05.
+ *  Modified by Serguei Kolos on 12.09.06.
  *  Copyright 2005 CERN. All rights reserved.
  *
  */
@@ -231,19 +232,29 @@ ers::StreamManager::setup_stream( const std::vector<std::string> & streams )
     return main;
 }
 
+/** Sends an Issue to an appropriate stream 
+ * \param type 
+ * \param issue 
+ */
+void
+ers::StreamManager::report_issue( ers::severity type, const Issue & issue )
+{
+    ers::severity old_severity = issue.set_severity( type );
+    m_out_streams[type]->write( issue );
+    issue.set_severity( old_severity );
+} // error
+
 /** Sends an Issue to the error stream 
- * \param issue_ptr 
+ * \param issue 
  */
 void
 ers::StreamManager::error( const Issue & issue )
 {
-    ers::severity old_severity = issue.set_severity( ers::Error );
-    m_out_streams[ers::Error]->write( issue );
-    issue.set_severity( old_severity );
+    report_issue( ers::Error, issue );
 } // error
 
 /** Sends an issue to the debug stream 
- * \param issue_ptr the Issue to send
+ * \param issue the Issue to send
  * \param level the debug level. 
  */
 void
@@ -251,44 +262,36 @@ ers::StreamManager::debug( const Issue & issue, int level )
 {
     if ( Configuration::instance().debug_level() >= level )
     {
-	ers::Severity old_severity = issue.set_severity( ers::Severity( ers::Debug, level ) );
-	m_out_streams[ers::Debug]->write( issue );
-	issue.set_severity( old_severity );
+	report_issue( ers::Debug, issue );
     }
 }
 
 /** Sends an Issue to the fatal error stream 
- * \param issue_ptr 
+ * \param issue 
  */
 void
 ers::StreamManager::fatal( const Issue & issue )
 {
-    ers::severity old_severity = issue.set_severity( ers::Fatal );
-    m_out_streams[ers::Fatal]->write( issue );
-    issue.set_severity( old_severity );
+    report_issue( ers::Fatal, issue );
 }
 
 /** Sends an Issue to the warning stream 
-* \param issue_ptr the issue to send
+* \param issue the issue to send
 */
 void
 ers::StreamManager::warning( const Issue & issue )
 {
-    ers::severity old_severity = issue.set_severity( ers::Warning );
-    m_out_streams[ers::Warning]->write( issue );
-    issue.set_severity( old_severity );
+    report_issue( ers::Warning, issue );
 }
 
 /** Sends an issue to the debug stream 
- * \param issue_ptr the Issue to send
+ * \param issue the Issue to send
  * \param level the debug level. 
  */
 void
 ers::StreamManager::information( const Issue & issue )
 {
-    ers::severity old_severity = issue.set_severity( ers::Information );
-    m_out_streams[ers::Information]->write( issue );
-    issue.set_severity( old_severity );
+    report_issue( ers::Information, issue );
 }
 
 std::ostream & 

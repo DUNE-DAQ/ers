@@ -16,9 +16,13 @@
   */
 
 #include <iostream>
+#include <boost/thread.hpp>
+#include <boost/function.hpp>
 
 namespace ers
 {
+    
+    class Issue;
     
     /** The \c Configuration class provides API for configuring ERS output streams.
       * 
@@ -54,8 +58,8 @@ namespace ers
         
       private:	
 	Configuration( );
-
-    	int m_debug_level;		/**< \brief current active level for the debug stream */	
+        
+        int m_debug_level;		/**< \brief current active level for the debug stream */	
     	int m_verbosity_level;		/**< \brief current verbosity level for all streams */
     };
     

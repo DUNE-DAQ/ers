@@ -174,6 +174,7 @@ namespace ers
 		<< FIELD_SEPARATOR << "user = " << issue.context().user_name()
 				   << " (" << issue.context().user_id() << ")"
 		<< FIELD_SEPARATOR << "process id = " << issue.context().process_id()
+		<< FIELD_SEPARATOR << "thread id = " << issue.context().thread_id()
 		<< FIELD_SEPARATOR << "process wd = " << issue.context().cwd();
 	}
         
