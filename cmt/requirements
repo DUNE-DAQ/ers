@@ -45,5 +45,8 @@ apply_pattern   install_apps            files="ers_pc ers_receiver"
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\
                                                                 files="*.h" \
                                                                 target_dir="internal"
+apply_pattern   install_headers         name="thread"		src_dir="../ers/thread"\
+                                                                files="*.h" \
+                                                                target_dir="thread"
 
 action 		check "../check_target.sh $(bin)"
