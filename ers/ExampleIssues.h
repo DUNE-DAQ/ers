@@ -17,8 +17,7 @@
   * \version 1.0 
   */
 
-/** \def ers::CantOpenFile This issue is reported when a certain file can 
- * not be opened by any reason. 
+/** \def ers::File This is the base class for all file related issues. 
  */
 ERS_DECLARE_ISSUE( 	ers, // namespace
 			File, // issue class name
@@ -47,7 +46,7 @@ ERS_DECLARE_ISSUE_BASE( 	ers, // namespace
 				 // no attributes in this class
                  	)
 
-/** \def ers::FileDoesNotExist This issue is reported when a certain file exists but
+/** \def ers::PermissionDenied This issue is reported when a certain file exists but
  * but not accessible for the current user. 
  */
 ERS_DECLARE_ISSUE_BASE( 	ers, 					// namespace
