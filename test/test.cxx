@@ -72,11 +72,11 @@ void test_function( int index )
 {
     ERS_INFO( "starting thread #" << index )
     sleep( 1 );
-    ers::thread::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
+    ers::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
     sleep( 1 );
-    ers::thread::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
+    ers::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
     sleep( 1 );
-    ers::thread::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
+    ers::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
     ERS_INFO( "finishing thread #" << index )
 }
 
@@ -85,7 +85,7 @@ struct IssueCatcher
     void handler( const ers::Issue & issue )
     {
     	std::cout << "IssueCatcher has been called for the following issue:" << std::endl;
-        std::cout << "\t" << issue << std::endl;
+        ers::error( issue );
     }
 };
 
@@ -99,9 +99,9 @@ int main(int , char** )
     IssueCatcher catcher;
     try
     {
-    	ers::thread::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
+    	ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
     }
-    catch( ers::thread::IssueCatcherAlreadySet & ex )
+    catch( ers::IssueCatcherAlreadySet & ex )
     {
     	ers::fatal( ex );
         return 1;

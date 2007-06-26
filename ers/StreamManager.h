@@ -33,6 +33,7 @@ namespace ers
 {
     
     class InputStream; 
+    class LocalStream;
     class OutputStream; 
     class Issue; 
     
@@ -53,14 +54,9 @@ namespace ers
       * \see ers::warning
       */
     
-    namespace thread
-    {
-    	class LocalStream;
-    }
-    
     class StreamManager
     {	
-      friend class ers::thread::LocalStream;
+      friend class ers::LocalStream;
       
       public:
 	

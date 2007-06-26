@@ -25,7 +25,7 @@
 #include <ers/Issue.h>
 #include <ers/Assertion.h>
 #include <ers/Severity.h>
-#include <ers/thread/LocalStream.h>
+#include <ers/LocalStream.h>
 
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -45,55 +45,19 @@ namespace ers
      *  which can be used for the local inter-thread error reporting.
      */
 
-    namespace thread
-    {
-	/*!
-	 *  This function sets severity of the reported issue to ers::Error and sends the issue to the local ERS stream. 
-         *  The issue will be forwarded to the local error catcher if it was set up already.
-         *  Otherwise it will be forwarded to the standard ERS ERROR stream.
-	 *  \param issue the issue to be reported
-         *  \see ers::error()
-         *  \see ers::thread::set_issue_catcher()
-	 */
-	inline void error( const Issue & issue )
-	{ LocalStream::instance().error( issue ); }
-
-	/*!
-	 *  This function sets severity of the reported issue to ers::Fatal and sends the issue to the local ERS stream. 
-         *  The issue will be forwarded to the local error catcher if it was set up already.
-         *  Otherwise it will be forwarded to the standard ERS FATAL stream.
-	 *  \param issue the issue to be reported
-         *  \see ers::fatal()
-         *  \see ers::thread::set_issue_catcher()
-	 */
-	inline void fatal( const Issue & issue )
-	{ LocalStream::instance().fatal( issue ); }
-	
-        /*!
-	 *  This function sets up the local issue handler function. This function will be executed in the context
-         *  of dedicated thread which will be created as a result of this call. All the issues which are reported
-         *  via the functions from the \c ers::thread namespace will be forwarded to this thread.
-	 *  \param issue the issue to be reported
-         *  \throw ers::thread::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
-         *  \see ers::error()
-         *  \see ers::fatal()
-         *  \see ers::warning()
-	 */
-        inline void set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher ) 
-        	throw ( ers::thread::IssueCatcherAlreadySet )
-	{ LocalStream::instance().set_issue_catcher( catcher ); }
-        
-        /*!
-	 *  This function sets severity of the reported issue to ers::Warning and sends the issue to the local ERS stream. 
-         *  The issue will be forwarded to the local error catcher if it was set up already.
-         *  Otherwise it will be forwarded to the standard ERS WARNING stream.
-	 *  \param issue the issue to be reported
-         *  \see ers::warning()
-         *  \see ers::thread::set_issue_catcher()
-	 */
-	inline void warning( const Issue & issue )
-	{ LocalStream::instance().warning( issue ); }
-    }
+    /*!
+     *	This function sets up the local issue handler function. This function will be executed in the context
+     *	of dedicated thread which will be created as a result of this call. All the issues which are reported
+     *	via the functions from the \c ers::thread namespace will be forwarded to this thread.
+     *	\param issue the issue to be reported
+     *	\throw ers::thread::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
+     *	\see ers::error()
+     *	\see ers::fatal()
+     *	\see ers::warning()
+     */
+    inline void set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
+	    throw ( ers::IssueCatcherAlreadySet )
+    { LocalStream::instance().set_issue_catcher( catcher ); }
     
     /*! 
      *  This function returns the current debug level for ERS.
@@ -114,14 +78,14 @@ namespace ers
      *  \param issue the issue to be reported
      */
     inline void error( const Issue & issue )
-    { StreamManager::instance().error( issue ); }
+    { LocalStream::instance().error( issue ); }
     
     /*! 
      *  This function sends the issue to the ERS FATAL stream.
      *  \param issue the issue to be reported
      */
     inline void fatal( const Issue & issue )
-    { StreamManager::instance().fatal( issue ); }
+    { LocalStream::instance().fatal( issue ); }
     
     /*! 
      *  This function sends the issue to the ERS INFO stream.
@@ -141,7 +105,7 @@ namespace ers
      *  \param issue the issue to be reported
      */
     inline void warning( const Issue & issue )
-    { StreamManager::instance().warning( issue ); }
+    { LocalStream::instance().warning( issue ); }
 }
 
 ERS_DECLARE_ISSUE( ers, Message, , )
