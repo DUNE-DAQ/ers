@@ -36,8 +36,8 @@ namespace ers
         { ; }
         
 	const std::string	m_host_name;	/**< host name */
-	const int 		m_pid;		/**< process id */
-	const int 		m_tid;		/**< thread id */
+	const pid_t 		m_pid;		/**< process id */
+	const pid_t 		m_tid;		/**< thread id */
 	const std::string	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const std::string	m_uname;	/**< user name */
@@ -89,10 +89,10 @@ namespace ers
         const char * const package_name() const		/**< \return CMT package name */
         { return m_package_name.c_str(); }
         
-        int process_id() const				/**< \return process id */
+        pid_t process_id() const			/**< \return process id */
         { return m_process.m_pid; }
         
-        int thread_id() const				/**< \return thread id */
+        pid_t thread_id() const				/**< \return thread id */
         { return m_process.m_tid; }
         
         void * const *  stack_symbols() const		/**< \return stack frames */

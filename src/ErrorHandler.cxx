@@ -22,7 +22,7 @@
 
 ERS_DECLARE_ISSUE(	ers, 
 			UnhandledException,
-                        "Unhandled " << name << " exception was thrown",
+                        "Unhandled '" << name << "' exception was thrown",
                         ((const char *)name) )
 
 ERS_DECLARE_ISSUE(	ers, 

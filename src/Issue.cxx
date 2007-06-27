@@ -18,11 +18,34 @@
 #include <ers/IssueFactory.h>
 #include <ers/OutputStream.h>
 #include <ers/ers.h>
+#include <ers/internal/Util.h>
 
 using namespace ers;
 
 ERS_DECLARE_ISSUE( ers, StdIssue, , )
 
+namespace
+{
+    int get_default_qualifiers( std::vector<std::string> & qualifiers )
+    {
+    	static const char * environment = ::getenv( "TDAQ_ERS_QUALIFIERS" );
+        if ( environment )
+        {
+	    ers::tokenize( environment, ",", qualifiers );
+        }
+        return 1;
+    }
+    
+    void add_default_qualifiers( Issue & issue )
+    {
+    	static std::vector<std::string> qualifiers;
+        static int _dummy_ = get_default_qualifiers( qualifiers );
+	for ( std::vector<std::string>::const_iterator it = qualifiers.begin(); it != qualifiers.end(); ++it )
+        {
+	    issue.add_qualifier( *it );
+        }
+    }
+}
 
 Issue::Issue( const Issue & other )
   : std::exception( other ),
@@ -49,6 +72,7 @@ Issue::Issue(	const Context & context,
     m_time( boost::posix_time::second_clock::local_time() )
 {
     add_qualifier( m_context->package_name() );
+    add_default_qualifiers( *this );
 }
 
 /** Constructor - takes another exceptions as the cause for the current exception.
@@ -64,6 +88,7 @@ Issue::Issue(	const Context & context,
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
+    add_default_qualifiers( *this );
 }
 
 /** Constructor - takes another exceptions as the cause for the current exception.
@@ -82,6 +107,7 @@ Issue::Issue(	const Context & context,
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
+    add_default_qualifiers( *this );
 }
 
 void 
@@ -161,10 +187,16 @@ namespace ers
         
 	if ( ers::verbosity_level() > 1 )
 	{
-	    ers::string_map::const_iterator it = issue.parameters().begin();
-            for ( ; it != issue.parameters().end(); ++it )
+            out << FIELD_SEPARATOR << "Parameters = ";
+            for ( ers::string_map::const_iterator it = issue.parameters().begin(); it != issue.parameters().end(); ++it )
 	    {
-		out << FIELD_SEPARATOR << it->first << "=\"" << it->second << "\" ";
+		out << "'" << it->first << "=" << it->second << "' ";
+	    }
+	    
+            out << FIELD_SEPARATOR << "Qualifiers = ";
+            for ( std::vector<std::string>::const_iterator it = issue.qualifiers().begin(); it != issue.qualifiers().end(); ++it )
+	    {
+		out << "'" << *it << "' ";
 	    }
         }
 	

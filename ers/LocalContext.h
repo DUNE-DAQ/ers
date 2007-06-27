@@ -29,21 +29,18 @@ namespace ers
     {
 	LocalProcessContext(	const char * const host_name,
 				int pid,
-				int tid,
 				const char * const cwd,
 				int uid,
 				const char * const uname )
 	  : m_host_name( host_name ),
             m_pid( pid ),
-            m_tid( tid ),
             m_cwd( cwd ),
             m_uid( uid ),
             m_uname( uname )
         { ; }
         
 	const char * const	m_host_name;	/**< host name */
-	const int 		m_pid;		/**< process id */
-	const int 		m_tid;		/**< thread id */
+	const pid_t 		m_pid;		/**< process id */
 	const char * const	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const char * const	m_uname;	/**< user name */
@@ -88,11 +85,11 @@ namespace ers
         const char * const package_name() const		/**< \return CMT package name */
         { return m_package_name; }
         
-        int process_id() const				/**< \return process id */
+        pid_t process_id() const			/**< \return process id */
         { return c_process.m_pid; }
         
-        int thread_id() const				/**< \return thread id */
-        { return c_process.m_tid; }
+        pid_t thread_id() const				/**< \return thread id */
+        { return m_thread_id; }
         
         void * const *  stack_symbols() const		/**< \return stack frames */
         { return m_stack; }
@@ -112,7 +109,8 @@ namespace ers
 	const char * const			m_package_name; /**< source package name */
         const char * const			m_file_name;	/**< source file-name */
 	const char * const			m_function_name;/**< source function name */
-	const int				m_line_number;	/**< source line-number */	
+	const int				m_line_number;	/**< source line-number */
+	const pid_t				m_thread_id;	/**< thread id */	
         void *					m_stack[128];	/**< stack frames */
 	const int				m_stack_size;	/**< stack frames number */
     };

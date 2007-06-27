@@ -7,11 +7,14 @@
  *
  */
 #include <sys/types.h>
+#include <linux/unistd.h>
 #include <pwd.h>
 #include <unistd.h>
 #include <execinfo.h>
 
 #include <ers/LocalContext.h>
+
+_syscall0(pid_t,gettid)
 
 namespace
 {
@@ -62,6 +65,7 @@ ers::LocalContext::LocalContext(
     m_file_name( filename ),
     m_function_name( function_name ),
     m_line_number( line_number ),
+    m_thread_id( gettid() ),
 #ifndef ERS_NO_DEBUG
     m_stack_size( backtrace( m_stack, 128 ) )
 #else
@@ -71,7 +75,6 @@ ers::LocalContext::LocalContext(
 
 const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(), 
 							 	getpid(),
-                                                                pthread_self(), 
                                                 	 	get_cwd(), 
                                                 	 	geteuid(), 
                                                 	 	get_user_name() );
