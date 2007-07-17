@@ -280,7 +280,6 @@ if ( ers::debug_level() >= level ) \
   	class Assertion : public ers::Issue {
 	    template <class> friend class ers::IssueRegistrator;
             Assertion() { ; }
-            virtual ~Assertion() throw( ) { ; }
             
             static const char * get_uid() { return "ers::Assertion"; }
 
@@ -289,6 +288,8 @@ if ( ers::debug_level() >= level ) \
             virtual ers::Issue * clone() const { return new ers::Assertion( *this ); }
             
           public:
+            virtual ~Assertion() throw( ) { ; }
+            
             Assertion( const ers::Context & context , const char * condition , const char * reason )
               : ers::Issue( context ) {
               	set_value( "condition", condition );
@@ -351,7 +352,6 @@ if ( ers::debug_level() >= level ) \
   	class Precondition : public ers::Assertion {
 	    template <class> friend class ers::IssueRegistrator;
             Precondition() { ; }
-            virtual ~Precondition() throw( ) { ; }
             
             static const bool registered = ers::IssueRegistrator< ers::Precondition >::instance.done;
             static const char * get_uid() { return "ers::Precondition"; }
@@ -361,6 +361,8 @@ if ( ers::debug_level() >= level ) \
             virtual ers::Issue * clone() const { return new ers::Precondition( *this ); }
             
           public:
+            virtual ~Precondition() throw( ) { ; }
+
             Precondition( const ers::Context & context , const char * condition , const char * reason, const char * location )
               : ers::Assertion( context, condition, reason ) {
               	set_value( "location", location );
