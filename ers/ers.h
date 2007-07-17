@@ -48,9 +48,9 @@ namespace ers
     /*!
      *	This function sets up the local issue handler function. This function will be executed in the context
      *	of dedicated thread which will be created as a result of this call. All the issues which are reported
-     *	via the functions from the \c ers::thread namespace will be forwarded to this thread.
+     *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
      *	\param issue the issue to be reported
-     *	\throw ers::thread::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
+     *	\throw ers::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
      *	\see ers::error()
      *	\see ers::fatal()
      *	\see ers::warning()
@@ -280,6 +280,8 @@ if ( ers::debug_level() >= level ) \
   	class Assertion : public ers::Issue {
 	    template <class> friend class ers::IssueRegistrator;
             Assertion() { ; }
+            virtual ~Assertion() throw( ) { ; }
+            
             static const char * get_uid() { return "ers::Assertion"; }
 
             virtual void raise() const throw( std::exception ) { throw *this; }
@@ -349,6 +351,8 @@ if ( ers::debug_level() >= level ) \
   	class Precondition : public ers::Assertion {
 	    template <class> friend class ers::IssueRegistrator;
             Precondition() { ; }
+            virtual ~Precondition() throw( ) { ; }
+            
             static const bool registered = ers::IssueRegistrator< ers::Precondition >::instance.done;
             static const char * get_uid() { return "ers::Precondition"; }
 
@@ -500,7 +504,7 @@ if ( ers::debug_level() >= level ) \
   and then tell to ERS the name of that library by setting it to the TDAQ_ERS_STREAM_LIBS environment variable. 
   For example if one sets this varibale to the following value:
   \code
-  export  TDAQ_ERS_STREAM_LIB=MyCustomFilter
+  export  TDAQ_ERS_STREAM_LIBS=MyCustomFilter
   \endcode
   then ERS will be looking for the libMyCustomFilter.so library in all the directories which appear in the 
   LD_LIBRARY_PATH environment variable.
@@ -508,22 +512,22 @@ if ( ers::debug_level() >= level ) \
   \section MultiThreadError Error reporting in multi-threaded applications
   ERS can be used for error handling in multi-threaded applications. While ERS requires that all problems within 
   the context of a single application have to be reported via exceptions, C++ language does not provide a way of 
-  passing exceptions across thread boundaries. To address this problem ERS provides a special local stream and 
-  four helper functions (error, fatal, warning and set_issue_catcher) which are defined in the ers::thread namespace. 
-  The following sections explain how to use them.
+  passing exceptions across thread boundaries. To address this problem ERS provides the set_issue_catcher function
+  which is defined in the ers namespace. 
+  The following sections explain how to use it.
   
   \subsection MultiThreadReporting Reporting errors to local stream
-  While one of the worker threads of an application encounters an issue it can send it to one of the there local 
-  streams using ers::thread::error, ers::thread::fatal or ers::thread::warning functions. If no error handling 
-  thread was set up then such issues will be forwarded to the respected global ERS streams. Otherwise they will 
-  be passed to the error handling thread.
+  While one of the worker threads of an application encounters an issue it can send it to one of the the ERS
+  streams using ers::error, ers::fatal or ers::warning functions. If no error catcher thread was set up then 
+  such issues will be forwarded to the respective global ERS streams. Otherwise they will be passed to the error
+  handling thread.
 
   \subsection ErrorCatcherThread Setting up error handling threaded
   In order to handle errors which have been reported by a thread of a particular application this application 
-  has to set up the error handling thread by calling the ers::thread::set_issue_catcher  function and passing 
+  has to set up the error handling thread by calling the ers::set_issue_catcher  function and passing 
   to it a function object as parameter. This function object will be executed in the context of a dedicated 
-  thread (created by the  ers::thread::set_issue_catcher) for every issue which is reported to the ERS local stream. 
-  The parameter of the  ers::thread::set_issue_catcher is of \c boost::function<void ( const ers::Issue & )> type 
+  thread (created by the  ers::set_issue_catcher) for every issue which is reported to the ERS error, fata or warning streams. 
+  The parameter of the  ers::set_issue_catcher is of \c boost::function<void ( const ers::Issue & )> type 
   which allows to use plain C-style functions as well as C++ member functions for implementing the error handling 
   algorithm. For example one can define the error handling algorithms as a member function of a certain class:
   \code
@@ -540,14 +544,14 @@ if ( ers::debug_level() >= level ) \
   \code
   IssueCatcher catcher;
   try {
-    ers::thread::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
+    ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
   }
-  catch( ers::thread::IssueCatcherAlreadySet & ex ){
+  catch( ers::IssueCatcherAlreadySet & ex ){
   ...
   }
   \endcode
   Note that the error handling catcher can be set only once for the lifetime of an application. 
-  An attempt to set it again will fail and the ers::thread::IssueCatcherAlreadySet will be thrown.
+  An attempt to set it again will fail and the ers::IssueCatcherAlreadySet will be thrown.
   
   \section ERS_HERE ERS_HERE macro
   The macro ERS_HERE is used to insert all the context information to an ers issue. 

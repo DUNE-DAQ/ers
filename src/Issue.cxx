@@ -110,6 +110,9 @@ Issue::Issue(	const Context & context,
     add_default_qualifiers( *this );
 }
 
+ers::Issue::~Issue() throw()
+{ ; }
+
 void 
 ers::Issue::get_value( const std::string & key, const char * & value ) const
 {

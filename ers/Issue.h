@@ -79,8 +79,7 @@ namespace ers
 	
 	Issue( const Issue & other );
 	      
-	virtual ~Issue() throw()
-        { ; }
+	virtual ~Issue() throw();
 	
 	virtual Issue * clone() const = 0;
 	
@@ -221,6 +220,7 @@ namespace namespace_name { \
 	virtual const char * get_class_name() const { return get_uid(); } \
 	virtual ERS_BASE_CLASS( base_class_name ) * clone() const { return new namespace_name::class_name( *this ); } \
       public: \
+	virtual ~class_name() throw() { ; } \
 	class_name( const ers::Context & context \
         	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
           : ERS_BASE_CLASS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
