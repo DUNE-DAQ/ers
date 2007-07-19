@@ -143,21 +143,21 @@ if ( ers::debug_level() >= level ) \
  */
 #define ERS_WARNING( message ) \
 { \
-    ERS_REPORT_IMPL( ers::warning, ers::Warning, message, ); \
+    ERS_REPORT_IMPL( ers::warning, ers::Message, message, ); \
 }
 
 /** \def ERS_ERROR( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_ERROR( message ) \
 { \
-    ERS_REPORT_IMPL( ers::error, ers::Error, message, ); \
+    ERS_REPORT_IMPL( ers::error, ers::Message, message, ); \
 }
 
 /** \def ERS_FATAL( message ) This macro sends the message to the ers::error stream.
  */
 #define ERS_FATAL( message ) \
 { \
-    ERS_REPORT_IMPL( ers::fatal, ers::Fatal, message, ); \
+    ERS_REPORT_IMPL( ers::fatal, ers::Message, message, ); \
 }
     	
 #endif
