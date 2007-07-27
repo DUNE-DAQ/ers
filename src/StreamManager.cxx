@@ -262,7 +262,9 @@ ers::StreamManager::debug( const Issue & issue, int level )
 {
     if ( Configuration::instance().debug_level() >= level )
     {
-	report_issue( ers::Debug, issue );
+	ers::severity old_severity = issue.set_severity( ers::Severity( ers::Debug, level ) );
+	m_out_streams[ers::Debug]->write( issue );
+	issue.set_severity( old_severity );
     }
 }
 
