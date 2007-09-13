@@ -121,6 +121,8 @@ namespace ers
         
 	ers::Severity set_severity( ers::Severity severity ) const;
 
+	void wrap_message( const std::string & begin, const std::string & end );
+        
       protected:
         
 	template <typename T>

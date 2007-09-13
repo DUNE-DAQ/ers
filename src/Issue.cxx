@@ -157,6 +157,12 @@ Issue::prepend_message( const std::string & msg )
     m_message = msg + m_message;
 }
 
+void
+Issue::wrap_message( const std::string & begin, const std::string & end )
+{
+    m_message = begin + m_message + end;
+}
+
 // ====================================================
 // OutputStream Operators
 // ====================================================
