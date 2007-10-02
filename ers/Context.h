@@ -33,7 +33,9 @@ namespace ers
       public:
 
 	static const Context EmptyInstance;
-
+	
+        virtual ~Context() { ; }
+        
 	std::string position() const;				/**< \return position in the code */
 	std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
 	
