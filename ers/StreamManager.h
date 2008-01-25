@@ -80,6 +80,10 @@ namespace ers
 	
         void add_output_stream( ers::severity severity, ers::OutputStream * new_stream );	
       
+        void configure_output_stream( ers::severity severity, std::map<std::string, std::string> & config );
+        	
+        void configure_all_output_streams( std::map<std::string, std::string> & config );
+        
       private:	
 	StreamManager( );
 	void report_issue( ers::severity type, const Issue & issue );

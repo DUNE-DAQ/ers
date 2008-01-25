@@ -35,3 +35,16 @@ ers::OutputStream::isNull() const
 {
     return false;
 }
+
+void
+ers::OutputStream::configure( const std::map<std::string,std::string> & ) throw ()
+{
+}
+
+void
+ers::OutputStream::configure_stream_chain( const std::map<std::string,std::string> & config ) throw ()
+{
+    configure( config );
+    if ( !chained().isNull() )
+	chained().configure_stream_chain( config );
+}

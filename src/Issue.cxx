@@ -17,6 +17,7 @@
 #include <ers/Issue.h>
 #include <ers/IssueFactory.h>
 #include <ers/OutputStream.h>
+#include <ers/StandardStreamOutput.h>
 #include <ers/ers.h>
 #include <ers/internal/Util.h>
 
@@ -127,12 +128,6 @@ ers::Issue::get_value( const std::string & key, const char * & value ) const
     }
 }
 
-// ====================================================
-// Field Access Methods
-// ====================================================
-
-// message
-
 /** Add a qualifier to the qualifier list
   * \param qualif the qualifier to add
   */
@@ -151,89 +146,34 @@ Issue::set_severity( ers::Severity severity ) const
     return old_severity;
 }
 
+/** Add the given text to the beginning of the current issue's message
+  * \param msg text to be prepended
+  */
 void
 Issue::prepend_message( const std::string & msg )
 {
     m_message = msg + m_message;
 }
 
+/** Add the given text strings to the beginning and to the end of the current issue's message
+  * \param begin text to be prepended
+  * \param begin text to be appended
+  */
 void
 Issue::wrap_message( const std::string & begin, const std::string & end )
 {
     m_message = begin + m_message + end;
 }
 
-// ====================================================
-// OutputStream Operators
-// ====================================================
-
-#define FIELD_SEPARATOR "\n\t"
 namespace ers
-{
-    
-    /** Standard Streaming operator - puts the human description into the OutputStream.
+{   
+    /** Standard streaming operator - puts the issue in human readable format into the OutputStream.
      * \param out the destination OutputStream
-     * \param issue the Issue to OutputStream
+     * \param issue the Issue to be printed
      */
     std::ostream & operator<<( std::ostream & out, const ers::Issue & issue )
     {
-        if ( ers::verbosity_level() > -3 )
-	{
-	    out << ers::to_string( issue.severity() ) << " ";
-	}
-        
-        if ( ers::verbosity_level() > -2 )
-	{
-	    out << issue.time() << " ";
-	}
-        
-        if ( ers::verbosity_level() > -1 )
-	{
-	    out << "[" << issue.context().position() << "] ";
-	}
-        
-	out << issue.message();
-        
-	if ( ers::verbosity_level() > 1 )
-	{
-            out << FIELD_SEPARATOR << "Parameters = ";
-            for ( ers::string_map::const_iterator it = issue.parameters().begin(); it != issue.parameters().end(); ++it )
-	    {
-		out << "'" << it->first << "=" << it->second << "' ";
-	    }
-	    
-            out << FIELD_SEPARATOR << "Qualifiers = ";
-            for ( std::vector<std::string>::const_iterator it = issue.qualifiers().begin(); it != issue.qualifiers().end(); ++it )
-	    {
-		out << "'" << *it << "' ";
-	    }
-        }
-	
-        if ( ers::verbosity_level() > 2 )
-	{
-	    out << FIELD_SEPARATOR << "host = " << issue.context().host_name()
-		<< FIELD_SEPARATOR << "user = " << issue.context().user_name()
-				   << " (" << issue.context().user_id() << ")"
-		<< FIELD_SEPARATOR << "process id = " << issue.context().process_id()
-		<< FIELD_SEPARATOR << "thread id = " << issue.context().thread_id()
-		<< FIELD_SEPARATOR << "process wd = " << issue.context().cwd();
-	}
-        
-	if ( ers::verbosity_level() > 3 )
-	{
-	    std::vector<std::string> stack = issue.context().stack();
-	    for( size_t i = 0; i < stack.size(); i++ )
-	    {
-		out << FIELD_SEPARATOR << "#" << std::setw(3) << std::left << i << stack[i];
-	    }
-	}
-        
-        if ( issue.cause() )
-        {
-            out << FIELD_SEPARATOR << "was caused by: " << *issue.cause();
-        }
-        
-	return out;
+        return StandardStreamOutput::print( out, issue, ers::verbosity_level() );
     }
 }
 

@@ -137,30 +137,9 @@ if ( ers::debug_level() >= level ) \
 #define ERS_INFO( message ) \
 { \
     ERS_REPORT_IMPL( ers::info, ers::Message, message, ); \
-}
+}    	
 
-/** \def ERS_WARNING( message ) This macro sends the message to the ers::warning stream.
- */
-#define ERS_WARNING( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::warning, ers::Message, message, ); \
-}
-
-/** \def ERS_ERROR( message ) This macro sends the message to the ers::error stream.
- */
-#define ERS_ERROR( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::error, ers::Message, message, ); \
-}
-
-/** \def ERS_FATAL( message ) This macro sends the message to the ers::error stream.
- */
-#define ERS_FATAL( message ) \
-{ \
-    ERS_REPORT_IMPL( ers::fatal, ers::Message, message, ); \
-}
-    	
-#endif
+#endif // ERS_ERS_H
 
 /** \page main How to use the ERS package
 

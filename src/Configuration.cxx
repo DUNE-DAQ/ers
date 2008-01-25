@@ -24,11 +24,7 @@ namespace
 	{
 	    if ( sscanf( env, "%d", &value ) != 1 )
 	    {
-//		ERS_INTERNAL_WARNING( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
-//		Unfortunately this macro does not work here because if this function is called from the
-//		constructor of the Configuration class. The reason is that this macro uses the Configuration
-//		singleton which results in the recursive initialization
-		std::cerr << "ERROR [ers::Configuration] Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" << std::endl;
+		ERS_INTERNAL_ERROR( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
 	    }
 	}
     }
@@ -54,7 +50,7 @@ ers::Configuration::instance()
     _creator_.dummy();
     
     return *instance;
-} // instance
+}
 
 /** Private constructor - can not be called by user code, use the \c instance() method instead
   * \see instance() 
@@ -63,13 +59,17 @@ ers::Configuration::Configuration()
   : m_debug_level( 0 ),
     m_verbosity_level( 0 )
 {
-    static bool initialised = false;
-    if ( !initialised )
-    {
-	initialised = true;
-        read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
-	read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
-    }
+    read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
+    read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+}
+
+void 
+ers::Configuration::verbosity_level( int verbosity_level )
+{
+    m_verbosity_level = verbosity_level;
+    std::map<std::string, std::string> parameters;
+    parameters["verbosity"] = m_verbosity_level;
+    ers::StreamManager::instance().configure_all_output_streams( parameters );
 }
 
 std::ostream & 

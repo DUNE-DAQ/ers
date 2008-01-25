@@ -26,13 +26,13 @@ namespace ers
     
     class Issue; 
 
-    /** ERS Issue stream interface.
-      * An ERS stream is a mean to send and receive issues.
-      * The two core method to do so are \c write and \c read.
-      * Certain subclasses of stream might implement only sending, or only receiving.
+    /** ERS Issue output stream interface.
+      * An ERS output stream is a mean to send issues.
+      * This interface defines two core methods to \c write issues and to \c configure the stream.
+      * Certain subclasses of stream might implement only sending while leaving the configure method empty.
       * \author Serguei Kolos
       * \version 1.0
-      * \brief ERS Issue stream interface.
+      * \brief ERS Output Issue stream interface.
       */
     
     class OutputStream
@@ -44,6 +44,8 @@ namespace ers
         { ; }
         
 	virtual void write( const Issue & issue ) = 0;	/**< \brief Sends an issue into the stream */
+	
+        virtual void configure( const std::map<std::string,std::string> & config ) throw ();	/**< \brief Configures the stream */
       
       protected:
         OutputStream( );
@@ -60,6 +62,8 @@ namespace ers
         OutputStream & operator=( const OutputStream & );
         
 	void chained( OutputStream * stream );
+        
+        void configure_stream_chain( const std::map<std::string,std::string> & config ) throw ();
         
       	std::auto_ptr<OutputStream> m_chained;
     };

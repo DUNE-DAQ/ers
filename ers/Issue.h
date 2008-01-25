@@ -272,27 +272,24 @@ ERS_DECLARE_ISSUE(  ers,
 		    "value for the \"" << key << "\" key is not set ",
 		    ((std::string)key ) )
 
-namespace ers
+template <typename T>
+void ers::Issue::get_value( const std::string & key, T & value ) const
 {
-    template <typename T>
-    void Issue::get_value( const std::string & key, T & value ) const
+    string_map::const_iterator it = m_values.find(key);
+    if ( it == m_values.end() )
     {
-	string_map::const_iterator it = m_values.find(key);
-	if ( it == m_values.end() )
-	{
-	    throw ers::NoValue( ERS_HERE, key );
-	}
-	std::istringstream in( it->second );
-	in >> value;
+	throw ers::NoValue( ERS_HERE, key );
     }
+    std::istringstream in( it->second );
+    in >> value;
+}
 
-    template <typename T>
-    void Issue::set_value( const std::string & key, T value )
-    {
-        std::ostringstream out;
-	out << value;
-	m_values[key] = out.str();
-    }
+template <typename T>
+void ers::Issue::set_value( const std::string & key, T value )
+{
+    std::ostringstream out;
+    out << value;
+    m_values[key] = out.str();
 }
 
 #endif

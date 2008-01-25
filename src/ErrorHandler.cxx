@@ -84,7 +84,7 @@ namespace ers
 	    same_shit_different_time = true;
 	else
 	    ::abort();
-        Configuration::instance().verbosity_level() = 13;
+        Configuration::instance().verbosity_level( 13 );
         ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
 	abort();
     }   
@@ -111,7 +111,7 @@ namespace ers
     
     void ErrorHandler::terminate_handler()
     {
-	Configuration::instance().verbosity_level() = 13;
+	Configuration::instance().verbosity_level( 13 );
     	try
         {
             throw;

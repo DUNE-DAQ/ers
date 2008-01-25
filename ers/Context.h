@@ -17,6 +17,7 @@
 
 #include <string>
 #include <vector>
+#include <ers/Configuration.h>
 
 namespace ers
 {   
@@ -36,8 +37,9 @@ namespace ers
 	
         virtual ~Context() { ; }
         
-	std::string position() const;				/**< \return position in the code */
-	std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
+	std::string position( int verbosity = ers::Configuration::instance().verbosity_level() ) const;		/**< \return position in the code */
+	
+        std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
 	
         virtual Context * clone() const = 0;			/**< \return copy of the current context */
         virtual const char * const cwd() const = 0;		/**< \return current working directory of the process */

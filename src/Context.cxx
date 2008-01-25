@@ -41,9 +41,9 @@ namespace
     }
     
     void
-    print_function( std::ostream & out, const char * function )
+    print_function( std::ostream & out, const char * function, int verbosity )
     {
-	if ( ers::Configuration::instance().verbosity_level() )
+	if ( verbosity )
         {
 	    out << function;
             return;
@@ -84,10 +84,10 @@ ers::Context::stack( ) const
   * \return reference to string containing format
   */
 std::string
-ers::Context::position() const
+ers::Context::position( int verbosity ) const
 {
     std::ostringstream out;
-    print_function( out, function_name() );
+    print_function( out, function_name(), verbosity );
     out << " at ";
     
     const char * file = file_name();

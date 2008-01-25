@@ -50,15 +50,14 @@ namespace ers
         int verbosity_level() const		/**< \brief returns current verbosity level */
         { return m_verbosity_level; }
         
-        int & debug_level()			/**< \brief can be used to set the current debug level */
-        { return m_debug_level; }
+        void debug_level( int debug_level )	/**< \brief can be used to set the current debug level */
+        { m_debug_level = debug_level; }
         
-        int & verbosity_level()			/**< \brief can be used to set the current verbosity level */
-        { return m_verbosity_level; }
+        void verbosity_level( int verbosity_level );	/**< \brief can be used to set the current verbosity level */
         
       private:	
 	Configuration( );
-        
+                
         int m_debug_level;		/**< \brief current active level for the debug stream */	
     	int m_verbosity_level;		/**< \brief current verbosity level for all streams */
     };

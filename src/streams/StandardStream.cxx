@@ -1,5 +1,5 @@
 /*
- *  StandardErrStream.cxx
+ *  StandardStream.cxx
  *  ers
  *
  *  Created by Serguei Kolos on 02.08.05.
@@ -11,29 +11,29 @@
 #include <fstream>
 #include <ers/ExampleIssues.h>
 #include <ers/internal/StandardStream.h>
+#include <ers/internal/FormattedStandardStream.h>
 #include <boost/thread/mutex.hpp>
+#include <boost/noncopyable.hpp>
 
 namespace
 {
-    struct NonLockableDevice
+    struct OutDevice : boost::noncopyable
     {
-	NonLockableDevice( std::ostream & out )
+	OutDevice( std::ostream & out )
           : out_( out )
 	{ ; }
         
         std::ostream & stream() const
         { return out_; }
         
-        const NonLockableDevice & device()
+        const OutDevice & device()
         { return *this; }
       
-      private:
-        NonLockableDevice & operator=( const NonLockableDevice & );
-        
+      private:        
       	std::ostream &	out_;
     };
     
-    struct ObjectLock
+    struct ObjectLock : boost::noncopyable
     {
       protected:
 	boost::mutex & mutex()
@@ -46,7 +46,7 @@ namespace
     };
     
     template <int LockDiscriminator>
-    struct ClassLock
+    struct ClassLock : boost::noncopyable
     {
       protected:
 	boost::mutex & mutex()
@@ -56,30 +56,30 @@ namespace
         }
     };
     
-    template <class ScopedLock=ObjectLock>
-    struct LockableDevice : public ScopedLock,
-    			    public NonLockableDevice
+    template <class L=ObjectLock>
+    struct LockableDevice : public L,
+    			    public OutDevice
     {
-	using ScopedLock::mutex;
+	using L::mutex;
         
         struct Lock : public boost::mutex::scoped_lock,
-		      public NonLockableDevice
+		      public OutDevice
 	{            
             Lock( std::ostream & out, boost::mutex & mutex )
 	      : boost::mutex::scoped_lock( mutex ),
-		NonLockableDevice( out )
+		OutDevice( out )
 	    { ; }
 
-	    // this constructor is not implemented because it is must never be called !!!
+	    // this constructor is not implemented because it must never be called !!!
 	    // nevertheless removing this declaration causes compilation error
 	    Lock( const Lock & );
             
-	  private:
+          private:
 	    Lock & operator=( const Lock & );
 	};
         
 	LockableDevice( std::ostream & out )
-	  : NonLockableDevice( out )
+	  : OutDevice( out )
 	{ ; }
         
         Lock device()
@@ -89,32 +89,32 @@ namespace
     };
         
     
-    template <class Device>
-    struct OutputDevice : public Device
+    template <class D>
+    struct OutputDevice : public D
     {
-	OutputDevice() 
-	  : Device( std::cout )
+	OutputDevice( const std::string & = "" ) 
+	  : D( std::cout )
 	{ ; }
     };
     
-    template <class Device>
-    struct ErrorDevice : public Device
+    template <class D>
+    struct ErrorDevice : public D
     {
-	ErrorDevice()
-	  : Device( std::cerr )
+	ErrorDevice( const std::string & = "" )
+	  : D( std::cerr )
 	{ ; }
     };
     
-    template <class Device>
-    struct FileDevice : public Device
+    template <class D>
+    struct FileDevice : public D
     {
 	FileDevice( const std::string & file_name )
-          : Device( out_ ),
+          : D( out_ ),
             out_( file_name.c_str() )
 	{
             if ( !out_ )
             {
-            	throw ers::FileDoesNotExist( ERS_HERE, file_name.c_str() );
+            	throw ers::CantOpenFile( ERS_HERE, file_name.c_str() );
             }
         }
                 
@@ -123,10 +123,18 @@ namespace
     };
 }
 
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<FileDevice<NonLockableDevice> >, "file", file_name )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<NonLockableDevice> >, "stdout", )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<NonLockableDevice> >, "stderr", )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<FileDevice<OutDevice> >, "file", file_name )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<OutDevice> >, "stdout", )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<OutDevice> >, "stderr", )
 
 ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<FileDevice<LockableDevice<> > >, "lfile", file_name )
 ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<LockableDevice<ClassLock<1> > > >, "lstdout", )
 ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<LockableDevice<ClassLock<2> > > >, "lstderr", )
+
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<FileDevice<OutDevice> >, "ffile", format )
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<OutputDevice<OutDevice> >, "fstdout", format )
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<ErrorDevice<OutDevice> >, "fstderr", format )
+
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<FileDevice<LockableDevice<> > >, "lffile", format )
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<OutputDevice<LockableDevice<ClassLock<1> > > >, "lfstdout", format )
+ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<ErrorDevice<LockableDevice<ClassLock<2> > > >, "lfstderr", format )

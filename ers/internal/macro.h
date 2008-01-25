@@ -8,6 +8,7 @@
 
 #include <ers/ers.h>
 #include <ers/StreamFactory.h>
+#include <ers/StandardStreamOutput.h>
 #include <boost/preprocessor/cat.hpp>
 
 ERS_DECLARE_ISSUE( ers, InternalMessage, , )
@@ -29,7 +30,7 @@ if ( ers::debug_level() >= level ) \
     out << message; \
     ers::InternalMessage info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Severity( ers::Debug, level ) ); \
-    std::cout << info << std::endl; \
+    ers::StandardStreamOutput::println( std::cout, info, 0 ); \
 } }
 
 #define ERS_INTERNAL_INFO( message ) { \
@@ -37,7 +38,7 @@ if ( ers::debug_level() >= level ) \
     out << message; \
     ers::InternalMessage info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Information ); \
-    std::cerr << info << std::endl; \
+    ers::StandardStreamOutput::println( std::cout, info, 0 ); \
 }
  
 #define ERS_INTERNAL_WARNING( message ) { \
@@ -45,7 +46,7 @@ if ( ers::debug_level() >= level ) \
     out << message; \
     ers::InternalMessage info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Warning ); \
-    std::cerr << info << std::endl; \
+    ers::StandardStreamOutput::println( std::cerr, info, 0 ); \
 }
  
 #define ERS_INTERNAL_ERROR( message ) { \
@@ -53,7 +54,7 @@ if ( ers::debug_level() >= level ) \
     out << message; \
     ers::InternalMessage info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Error ); \
-    std::cerr << info << std::endl; \
+    ers::StandardStreamOutput::println( std::cerr, info, 0 ); \
 }
  
 #define ERS_INTERNAL_FATAL( message ) { \
@@ -61,7 +62,7 @@ if ( ers::debug_level() >= level ) \
     out << message; \
     ers::InternalMessage info( ERS_HERE, out.str() ); \
     info.set_severity( ers::Fatal ); \
-    std::cerr << info << std::endl; \
+    ers::StandardStreamOutput::println( std::cerr, info, 0 ); \
     ::exit( 13 ); \
 }
  

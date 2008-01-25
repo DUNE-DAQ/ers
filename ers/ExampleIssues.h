@@ -1,5 +1,8 @@
+#ifndef ERS_EXAMPLE_ISSUES_H
+#define ERS_EXAMPLE_ISSUES_H
+
 /*
- *  ExampleIssue.h
+ *  ExampleIssues.h
  *  ers
  *
  *  Created by Matthias Wiesmann on 24.01.05.
@@ -59,5 +62,5 @@ ERS_DECLARE_ISSUE_BASE( 	ers, 					// namespace
 				((int)mode )				// attribute of this class
                  	)
 
-
+#endif
 
