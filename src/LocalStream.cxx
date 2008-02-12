@@ -43,7 +43,11 @@ ers::LocalStream::LocalStream( )
 
 ers::LocalStream::~LocalStream( )
 {
-    m_terminated = true;
+    {
+	m_terminated = true;
+	boost::mutex::scoped_lock lock( m_mutex );
+	m_condition.notify_one();
+    }
     if ( m_issue_catcher_thread.get() )
     {
     	m_issue_catcher_thread->join();
@@ -56,9 +60,12 @@ ers::LocalStream::thread_wrapper()
     m_catcher_thread_id = pthread_self();
     while( !m_terminated )
     {
-    	boost::mutex::scoped_lock lock( m_mutex );
-        m_condition.wait( lock );
-        while( !m_issues.empty() )
+    	{
+	    boost::mutex::scoped_lock lock( m_mutex );
+	    m_condition.wait( lock );
+        }
+	boost::mutex::scoped_lock lock( m_issues_guard );
+        while( !m_terminated && !m_issues.empty() )
         {
             m_issue_catcher( *m_issues.front() );
             m_issues.pop();
