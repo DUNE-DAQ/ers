@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>RELEASE_NOTES</title>
+</head>
+<body>
+<h3>Compatibility note</h3>
+There are some changes in the public API which are nevertheless fully
+backward compatible except the absence of the <span
+ style="font-weight: bold;">ERS_WARNING</span>, <span
+ style="font-weight: bold;">ERS_ERROR</span>
+and <span style="font-weight: bold;">ERS_FATAL</span> macro which have
+been removed as suggested in the <a
+ href="https://edms.cern.ch/document/854087/2">ERS review document</a>.
+Here is a quote from that document explaining the reasoning:<br>
+<div style="margin-left: 40px;">"<span style="font-style: italic;">It
+is recommended that any error condition (i.e. issues sent to either of
+the ers::warning,</span><span style="font-style: italic;"> ers::error
+or ers::fatal streams) should always be notified by a qualified issue
+and not by a</span><span style="font-style: italic;"> generic one. This
+will allow the implementation of handling procedures.</span><br
+ style="font-style: italic;">
+<span style="font-style: italic;">Even if ERS cannot enforce such a
+behaviour on developers, it is recommended that at least</span><span
+ style="font-style: italic;"> the ERS_WARNING, ERS_ERROR and ERS_FATAL
+macros should be removed from the</span><span
+ style="font-style: italic;"> code.</span>"<br>
+</div>
+<h3>New features</h3>
+ERS implements most of the suggestions of the <a
+ href="https://edms.cern.ch/document/854087/2">ERS review document</a>.<br>
+<h4>Dynamic configuration</h4>
+ERS provides new functions to configure the output stream objects at
+run time. Note that a set of stream objects for any given ERS severity
+(which is defined via the TDAQ_ERS_&lt;SEVERITY&gt; environment
+variables) can <span style="font-weight: bold;">not</span> be changed
+while there is a possibility of changing behaviour of the stream
+objects by passing configuration paarameter to them. Stream
+implementations which support dynamic configuration must implement the
+new virtual function declared in the <span
+ style="font-style: italic; font-weight: bold;">ers::OutputStream</span>
+class as:<br>
+<pre>	virtual void configure( const std::map&lt;std::string,std::string&gt; &amp; config ) throw ();</pre>
+An application may use one of the two functions defined in the <span
+ style="font-style: italic; font-weight: bold;">ers::StreamManager</span>
+class in order to configure stream objects:<br>
+<pre>	void configure_output_stream( ers::severity severity, std::map&lt;std::string, std::string&gt; &amp; config );</pre>
+<pre>	void configure_all_output_streams( std::map&lt;std::string, std::string&gt; &amp; config );<br></pre>
+For example in order to pass the new verbosity level to all the stream
+objects for the DEBUG severity one can use the following code:<br>
+<pre>	std::map&lt;std::string, std::string&gt; config;<br>	config.insert( std::make_pair( "verbosity", "3" ) );<br>	ers::StreamManager::instance.configure_output_stream( ers::Debug, config );<br></pre>
+<span style="font-weight: bold;">Note: </span>Stream implementation
+objects are responsible for parsing the configuration infomation and
+reconfigure themselves with respect to the given parameters. <br>
+<h4>Verbosity levels</h4>
+Stream implementations which are printing infomation to the standard
+streams (output, error and file) are acdcepting now negative verbosity
+values which can be used to minimise the output. The following table
+shows the meaning of the supported verbosity levels.<br>
+<table style="text-align: left;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td
+ style="vertical-align: top; font-weight: bold; text-align: center;">verbosity
+level<br>
+      </td>
+      <td
+ style="vertical-align: top; font-weight: bold; text-align: center;">output
+infomation<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">&lt; -2<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">text<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">-2<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity test<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">-1<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity
+time text<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">0 or 1<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity
+time context text<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">2<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity
+time context text [parameter...] [qualifier...]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">3<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity
+time context text [parameter...] [qualifier...] [process parameters]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: center;">&gt; 3<br>
+      </td>
+      <td style="vertical-align: top; text-align: center;">severity
+time context text [parameter...] [qualifier...] [process parameters]
+[stck trace]<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Issue flow in multi-thread environment</h4>
+A multi-threaded application can declare issue catcher which will work
+as interceptor for all ERS issues which are sent to ERS streams in the
+scope of the current process. Issue catcher must be of the
+boost::function&lt;void ( const ers::Issue &amp; )&gt; type. For
+example it can be declared like:<br>
+<pre style="margin-left: 40px;">struct IssueCatcher {<br>	void handler( const ers::Issue &amp; issue ) { ers::error( issue ); }<br>};</pre>
+In order to activate the catcher one should use the <span
+ style="font-weight: bold;">set_issue_catcher</span> function declared
+in the <span style="font-weight: bold;">ers</span> namespace in the
+following way:<br>
+<pre style="margin-left: 40px;">IssueCatcher catcher;<br>try {<br>	ers::set_issue_catcher( boost::bind( &amp;IssueCatcher::handler, &amp;catcher, _1 ) );<br>}<br>catch( ers::IssueCatcherAlreadySet &amp; ex ) {<br>	ers::fatal( ex );<br>	return 1;<br>}</pre>
+<span style="font-weight: bold;">Note:</span> An issue catcher can be
+installed only <span style="font-weight: bold;">once</span> per life
+time of the application. Any subsequent attempt to install another
+issue catcher will fail and the <span style="font-weight: bold;">ers::IssueCatcherAlreadySet</span>
+exception will be thrown.<br>
+If issue catcher has been succesfully installed then all the ERS issues
+will be passed to the catcher by executing the catcher's function in
+the <span style="font-weight: bold; font-style: italic;">context of
+the dedicated thread</span>. The issue catcher itself can report issues
+to all ERS streams and they will be passed directly to the ERS stream
+objects without calling the catcher&nbsp;<span
+ style="font-weight: bold;"></span>in order to avoid recursion.<br>
+</body>
+</html>
