@@ -72,6 +72,8 @@ namespace ers
 	
         void information( const Issue & issue );	/**< \brief sends an issue to the information stream */
 	
+        void log( const Issue & issue );		/**< \brief sends an issue to the log stream */
+        
         void warning( const Issue & issue );		/**< \brief sends an issue to the warning stream */
 
         void add_receiver(	const std::string & stream,
@@ -80,9 +82,9 @@ namespace ers
 	
         void add_output_stream( ers::severity severity, ers::OutputStream * new_stream );	
       
-        void configure_output_stream( ers::severity severity, std::map<std::string, std::string> & config );
+        void configure_output_stream( ers::severity severity, const std::map<std::string, std::string> & config );
         	
-        void configure_all_output_streams( std::map<std::string, std::string> & config );
+        void configure_all_output_streams( const std::map<std::string, std::string> & config );
         
       private:	
 	StreamManager( );

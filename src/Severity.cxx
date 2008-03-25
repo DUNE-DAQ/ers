@@ -6,6 +6,7 @@ namespace
     const char * SeverityNames[] =
     { 
 	"DEBUG",
+	"LOG",
 	"INFO",
 	"WARNING",
 	"ERROR",

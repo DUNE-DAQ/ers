@@ -70,14 +70,14 @@ void pass( int step )
 
 void test_function( int index )
 {
-    ERS_INFO( "starting thread #" << index )
+    ERS_LOG( "starting thread #" << index )
     sleep( 1 );
     ers::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
     sleep( 1 );
     ers::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
     sleep( 1 );
     ers::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
-    ERS_INFO( "finishing thread #" << index )
+    ERS_LOG( "finishing thread #" << index )
 }
 
 struct IssueCatcher

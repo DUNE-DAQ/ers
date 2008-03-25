@@ -23,7 +23,7 @@ namespace
 }
 
 /** Returns the singleton instance of the factory.
-  * \return a pointer to the singleton instance 
+  * \return a reference to the singleton instance 
   */
 ers::IssueFactory &
 ers::IssueFactory::instance()

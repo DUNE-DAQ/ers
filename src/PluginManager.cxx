@@ -2,7 +2,6 @@
 #include <ers/internal/Util.h>
 #include <ers/internal/PluginManager.h>
 #include <ers/internal/macro.h>
-#include <ers/ers.h>
 #include <vector>
 #include <iostream>
 

@@ -23,7 +23,7 @@ namespace ers
 {
     class BadSeverity;
     
-    enum severity { Debug, Information, Warning, Error, Fatal };
+    enum severity { Debug, Log, Information, Warning, Error, Fatal };
     
     struct Severity
     {

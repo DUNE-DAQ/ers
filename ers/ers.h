@@ -95,6 +95,13 @@ namespace ers
     { StreamManager::instance().information( issue ); }
     
     /*! 
+     *  This function sends the issue to the ERS LOG stream.
+     *  \param issue the issue to be reported
+     */
+    inline void log( const Issue & issue )
+    { StreamManager::instance().log( issue ); }
+    
+    /*! 
      *  This function returns the current verbosity level for ERS.
      */
     inline int verbosity_level( )
@@ -137,6 +144,13 @@ if ( ers::debug_level() >= level ) \
 #define ERS_INFO( message ) \
 { \
     ERS_REPORT_IMPL( ers::info, ers::Message, message, ); \
+}    	
+
+/** \def ERS_LOG( message ) This macro sends the message to the ers::log stream.
+ */
+#define ERS_LOG( message ) \
+{ \
+    ERS_REPORT_IMPL( ers::log, ers::Message, message, ); \
 }    	
 
 #endif // ERS_ERS_H

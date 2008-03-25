@@ -38,7 +38,7 @@ namespace
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
-  * \return a pointer to the singleton instance 
+  * \return a reference to the singleton instance 
   */
 ers::Configuration &
 ers::Configuration::instance()

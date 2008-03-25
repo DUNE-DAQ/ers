@@ -39,6 +39,7 @@ namespace
     const char * const DefaultOutputStreams[] =
     {
 	"lstdout",		// Debug
+	"lstdout",		// Log
 	"throttle,lstdout",	// Information
 	"throttle,lstderr",	// Warning
         "throttle,lstderr",	// Error
@@ -101,7 +102,7 @@ namespace
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
-  * \return a pointer to the singleton instance 
+  * \return a reference to the singleton instance 
   */
 ers::StreamManager &
 ers::StreamManager::instance()
@@ -243,7 +244,7 @@ ers::StreamManager::setup_stream( const std::vector<std::string> & streams )
  * \param config this object contains configuration parameters
  */
 void
-ers::StreamManager::configure_output_stream( ers::severity severity, std::map<std::string, std::string> & config )
+ers::StreamManager::configure_output_stream( ers::severity severity, const std::map<std::string, std::string> & config )
 {
     ers::OutputStream & out = *m_out_streams[severity];
     out.configure_stream_chain( config );
@@ -254,7 +255,7 @@ ers::StreamManager::configure_output_stream( ers::severity severity, std::map<st
  * \param config this object contains configuration parameters
  */
 void
-ers::StreamManager::configure_all_output_streams( std::map<std::string, std::string> & config )
+ers::StreamManager::configure_all_output_streams( const std::map<std::string, std::string> & config )
 {
     for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
@@ -316,14 +317,22 @@ ers::StreamManager::warning( const Issue & issue )
     report_issue( ers::Warning, issue );
 }
 
-/** Sends an issue to the debug stream 
+/** Sends an issue to the info stream 
  * \param issue the Issue to send
- * \param level the debug level. 
  */
 void
 ers::StreamManager::information( const Issue & issue )
 {
     report_issue( ers::Information, issue );
+}
+
+/** Sends an issue to the log stream 
+ * \param issue the Issue to send
+ */
+void
+ers::StreamManager::log( const Issue & issue )
+{
+    report_issue( ers::Log, issue );
 }
 
 std::ostream & 
