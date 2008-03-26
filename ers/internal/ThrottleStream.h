@@ -2,6 +2,9 @@
 // $Id$ 
 //
 // $Log$
+// Revision 1.2  2008/03/26 08:37:14  kolos
+// Change the way in which parameters are passed to the throttle stream.
+//
 // Revision 1.1  2008/01/25 17:32:14  kolos
 // Add possibility to configure ERS streams dynamically, add Throttle and FormattedOutput streams.
 //
@@ -28,8 +31,9 @@ namespace ers
    class ThrottleStream : public ers::OutputStream
    {
      public:
-      ThrottleStream(const std::string& criteria);
-      void write(const ers::Issue& issue);
+      ThrottleStream( const std::string & criteria );
+      
+      void write( const ers::Issue & issue );
       
      private:
       

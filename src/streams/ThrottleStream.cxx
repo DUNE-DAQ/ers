@@ -5,6 +5,9 @@
 //  Author:  G.J.Crone
 //
 //  $Log$
+//  Revision 1.2  2008/03/26 08:37:17  kolos
+//  Change the way in which parameters are passed to the throttle stream.
+//
 //  Revision 1.1  2008/01/25 17:32:14  kolos
 //  Add possibility to configure ERS streams dynamically, add Throttle and FormattedOutput streams.
 //
@@ -104,25 +107,27 @@ ers::ThrottleStream::throttle(IssueRecord& rec, const ers::Issue& issue)
     rec.m_lastOccuranceFormatted=issue.time();
 }
 
-ers::ThrottleStream::ThrottleStream(const std::string& criteria)
+ers::ThrottleStream::ThrottleStream( const std::string & criteria )
 {
-    m_initialThreshold=30;
-    m_timeLimit=30;
-
-    std::istringstream istr(criteria);
-    char key;
-    int value;
-    while (!istr.eof()) {
-	istr >> key >> value;
-	switch (key) {
-	case 'i':
-	   m_initialThreshold=value;
-	   break;
-	case 'r':
-	   m_timeLimit=value;
-	   break;
-	}
+    m_initialThreshold = 30;
+    m_timeLimit = 30;
+    
+    std::vector<std::string> params;
+    ers::tokenize( criteria, ",", params );
+    
+    if ( params.size() > 0 )
+    {
+	std::istringstream in( params[0] );
+        in >> m_initialThreshold;
     }
+    
+    if ( params.size() > 1 )
+    {
+	std::istringstream in( params[1] );
+        in >> m_timeLimit;
+    }
+    
+    std::cerr << m_initialThreshold << " " << m_timeLimit << std::endl;
 }
 
 /** Write method 
