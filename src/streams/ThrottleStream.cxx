@@ -5,6 +5,9 @@
 //  Author:  G.J.Crone
 //
 //  $Log$
+//  Revision 1.3  2008/03/26 17:13:23  kolos
+//  Remove debug output from the constructor of the Throttle stream.
+//
 //  Revision 1.2  2008/03/26 08:37:17  kolos
 //  Change the way in which parameters are passed to the throttle stream.
 //
@@ -126,8 +129,6 @@ ers::ThrottleStream::ThrottleStream( const std::string & criteria )
 	std::istringstream in( params[1] );
         in >> m_timeLimit;
     }
-    
-    std::cerr << m_initialThreshold << " " << m_timeLimit << std::endl;
 }
 
 /** Write method 
