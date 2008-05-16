@@ -5,6 +5,9 @@
 //  Author:  G.J.Crone
 //
 //  $Log$
+//  Revision 1.4  2008/05/16 13:30:13  kolos
+//  Fix memory leak in the IssueCatcher processing. Fix the bug of using uninitialized variable in the ThrottleStream.
+//
 //  Revision 1.3  2008/03/26 17:13:23  kolos
 //  Remove debug output from the constructor of the Throttle stream.
 //
@@ -52,6 +55,7 @@ ers::ThrottleStream::IssueRecord::IssueRecord()
 void 
 ers::ThrottleStream::IssueRecord::reset()
 {
+    m_lastOccurance=0;
     m_initialCounter=0;
     m_threshold=10;
     m_suppressedCounter=0;

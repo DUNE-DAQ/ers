@@ -67,8 +67,10 @@ ers::LocalStream::thread_wrapper()
 	boost::mutex::scoped_lock lock( m_issues_guard );
         while( !m_terminated && !m_issues.empty() )
         {
-            m_issue_catcher( *m_issues.front() );
+            ers::Issue * issue = m_issues.front();
+            m_issue_catcher( *issue );
             m_issues.pop();
+	    delete issue;
         }
     }
     m_catcher_thread_id = 0;
