@@ -19,6 +19,7 @@ ers::StandardStreamOutput::println( std::ostream & out, const Issue & issue, int
 {
     print( out, issue, verbosity );
     out << std::endl;
+    return out;
 }
 
 std::ostream &
