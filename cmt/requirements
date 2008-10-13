@@ -19,8 +19,7 @@ library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags	" -lers -lboost_thread-$(boost_libsuffix) -lboost_date_time-$(boost_libsuffix) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
 
-macro		instlibs			"libers.so libErsBaseStreams.so"	\
-		osx				"libers.dylib libErsBaseStreams.dylib"
+macro		instlibs			"libers.so libErsBaseStreams.so"
 		
 apply_pattern   install_libs            	files=$(instlibs)
 
