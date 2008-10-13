@@ -7,14 +7,18 @@
  *
  */
 #include <sys/types.h>
+#ifndef __APPLE__
 #include <linux/unistd.h>
+#endif
 #include <pwd.h>
 #include <unistd.h>
 #include <execinfo.h>
 
 #include <ers/LocalContext.h>
 
+#ifndef __APPLE__
 _syscall0(pid_t,gettid)
+#endif
 
 namespace
 {
@@ -65,7 +69,11 @@ ers::LocalContext::LocalContext(
     m_file_name( filename ),
     m_function_name( function_name ),
     m_line_number( line_number ),
+#ifndef __APPLE__
     m_thread_id( gettid() ),
+#else
+    m_thread_id( 0 ),
+#endif
 #ifndef ERS_NO_DEBUG
     m_stack_size( backtrace( m_stack, 128 ) )
 #else

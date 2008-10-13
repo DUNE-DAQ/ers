@@ -16,7 +16,7 @@ library		ers				$(lib_opts)	"*.cxx"
 macro           ers_shlibflags          	" -lboost_thread-$(boost_libsuffix) -lboost_date_time-$(boost_libsuffix)" 
 
 library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
-macro           ErsBaseStreams_shlibflags	" -lers -lboost_thread-$(boost_libsuffix) -lboost_regex-$(boost_libsuffix)" 
+macro           ErsBaseStreams_shlibflags	" -lers -lboost_thread-$(boost_libsuffix) -lboost_date_time-$(boost_libsuffix) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
 
 macro		instlibs			"libers.so libErsBaseStreams.so"	\
@@ -28,9 +28,9 @@ apply_pattern   install_libs            	files=$(instlibs)
 #       Test applications
 ########################################################################################################
 
-application	ers_test 		"../test/test.cxx"
-application	ers_psc 			"../bin/config.cxx"
-application	ers_receiver 		"../test/receiver.cxx"
+application	ers_test 			"../test/test.cxx"
+application	ers_psc				"../bin/config.cxx"
+application	ers_receiver 			"../test/receiver.cxx"
 
 macro		ers_test_dependencies		"ers" 
 macro		ers_testlinkopts		"-lers -lboost_date_time-$(boost_libsuffix) -lboost_thread-$(boost_libsuffix)"
