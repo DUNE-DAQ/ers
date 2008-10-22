@@ -34,7 +34,6 @@ ERS_DECLARE_ISSUE(	ers,
 			((const char *)condition )		
 			((const char *)reason ) )		
 
-#ifndef ERS_NO_DEBUG
 #include <boost/preprocessor/comparison.hpp>
 #include <ers/ers.h>
 
@@ -50,9 +49,6 @@ if( !(expression) ) \
     ers::fatal( ass ); \
     ::abort(); \
 }}
-#else 
-#define ERS_ASSERT_MSG( expression, message )
-#endif
 
 /** \def ERS_ASSERT(expression) This macro inserts an assertion than checks condition expression.
  * If expression is not true, then an issue of type ers::Asertion is thrown. It should be used
