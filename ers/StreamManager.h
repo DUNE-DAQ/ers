@@ -23,8 +23,8 @@
 
 #include <list>
 
-/** \file StreamFactory.h This file defines the StreamFactory class, 
-  * which is responsible for registration and creation of ERS streams.
+/** \file StreamManager.h This file defines the StreamManager class, 
+  * which is responsible for manipulation of ERS streams.
   * \author Serguei Kolos
   * \brief ers header and documentation file 
   */
@@ -38,7 +38,7 @@ namespace ers
     class Issue; 
     
     /** The \c StreamManager class is responsible for creating and handling all the ers
-      * streams used by the system. It implements the singleton pattern and handles a 
+      * streams used by an application. It implements the singleton pattern and handles a 
       * table of the different stream attached to each severity. 
       * When issues occurs, they can be dispatched using this instance.
       * Users should not use functions of this class directly.
