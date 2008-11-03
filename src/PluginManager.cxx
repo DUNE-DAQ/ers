@@ -18,11 +18,7 @@ namespace ers
 
     PluginManager::SharedLibrary::SharedLibrary( const std::string & name )
     {
-    #ifdef __macos__
-	std::string library = "lib" + name + ".dylib" ;
-    #else
 	std::string library = "lib" + name + ".so" ;
-    #endif
 
 	handle_ = dlopen( library.c_str(), RTLD_LAZY|RTLD_GLOBAL );
 	char * error = dlerror();
