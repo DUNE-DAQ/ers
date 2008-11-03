@@ -19,6 +19,7 @@
 #include <queue>
 #include <boost/thread.hpp>
 #include <boost/function.hpp>
+#include <boost/thread/condition.hpp>
 
 #include <ers/Issue.h>
 
