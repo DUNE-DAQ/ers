@@ -25,11 +25,11 @@
   */
 
 namespace ers
-{
-    
+{    
     class InputStream; 
     class LocalStream;
     class OutputStream; 
+    class ErrorHandler; 
     class Issue; 
     
     /** The \c StreamManager class is responsible for creating and handling all the ers
@@ -52,6 +52,7 @@ namespace ers
     class StreamManager
     {	
       friend class ers::LocalStream;
+      friend class ers::ErrorHandler;
       
       public:
 	

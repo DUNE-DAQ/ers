@@ -72,6 +72,7 @@ namespace ers
         
       private:  
         
+        static void abort( const ers::Issue & issue );
         static void terminate_handler();
         
         static std::map<int,SignalHandler*> handlers;
@@ -85,8 +86,7 @@ namespace ers
 	else
 	    ::abort();
         Configuration::instance().verbosity_level( 13 );
-        ers::fatal( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
-	abort();
+        ErrorHandler::abort( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
     }   
     
     ErrorHandler::ErrorHandler()
@@ -112,23 +112,24 @@ namespace ers
     void ErrorHandler::terminate_handler()
     {
 	Configuration::instance().verbosity_level( 13 );
-    	try
-        {
+    	try {
             throw;
         }
-        catch( ers::Issue & ex )
-        {
-            ers::fatal( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
+        catch( ers::Issue & ex ) {
+            ErrorHandler::abort( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
         }
-        catch( std::exception & ex )
-        {
-            ers::fatal( UnhandledException( ERS_HERE, "std::exception", ex ) );
+        catch( std::exception & ex ) {
+            ErrorHandler::abort( UnhandledException( ERS_HERE, "std::exception", ex ) );
         }
-        catch(...)
-        {
-            ers::fatal( UnhandledException( ERS_HERE, "unknown" ) );
+        catch(...) {
+            ErrorHandler::abort( UnhandledException( ERS_HERE, "unknown" ) );
         }
-	abort();
+    }
+    
+    void ErrorHandler::abort( const ers::Issue & issue )
+    {
+	StreamManager::instance().report_issue( Fatal, issue );
+        ::abort();
     }
 }
 
