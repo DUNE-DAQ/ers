@@ -17,6 +17,7 @@
 
 #include <ers/Issue.h>
 #include <ers/Severity.h>
+#include <ers/StreamManager.h>
 
 /** This class represents an assertion in the code, it is an issue with two fields:
   * \li A condition
@@ -45,8 +46,8 @@ if( !(expression) ) \
     std::ostringstream ers_report_impl_out_buffer; \
     ers_report_impl_out_buffer << BOOST_PP_IF( BOOST_PP_IS_EMPTY( message ), "of unknown reason", message ); \
     std::string reason = ers_report_impl_out_buffer.str(); \
-    ers::Assertion ass( ERS_HERE, #expression, reason.c_str() ); \
-    ers::fatal( ass ); \
+    ers::Assertion issue( ERS_HERE, #expression, reason.c_str() ); \
+    ers::StreamManager::instance().report_issue( ers::Fatal, issue ); \
     ::abort(); \
 }}
 

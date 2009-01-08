@@ -82,9 +82,10 @@ namespace ers
         	
         void configure_all_output_streams( const std::map<std::string, std::string> & config );
         
+	void report_issue( ers::severity type, const Issue & issue );
+
       private:	
 	StreamManager( );
-	void report_issue( ers::severity type, const Issue & issue );
 
 	OutputStream * setup_stream( ers::severity severity );	
 	OutputStream * setup_stream( const std::vector<std::string> & streams );
