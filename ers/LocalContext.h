@@ -67,22 +67,22 @@ namespace ers
         virtual Context * clone() const			/**< \return copy of the current context */
         { return new LocalContext( *this ); }
         
-        const char * const cwd() const			/**< \return current working directory of the process */
+        const char * cwd() const			/**< \return current working directory of the process */
         { return c_process.m_cwd; }
         
-        const char * const file_name() const		/**< \return name of the file which created the issue */
+        const char * file_name() const			/**< \return name of the file which created the issue */
         { return m_file_name; }
         
-        const char * const function_name() const	/**< \return name of the function which created the issue */
+        const char * function_name() const		/**< \return name of the function which created the issue */
         { return m_function_name; }
         
-        const char * const host_name() const		/**< \return host where the process is running */
+        const char * host_name() const			/**< \return host where the process is running */
         { return c_process.m_host_name; }
         
         int line_number() const				/**< \return line number, in which the issue has been created */
         { return m_line_number; }
         
-        const char * const package_name() const		/**< \return CMT package name */
+        const char * package_name() const		/**< \return CMT package name */
         { return m_package_name; }
         
         pid_t process_id() const			/**< \return process id */
@@ -91,7 +91,7 @@ namespace ers
         pid_t thread_id() const				/**< \return thread id */
         { return m_thread_id; }
         
-        void * const *  stack_symbols() const		/**< \return stack frames */
+        void * const * stack_symbols() const		/**< \return stack frames */
         { return m_stack; }
         
         int stack_size() const				/**< \return number of frames in stack */
@@ -100,7 +100,7 @@ namespace ers
         int user_id() const				/**< \return user id */
         { return c_process.m_uid; }
         
-        const char * const user_name() const		/**< \return user name */
+        const char * user_name() const			/**< \return user name */
         { return c_process.m_uname; }
 
       private:

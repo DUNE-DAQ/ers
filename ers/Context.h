@@ -42,18 +42,18 @@ namespace ers
         std::vector<std::string> stack( ) const;		/**< \return stack frames vector */
 	
         virtual Context * clone() const = 0;			/**< \return copy of the current context */
-        virtual const char * const cwd() const = 0;		/**< \return current working directory of the process */
-        virtual const char * const file_name() const = 0;	/**< \return name of the file which created the issue */
-        virtual const char * const function_name() const = 0;	/**< \return name of the function which created the issue */
-        virtual const char * const host_name() const = 0;	/**< \return host where the process is running */
+        virtual const char * cwd() const = 0;			/**< \return current working directory of the process */
+        virtual const char * file_name() const = 0;		/**< \return name of the file which created the issue */
+        virtual const char * function_name() const = 0;		/**< \return name of the function which created the issue */
+        virtual const char * host_name() const = 0;		/**< \return host where the process is running */
         virtual int line_number() const = 0;			/**< \return line number, in which the issue has been created */
-        virtual const char * const package_name() const = 0;	/**< \return CMT package name */
+        virtual const char * package_name() const = 0;		/**< \return CMT package name */
         virtual pid_t process_id() const = 0;			/**< \return process id */
         virtual pid_t thread_id() const = 0;			/**< \return thread id */
         virtual void * const * stack_symbols() const = 0;	/**< \return stack frames */
         virtual int stack_size() const = 0;			/**< \return number of frames in stack */
         virtual int user_id() const = 0;			/**< \return user id */
-        virtual const char * const user_name() const = 0;	/**< \return user name */
+        virtual const char * user_name() const = 0;		/**< \return user name */
     };
 }
 
