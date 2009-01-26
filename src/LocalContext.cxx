@@ -7,9 +7,6 @@
  *
  */
 #include <sys/types.h>
-#ifndef __APPLE__
-#include <linux/unistd.h>
-#endif
 #include <pwd.h>
 #include <unistd.h>
 #include <execinfo.h>
@@ -17,8 +14,12 @@
 #include <ers/LocalContext.h>
 
 #ifndef __APPLE__
-_syscall0(pid_t,gettid)
+#include <sys/syscall.h>
+pid_t gettid() {
+    return syscall( SYS_gettid );
+}
 #endif
+
 
 namespace
 {
