@@ -51,8 +51,8 @@ namespace
       protected:
 	boost::mutex & mutex()
         {
-            static boost::mutex	mutex_;
-            return mutex_;
+            static boost::mutex * mutex_ = new boost::mutex;
+            return *mutex_;
         }
     };
     
