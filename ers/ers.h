@@ -211,9 +211,9 @@ if ( ers::debug_level() >= level ) \
   The ERS package offers a set of macros to do logging. Those macros construct an 
   issue and send them to the relevant stream. 
   For each debug and warning severity_t level there is an associated macro:
-  \li ERS_DEBUG( level, message ) - sends ers::Info issue to the ers::debug stream
-  \li ERS_INFO( message ) - sends ers::Info issue to the ers::information stream
-  \li ERS_WARNING( message ) - sends ers::Info issue to the ers::warning stream
+  \li ERS_DEBUG( level, message ) - sends ers::Message issue to the ers::debug stream
+  \li ERS_INFO( message ) - sends ers::Message issue to the ers::information stream
+  \li ERS_LOG( message ) - sends ers::Message issue to the ers::log stream
   \note ERS_DEBUG macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined at compilation time.
   
   The \b message argument of these macros can be any entity, for which the operator<< to the
