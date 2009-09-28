@@ -68,9 +68,12 @@ ers::LocalStream::thread_wrapper()
         while( !m_terminated && !m_issues.empty() )
         {
             ers::Issue * issue = m_issues.front();
-            m_issue_catcher( *issue );
             m_issues.pop();
+            
+            lock.unlock();            
+            m_issue_catcher( *issue );
 	    delete issue;
+            lock.lock();            
         }
     }
     m_catcher_thread_id = 0;
