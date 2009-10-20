@@ -137,6 +137,7 @@ ers::StreamManager::~StreamManager()
        delete m_out_streams[ss];
     }
     
+    boost::mutex::lock lock( mutex );
     for( std::list<ers::InputStream *>::iterator it = m_in_streams.begin(); it != m_in_streams.end(); ++it )
     {	
        delete *it;
@@ -170,7 +171,27 @@ ers::StreamManager::add_receiver( const std::string & stream,
 {
     ers::InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
     in->set_receiver( receiver );
+    
+    boost::mutex::lock lock( mutex );
     m_in_streams.push_back( in );
+}
+
+void
+ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
+{
+    boost::mutex::lock lock( mutex );
+    for( std::list<ers::InputStream *>::iterator it = m_in_streams.begin(); it != m_in_streams.end(); )
+    {	
+        if ( it -> m_receiver == receiver )
+        {
+	    delete *it;
+            m_in_streams.erase( it++ );
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
 
 ers::OutputStream * 

@@ -10,6 +10,8 @@
 #ifndef ERS_STREAM_MANAGER_H
 #define ERS_STREAM_MANAGER_H
 
+#include <boost/thread.hpp>
+
 #include <ers/Severity.h>
 #include <ers/Context.h>
 #include <ers/IssueReceiver.h>
@@ -76,6 +78,8 @@ namespace ers
         			const std::string & filter,
                                 ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
 	
+        void remove_receiver( ers::IssueReceiver * receiver );
+	
         void add_output_stream( ers::severity severity, ers::OutputStream * new_stream );	
       
         void configure_output_stream( ers::severity severity, const std::map<std::string, std::string> & config );
@@ -90,6 +94,7 @@ namespace ers
 	OutputStream * setup_stream( ers::severity severity );	
 	OutputStream * setup_stream( const std::vector<std::string> & streams );
         
+        boost::mutex			m_mutex;
         std::list<ers::InputStream *>	m_in_streams;               
 	ers::OutputStream *		m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
     };
