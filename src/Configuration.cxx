@@ -28,6 +28,13 @@ namespace
 	    }
 	}
     }
+    
+    std::string int_to_string( int param )
+    {
+	std::ostringstream out;
+	out << param;
+	return out.str();
+    }
 }
 
 
@@ -68,7 +75,7 @@ ers::Configuration::verbosity_level( int verbosity_level )
 {
     m_verbosity_level = verbosity_level;
     std::map<std::string, std::string> parameters;
-    parameters["verbosity"] = m_verbosity_level;
+    parameters["verbosity"] = int_to_string( m_verbosity_level );
     ers::StreamManager::instance().configure_all_output_streams( parameters );
 }
 
