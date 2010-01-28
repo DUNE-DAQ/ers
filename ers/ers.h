@@ -50,14 +50,17 @@ namespace ers
      *	of dedicated thread which will be created as a result of this call. All the issues which are reported
      *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
      *	\param issue the issue to be reported
+     *	\return pointer to the handler object, which allows to remove the catcher by just destroying this object.
+     *			If an applications ignores this return value there will no way of deinstalling the issue catcher.
      *	\throw ers::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
      *	\see ers::error()
      *	\see ers::fatal()
      *	\see ers::warning()
      */
-    inline void set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
+    inline IssueCatcherHandler * 
+    	set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
 	    throw ( ers::IssueCatcherAlreadySet )
-    { LocalStream::instance().set_issue_catcher( catcher ); }
+    { return LocalStream::instance().set_issue_catcher( catcher ); }
     
     /*! 
      *  This function returns the current debug level for ERS.

@@ -89,6 +89,26 @@ struct IssueCatcher
     }
 };
 
+void test_local_catcher()
+{
+    IssueCatcher catcher;
+    boost::shared_ptr<ers::IssueCatcherHandler> handler;
+    try
+    {
+    	handler.reset( ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) ) );
+    }
+    catch( ers::IssueCatcherAlreadySet & ex )
+    {
+    	ers::fatal( ex );
+        return ;
+    }
+
+    ers::CantOpenFile issue( ERS_HERE, "TEST" );
+    ers::warning( issue );
+    ers::error( issue );
+    ers::fatal( issue );
+}
+
 int main(int , char** )
 {
     int step = 0;
@@ -96,16 +116,21 @@ int main(int , char** )
     test_function( 0 );
     test_function( 0 );
     
+    test_local_catcher();
+    
     IssueCatcher catcher;
+    boost::shared_ptr<ers::IssueCatcherHandler> handler;
     try
     {
-    	ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) );
+    	handler.reset( ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) ) );
     }
     catch( ers::IssueCatcherAlreadySet & ex )
     {
     	ers::fatal( ex );
         return 1;
     }
+    
+    test_local_catcher();
     
     ERS_DEBUG( 0, "Testing output produced by different threads ... " );
     boost::thread thr1( boost::bind(test_function,1) );

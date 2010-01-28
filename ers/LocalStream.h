@@ -22,6 +22,7 @@
 #include <boost/thread/condition.hpp>
 
 #include <ers/Issue.h>
+#include <ers/IssueCatcherHandler.h>
 
 ERS_DECLARE_ISSUE(	ers, // namespace
 			IssueCatcherAlreadySet, // issue class name
@@ -34,6 +35,8 @@ namespace ers
     
     class Issue;
     
+    class IssueCatcherHandler;
+    
     /** The \c LocalStream class implements error reporting between different threads within one application.
       *
       * \author Serguei Kolos
@@ -44,19 +47,29 @@ namespace ers
 
     class LocalStream
     {
+        friend class IssueCatcherHandler;
+        
       public:
-	static LocalStream & instance();	/**< \brief return the singleton */
+	        
+        //! returns the singleton
+        static LocalStream & instance();
 
-	void set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
-					throw ( ers::IssueCatcherAlreadySet ); /**< \brief can be used to set the local error handling function */
+	//! sets local issue interceptor
+	IssueCatcherHandler * set_issue_catcher( 
+        			const boost::function<void ( const ers::Issue & )> & catcher )
+			throw ( ers::IssueCatcherAlreadySet );
 
 	void error( const ers::Issue & issue );
-	void fatal( const ers::Issue & issue );
-	void warning( const ers::Issue & issue );
+	
+        void fatal( const ers::Issue & issue );
+	
+        void warning( const ers::Issue & issue );
 
       private:
 	LocalStream( );
 	~LocalStream( );
+        
+        void remove_issue_catcher();
 
 	void report_issue( ers::severity type, const ers::Issue & issue );
 	void thread_wrapper();
@@ -66,7 +79,6 @@ namespace ers
 	boost::mutex					m_mutex;
 	boost::condition				m_condition;
 	bool						m_terminated;
-	boost::mutex					m_issues_guard;
 	std::queue<ers::Issue *>			m_issues;
 	pthread_t					m_catcher_thread_id;
     };

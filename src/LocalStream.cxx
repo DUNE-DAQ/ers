@@ -43,28 +43,38 @@ ers::LocalStream::LocalStream( )
 
 ers::LocalStream::~LocalStream( )
 {
+    remove_issue_catcher();
+}
+
+void
+ers::LocalStream::remove_issue_catcher( )
+{
     {
-	m_terminated = true;
 	boost::mutex::scoped_lock lock( m_mutex );
+	if ( !m_issue_catcher_thread.get() )
+	{
+	    return ;
+	}
+	m_terminated = true;
 	m_condition.notify_one();
     }
-    if ( m_issue_catcher_thread.get() )
-    {
-    	m_issue_catcher_thread->join();
-    }
+    
+    m_issue_catcher_thread -> join();
+    m_issue_catcher_thread.release();
 }
 
 void
 ers::LocalStream::thread_wrapper()
 {
+    boost::mutex::scoped_lock lock( m_mutex );
     m_catcher_thread_id = pthread_self();
     while( !m_terminated )
     {
-    	{
-	    boost::mutex::scoped_lock lock( m_mutex );
+    	if ( m_issues.empty() )
+        {
 	    m_condition.wait( lock );
         }
-	boost::mutex::scoped_lock lock( m_issues_guard );
+        
         while( !m_terminated && !m_issues.empty() )
         {
             ers::Issue * issue = m_issues.front();
@@ -77,9 +87,10 @@ ers::LocalStream::thread_wrapper()
         }
     }
     m_catcher_thread_id = 0;
+    m_terminated = false;
 }
 
-void 
+ers::IssueCatcherHandler *
 ers::LocalStream::set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher ) 
 		throw ( ers::IssueCatcherAlreadySet )
 {
@@ -89,20 +100,19 @@ ers::LocalStream::set_issue_catcher( const boost::function<void ( const ers::Iss
     }
     m_issue_catcher = catcher;
     m_issue_catcher_thread.reset( new boost::thread( boost::bind( &ers::LocalStream::thread_wrapper, this ) ) );
+    
+    return new ers::IssueCatcherHandler;
 }
 
 void 
 ers::LocalStream::report_issue( ers::severity type, const ers::Issue & issue )
 {
-    if ( m_catcher_thread_id && m_catcher_thread_id != pthread_self() )
+    if ( m_issue_catcher_thread.get() && m_catcher_thread_id != pthread_self() )
     {
 	ers::Issue * clone = issue.clone();
 	clone->set_severity( type );
-	{
-	    boost::mutex::scoped_lock lock( m_issues_guard );
-	    m_issues.push( clone );
-	}
 	boost::mutex::scoped_lock lock( m_mutex );
+	m_issues.push( clone );
 	m_condition.notify_one();
     }
     else
