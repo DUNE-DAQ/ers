@@ -12,7 +12,8 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
-#include <time.h>
+
+#include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include <ers/Issue.h>
 #include <ers/IssueFactory.h>
@@ -70,7 +71,7 @@ Issue::Issue(	const Context & context,
     m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::local_time() )
+    m_time( boost::posix_time::second_clock::universal_time() )
 {
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
@@ -84,7 +85,7 @@ Issue::Issue(	const Context & context,
                 const std::exception & cause )
   : m_context( context.clone() ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::local_time() )
+    m_time( boost::posix_time::second_clock::universal_time() )
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
@@ -103,7 +104,7 @@ Issue::Issue(	const Context & context,
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::local_time() )
+    m_time( boost::posix_time::second_clock::universal_time() )
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
@@ -113,6 +114,13 @@ Issue::Issue(	const Context & context,
 
 ers::Issue::~Issue() throw()
 { ; }
+
+std::string 
+ers::Issue::time() const
+{
+    return boost::posix_time::to_simple_string( 
+    	boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local( m_time )  );
+}
 
 void 
 ers::Issue::get_value( const std::string & key, const char * & value ) const

@@ -107,13 +107,12 @@ namespace ers
         ers::Severity severity() const				/**< \brief severity of the issue */
 	{ return m_severity; }
         
-	std::string time() const				/**< \brief time of the issue */
-	{ return boost::posix_time::to_simple_string( m_time ); }
+	std::string time() const;				/**< \brief local time of the issue */
         
 	std::time_t time_t() const				/**< \brief time in seconds since 1 Jan 1970 */
 	{ return ( ( m_time - boost::posix_time::from_time_t( 0 ) ).total_seconds() ); }
         
-	const boost::posix_time::ptime & ptime() const		/**< \brief boost Posix time of the issue */
+	const boost::posix_time::ptime & ptime() const		/**< \brief UTC time of the issue */
 	{ return m_time; }
         
         const char * what() const throw()			/**< \brief General cause of the issue. */
