@@ -109,8 +109,7 @@ namespace ers
         
 	std::string time() const;				/**< \brief local time of the issue */
         
-	std::time_t time_t() const				/**< \brief time in seconds since 1 Jan 1970 */
-	{ return ( ( m_time - boost::posix_time::from_time_t( 0 ) ).total_seconds() ); }
+	std::time_t time_t() const;				/**< \brief UTC time, in seconds since 1 Jan 1970 */
         
 	const boost::posix_time::ptime & ptime() const		/**< \brief UTC time of the issue */
 	{ return m_time; }

@@ -122,6 +122,12 @@ ers::Issue::time() const
     	boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local( m_time )  );
 }
 
+std::time_t 
+ers::Issue::time_t() const
+{
+    return ( ( m_time - boost::posix_time::from_time_t( 0 ) ).total_seconds() );
+}
+
 void 
 ers::Issue::get_value( const std::string & key, const char * & value ) const
 {

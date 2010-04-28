@@ -153,7 +153,8 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
 	for (	ers::OutputStream * stream = &parent->chained(); 
         	!stream->isNull();
                  parent = stream, stream = &parent->chained() 
-            );
+            )
+            ;
                  
 	parent->chained( new_stream );
     }
