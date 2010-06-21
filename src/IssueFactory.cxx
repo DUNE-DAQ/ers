@@ -8,14 +8,12 @@
  *
  */
 
+#include <ers/ers.h>
 #include <ers/IssueFactory.h>
 #include <ers/StreamFactory.h>
-#include <ers/Issue.h>
-#include <ers/ers.h>
+#include <ers/AnyIssue.h>
 #include <ers/internal/SingletonCreator.h>
 #include <ers/internal/macro.h>
-
-ERS_DECLARE_ISSUE( ers, DefaultIssue, , )
 
 namespace
 {
@@ -51,8 +49,8 @@ ers::IssueFactory::register_issue( const std::string & name, IssueCreator creato
 
 /** Builds an issue out of the name it was registered with 
   * \param name the name used to indentify the class 
-  * \return an newly allocated instance of type \c name or DefaultIssue 
-  * \note If the requested type cannot be resolved an instance of type DefaultIssue 
+  * \return an newly allocated instance of type \c name or AnyIssue 
+  * \note If the requested type cannot be resolved an instance of type AnyIssue 
   */
 ers::Issue * 
 ers::IssueFactory::create(	const std::string & name,
@@ -62,7 +60,7 @@ ers::IssueFactory::create(	const std::string & name,
     if ( it == m_creators.end() )
     {
 	ERS_INTERNAL_DEBUG( 1, "Creator for the \"" << name << "\" issue is not found" );
-        return new DefaultIssue( context );
+        return new ers::AnyIssue( name, context );
     }
     
     ERS_INTERNAL_DEBUG( 2, "Creating the \"" << name << "\" issue" );
