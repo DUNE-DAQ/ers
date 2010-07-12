@@ -58,8 +58,9 @@ apply_pattern   install_headers         name="thread"		src_dir="../ers/thread"\
                                                                 files="*.h" \
                                                                 target_dir="thread"
 
-apply_pattern	install_dir		src_dir="../python"	target_dir="share/lib/python" \
-								mask="*.py"
+apply_pattern	install_data		name="python" 		src_dir="../python" \
+								target_dir="../../lib/python" \
+								files="ers.py"
 
 ########################################################################################################
 #       Check target
