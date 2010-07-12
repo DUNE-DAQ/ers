@@ -20,7 +20,7 @@ library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 
 macro           ers_shlibflags          	$(boost_libs)
 
-macro           erspy_shlibflags          	"-lers -lboost_python-$(boost_libsuffix)" 
+macro           erspy_shlibflags          	"-lers -lboost_python-$(boost_libsuffix) -l$(Python_version_headers)" 
 macro           erspy_dependencies		"ers"
 
 macro           ErsBaseStreams_shlibflags	" -lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
