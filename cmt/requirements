@@ -15,14 +15,14 @@ macro boost_libs "-lboost_thread-$(boost_libsuffix) -lboost_date_time-$(boost_li
 #       ERS Libraries
 ########################################################################################################
 library		ers				$(lib_opts)	"*.cxx"
+library		erspy				$(lib_opts)	"../python/*.cxx"
+library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
+
 macro           ers_shlibflags          	$(boost_libs)
 
-library		erspy				$(lib_opts)	"../python/*.cxx"
 macro           erspy_shlibflags          	"-lers -lboost_python-$(boost_libsuffix)" 
-macro           erspy_dependencies		"ers" 
+macro           erspy_dependencies		"ers"
 
-
-library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags	" -lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
 		
