@@ -10,6 +10,7 @@ use Python	*	TDAQCExternal
 private
 
 macro boost_libs "-lboost_thread-$(boost_libsuffix) -lboost_date_time-$(boost_libsuffix)"
+
 ########################################################################################################
 #       ERS Libraries
 ########################################################################################################
@@ -25,8 +26,6 @@ library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags	" -lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
 		
-apply_pattern   install_libs            	files="libers.so libErsBaseStreams.so liberspy.so"
-
 ########################################################################################################
 #       Test applications
 ########################################################################################################
@@ -46,6 +45,8 @@ macro		ers_psclinkopts			"-lers $(boost_libs)"
 ########################################################################################################
 #       Installation patterns
 ########################################################################################################
+apply_pattern   install_libs		files="libers.so libErsBaseStreams.so liberspy.so"
+
 apply_pattern   install_apps            files="ers_psc ers_receiver ers_test"
 
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\
