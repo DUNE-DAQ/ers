@@ -24,10 +24,8 @@ macro           erspy_dependencies		"ers"
 library		ErsBaseStreams			$(lib_opts)	"streams/*.cxx"
 macro           ErsBaseStreams_shlibflags	" -lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
-
-macro		instlibs			"libers.so libErsBaseStreams.so liberspy.so"
 		
-apply_pattern   install_libs            	files=$(instlibs)
+apply_pattern   install_libs            	files="libers.so libErsBaseStreams.so liberspy.so"
 
 ########################################################################################################
 #       Test applications
