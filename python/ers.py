@@ -8,6 +8,7 @@ __author__ = "Serguei Kolos (Serguei.Kolos@cern.ch)"
 __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2010/06/05 21:57:20 $"
 
+import getpass
 import inspect
 import logging
 import os
@@ -45,7 +46,7 @@ class Context( object ):
         self.process_id = os.getpid()
         self.thread_id = thread.get_ident()
         self.user_id = os.getuid()
-        self.user_name = os.getlogin()
+        self.user_name = getpass.getuser()
                 
 class Issue( Exception ):
     "base class for ERS exceptions"    
@@ -109,14 +110,17 @@ def info( msg ):
 
 def warning( issue ):
     "sends issue to the warning stream"
+    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
     liberspy.warning( issue )
 
 def error( issue ):
     "sends issue to the error stream"
+    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.error stream'
     liberspy.error( issue )
 
 def fatal( issue ):
     "sends issue to the fatal stream"
+    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
     liberspy.fatal( issue )
 
 class LoggingHandler( logging.Handler ) :
