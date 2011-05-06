@@ -24,7 +24,7 @@
  */
 ERS_DECLARE_ISSUE( 	ers, // namespace
 			File, // issue class name
-			, // no message
+			ERS_EMPTY, // no message
                         ((const char *)file_name ) // single attribute 
                  )
 
@@ -36,7 +36,7 @@ ERS_DECLARE_ISSUE_BASE( 	ers, // namespace
                                 ers::File, // base class name
 				"Can not open \"" << file_name << "\" file", // message
                                 ((const char *)file_name ), // base class attributes
-                        	 // no attributes in this class
+                        	ERS_EMPTY // no attributes in this class
                  	)
 
 /** \def ers::FileDoesNotExist This issue is reported when a certain file does not exist. 
@@ -46,7 +46,7 @@ ERS_DECLARE_ISSUE_BASE( 	ers, // namespace
 				ers::File, // base class name
 				"File \"" << file_name << "\" does not exist", // message
                         	(( const char * )file_name ), // base class attributes
-				 // no attributes in this class
+				ERS_EMPTY // no attributes in this class
                  	)
 
 /** \def ers::PermissionDenied This issue is reported when a certain file exists but

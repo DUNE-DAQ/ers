@@ -118,14 +118,14 @@ namespace ers
     { LocalStream::instance().warning( issue ); }
 }
 
-ERS_DECLARE_ISSUE( ers, Message, , )
+ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
 
 #define ERS_REPORT_IMPL( stream, issue, message, level ) \
 { \
     std::ostringstream ers_report_impl_out_buffer; \
     ers_report_impl_out_buffer << message; \
     stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) \
-	    BOOST_PP_COMMA_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( level ) ) ) level ); \
+	    BOOST_PP_COMMA_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY level ) ) ) level ); \
 }
 
 #ifndef ERS_NO_DEBUG
@@ -146,14 +146,14 @@ if ( ers::debug_level() >= level ) \
  */
 #define ERS_INFO( message ) \
 { \
-    ERS_REPORT_IMPL( ers::info, ers::Message, message, ); \
+    ERS_REPORT_IMPL( ers::info, ers::Message, message, ERS_EMPTY ); \
 }    	
 
 /** \def ERS_LOG( message ) This macro sends the message to the ers::log stream.
  */
 #define ERS_LOG( message ) \
 { \
-    ERS_REPORT_IMPL( ers::log, ers::Message, message, ); \
+    ERS_REPORT_IMPL( ers::log, ers::Message, message, ERS_EMPTY ); \
 }    	
 
 #endif // ERS_ERS_H

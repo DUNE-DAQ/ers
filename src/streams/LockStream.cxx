@@ -9,7 +9,7 @@
 
 #include <ers/internal/LockStream.h>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::LockStream, "lock", )
+ERS_REGISTER_OUTPUT_STREAM( ers::LockStream, "lock", ERS_EMPTY)
 
 void ers::LockStream::write( const Issue & issue )
 {

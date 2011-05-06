@@ -33,8 +33,6 @@ namespace ers
     {
       public:
 
-	static const Context EmptyInstance;
-	
         virtual ~Context() { ; }
         
 	std::string position( int verbosity = ers::Configuration::instance().verbosity_level() ) const;		/**< \return position in the code */

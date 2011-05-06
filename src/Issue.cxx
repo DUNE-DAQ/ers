@@ -24,7 +24,7 @@
 
 using namespace ers;
 
-ERS_DECLARE_ISSUE( ers, StdIssue, , )
+ERS_DECLARE_ISSUE( ers, StdIssue, ERS_EMPTY, ERS_EMPTY )
 
 namespace
 {

@@ -9,7 +9,7 @@
 
 #include <ers/internal/GlobalLockStream.h>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::GlobalLockStream, "glock", )
+ERS_REGISTER_OUTPUT_STREAM( ers::GlobalLockStream, "glock", ERS_EMPTY )
 
 boost::mutex	ers::GlobalLockStream::mutex_;
 

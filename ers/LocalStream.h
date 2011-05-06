@@ -24,10 +24,10 @@
 #include <ers/Issue.h>
 #include <ers/IssueCatcherHandler.h>
 
-ERS_DECLARE_ISSUE(	ers, // namespace
-			IssueCatcherAlreadySet, // issue class name
-			"Local error catcher has been already set", //
-			 // no attributes
+ERS_DECLARE_ISSUE(  ers,					// namespace
+		    IssueCatcherAlreadySet, 			// issue class name
+		    "Local error catcher has been already set",	//
+		     ERS_EMPTY					// no attributes
 		 )
                      
 namespace ers

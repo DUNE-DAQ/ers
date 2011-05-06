@@ -11,7 +11,7 @@
 #include <ers/StandardStreamOutput.h>
 #include <boost/preprocessor/cat.hpp>
 
-ERS_DECLARE_ISSUE( ers, InternalMessage, , )
+ERS_DECLARE_ISSUE( ers, InternalMessage, ERS_EMPTY, ERS_EMPTY )
 
 #define ERS_REGISTER_OUTPUT_STREAM( class, name, param ) \
 namespace { \

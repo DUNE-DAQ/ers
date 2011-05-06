@@ -9,4 +9,4 @@
 
 #include <ers/internal/NullStream.h>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::NullStream, "null", )
+ERS_REGISTER_OUTPUT_STREAM( ers::NullStream, "null", ERS_EMPTY)

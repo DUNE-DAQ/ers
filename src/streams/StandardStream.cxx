@@ -124,12 +124,12 @@ namespace
 }
 
 ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<FileDevice<OutDevice> >, "file", file_name )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<OutDevice> >, "stdout", )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<OutDevice> >, "stderr", )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<OutDevice> >, "stdout", ERS_EMPTY)
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<OutDevice> >, "stderr", ERS_EMPTY)
 
 ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<FileDevice<LockableDevice<> > >, "lfile", file_name )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<LockableDevice<ClassLock<1> > > >, "lstdout", )
-ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<LockableDevice<ClassLock<2> > > >, "lstderr", )
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<OutputDevice<LockableDevice<ClassLock<1> > > >, "lstdout", ERS_EMPTY)
+ERS_REGISTER_OUTPUT_STREAM( ers::StandardStream<ErrorDevice<LockableDevice<ClassLock<2> > > >, "lstderr", ERS_EMPTY)
 
 ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<FileDevice<OutDevice> >, "ffile", format )
 ERS_REGISTER_OUTPUT_STREAM( ers::FormattedStandardStream<OutputDevice<OutDevice> >, "fstdout", format )

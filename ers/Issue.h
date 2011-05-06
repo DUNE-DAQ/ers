@@ -159,33 +159,20 @@ namespace ers
 #include <boost/preprocessor/tuple.hpp>
 #include <boost/preprocessor/logical.hpp>
 #include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/facilities/is_empty.hpp>
 #include <boost/preprocessor/comparison.hpp>
 
-#undef BOOST_PP_IS_EMPTY
-#undef BOOST_PP_IS_EMPTY_I
-#undef BOOST_PP_IS_EMPTY_II
-#undef BOOST_PP_IS_EMPTY_III
-#undef BOOST_PP_IS_EMPTY_HELPER
-#undef BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE
-#undef BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER
+#define ERS_EMPTY
 
-#define BOOST_PP_IS_EMPTY(x) 				BOOST_PP_IS_EMPTY_I(BOOST_PP_IS_EMPTY_HELPER x)
-#define BOOST_PP_IS_EMPTY_I(contents) 			BOOST_PP_IS_EMPTY_II( contents() )
-#define BOOST_PP_IS_EMPTY_II(contents) 			BOOST_PP_IS_EMPTY_III( contents )
-#define BOOST_PP_IS_EMPTY_III(contents) 		BOOST_PP_TUPLE_ELEM( 2, 0, ( BOOST_PP_IS_EMPTY_DEF_ ## contents ) )
-#define BOOST_PP_IS_EMPTY_HELPER() 			BOOST_PP_IS_EMPTY_TRUE
-#define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_TRUE	1 ,
-#define BOOST_PP_IS_EMPTY_DEF_BOOST_PP_IS_EMPTY_HELPER	0 ,
-
-#define ERS_BASE_CLASS( x )				BOOST_PP_IF( BOOST_PP_IS_EMPTY( x ), ers::Issue, x )
+#define ERS_IS_EMPTY(x) 				ERS_IS_EMPTY_I(ERS_IS_EMPTY_HELPER x)
+#define ERS_IS_EMPTY_I(contents) 			ERS_IS_EMPTY_II( contents() )
+#define ERS_IS_EMPTY_II(contents) 			ERS_IS_EMPTY_III( contents )
+#define ERS_IS_EMPTY_III(contents) 			BOOST_PP_TUPLE_ELEM( 2, 0, ( ERS_IS_EMPTY_DEF_ ## contents ) )
+#define ERS_IS_EMPTY_HELPER() 				ERS_IS_EMPTY_TRUE
+#define ERS_IS_EMPTY_DEF_ERS_IS_EMPTY_TRUE		1 ,
+#define ERS_IS_EMPTY_DEF_ERS_IS_EMPTY_HELPER		0 ,
 
 #define ERS_TYPE( tuple )				BOOST_PP_SEQ_HEAD(tuple)
 #define ERS_NAME( tuple )				BOOST_PP_SEQ_TAIL(tuple)
-
-#define ERS_CONST_HELPER_				0 ,
-#define ERS_CONST_HELPER_const				1 ,
-#define ERS_IS_CONST( x )				BOOST_PP_TUPLE_ELEM( 2, 0, BOOST_PP_CAT( ERS_CONST_HELPER_, x ) )
 
 #define ERS_ATTRIBUTE_NAME( _, __, tuple )		, ERS_NAME(tuple)
 
@@ -206,56 +193,59 @@ namespace ers
 							out << message;\
 							prepend_message( out.str() );
 
-#define	ERS_DECLARE( decl, attributes )			BOOST_PP_SEQ_FOR_EACH( decl, , attributes )
+#define	ERS_PRINT_LIST( decl, attributes )		BOOST_PP_SEQ_FOR_EACH( decl, _, attributes )
 
 #define ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
-    class class_name : public ERS_BASE_CLASS( base_class_name ) { \
+    class class_name : public base_class_name { \
       template <class> friend class ers::IssueRegistrator;\
       protected: \
-	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), class_name( const ers::Context & context ) : ERS_BASE_CLASS( base_class_name )( context ) { ; } )\
+	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), class_name( const ers::Context & context ) : base_class_name( context ) { ; } )\
         \
 	virtual void raise() const throw( std::exception ) { throw *this; } \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	virtual const char * get_class_name() const { return get_uid(); } \
-	virtual ERS_BASE_CLASS( base_class_name ) * clone() const { return new namespace_name::class_name( *this ); } \
+	virtual base_class_name * clone() const { return new namespace_name::class_name( *this ); } \
       public: \
 	virtual ~class_name() throw() { ; } \
 	class_name( const ers::Context & context \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ERS_BASE_CLASS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
+        	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
+                    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ) ) \
+          : base_class_name( context ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ) ) \
 	{ \
-          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
-	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+          ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
+	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY message ) ), ERS_SET_MESSAGE( ERS_EMPTY message ) )\
 	} \
         \
 	class_name( const ers::Context & context, \
         	    const std::string & msg \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ) ) \
-          : ERS_BASE_CLASS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ) ) \
-	{  \
-          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
+        	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
+                    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ) ) \
+          : base_class_name( context, msg ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ) ) \
+	{ \
+          ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
 	} \
         \
 	class_name( const ers::Context & context, \
         	    const std::string & msg \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
+        	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
+                    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
                     const std::exception & cause ) \
-          : ERS_BASE_CLASS( base_class_name )( context, msg ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
-	{  \
-          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
-	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+          : base_class_name( context, msg ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ), cause ) \
+	{ \
+          ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
 	} \
 	class_name( const ers::Context & context \
-        	    ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, base_attributes ) ERS_DECLARE( ERS_ATTRIBUTE_NAME_TYPE, attributes ), \
+        	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
+                    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
                     const std::exception & cause ) \
-          : ERS_BASE_CLASS( base_class_name )( context ERS_DECLARE( ERS_ATTRIBUTE_NAME, base_attributes ), cause ) \
-	{  \
-          ERS_DECLARE( ERS_ATTRIBUTE_SERIALIZATION, attributes ) \
-	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( BOOST_PP_IS_EMPTY( message ) ), ERS_SET_MESSAGE( message ) )\
+          : base_class_name( context ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ), cause ) \
+	{ \
+          ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
+	  BOOST_PP_EXPR_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY message ) ), ERS_SET_MESSAGE( ERS_EMPTY message ) )\
 	} \
         \
-	ERS_DECLARE( ERS_ATTRIBUTE_ACCESSORS, attributes ) \
+	ERS_PRINT_LIST( ERS_ATTRIBUTE_ACCESSORS, ERS_EMPTY attributes ) \
     }; \
 } \
 namespace { \
@@ -263,7 +253,7 @@ namespace { \
 }
 
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
-	ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, , message, , attributes )
+	ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, ERS_EMPTY attributes )
         
 ERS_DECLARE_ISSUE(  ers,
 		    NoValue,

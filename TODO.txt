@@ -1,1 +1,0 @@
-1. Use smart pointer for storing streams and reuse already existing streams instead of creating new ones

@@ -75,8 +75,6 @@ ers::FormattedStandardStream<Device>::FormattedStandardStream( const std::string
 	std::map<std::string,ers::format::Token>::iterator it = supported_fields_.find( token );
 	if ( it != supported_fields_.end() )
 	    tokens_.push_back( it->second );
-	else
-	    ;// throw exception here
         
         offset += token.size() + 1;
     } while ( index != std::string::npos );

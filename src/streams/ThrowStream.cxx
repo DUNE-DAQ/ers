@@ -9,7 +9,7 @@
 
 #include <ers/internal/ThrowStream.h>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", )
+ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", ERS_EMPTY)
 
 void ers::ThrowStream::write( const Issue & issue )
 {

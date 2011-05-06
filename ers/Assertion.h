@@ -44,7 +44,7 @@ ERS_DECLARE_ISSUE(	ers,
 if( !(expression) ) \
 { \
     std::ostringstream ers_report_impl_out_buffer; \
-    ers_report_impl_out_buffer << BOOST_PP_IF( BOOST_PP_IS_EMPTY( message ), "of unknown reason", message ); \
+    ers_report_impl_out_buffer << BOOST_PP_IF( ERS_IS_EMPTY( message ), "of unknown reason", message ); \
     std::string reason = ers_report_impl_out_buffer.str(); \
     ers::Assertion issue( ERS_HERE, #expression, reason.c_str() ); \
     ers::StreamManager::instance().report_issue( ers::Fatal, issue ); \
