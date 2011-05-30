@@ -39,6 +39,8 @@
 //
 //
 // //////////////////////////////////////////////////////////////////////
+#include <boost/lexical_cast.hpp>
+
 #include <ers/internal/FilterStream.h>
 #include <ers/internal/Util.h>
 #include <ers/StreamFactory.h>
@@ -145,7 +147,7 @@ void
 ers::ThrottleStream::write( const ers::Issue & issue )
 {
     const ers::Context& context = issue.context();
-    std::string issueId = context.file_name() + context.line_number();
+    std::string issueId = context.file_name() + boost::lexical_cast<std::string>(context.line_number());
 
     boost::mutex::scoped_lock ml(m_mutex);
     throttle( m_issueMap[issueId], issue );
