@@ -31,12 +31,14 @@ namespace ers
 				int pid,
 				const char * const cwd,
 				int uid,
-				const char * const uname )
+				const char * const uname,
+                                const char * const app_name )
 	  : m_host_name( host_name ),
             m_pid( pid ),
             m_cwd( cwd ),
             m_uid( uid ),
-            m_uname( uname )
+            m_uname( uname ),
+            m_app_name( app_name )
         { ; }
         
 	const char * const	m_host_name;	/**< host name */
@@ -44,6 +46,7 @@ namespace ers
 	const char * const	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const char * const	m_uname;	/**< user name */
+	const char * const	m_app_name;	/**< application name */
     };
     
     class LocalContext : public Context
@@ -102,6 +105,9 @@ namespace ers
         
         const char * user_name() const			/**< \return user name */
         { return c_process.m_uname; }
+
+        const char * application_name() const		/**< \return application name */
+        { return c_process.m_app_name; }
 
       private:
         static const LocalProcessContext	c_process;

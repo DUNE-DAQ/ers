@@ -10,6 +10,7 @@
 #include <pwd.h>
 #include <unistd.h>
 #include <execinfo.h>
+#include <stdlib.h>
 
 #include <ers/LocalContext.h>
 
@@ -29,7 +30,7 @@ namespace
 	if ( buf.empty() )
 	{
 	    char tmp[1024];
-	    if ( getcwd( tmp, sizeof( tmp ) ) )
+	    if ( ::getcwd( tmp, sizeof( tmp ) ) )
 		buf = tmp;
 	}
 	return buf.c_str();
@@ -40,7 +41,7 @@ namespace
 	static std::string buf;
 	if ( buf.empty() )
 	{
-	    struct passwd * psw = getpwuid( geteuid() );
+	    struct passwd * psw = ::getpwuid( geteuid() );
 	    if ( psw )
 		buf = psw->pw_name;
 	}
@@ -53,10 +54,18 @@ namespace
 	if ( buf.empty() )
 	{
 	    char tmp[1024];
-	    if ( !gethostname( tmp, sizeof( tmp ) ) )
+	    if ( !::gethostname( tmp, sizeof( tmp ) ) )
 		buf = tmp;
 	}
 	return buf.c_str();
+    }
+    
+    const char * get_app_name()
+    {
+	static const char * const env = ::getenv( "TDAQ_APPLICATION" ) 
+        		? ::getenv( "TDAQ_APPLICATION" ) 
+                        : "Undefined";
+	return env;
     }
 }
 
@@ -86,4 +95,5 @@ const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(),
 							 	getpid(),
                                                 	 	get_cwd(), 
                                                 	 	geteuid(), 
-                                                	 	get_user_name() );
+                                                	 	get_user_name(),
+                                                                get_app_name() );

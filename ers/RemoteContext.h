@@ -26,13 +26,15 @@ namespace ers
 				int tid,
 				const std::string & cwd,
 				int uid,
-				const std::string & uname )
+				const std::string & uname,
+                                const std::string & app_name )
 	  : m_host_name( host_name ),
             m_pid( pid ),
             m_tid( tid ),
             m_cwd( cwd ),
             m_uid( uid ),
-            m_uname( uname )
+            m_uname( uname ),
+            m_app_name( app_name )
         { ; }
         
 	const std::string	m_host_name;	/**< host name */
@@ -41,6 +43,7 @@ namespace ers
 	const std::string	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const std::string	m_uname;	/**< user name */
+	const std::string	m_app_name;	/**< application name */
     };
     
     class RemoteContext : public Context
@@ -106,6 +109,9 @@ namespace ers
         
         const char * user_name() const			/**< \return user name */
         { return m_process.m_uname.c_str(); }
+
+        const char * application_name() const		/**< \return application name */
+        { return m_process.m_app_name.c_str(); }
 
       private:
         const RemoteProcessContext	m_process;		/**< process information */

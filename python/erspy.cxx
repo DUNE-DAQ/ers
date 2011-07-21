@@ -105,7 +105,8 @@ namespace
 			    PyInt_AsLong( PyObject_GetAttrString( c, "thread_id" ) ),
 			    PyString_AsString( PyObject_GetAttrString( c, "cwd" ) ),
 			    PyInt_AsLong( PyObject_GetAttrString( c, "user_id" ) ),
-			    PyString_AsString( PyObject_GetAttrString( c, "user_name" ) ) ) );
+			    PyString_AsString( PyObject_GetAttrString( c, "user_name" ) ),
+                            PyString_AsString( PyObject_GetAttrString( c, "application_name" ) ) ) );
         
         PyObject * cause = PyObject_GetAttrString( o, "cause" );
         if ( cause != Py_None )

@@ -52,6 +52,7 @@ namespace ers
         virtual int stack_size() const = 0;			/**< \return number of frames in stack */
         virtual int user_id() const = 0;			/**< \return user id */
         virtual const char * user_name() const = 0;		/**< \return user name */
+        virtual const char * application_name() const = 0;	/**< \return application name */
     };
 }
 
