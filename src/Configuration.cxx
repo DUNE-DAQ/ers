@@ -6,7 +6,7 @@
  *  Copyright 2005 CERN. All rights reserved.
  *
  */
-
+#include <cstdio>
 #include <iostream>
 
 #include <ers/Configuration.h>
