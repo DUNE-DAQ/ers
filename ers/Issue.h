@@ -126,6 +126,7 @@ namespace ers
 	template <typename T>
 	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */
 	void get_value( const std::string & key, const char * & value ) const;
+	void get_value( const std::string & key, std::string & value ) const;
 	
 	template <typename T>
 	void set_value( const std::string & key, T value );	/**< \brief Sets a value of any type, which defines the standard stream output operator*/

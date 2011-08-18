@@ -142,6 +142,20 @@ ers::Issue::get_value( const std::string & key, const char * & value ) const
     }
 }
 
+void 
+ers::Issue::get_value( const std::string & key, std::string & value ) const
+{
+    string_map::const_iterator it = m_values.find(key);
+    if ( it != m_values.end() )
+    {
+	value = it->second;
+    }
+    else
+    {
+    	throw ers::NoValue( ERS_HERE, key );
+    }
+}
+
 /** Add a qualifier to the qualifier list
   * \param qualif the qualifier to add
   */
