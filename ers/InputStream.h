@@ -55,8 +55,8 @@ namespace ers
 	InputStream( const InputStream & other );
         InputStream & operator=( const InputStream & );
         
-        void set_receiver( IssueReceiver * rec )
-        { m_receiver = rec; }
+        void set_receiver( IssueReceiver * receiver )
+        { m_receiver = receiver; }
         
         IssueReceiver * m_receiver;
     };

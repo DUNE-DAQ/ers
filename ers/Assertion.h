@@ -35,9 +35,6 @@ ERS_DECLARE_ISSUE(	ers,
 			((const char *)condition )		
 			((const char *)reason ) )		
 
-#include <boost/preprocessor/comparison.hpp>
-#include <ers/ers.h>
-
 /** \hideinitializer
 */
 #define ERS_ASSERT_MSG( expression, message ) { \

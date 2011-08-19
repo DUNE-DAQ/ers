@@ -58,6 +58,7 @@ void
 ers::ThrottleStream::IssueRecord::reset()
 {
     m_lastOccurance=0;
+    m_lastReport=0;
     m_initialCounter=0;
     m_threshold=10;
     m_suppressedCounter=0;
