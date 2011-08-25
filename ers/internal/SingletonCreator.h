@@ -23,20 +23,16 @@ namespace ers
     struct SingletonCreator
     {
 	static boost::mutex s_mutex;
-	static bool	    s_instance_created;
+	static T *	    s_instance;
         
         static T * create( )
         {
 	    boost::mutex::scoped_lock lock(s_mutex);
-	    T * instance;
-            {
-		if ( !s_instance_created )
-		{
-		    instance = new T();
-		    s_instance_created = true;
-		}
+	    if ( !s_instance )
+	    {
+		s_instance = new T();
 	    }
-	    return instance;
+	    return s_instance;
         }
     };
     
@@ -44,7 +40,7 @@ namespace ers
     boost::mutex 	SingletonCreator<T>::s_mutex;
     
     template <class T>
-    bool 		SingletonCreator<T>::s_instance_created;
+    T * 		SingletonCreator<T>::s_instance;
 }
 
 #endif
