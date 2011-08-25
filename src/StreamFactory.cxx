@@ -21,11 +21,6 @@
 #include <ers/internal/macro.h>
 #include <ers/internal/SingletonCreator.h>
 
-namespace
-{
-    ers::SingletonCreator<ers::StreamFactory>	_creator_;
-}
-
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a reference to the singleton instance 
@@ -35,9 +30,7 @@ ers::StreamFactory::instance()
 {
     /**Singleton instance
       */
-    static ers::StreamFactory * instance = new ers::StreamFactory;
-    
-    _creator_.dummy();
+    static ers::StreamFactory * instance = ers::SingletonCreator<ers::StreamFactory>::create();
     
     return *instance;
 } // instance

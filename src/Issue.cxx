@@ -41,7 +41,7 @@ namespace
     void add_default_qualifiers( Issue & issue )
     {
     	static std::vector<std::string> qualifiers;
-        static int _dummy_ = get_default_qualifiers( qualifiers );
+        static int _unused_ = get_default_qualifiers( qualifiers );
 	for ( std::vector<std::string>::const_iterator it = qualifiers.begin(); it != qualifiers.end(); ++it )
         {
 	    issue.add_qualifier( *it );

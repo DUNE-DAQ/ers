@@ -32,7 +32,8 @@ namespace ers
     class LocalStream;
     class OutputStream; 
     class ErrorHandler; 
-    class Issue; 
+    class Issue;
+    template <class > class SingletonCreator;
     
     /** The \c StreamManager class is responsible for creating and handling all the ers
       * streams used by an application. It implements the singleton pattern and handles a 
@@ -55,6 +56,7 @@ namespace ers
     {	
       friend class ers::LocalStream;
       friend class ers::ErrorHandler;
+      template <class > friend class SingletonCreator;
       
       public:
 	
@@ -94,6 +96,7 @@ namespace ers
 	OutputStream * setup_stream( ers::severity severity );	
 	OutputStream * setup_stream( const std::vector<std::string> & streams );
         
+        PluginManager			m_plugin_manager;
         boost::mutex			m_mutex;
         std::list<ers::InputStream *>	m_in_streams;               
 	ers::OutputStream *		m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */

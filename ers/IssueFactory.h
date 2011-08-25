@@ -23,9 +23,9 @@
   
 namespace ers
 {
-
     class Issue; 
     class Context;
+    template <class > class SingletonCreator;
     
     /** This class implements the factory pattern for Issues.
       * The main responsability of this class is to keep track of the existing types of Issues
@@ -39,6 +39,8 @@ namespace ers
     
     class IssueFactory
     {
+	template <class > friend class SingletonCreator;
+        
 	typedef Issue * (*IssueCreator)( const ers::Context & );
 	typedef std::map<std::string,IssueCreator> FunctionMap;
 

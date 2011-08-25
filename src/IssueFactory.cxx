@@ -15,20 +15,13 @@
 #include <ers/internal/SingletonCreator.h>
 #include <ers/internal/macro.h>
 
-namespace
-{
-    ers::SingletonCreator<ers::IssueFactory>	_creator_;
-}
-
 /** Returns the singleton instance of the factory.
   * \return a reference to the singleton instance 
   */
 ers::IssueFactory &
 ers::IssueFactory::instance()
 {
-    static ers::IssueFactory * instance = new ers::IssueFactory;
-    
-    _creator_.dummy();
+    static ers::IssueFactory * instance = ers::SingletonCreator<ers::IssueFactory>::create();
     
     return *instance;
 } // instance

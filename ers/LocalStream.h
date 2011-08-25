@@ -31,9 +31,9 @@ ERS_DECLARE_ISSUE(  ers,					// namespace
 		 )
                      
 namespace ers
-{
-    
+{    
     class Issue;
+    template <class > class SingletonCreator;
     
     class IssueCatcherHandler;
     
@@ -48,6 +48,7 @@ namespace ers
     class LocalStream
     {
         friend class IssueCatcherHandler;
+	template <class > friend class SingletonCreator;
         
       public:
 	        

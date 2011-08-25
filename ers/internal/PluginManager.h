@@ -39,15 +39,15 @@ namespace ers
 	class SharedLibrary
 	{
 	  public:
-	    /**	 Load the shared library and locate the create function.
-	    Store a pointer to the create function in our map indexed by
+	    /**	 Loads the shared library and locates the create function.
+	    Stores a pointer to the create function in the map indexed by
 	    the library name.
 	    @param name Name of the class to be loaded (library name excluding
 	    lib prefix and .so suffix).
 	    */
 	    SharedLibrary( const std::string & name );
 
-	    /** Unload the dynamic library containing class name and remove it from our map.  */
+	    /** Unloads dynamic library and removes it from the map.  */
 	    ~SharedLibrary();
 
 	  private:

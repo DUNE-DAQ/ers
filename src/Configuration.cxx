@@ -38,11 +38,6 @@ namespace
 }
 
 
-namespace
-{
-    ers::SingletonCreator<ers::Configuration>	_creator_;
-}
-
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a reference to the singleton instance 
@@ -52,9 +47,7 @@ ers::Configuration::instance()
 {
     /**Singleton instance
       */
-    static ers::Configuration * instance = new ers::Configuration;
-    
-    _creator_.dummy();
+    static ers::Configuration * instance = ers::SingletonCreator<ers::Configuration>::create();
     
     return *instance;
 }

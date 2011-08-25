@@ -33,6 +33,7 @@ namespace ers
     
     class InputStream; 
     class OutputStream; 
+    template <class > class SingletonCreator;
     
     /** The \c StreamFactory class is responsible for creating all the ers streams
       * used by the system. It implements the singleton pattern and the factory pattern. 
@@ -47,6 +48,7 @@ namespace ers
     class StreamFactory
     {	
 	friend std::ostream & operator<<( std::ostream &, const ers::StreamFactory & );
+	template <class > friend class SingletonCreator;
         
         typedef ers::InputStream *  (*InputStreamCreator) ( const std::string & format );
         typedef ers::OutputStream * (*OutputStreamCreator)( const std::string & format );

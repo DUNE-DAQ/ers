@@ -12,11 +12,6 @@
 #include <ers/StreamManager.h>
 #include <ers/internal/SingletonCreator.h>
 
-namespace
-{
-    ers::SingletonCreator<ers::LocalStream>   _creator_;
-}
-
 /** This method returns the singleton instance.
   * It should be used for every operation on the factory.
   * \return a reference to the singleton instance
@@ -26,9 +21,7 @@ ers::LocalStream::instance()
 {
     /**Singleton instance
       */
-    static ers::LocalStream * instance = new ers::LocalStream;
-
-    _creator_.dummy();
+    static ers::LocalStream * instance = ers::SingletonCreator<ers::LocalStream>::create();
 
     return *instance;
 }

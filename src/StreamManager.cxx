@@ -95,11 +95,6 @@ namespace
     }
 }
 
-namespace
-{
-    ers::SingletonCreator<ers::StreamManager>	_creator_;
-}
-
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a reference to the singleton instance 
@@ -107,12 +102,9 @@ namespace
 ers::StreamManager &
 ers::StreamManager::instance()
 {
-    /**Singleton instance of PluginManager is always created before the StreamManager
+    /**Singleton instance
       */
-    static ers::PluginManager * plugins = new ers::PluginManager;
-    static ers::StreamManager * instance = new ers::StreamManager;
-    
-    _creator_.dummy();
+    static ers::StreamManager * instance = ers::SingletonCreator<ers::StreamManager>::create();
     
     return *instance;
 } // instance

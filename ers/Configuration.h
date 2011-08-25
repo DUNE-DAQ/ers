@@ -20,9 +20,9 @@
 #include <boost/function.hpp>
 
 namespace ers
-{
-    
+{   
     class Issue;
+    template <class > class SingletonCreator;
     
     /** The \c Configuration class provides API for configuring ERS output streams.
       * 
@@ -39,6 +39,7 @@ namespace ers
     class Configuration
     {	
 	friend std::ostream & operator<<( std::ostream &, const ers::Configuration & );
+	template <class > friend class SingletonCreator;
         
       public:
 	        
