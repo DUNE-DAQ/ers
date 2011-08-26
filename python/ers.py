@@ -47,6 +47,7 @@ class Context( object ):
         self.thread_id = thread.get_ident()
         self.user_id = os.getuid()
         self.user_name = getpass.getuser()
+        self.application_name = os.getenv( "TDAQ_APPLICATION", "Undefined" )
                 
 class Issue( Exception ):
     "base class for ERS exceptions"    
@@ -93,9 +94,16 @@ class Message( Issue ):
     def __init__( self, msg ):
     	Issue.__init__( self, msg, {}, None )
 
-import liberspy
+if sys.platform == 'linux2':
+    import dl
+    flags = sys.getdlopenflags()
+    sys.setdlopenflags( flags | dl.RTLD_GLOBAL )
+    import liberspy
+    sys.setdlopenflags( flags )
+else:
+    import liberspy
 liberspy.init( Issue )        
-              
+                  
 def debug( lvl, msg ):
     "sends msg to the debug stream"
     liberspy.debug( lvl, isinstance( msg, Issue ) and msg or Message( msg ) )
