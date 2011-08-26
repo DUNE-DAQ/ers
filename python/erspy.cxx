@@ -1,5 +1,5 @@
+#include <boost/algorithm/string.hpp>
 #include <boost/python.hpp>
-
 #include <boost/python/exception_translator.hpp>
 
 #include <ers/ers.h>
@@ -17,14 +17,7 @@ namespace
 	static const std::string py_separator( "." );
         
         std::string str = ex.get_class_name();
-	for(	std::string::size_type pos = str.find( cpp_separator, 0 ); 
-        	pos != std::string::npos; 
-                pos = str.find( cpp_separator, pos ) )
-	{
-	    str.erase( pos, cpp_separator.size() );
-	    str.insert( pos, "." );
-	    pos += py_separator.size();
-	}
+        boost::replace_all( str, cpp_separator, py_separator );
         
 	custom_ex_type = PyErr_NewException( (char*)str.c_str(), base_ex_type, 0 );
 
