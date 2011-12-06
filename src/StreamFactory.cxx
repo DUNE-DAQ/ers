@@ -67,7 +67,7 @@ ers::StreamFactory::create_out_stream( const std::string & format ) const
         }
         catch( ers::Issue & issue )
         {
-            std::cerr << issue << std::endl;
+            ERS_INTERNAL_ERROR( issue )
         }
     }
     else
@@ -94,7 +94,14 @@ ers::StreamFactory::create_in_stream(	const std::string & stream,
     
     if( it != m_in_factories.end() )
     {
-	return it->second( filter );
+	try
+        {
+            return it->second( filter );
+        }
+        catch( ers::Issue & issue )
+        {
+	    throw ers::InvalidFormat( ERS_HERE, stream, issue ); 
+        }
     }
     
     throw ers::InvalidFormat( ERS_HERE, stream ); 
