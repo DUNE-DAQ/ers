@@ -62,8 +62,8 @@ namespace
     
     const char * get_app_name()
     {
-	static const char * const env = ::getenv( "TDAQ_APPLICATION" ) 
-        		? ::getenv( "TDAQ_APPLICATION" ) 
+	static const char * const env = ::getenv( "TDAQ_APPLICATION_NAME" ) 
+        		? ::getenv( "TDAQ_APPLICATION_NAME" ) 
                         : "Undefined";
 	return env;
     }
