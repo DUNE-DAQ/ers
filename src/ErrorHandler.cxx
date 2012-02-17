@@ -72,6 +72,7 @@ namespace ers
         
       private:  
         
+        static void recursion_preventer();
         static void abort( const ers::Issue & issue );
         static void terminate_handler();
         
@@ -80,11 +81,8 @@ namespace ers
     
     void ErrorHandler::SignalHandler::action( int signal, siginfo_t *, void * )
     {
-	static bool same_shit_different_time = false;
-	if ( !same_shit_different_time )
-	    same_shit_different_time = true;
-	else
-	    ::abort();
+	recursion_preventer();
+        
         Configuration::instance().verbosity_level( 13 );
         ErrorHandler::abort( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
     }   
@@ -109,8 +107,19 @@ namespace ers
             delete it->second;
     }
     
+    void ErrorHandler::recursion_preventer()
+    {
+	static bool same_shit_different_time = false;
+	if ( !same_shit_different_time )
+	    same_shit_different_time = true;
+	else
+	    ::abort();
+    }
+    
     void ErrorHandler::terminate_handler()
     {
+	recursion_preventer();
+            
 	Configuration::instance().verbosity_level( 13 );
     	try {
             throw;
