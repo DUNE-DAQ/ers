@@ -12,7 +12,14 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
+
+#ifndef __rtems__
 #include <execinfo.h>
+#else
+char** backtrace_symbols (void ** , int size) {
+    return 0;
+}
+#endif
 
 #include <ers/Context.h>
 #include <ers/Configuration.h>
@@ -64,18 +71,21 @@ std::vector<std::string>
 ers::Context::stack( ) const
 {
     std::vector<std::string>	stack;
+    
+#ifndef ERS_NO_DEBUG
     char ** symbols = backtrace_symbols( (void**)stack_symbols(), stack_size() );
     
     //////////////////////////////////////////////////////////////////
-    // This stack frame is compiler an compilation dependant,
-    // we relay on GCC optimized compilation
-    // the last frame contains some garbage
+    // This stack frame is compiler dependant,
+    // For GCC the last frame contains some garbage
     //////////////////////////////////////////////////////////////////
     for (int i = 0; i < stack_size() - 1; i++)
     {
 	stack.push_back( readable_type_name( symbols[i] ) );
     }
     free(symbols);
+#endif
+
     return stack;
 }
 

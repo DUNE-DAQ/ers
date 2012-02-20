@@ -53,7 +53,7 @@ namespace ers
 
 		sa.sa_sigaction = action;
 		sigemptyset ( &sa.sa_mask );
-		sa.sa_flags = SA_RESTART | SA_SIGINFO;
+		sa.sa_flags = SA_SIGINFO;
 
 		::sigaction( signal_, &sa, &old_action_ );
             }

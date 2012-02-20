@@ -23,7 +23,7 @@ macro           ers_shlibflags          	$(boost_libs)
 macro           erspy_shlibflags          	"-lers -lboost_python-$(boost_libsuffix) -l$(Python_version_headers)" 
 macro           erspy_dependencies		"ers"
 
-macro           ErsBaseStreams_shlibflags	" -lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
+macro           ErsBaseStreams_shlibflags	"-lers $(boost_libs) -lboost_regex-$(boost_libsuffix)" 
 macro		ErsBaseStreams_dependencies	"ers" 
 		
 ########################################################################################################
@@ -42,10 +42,16 @@ macro		ers_receiverlinkopts		"-lers $(boost_libs)"
 macro		ers_psc_dependencies		"ers" 
 macro		ers_psclinkopts			"-lers $(boost_libs)"
 
+macro_remove	constituents			"" \
+		ppc-rtems-rce405 		"erspy"
+
 ########################################################################################################
 #       Installation patterns
 ########################################################################################################
-apply_pattern   install_libs		files="libers.so libErsBaseStreams.so liberspy.so"
+macro   	lib_files		"libers.so libErsBaseStreams.so liberspy.so" \
+		ppc-rtems-rce405	"libers.a libErsBaseStreams.a"
+
+apply_pattern   install_libs		files="$(lib_files)"
 
 apply_pattern   install_apps            files="ers_psc ers_receiver ers_test"
 

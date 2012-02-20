@@ -1,9 +1,12 @@
+#ifndef __rtems__
 #include <dlfcn.h>
+#endif
+
+#include <vector>
+
 #include <ers/internal/Util.h>
 #include <ers/internal/PluginManager.h>
 #include <ers/internal/macro.h>
-#include <vector>
-#include <iostream>
 
 namespace
 {
@@ -18,6 +21,7 @@ namespace ers
 
     PluginManager::SharedLibrary::SharedLibrary( const std::string & name )
     {
+#ifndef __rtems__
 	std::string library = "lib" + name + ".so" ;
 
 	handle_ = dlopen( library.c_str(), RTLD_LAZY|RTLD_GLOBAL );
@@ -27,6 +31,7 @@ namespace ers
 	{
 	    throw PluginException( error );
 	}
+#endif
     }
 
     PluginManager::SharedLibrary::~SharedLibrary( )

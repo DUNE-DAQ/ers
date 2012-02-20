@@ -9,17 +9,25 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
-#include <execinfo.h>
 #include <stdlib.h>
 
 #include <ers/LocalContext.h>
 
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(__rtems__)
 #include <sys/syscall.h>
-pid_t gettid() {
-    return syscall( SYS_gettid );
+#else
+int backtrace(void**, int) {
+    return 0;
 }
 #endif
+
+pid_t gettid() {
+#if !defined(__APPLE__) && !defined(__rtems__)
+    return syscall( SYS_gettid );
+#else
+    return 0;
+#endif
+}
 
 
 namespace
@@ -79,11 +87,7 @@ ers::LocalContext::LocalContext(
     m_file_name( filename ),
     m_function_name( function_name ),
     m_line_number( line_number ),
-#ifndef __APPLE__
     m_thread_id( gettid() ),
-#else
-    m_thread_id( 0 ),
-#endif
 #ifndef ERS_NO_DEBUG
     m_stack_size( backtrace( m_stack, 128 ) )
 #else
