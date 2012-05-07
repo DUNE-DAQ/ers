@@ -34,6 +34,12 @@ ERS_DECLARE_ISSUE(	ers,
                         << ") failed because " << reason,	
 			((const char *)condition )		
 			((const char *)reason ) )		
+#ifdef __rtems__
+#include <assert.h>
+#define ERS_INTERNAL_ABORT(m)	__assert_func (__FILE__, __LINE__, __ASSERT_FUNC, m)
+#else
+#define ERS_INTERNAL_ABORT(_)	::abort()
+#endif
 
 /** \hideinitializer
 */
@@ -45,7 +51,7 @@ if( !(expression) ) \
     std::string reason = ers_report_impl_out_buffer.str(); \
     ers::Assertion issue( ERS_HERE, #expression, reason.c_str() ); \
     ers::StreamManager::instance().report_issue( ers::Fatal, issue ); \
-    ::abort(); \
+    ERS_INTERNAL_ABORT(#expression); \
 }}
 
 /** \def ERS_ASSERT(expression) This macro inserts an assertion than checks condition expression.
