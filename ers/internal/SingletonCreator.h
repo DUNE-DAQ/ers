@@ -30,7 +30,7 @@ namespace ers
 	// on MacOS with gcc 4.2 the s_mutex is not yet created
         // at this moment which causes crash. This might be fixed 
         // when movining to newer gcc version
-        #ifndef __APPLE__
+        #if !defined( __APPLE__) && !defined(__rtems__)
 	    boost::mutex::scoped_lock lock(s_mutex);
         #endif
 	    if ( !s_instance )
