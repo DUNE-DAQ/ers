@@ -110,10 +110,8 @@ namespace ers
     void ErrorHandler::recursion_preventer()
     {
 	static bool same_shit_different_time = false;
-	if ( !same_shit_different_time )
-	    same_shit_different_time = true;
-	else
-	    ::abort();
+	ERS_ASSERT( !same_shit_different_time )
+	same_shit_different_time = true;
     }
     
     void ErrorHandler::terminate_handler()
@@ -138,7 +136,7 @@ namespace ers
     void ErrorHandler::abort( const ers::Issue & issue )
     {
 	StreamManager::instance().report_issue( Fatal, issue );
-        ::abort();
+        ERS_ASSERT(0);
     }
 }
 
