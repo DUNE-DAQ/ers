@@ -95,6 +95,50 @@ namespace
     }
 }
 
+namespace ers
+{
+    class StreamInitializer : public ers::OutputStream
+    {
+	public:
+	  StreamInitializer( StreamManager & manager )
+            : m_manager( manager ),
+              m_in_progress( false )
+          { ; }
+        
+          void write( const Issue & issue ) 
+          {
+	    ers::severity s = issue.severity();
+	    boost::recursive_mutex::scoped_lock lock( m_mutex );
+
+	    if ( !m_in_progress ) {
+		m_in_progress = true;
+            }
+	    else {
+		// The issue is coming from the stream constructor
+                // We can't use ERS streams, so print it to std
+                if ( s < ers::Warning )
+                    std::cout << issue << std::endl;
+                else
+                    std::cerr << issue << std::endl;
+                return ;
+            }
+
+	    if ( m_manager.m_out_streams[s].get() == this ) {
+		m_manager.m_out_streams[s] =
+		    boost::shared_ptr<OutputStream>( m_manager.setup_stream( s ) );
+	    }
+	    m_manager.report_issue( s, issue );
+            m_in_progress = false;
+	  }
+          
+        private:
+	  boost::recursive_mutex m_mutex;
+	  StreamManager &	 m_manager; 
+          bool			 m_in_progress;
+    };
+    
+}
+
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
   * \return a reference to the singleton instance 
@@ -116,44 +160,31 @@ ers::StreamManager::StreamManager()
 {
     for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-       m_out_streams[ss] = setup_stream( (ers::severity)ss );
+       m_init_streams[ss] = boost::shared_ptr<OutputStream>( new StreamInitializer( *this ) );
+       m_out_streams[ss] = m_init_streams[ss];
     }
 }
 
 /** Destructor - basic cleanup
   */
 ers::StreamManager::~StreamManager()
-{
-    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
-    {	
-       delete m_out_streams[ss];
-    }
-    
-    boost::mutex::scoped_lock lock( m_mutex );
-    for( std::list<ers::InputStream *>::iterator it = m_in_streams.begin(); it != m_in_streams.end(); ++it )
-    {	
-       delete *it;
-    }
-}
+{ ; }
 
 void
 ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream * new_stream )
 {    
-    ers::OutputStream * parent = m_out_streams[severity];
-    if ( parent && !parent->isNull() )
+    boost::shared_ptr<OutputStream> head = m_out_streams[severity];
+    if ( head && !head->isNull() )
     {
-	for (	ers::OutputStream * stream = &parent->chained(); 
-        	!stream->isNull();
-                 parent = stream, stream = &parent->chained() 
-            )
+	OutputStream * parent = head.get();
+        for ( OutputStream * stream = parent; !stream->isNull(); parent = stream, stream = &parent->chained() )
             ;
                  
 	parent->chained( new_stream );
     }
     else
     {
-    	delete m_out_streams[severity];
-        m_out_streams[severity] = new_stream;
+        m_out_streams[severity] = boost::shared_ptr<OutputStream>( new_stream );
     }
 }	
 
@@ -162,28 +193,23 @@ ers::StreamManager::add_receiver( const std::string & stream,
 				  const std::string & filter,
                                   ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat )
 {
-    ers::InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
+    InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
     in->set_receiver( receiver );
     
     boost::mutex::scoped_lock lock( m_mutex );
-    m_in_streams.push_back( in );
+    m_in_streams.push_back( boost::shared_ptr<InputStream>( in ) );
 }
 
 void
 ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
 {
     boost::mutex::scoped_lock lock( m_mutex );
-    for( std::list<ers::InputStream *>::iterator it = m_in_streams.begin(); it != m_in_streams.end(); )
+    for( std::list<boost::shared_ptr<InputStream> >::iterator it = m_in_streams.begin(); it != m_in_streams.end(); )
     {	
         if ( (*it) -> m_receiver == receiver )
-        {
-	    delete *it;
             m_in_streams.erase( it++ );
-        }
         else
-        {
             ++it;
-        }
     }
 }
 

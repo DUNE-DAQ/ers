@@ -10,6 +10,7 @@
 #ifndef ERS_STREAM_MANAGER_H
 #define ERS_STREAM_MANAGER_H
 
+#include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
 #include <ers/Severity.h>
@@ -33,6 +34,7 @@ namespace ers
     class OutputStream; 
     class ErrorHandler; 
     class Issue;
+    class StreamInitializer;
     template <class > class SingletonCreator;
     
     /** The \c StreamManager class is responsible for creating and handling all the ers
@@ -53,7 +55,8 @@ namespace ers
       */
     
     class StreamManager
-    {	
+    {      
+      friend class StreamInitializer;
       friend class ers::LocalStream;
       friend class ers::ErrorHandler;
       template <class > friend class SingletonCreator;
@@ -96,10 +99,11 @@ namespace ers
 	OutputStream * setup_stream( ers::severity severity );	
 	OutputStream * setup_stream( const std::vector<std::string> & streams );
         
-        PluginManager			m_plugin_manager;
-        boost::mutex			m_mutex;
-        std::list<ers::InputStream *>	m_in_streams;               
-	ers::OutputStream *		m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+	PluginManager					m_plugin_manager;
+	boost::mutex					m_mutex;
+	std::list<boost::shared_ptr<InputStream> >	m_in_streams;               
+	boost::shared_ptr<OutputStream>			m_init_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+	boost::shared_ptr<OutputStream>			m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
     };
     
     std::ostream & operator<<( std::ostream &, const ers::StreamManager & );
