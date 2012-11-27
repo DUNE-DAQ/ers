@@ -122,6 +122,13 @@ namespace ers
 	void wrap_message( const std::string & begin, const std::string & end );
         
       protected:
+        Issue(	Severity severity,
+		const boost::posix_time::ptime & time,
+		const ers::Context & context,
+		const std::string & message,
+		const std::vector<std::string> & qualifiers,
+		const std::map<std::string, std::string> & parameters,
+		const ers::Issue * cause = 0 );
         
 	template <typename T>
 	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */

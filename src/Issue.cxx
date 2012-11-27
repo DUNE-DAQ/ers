@@ -112,6 +112,22 @@ Issue::Issue(	const Context & context,
     add_default_qualifiers( *this );
 }
 
+Issue::Issue(	Severity severity,
+		const boost::posix_time::ptime & time,
+                const ers::Context & context,
+		const std::string & message,
+		const std::vector<std::string> & qualifiers,
+		const std::map<std::string, std::string> & parameters,
+		const ers::Issue * cause )
+  : m_cause( cause ),
+    m_context( context.clone() ),
+    m_message( message ),
+    m_qualifiers( qualifiers ),
+    m_severity( severity ),
+    m_time( time ),
+    m_values( parameters )
+{ ; }
+
 ers::Issue::~Issue() throw()
 { ; }
 

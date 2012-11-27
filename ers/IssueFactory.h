@@ -15,6 +15,8 @@
 #include <vector>
 #include <map>
 
+#include <ers/Severity.h>
+
 /** \file IssueFactory.h This file defines the IssueFactory class, 
   * which is responsible for registration and creation of user defined issues.
   * \author Serguei Kolos
@@ -52,10 +54,12 @@ namespace ers
 	
         Issue * create( const std::string & name,
         		const Context & context,
+                        Severity severity,
                         long  time,
                         const std::string & message,
                         const std::vector<std::string> & qualifiers,
-                        const std::map<std::string, std::string> & parameters ) const ;		/**< \brief build issue out of all the given parameters */
+                        const std::map<std::string, std::string> & parameters,
+                        const Issue * cause = 0 ) const ;			/**< \brief build issue out of all the given parameters */
 	
         void register_issue( const std::string & name, IssueCreator creator );	/**< \brief register an issue factory */
       

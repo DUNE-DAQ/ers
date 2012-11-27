@@ -29,12 +29,16 @@ namespace ers
         { ; }
         
         AnyIssue( const std::string & type,
+        	  Severity severity,
                   const ers::Context & context,
+		  const boost::posix_time::ptime & time,
 		  const std::string & message,
-                  const ers::Issue & cause )
-          : ers::Issue( context, message, cause ),
-            m_type( type )
-        { ; }
+		  const std::vector<std::string> & qualifiers,
+		  const std::map<std::string, std::string> & parameters,
+                  const ers::Issue * cause = 0 )
+          : ers::Issue( severity, time, context, message, qualifiers, parameters, cause ),
+            m_type( type ) 
+	{ ; }
         
         ~AnyIssue() throw() { ; }
         

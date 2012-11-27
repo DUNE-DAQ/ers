@@ -100,12 +100,14 @@ namespace
 			    PyInt_AsLong( PyObject_GetAttrString( c, "user_id" ) ),
 			    PyString_AsString( PyObject_GetAttrString( c, "user_name" ) ),
                             PyString_AsString( PyObject_GetAttrString( c, "application_name" ) ) ) );
-        
+                
         PyObject * cause = PyObject_GetAttrString( o, "cause" );
         if ( cause != Py_None )
         {
-            std::auto_ptr<ers::Issue> c_ptr( issue( cause ) );
-	    return new ers::AnyIssue( id, context, msg, *c_ptr );
+	    std::vector<std::string> qualifiers;
+	    std::map<std::string, std::string> parameters;
+	    return new ers::AnyIssue( id, ers::Error, context, boost::posix_time::ptime(),
+					msg, qualifiers, parameters, issue( cause ) );
         }
 	
         return new ers::AnyIssue( id, context, msg );
