@@ -15,6 +15,7 @@
 
 #if !defined(__APPLE__) && !defined(__rtems__)
 #include <sys/syscall.h>
+#include <execinfo.h>
 #else
 int backtrace(void**, int) {
     return 0;
