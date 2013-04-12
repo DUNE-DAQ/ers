@@ -73,10 +73,12 @@ namespace ers
         void remove_issue_catcher();
 
 	void report_issue( ers::severity type, const ers::Issue & issue );
+        
 	void thread_wrapper();
 
+      private:
 	boost::function<void ( const ers::Issue & )>	m_issue_catcher;
-	std::auto_ptr<boost::thread>			m_issue_catcher_thread;
+	std::unique_ptr<boost::thread>			m_issue_catcher_thread;
 	boost::mutex					m_mutex;
 	boost::condition				m_condition;
 	bool						m_terminated;

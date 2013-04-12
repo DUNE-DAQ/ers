@@ -67,8 +67,7 @@ Issue::Issue( const Issue & other )
  */
 Issue::Issue(	const Context & context,
 		const std::string & message )
-  : m_cause( 0 ),
-    m_context( context.clone() ),
+  : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
     m_time( boost::posix_time::second_clock::universal_time() )

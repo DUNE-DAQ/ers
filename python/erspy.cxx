@@ -116,42 +116,42 @@ namespace
     void
     debug( int level, PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
         ers::debug( *a, level );
     }
     
     void
     log( PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
     	ers::log( *a );
     }
     
     void
     info( PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
     	ers::info( *a );
     }
     
     void
     warning( PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
     	ers::warning( *a );
     }
     
     void
     error( PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
     	ers::error( *a );
     }
     
     void
     fatal( PyObject * o )
     {
-    	std::auto_ptr<ers::Issue> a( issue( o ) );
+    	std::unique_ptr<ers::Issue> a( issue( o ) );
     	ers::fatal( *a );
     }
 

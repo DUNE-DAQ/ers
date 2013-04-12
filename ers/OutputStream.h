@@ -65,7 +65,7 @@ namespace ers
         
         void configure_stream_chain( const std::map<std::string,std::string> & config ) throw ();
         
-      	std::auto_ptr<OutputStream> m_chained;
+      	std::unique_ptr<OutputStream> m_chained;
     };
 }
 

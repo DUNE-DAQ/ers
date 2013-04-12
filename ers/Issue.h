@@ -149,8 +149,8 @@ namespace ers
         //////////////////////////////////////
         Issue & operator=( const Issue & other );
 					  
-	std::auto_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
-	std::auto_ptr<Context>		m_context;		/**< \brief Context of the current issue */
+	std::unique_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
+	std::unique_ptr<Context>	m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
