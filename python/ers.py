@@ -30,17 +30,21 @@ class Context( object ):
     __file = re.sub( r'\.pyc$', '.py', __file__ )
 
     def __init__( self, issue ):
-	self.stack = [f[0] for f in inspect.stack() if f[3] <> '__init__' and f[1] <> self.__file ]
+	stack = [f[0] for f in inspect.stack() \
+        		if  f[1] <> self.__file \
+                        and (      not f[0].f_locals.has_key( 'self' )\
+                        	or not isinstance(f[0].f_locals['self'], Issue))]
+                                
         self.package_name = issue.__class__.__module__
-        class_name    = lambda : self.stack[0].f_locals.has_key( 'self' ) \
-        			 and self.stack[0].f_locals['self'].__class__.__name__ + '.'\
+        class_name    = lambda : stack[0].f_locals.has_key( 'self' ) \
+        			 and stack[0].f_locals['self'].__class__.__name__ + '.'\
                                  or ''
 
         self.function_name =	class_name() \
-        			+ self.stack[0].f_code.co_name \
-                                + inspect.formatargvalues( *inspect.getargvalues(self.stack[0]) );
-	self.file_name = self.stack[0].f_code.co_filename
-        self.line_number = self.stack[0].f_lineno
+        			+ stack[0].f_code.co_name \
+                                + inspect.formatargvalues( *inspect.getargvalues(stack[0]) );
+	self.file_name = stack[0].f_code.co_filename
+        self.line_number = stack[0].f_lineno
         self.host_name = platform.node()
         self.cwd = os.getcwd()
         self.process_id = os.getpid()
@@ -74,7 +78,6 @@ class Issue( Exception ):
         pretty_function = lambda f,v: v > 0 \
         			 and f \
 				 or  re.sub( '\(.*\)', '(...)', f )
-        
         s = '%s %s [%s at %s:%d] %s' % ( 
                         SeverityNames[self.severity],
         		time.strftime( '%Y-%b-%d %H:%M:%S', time.localtime( self.time ) ),
@@ -94,14 +97,7 @@ class Message( Issue ):
     def __init__( self, msg ):
     	Issue.__init__( self, msg, {}, None )
 
-if sys.platform == 'linux2':
-    import dl
-    flags = sys.getdlopenflags()
-    sys.setdlopenflags( flags | dl.RTLD_GLOBAL )
-    import liberspy
-    sys.setdlopenflags( flags )
-else:
-    import liberspy
+import liberspy
 liberspy.init( Issue )        
                   
 def debug( lvl, msg ):
@@ -118,17 +114,20 @@ def info( msg ):
 
 def warning( issue ):
     "sends issue to the warning stream"
-    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
+    assert isinstance(issue,Issue), \
+    	'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
     liberspy.warning( issue )
 
 def error( issue ):
     "sends issue to the error stream"
-    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.error stream'
+    assert isinstance(issue,Issue), \
+    	'Only an instance of ers.Issue sub-class can be sent to the ers.error stream'
     liberspy.error( issue )
 
 def fatal( issue ):
     "sends issue to the fatal stream"
-    assert isinstance(issue,Issue), 'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
+    assert isinstance(issue,Issue), \
+    	'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
     liberspy.fatal( issue )
 
 class LoggingHandler( logging.Handler ) :

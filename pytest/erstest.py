@@ -9,8 +9,8 @@ __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2010/05/05 21:57:20 $"
 
 # It's necessay to properly instantiate exceptions in the underlying C++ modules
-import sys, dl
-sys.setdlopenflags(dl.RTLD_LAZY|dl.RTLD_GLOBAL)
+#import sys, dl
+#sys.setdlopenflags(dl.RTLD_LAZY|dl.RTLD_GLOBAL)
 
 import ers
 import ipc
@@ -32,8 +32,6 @@ class CantOpenFile( Exception ):
 	    { 'filename' : fname, 'error' : err },
 	    cause )
 
-cof = CantOpenFile( "t", 1 )
-
 #create the logger
 logger = logging.getLogger("main")
 logger.setLevel(logging.DEBUG)
@@ -41,11 +39,15 @@ logger.setLevel(logging.DEBUG)
 #add ers handler
 ers.addLoggingHandler("main")
 
+cof = CantOpenFile( "t1", 1 )
+logger.error(cof);
+logger.error(CantOpenFile( "t2", 2 ));
+
 class Test:
     def method(self):
         raise PermissionDenied( )
             
-def function( arg1, arg2 ):
+def test_function( arg1, arg2 ):
     logger.debug('This is a debug message')
     logger.info('This is an info message')
     logger.warning('This is a warning message')
@@ -61,6 +63,6 @@ import time
 
 if __name__ == "__main__":
     try:
-    	function( "test", "ers" )
+    	test_function( "test", "ers" )
     except ers.Issue, e:
 	ers.warning( e )
