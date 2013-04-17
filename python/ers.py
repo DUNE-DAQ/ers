@@ -30,21 +30,21 @@ class Context( object ):
     __file = re.sub( r'\.pyc$', '.py', __file__ )
 
     def __init__( self, issue ):
-	stack = [f[0] for f in inspect.stack() \
+	self.stack = [f[0] for f in inspect.stack() \
         		if  f[1] <> self.__file \
                         and (      not f[0].f_locals.has_key( 'self' )\
                         	or not isinstance(f[0].f_locals['self'], Issue))]
                                 
         self.package_name = issue.__class__.__module__
-        class_name    = lambda : stack[0].f_locals.has_key( 'self' ) \
-        			 and stack[0].f_locals['self'].__class__.__name__ + '.'\
+        class_name    = lambda : self.stack[0].f_locals.has_key( 'self' ) \
+        			 and self.stack[0].f_locals['self'].__class__.__name__ + '.'\
                                  or ''
 
         self.function_name =	class_name() \
-        			+ stack[0].f_code.co_name \
-                                + inspect.formatargvalues( *inspect.getargvalues(stack[0]) );
-	self.file_name = stack[0].f_code.co_filename
-        self.line_number = stack[0].f_lineno
+        			+ self.stack[0].f_code.co_name \
+                                + inspect.formatargvalues( *inspect.getargvalues(self.stack[0]) );
+	self.file_name = self.stack[0].f_code.co_filename
+        self.line_number = self.stack[0].f_lineno
         self.host_name = platform.node()
         self.cwd = os.getcwd()
         self.process_id = os.getpid()
