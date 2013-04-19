@@ -31,7 +31,7 @@ namespace ers
         AnyIssue( const std::string & type,
         	  Severity severity,
                   const ers::Context & context,
-		  const boost::posix_time::ptime & time,
+		  const system_clock::time_point & time,
 		  const std::string & message,
 		  const std::vector<std::string> & qualifiers,
 		  const std::map<std::string, std::string> & parameters,

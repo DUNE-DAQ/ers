@@ -9,34 +9,12 @@
 #include <cstdio>
 #include <iostream>
 
+#include <boost/lexical_cast.hpp>
+
 #include <ers/Configuration.h>
 #include <ers/ers.h>
 #include <ers/internal/SingletonCreator.h>
-#include <ers/internal/macro.h>
-
-namespace
-{
-    void
-    read_environment( const char * name, int & value )
-    {
-	const char * env = ::getenv( name );
-	if ( env )
-	{
-	    if ( sscanf( env, "%d", &value ) != 1 )
-	    {
-		ERS_INTERNAL_ERROR( "Wrong value \"" << env << "\" is given for the \"" << name << "\" environment" )
-	    }
-	}
-    }
-    
-    std::string int_to_string( int param )
-    {
-	std::ostringstream out;
-	out << param;
-	return out.str();
-    }
-}
-
+#include <ers/internal/Util.h>
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 
@@ -59,8 +37,8 @@ ers::Configuration::Configuration()
   : m_debug_level( 0 ),
     m_verbosity_level( 0 )
 {
-    read_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
-    read_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+    m_debug_level = read_from_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
+    m_verbosity_level = read_from_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
 }
 
 void 
@@ -68,7 +46,7 @@ ers::Configuration::verbosity_level( int verbosity_level )
 {
     m_verbosity_level = verbosity_level;
     std::map<std::string, std::string> parameters;
-    parameters["verbosity"] = int_to_string( m_verbosity_level );
+    parameters["verbosity"] = boost::lexical_cast<std::string>( m_verbosity_level );
     ers::StreamManager::instance().configure_all_output_streams( parameters );
 }
 

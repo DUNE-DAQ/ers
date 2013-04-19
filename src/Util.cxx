@@ -1,4 +1,5 @@
 #include <ers/internal/Util.h>
+#include <ers/internal/macro.h>
 
 void
 ers::tokenize(	const std::string & text,
@@ -20,6 +21,28 @@ ers::tokenize(	const std::string & text,
     while( start_p != std::string::npos );
 }
 
+int
+ers::read_from_environment( const char * name, int default_value )
+{
+    int value = default_value;
+    const char * env = ::getenv( name );
+    if ( env )
+    {
+	if ( sscanf( env, "%d", &value ) != 1 )
+        {
+	    ERS_INTERNAL_ERROR( "Wrong value \"" << env
+		    << "\" is given for the \"" << name << "\" environment" )
+        }
+    }
+    return value;
+}
+
+const char * 
+ers::read_from_environment( const char * name, const char * default_value )
+{
+    const char * env = ::getenv( name );
+    return ( env ? env : default_value);
+}
 
 
 

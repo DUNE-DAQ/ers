@@ -8,10 +8,11 @@
  *
  */
  
-#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <ctime>
+#include <time.h>
 
 #include <boost/date_time/c_local_time_adjustor.hpp>
 
@@ -46,7 +47,7 @@ namespace
         {
 	    issue.add_qualifier( *it );
         }
-    }
+    }    
 }
 
 Issue::Issue( const Issue & other )
@@ -70,7 +71,7 @@ Issue::Issue(	const Context & context,
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::universal_time() )
+    m_time( system_clock::now() )
 {
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
@@ -84,7 +85,7 @@ Issue::Issue(	const Context & context,
                 const std::exception & cause )
   : m_context( context.clone() ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::universal_time() )
+    m_time( system_clock::now() )
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
@@ -103,7 +104,7 @@ Issue::Issue(	const Context & context,
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
-    m_time( boost::posix_time::second_clock::universal_time() )
+    m_time( system_clock::now() )
 {
     const Issue * issue = dynamic_cast<const Issue *>( &cause );
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
@@ -112,7 +113,7 @@ Issue::Issue(	const Context & context,
 }
 
 Issue::Issue(	Severity severity,
-		const boost::posix_time::ptime & time,
+		const system_clock::time_point & time,
                 const ers::Context & context,
 		const std::string & message,
 		const std::vector<std::string> & qualifiers,
@@ -130,17 +131,10 @@ Issue::Issue(	Severity severity,
 ers::Issue::~Issue() throw()
 { ; }
 
-std::string 
-ers::Issue::time() const
-{
-    return boost::posix_time::to_simple_string( 
-    	boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local( m_time )  );
-}
-
 std::time_t 
 ers::Issue::time_t() const
 {
-    return ( ( m_time - boost::posix_time::from_time_t( 0 ) ).total_seconds() );
+    return system_clock::to_time_t(m_time);
 }
 
 void 

@@ -65,7 +65,7 @@ ers::Issue *
 ers::IssueFactory::create(	const std::string & name,
 				const ers::Context & context,
                                 Severity severity,
-                                long time,
+                                const system_clock::time_point & time,
 				const std::string & message,
 				const std::vector<std::string> & qualifiers,
 				const ers::string_map & parameters,
@@ -76,7 +76,7 @@ ers::IssueFactory::create(	const std::string & name,
     issue->m_severity = severity;
     issue->m_qualifiers = qualifiers;
     issue->m_values = parameters;
-    issue->m_time = boost::posix_time::from_time_t( time );
+    issue->m_time = time;
     issue->m_cause.reset( cause );
     return issue;
 }

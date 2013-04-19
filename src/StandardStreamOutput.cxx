@@ -10,9 +10,59 @@
 #include <ers/Issue.h>
 #include <ers/StandardStreamOutput.h>
 #include <ers/Severity.h>
+#include <ers/internal/Util.h>
 
+#include <boost/algorithm/string.hpp>
 
 #define FIELD_SEPARATOR "\n\t"
+
+namespace
+{    
+    const char * const format = ers::read_from_environment(
+    		"TDAQ_ERS_TIMESTAMP_FORMAT", "%y-%b-%d %H:%M:%S");
+
+    const bool isUTC = ::getenv("TDAQ_ERS_TIMESTAMP_UTC");
+
+    std::string timeToStringNano( const ers::Issue & issue ) {
+        return issue.time<std::chrono::nanoseconds>(format, isUTC);
+    }
+
+    std::string timeToStringMicro( const ers::Issue & issue ) {
+        return issue.time<std::chrono::microseconds>(format, isUTC);
+    }
+
+    std::string timeToStringMilli( const ers::Issue & issue ) {
+        return issue.time<std::chrono::milliseconds>(format, isUTC);
+    }
+
+    std::string timeToString( const ers::Issue & issue ) {
+        return issue.time<std::chrono::seconds>(format, isUTC);
+    }
+    
+    std::function<std::string( const ers::Issue & issue )>
+    getTimeFormatter()
+    {
+	static std::string env =
+        	::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
+                	? ::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
+                        : "";
+                        
+	boost::algorithm::to_upper(env);
+
+        if ( boost::algorithm::find_first(env, "NANO") )
+            return timeToStringNano;
+ 
+        if ( boost::algorithm::find_first(env, "MICRO") )
+            return timeToStringMicro;
+
+        if ( boost::algorithm::find_first(env, "MILLI") )
+            return timeToStringMilli;
+
+	return timeToString;
+    }
+    
+    const std::function<std::string( const ers::Issue & issue )> put_time = getTimeFormatter();    
+}
 
 std::ostream &
 ers::StandardStreamOutput::println( std::ostream & out, const Issue & issue, int verbosity )
@@ -27,12 +77,12 @@ ers::StandardStreamOutput::print( std::ostream & out, const Issue & issue, int v
 {
     if ( verbosity > -3 )
     {
-	out << ers::to_string( issue.severity() ) << " ";
+	out << put_time( issue ) << " ";
     }
 
     if ( verbosity > -2 )
     {
-	out << issue.time() << " ";
+	out << ers::to_string( issue.severity() ) << " ";
     }
 
     if ( verbosity > -1 )

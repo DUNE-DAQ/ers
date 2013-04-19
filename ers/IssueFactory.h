@@ -11,6 +11,7 @@
 #ifndef ERS_ISSUE_FACTORY
 #define ERS_ISSUE_FACTORY
 
+#include <chrono>
 #include <string>
 #include <vector>
 #include <map>
@@ -22,6 +23,8 @@
   * \author Serguei Kolos
   * \brief ers header and documentation file 
   */
+
+using std::chrono::system_clock;
   
 namespace ers
 {
@@ -55,7 +58,7 @@ namespace ers
         Issue * create( const std::string & name,
         		const Context & context,
                         Severity severity,
-                        long  time,
+                        const system_clock::time_point & time,
                         const std::string & message,
                         const std::vector<std::string> & qualifiers,
                         const std::map<std::string, std::string> & parameters,

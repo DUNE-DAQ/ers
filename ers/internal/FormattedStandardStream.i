@@ -92,7 +92,7 @@ ers::FormattedStandardStream<Device>::report( std::ostream & out, const Issue & 
 		out << ers::to_string( issue.severity() );
                 break;
 	    case format::Time:
-		out << issue.time() << " ";
+		out << issue.time<std::chrono::microseconds>() << " ";
                 break;
 	    case format::Position:
 		out << "[" << issue.context().position( ) << "]";

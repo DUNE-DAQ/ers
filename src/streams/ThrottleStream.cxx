@@ -114,7 +114,7 @@ ers::ThrottleStream::throttle(IssueRecord& rec, const ers::Issue& issue)
     }
 
     rec.m_lastOccurance=issueTime;
-    rec.m_lastOccuranceFormatted=issue.time();
+    rec.m_lastOccuranceFormatted=issue.time<std::chrono::microseconds>();
 }
 
 ers::ThrottleStream::ThrottleStream( const std::string & criteria )

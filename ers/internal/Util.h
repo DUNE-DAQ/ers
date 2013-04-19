@@ -24,6 +24,10 @@ namespace ers
     void tokenize(	const std::string & text,
     			const std::string & separators,
                         std::vector<std::string> & tokens );
+    
+    int read_from_environment( const char * name, int default_value );
+    
+    const char * read_from_environment( const char * name, const char * default_value );
 }
 
 #endif

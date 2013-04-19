@@ -16,18 +16,19 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <chrono>
 
 #include <ers/IssueFactory.h>
 #include <ers/LocalContext.h>
 #include <ers/Severity.h>
-
-#include <boost/date_time/posix_time/posix_time.hpp>
 
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
   * \author Serguei Kolos
   * \brief ers header and documentation file 
   */
+
+using std::chrono::system_clock;
 
 namespace ers
 {
@@ -107,11 +108,22 @@ namespace ers
         ers::Severity severity() const				/**< \brief severity of the issue */
 	{ return m_severity; }
         
-	std::string time() const;				/**< \brief local time of the issue */
+	template <class Precision>
+        std::string time(const std::string & format = "%y-%b-%d %H:%M:%S", bool isUTC = false) const;
+
+	/**< \brief string representation of local time of the issue */
+        template <class Precision>
+        std::string localtime(const std::string & format = "%y-%b-%d %H:%M:%S") const
+        { return time<Precision>(format, false); }
         
-	std::time_t time_t() const;				/**< \brief UTC time, in seconds since 1 Jan 1970 */
+	/**< \brief string representation of UTC time of the issue */
+	template <class Precision>
+        std::string gmtime(const std::string & format = "%y-%b-%d %H:%M:%S") const
+        { return time<Precision>(format, true); }
         
-	const boost::posix_time::ptime & ptime() const		/**< \brief UTC time of the issue */
+	std::time_t time_t() const;				/**< \brief seconds since 1 Jan 1970 */
+        
+	const system_clock::time_point & ptime() const		/**< \brief original time point of the issue */
 	{ return m_time; }
         
         const char * what() const throw()			/**< \brief General cause of the issue. */
@@ -123,7 +135,7 @@ namespace ers
         
       protected:
         Issue(	Severity severity,
-		const boost::posix_time::ptime & time,
+		const system_clock::time_point & time,
 		const ers::Context & context,
 		const std::string & message,
 		const std::vector<std::string> & qualifiers,
@@ -154,7 +166,7 @@ namespace ers
 	std::string			m_message;		/**< \brief Issue's explanation text */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
-	boost::posix_time::ptime	m_time;			/**< \brief Time when issue was thrown */
+	system_clock::time_point	m_time;			/**< \brief Time when issue was thrown */
 	string_map			m_values;		/**< \brief List of user defined attributes. */	
     };
 
@@ -269,7 +281,8 @@ ERS_DECLARE_ISSUE(  ers,
 		    ((std::string)key ) )
 
 template <typename T>
-void ers::Issue::get_value( const std::string & key, T & value ) const
+void 
+ers::Issue::get_value( const std::string & key, T & value ) const
 {
     string_map::const_iterator it = m_values.find(key);
     if ( it == m_values.end() )
@@ -281,11 +294,31 @@ void ers::Issue::get_value( const std::string & key, T & value ) const
 }
 
 template <typename T>
-void ers::Issue::set_value( const std::string & key, T value )
+void 
+ers::Issue::set_value( const std::string & key, T value )
 {
     std::ostringstream out;
     out << value;
     m_values[key] = out.str();
+}
+
+template <class Precision>
+std::string 
+ers::Issue::time(const std::string & format, bool isUTC) const
+{
+    std::time_t t = time_t();
+    std::tm tm = isUTC ? *gmtime_r(&t, &tm) : *localtime_r(&t, &tm);
+
+    char buff[128];
+    std::strftime(buff, 128 - 16, format.c_str(), &tm);
+
+    auto c = std::chrono::duration_cast<Precision>(
+			m_time.time_since_epoch()).count();
+    double frac = c - (double)t*Precision::period::den;
+    if (frac)
+	sprintf(buff+strlen(buff), ",%.0f", frac);
+
+    return buff;
 }
 
 #endif

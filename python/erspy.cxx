@@ -107,7 +107,7 @@ namespace
 	    std::vector<std::string> qualifiers;
 	    std::map<std::string, std::string> parameters;
 	    return new ers::AnyIssue( id, ers::Error, context, 
-            				boost::posix_time::second_clock::universal_time(),
+            				system_clock::now(),
 					msg, qualifiers, parameters, issue( cause ) );
         }
 	
