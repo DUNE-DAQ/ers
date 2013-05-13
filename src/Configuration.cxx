@@ -45,9 +45,6 @@ void
 ers::Configuration::verbosity_level( int verbosity_level )
 {
     m_verbosity_level = verbosity_level;
-    std::map<std::string, std::string> parameters;
-    parameters["verbosity"] = boost::lexical_cast<std::string>( m_verbosity_level );
-    ers::StreamManager::instance().configure_all_output_streams( parameters );
 }
 
 std::ostream & 

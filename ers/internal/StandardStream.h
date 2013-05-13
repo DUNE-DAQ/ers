@@ -34,32 +34,18 @@ namespace ers
     {
         using Device::device;
         
-        StandardStream( )
-          : verbosity_( Configuration::instance().verbosity_level() )
+        StandardStream()
         { ; }
         
         StandardStream( const std::string & file_name )
-          : Device ( file_name ),
-            verbosity_( Configuration::instance().verbosity_level() )
+          : Device ( file_name )
         { ; }
         
-        virtual void write( const Issue & issue )
+        void write( const Issue & issue )
 	{
-	    println( device().stream(), issue, verbosity_ );
+	    println( device().stream(), issue, Configuration::instance().verbosity_level() );
 	    chained().write( issue );
 	}
-        
-        virtual void configure( const std::map<std::string,std::string> & config ) throw ()
-        {
-            std::map<std::string,std::string>::const_iterator it = config.find( "verbosity" );
-            if ( it != config.end() )
-            {
-            	sscanf( it->second.c_str(), "%d", &verbosity_ );
-            }
-        }
-        
-      private:
-        int verbosity_;
     };
 }
     

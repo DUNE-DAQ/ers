@@ -45,8 +45,6 @@ namespace ers
         
 	virtual void write( const Issue & issue ) = 0;	/**< \brief Sends an issue into the stream */
 	
-        virtual void configure( const std::map<std::string,std::string> & config ) throw ();	/**< \brief Configures the stream */
-      
       protected:
         OutputStream( );
                 
@@ -62,9 +60,7 @@ namespace ers
         OutputStream & operator=( const OutputStream & );
         
 	void chained( OutputStream * stream );
-        
-        void configure_stream_chain( const std::map<std::string,std::string> & config ) throw ();
-        
+                
       	std::unique_ptr<OutputStream> m_chained;
     };
 }

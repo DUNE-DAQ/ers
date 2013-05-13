@@ -278,31 +278,6 @@ ers::StreamManager::setup_stream( const std::vector<std::string> & streams )
     return main;
 }
 
-/** Configure streams for the given severity. This function will call the \c configure method on all
- *  the instances of the ERS output streams which have been configured for the given severity.
- * \param severity severity to configure 
- * \param config this object contains configuration parameters
- */
-void
-ers::StreamManager::configure_output_stream( ers::severity severity, const std::map<std::string, std::string> & config )
-{
-    ers::OutputStream & out = *m_out_streams[severity];
-    out.configure_stream_chain( config );
-}
-
-/** Configure streams for all severity levels. This function will call the \c configure method on all
- *  the instances of the ERS output streams which have been configured for the all possible severity levels.
- * \param config this object contains configuration parameters
- */
-void
-ers::StreamManager::configure_all_output_streams( const std::map<std::string, std::string> & config )
-{
-    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
-    {	
-       configure_output_stream( (ers::severity)ss, config );
-    }
-}
-
 /** Sends an Issue to an appropriate stream 
  * \param type 
  * \param issue 
