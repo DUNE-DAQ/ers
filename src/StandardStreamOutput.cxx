@@ -36,7 +36,7 @@ namespace
     }
 
     std::string timeToString( const ers::Issue & issue ) {
-        return issue.time<std::chrono::seconds>(format, isUTC);
+        return issue.time(format, isUTC);
     }
     
     std::function<std::string( const ers::Issue & issue )>

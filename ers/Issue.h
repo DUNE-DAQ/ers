@@ -108,7 +108,7 @@ namespace ers
         ers::Severity severity() const				/**< \brief severity of the issue */
 	{ return m_severity; }
         
-	template <class Precision>
+	template <class Precision=std::chrono::seconds>
         std::string time(const std::string & format = "%y-%b-%d %H:%M:%S", bool isUTC = false) const;
 
 	/**< \brief string representation of local time of the issue */
