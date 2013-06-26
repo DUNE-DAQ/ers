@@ -36,7 +36,7 @@ namespace ers
         { return type; }
         
         enum severity	type;
-        unsigned short	rank;
+        int		rank;
     };
         
     severity 	parse( const std::string & s, severity & );
