@@ -109,16 +109,16 @@ namespace ers
 	{ return m_severity; }
         
 	template <class Precision=std::chrono::seconds>
-        std::string time(const std::string & format = "%y-%b-%d %H:%M:%S", bool isUTC = false) const;
+        std::string time(const std::string & format = "%Y-%b-%d %H:%M:%S", bool isUTC = false) const;
 
 	/**< \brief string representation of local time of the issue */
         template <class Precision>
-        std::string localtime(const std::string & format = "%y-%b-%d %H:%M:%S") const
+        std::string localtime(const std::string & format = "%Y-%b-%d %H:%M:%S") const
         { return time<Precision>(format, false); }
         
 	/**< \brief string representation of UTC time of the issue */
 	template <class Precision>
-        std::string gmtime(const std::string & format = "%y-%b-%d %H:%M:%S") const
+        std::string gmtime(const std::string & format = "%Y-%b-%d %H:%M:%S") const
         { return time<Precision>(format, true); }
         
 	std::time_t time_t() const;				/**< \brief seconds since 1 Jan 1970 */
