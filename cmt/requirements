@@ -29,9 +29,9 @@ macro		ErsBaseStreams_dependencies	"ers"
 ########################################################################################################
 #       Test applications
 ########################################################################################################
-application	ers_test 			"../test/test.cxx"
-application	ers_psc				"../bin/config.cxx"
+application	ers_print_config		"../bin/config.cxx"
 application	ers_receiver 			"../test/receiver.cxx"
+application	ers_test 			"../test/test.cxx ../test/SampleIssues.cxx"
 
 macro		ers_test_dependencies		"ers" 
 macro		ers_testlinkopts		"-lers $(boost_libs)"
@@ -39,8 +39,8 @@ macro		ers_testlinkopts		"-lers $(boost_libs)"
 macro		ers_receiver_dependencies	"ers" 
 macro		ers_receiverlinkopts		"-lers $(boost_libs)"
 
-macro		ers_psc_dependencies		"ers" 
-macro		ers_psclinkopts			"-lers $(boost_libs)"
+macro		ers_print_config_dependencies	"ers" 
+macro		ers_print_configlinkopts	"-lers $(boost_libs)"
 
 macro_remove	constituents			"" \
 		ppc-rtems-rce405 		"erspy"
@@ -53,7 +53,7 @@ macro   	lib_files		"libers.so libErsBaseStreams.so liberspy.so" \
 
 apply_pattern   install_libs		files="$(lib_files)"
 
-apply_pattern   install_apps            files="ers_psc ers_receiver ers_test"
+apply_pattern   install_apps            files="ers_print_config ers_receiver ers_test"
 
 apply_pattern   install_headers         name="internal"         src_dir="../ers/internal"\
                                                                 files="*.h" \

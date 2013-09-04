@@ -12,7 +12,7 @@ namespace
 {
     const char * const SEPARATOR = ":";
     const char * const DefaultLibraryName = "ErsBaseStreams";
-    const char * const MRSStreamLibraryName = "mrsStream";
+    const char * const MRSStreamLibraryName = "mtsStreams";
     const char * const EnvironmentName = "TDAQ_ERS_STREAM_LIBS";
 }
 

@@ -23,11 +23,18 @@ struct MyIssueReceiver : public ers::IssueReceiver
 int main(int , char** )
 {
     
-    ers::StreamManager::instance().add_receiver( "mrs", "ALL", new MyIssueReceiver );
+    try {
+    	ers::StreamManager::instance().add_receiver( "mts", "*", new MyIssueReceiver );
+    }
+    catch( ers::Issue & ex ) {
+    	ers::fatal( ex );
+    	return 1;
+    }
     
     sem_t semaphore;
     sem_init( &semaphore, 0, 0 );
     sem_wait( &semaphore );
+    
     return 0; 
 }
 

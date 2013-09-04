@@ -19,7 +19,7 @@
 namespace
 {    
     const char * const format = ers::read_from_environment(
-    		"TDAQ_ERS_TIMESTAMP_FORMAT", "%y-%b-%d %H:%M:%S");
+    		"TDAQ_ERS_TIMESTAMP_FORMAT", "%Y-%b-%d %H:%M:%S");
 
     const bool isUTC = ::getenv("TDAQ_ERS_TIMESTAMP_UTC");
 
@@ -45,7 +45,7 @@ namespace
 	static std::string env =
         	::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
                 	? ::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
-                        : "";
+                        : "MILLI";
                         
 	boost::algorithm::to_upper(env);
 
