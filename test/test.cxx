@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/ExampleIssues.h>
+#include <ers/SampleIssues.h>
 #include <ers/OutputStream.h>
 #include <ers/StreamManager.h>
 

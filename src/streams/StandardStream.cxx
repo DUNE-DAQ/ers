@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <ers/ExampleIssues.h>
+#include <ers/SampleIssues.h>
 #include <ers/internal/StandardStream.h>
 #include <ers/internal/FormattedStandardStream.h>
 #include <boost/thread/mutex.hpp>

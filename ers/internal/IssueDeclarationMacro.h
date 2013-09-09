@@ -46,7 +46,7 @@
 #define	ERS_PRINT_LIST( decl, attributes ) \
 	BOOST_PP_SEQ_FOR_EACH( decl, _, attributes )
 
-#define ERS_DECLARE_ISSUE_BASE_HPP( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
+#define __ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
     class class_name : public base_class_name { \
       template <class> friend class ers::IssueRegistrator;\
@@ -78,9 +78,9 @@ namespace namespace_name { \
     }; \
 }
 
-#define ERS_DECLARE_ISSUE_BASE_CXX( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
+#define __ERS_DEFINE_ISSUE_BASE__( INLINE, namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
-    inline class_name::class_name( const ers::Context & context \
+    INLINE class_name::class_name( const ers::Context & context \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ) ) \
       : base_class_name( context ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ) ) \
@@ -89,7 +89,7 @@ namespace namespace_name { \
       BOOST_PP_EXPR_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY message ) ), ERS_SET_MESSAGE( ERS_EMPTY message ) )\
     } \
     \
-    inline class_name::class_name( const ers::Context & context, \
+    INLINE class_name::class_name( const ers::Context & context, \
 		const std::string & msg \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ) ) \
@@ -98,7 +98,7 @@ namespace namespace_name { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
     } \
     \
-    inline class_name::class_name( const ers::Context & context, \
+    INLINE class_name::class_name( const ers::Context & context, \
 		const std::string & msg \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
@@ -107,7 +107,7 @@ namespace namespace_name { \
     { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
     } \
-    inline class_name::class_name( const ers::Context & context \
+    INLINE class_name::class_name( const ers::Context & context \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
 		const std::exception & cause ) \
@@ -121,16 +121,22 @@ namespace { \
     ers::IssueRegistrator<namespace_name::class_name> namespace_name##_##class_name##_instance; \
 }
 
+#define ERS_DECLARE_ISSUE_BASE_HPP( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
+	__ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, base_class_name, ERS_EMPTY message, ERS_EMPTY base_attributes, ERS_EMPTY attributes )
+
+#define ERS_DEFINE_ISSUE_BASE_CXX( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
+	__ERS_DEFINE_ISSUE_BASE__( ERS_EMPTY, namespace_name, class_name, base_class_name, ERS_EMPTY message, ERS_EMPTY base_attributes, ERS_EMPTY attributes )
+
 #define ERS_DECLARE_ISSUE_HPP( namespace_name, class_name, message, attributes ) \
 	ERS_DECLARE_ISSUE_BASE_HPP( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, ERS_EMPTY attributes )
 
-#define ERS_DECLARE_ISSUE_CXX( namespace_name, class_name, message, attributes ) \
-	ERS_DECLARE_ISSUE_BASE_CXX( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, ERS_EMPTY attributes )
+#define ERS_DEFINE_ISSUE_CXX( namespace_name, class_name, message, attributes ) \
+	ERS_DEFINE_ISSUE_BASE_CXX( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, ERS_EMPTY attributes )
 
 #define ERS_DECLARE_ISSUE_BASE( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
-	ERS_DECLARE_ISSUE_BASE_HPP( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
-        ERS_DECLARE_ISSUE_BASE_CXX( namespace_name, class_name, base_class_name, message, base_attributes, attributes )
+	__ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
+        __ERS_DEFINE_ISSUE_BASE__( inline, namespace_name, class_name, base_class_name, message, base_attributes, attributes )
 
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
-	ERS_DECLARE_ISSUE_HPP( namespace_name, class_name, message, attributes ) \
-        ERS_DECLARE_ISSUE_CXX( namespace_name, class_name, message, attributes )
+	__ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, attributes ) \
+        __ERS_DEFINE_ISSUE_BASE__( inline, namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, attributes )

@@ -8,7 +8,7 @@
  */
 
 #include <ers/InputStream.h>
-#include <ers/ExampleIssues.h>
+#include <ers/SampleIssues.h>
 #include <ers/ers.h>
 #include <semaphore.h>
 

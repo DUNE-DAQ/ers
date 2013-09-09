@@ -54,13 +54,13 @@ namespace ers
       *  as key - value paris (both strings).
       *  The object contains utility methods to allow the manipulation of those key / values and
       *  code to insert common values into it, like time, compilation information, host information etc.
-      *  For an example of how to build an actual subclass of issue look at the source of ExampleIssue.
+      *  For an example of how to build an actual subclass of issue look at the source at SampleIssues.h.
       *  \author Matthias Wiesmann
       *  \version 1.1
       *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that
       *  correctly implement the factory methods required by the IssueFactory class
       *  \see ers::IssueFactory
-      *  \see ExampleIssue
+      *  \see SampleIssues.h
       *  \brief Root Issue class
       */
     

@@ -31,7 +31,7 @@ macro		ErsBaseStreams_dependencies	"ers"
 ########################################################################################################
 application	ers_print_config		"../bin/config.cxx"
 application	ers_receiver 			"../test/receiver.cxx"
-application	ers_test 			"../test/test.cxx ../test/SampleIssues.cxx"
+application	ers_test 			"../test/test.cxx"
 
 macro		ers_test_dependencies		"ers" 
 macro		ers_testlinkopts		"-lers $(boost_libs)"

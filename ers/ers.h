@@ -346,7 +346,7 @@ if ( ers::debug_level() >= level ) \
     }
   \endcode
   \see ers::Issue 
-  \see ExampleIssues.h
+  \see SampleIssues.h
 
   The macro ERS_DECLARE_ISSUE_BASE has to be used in case one wants to declare the issue class,
   which inherits from one of the issue classes declared with either this or ERS_DECLARE_ISSUE
@@ -414,11 +414,11 @@ if ( ers::debug_level() >= level ) \
   Functions, which can throw exceptions must be invoked inside the \c try...catch statement. The
   following example shows how one can handle ERS exceptions.
   First of all one has to declare once all the possible exceptions:
-  \see ExampleIssues.h
+  \see SampleIssues.h
  
   
   \code
-    #include <ers/ExampleIssues.h>
+    #include <ers/SampleIssues.h>
     
     ...
     
