@@ -11,6 +11,8 @@
 #ifndef ERS_ISSUE_H
 #define ERS_ISSUE_H
 
+#include <math.h>
+
 #include <map>
 #include <string>
 #include <iostream>
@@ -205,6 +207,8 @@ template <class Precision>
 std::string 
 ers::Issue::time(const std::string & format, bool isUTC) const
 {
+    static const int width(::log10(Precision::period::den));
+    
     std::time_t t = time_t();
     std::tm tm = isUTC ? *gmtime_r(&t, &tm) : *localtime_r(&t, &tm);
 
@@ -215,7 +219,7 @@ ers::Issue::time(const std::string & format, bool isUTC) const
 			m_time.time_since_epoch()).count();
     double frac = c - (double)t*Precision::period::den;
     if (frac)
-	sprintf(buff+strlen(buff), ",%.0f", frac);
+	sprintf(buff+strlen(buff), ",%0*.0f", width, frac);
 
     return buff;
 }
