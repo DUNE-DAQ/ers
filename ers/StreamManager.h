@@ -10,6 +10,8 @@
 #ifndef ERS_STREAM_MANAGER_H
 #define ERS_STREAM_MANAGER_H
 
+#include <initializer_list>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
@@ -81,6 +83,10 @@ namespace ers
 
         void add_receiver(	const std::string & stream,
         			const std::string & filter,
+                                ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
+	
+        void add_receiver(	const std::string & stream,
+        			const std::initializer_list<std::string> & params,
                                 ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
 	
         void remove_receiver( ers::IssueReceiver * receiver );

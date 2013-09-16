@@ -83,12 +83,28 @@ ers::StreamFactory::create_out_stream( const std::string & format ) const
   * For some streams parameters can be ommitted. 
   * For instance to write to the error stream, the key is: 
   * \c stderr
-  * \param format the format, which describes new stream
+  * \param param parameter to be passed to the new stream constructor
   * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
   */
 ers::InputStream *
 ers::StreamFactory::create_in_stream(	const std::string & stream, 
-        				const std::string & filter ) const
+        				const std::string & param ) const
+{
+    return create_in_stream( stream, { param } );
+}
+
+/** Builds a stream from a textual key 
+  * The key should have the format \c stream_name[(stream_parameters)]
+  * For some streams parameters can be ommitted. 
+  * For instance to write to the error stream, the key is: 
+  * \c stderr
+  * \param params parameters to be passed to the new stream constructor
+  * \note the stream is allocated on the heap, it is the caller's responsibility to delete it.
+  */
+ers::InputStream *
+ers::StreamFactory::create_in_stream(	
+	const std::string & stream, 
+	const std::initializer_list<std::string> & params ) const
 {
     InFunctionMap::const_iterator it = m_in_factories.find( stream );
     
@@ -96,7 +112,7 @@ ers::StreamFactory::create_in_stream(	const std::string & stream,
     {
 	try
         {
-            return it->second( filter );
+            return it->second( params );
         }
         catch( ers::Issue & issue )
         {

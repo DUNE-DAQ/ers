@@ -200,6 +200,18 @@ ers::StreamManager::add_receiver( const std::string & stream,
     m_in_streams.push_back( boost::shared_ptr<InputStream>( in ) );
 }
 
+void 
+ers::StreamManager::add_receiver( const std::string & stream,
+				  const std::initializer_list<std::string> & params,
+				  ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat )
+{
+    InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, params );
+    in->set_receiver( receiver );
+    
+    boost::mutex::scoped_lock lock( m_mutex );
+    m_in_streams.push_back( boost::shared_ptr<InputStream>( in ) );
+}
+
 void
 ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
 {

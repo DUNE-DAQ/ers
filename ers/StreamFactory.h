@@ -50,7 +50,7 @@ namespace ers
 	friend std::ostream & operator<<( std::ostream &, const ers::StreamFactory & );
 	template <class > friend class SingletonCreator;
         
-        typedef ers::InputStream *  (*InputStreamCreator) ( const std::string & format );
+        typedef ers::InputStream * (*InputStreamCreator) ( const std::initializer_list<std::string> & params );
         typedef ers::OutputStream * (*OutputStreamCreator)( const std::string & format );
               
       public:
@@ -65,6 +65,9 @@ namespace ers
 	
         InputStream * create_in_stream( const std::string & stream, 
         				const std::string & filter ) const;	/**< \brief create new stream */
+	
+        InputStream * create_in_stream( const std::string & stream, 
+		const std::initializer_list<std::string> & params ) const;	/**< \brief create new stream */
 	
         OutputStream * create_out_stream( const std::string & format ) const;	/**< \brief create new stream */
 	

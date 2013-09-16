@@ -64,14 +64,14 @@ namespace ers
 
 #include <ers/StreamFactory.h>
 
-#define ERS_REGISTER_INPUT_STREAM( class, name, param ) \
+#define ERS_REGISTER_INPUT_STREAM( class, name, params ) \
 namespace { \
     struct InputStreamRegistrator { \
-	static ers::InputStream * create( const std::string & param ) \
-	{ return new class( param ); }  \
+	static ers::InputStream * create( const std::initializer_list<std::string> & params ) \
+	{ return new class( params ); }  \
         InputStreamRegistrator() \
 	{ ers::StreamFactory::instance().register_in_stream( name, create ); } \
-    } registrator; \
+    } registrator_mp; \
 }
 
 #endif
