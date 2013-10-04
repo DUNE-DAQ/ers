@@ -97,7 +97,14 @@ class Message( Issue ):
     def __init__( self, msg ):
     	Issue.__init__( self, msg, {}, None )
 
-import liberspy
+if sys.platform == 'linux2':
+    import DLFCN
+    flags = sys.getdlopenflags()
+    sys.setdlopenflags( flags | DLFCN.RTLD_GLOBAL )
+    import liberspy
+    sys.setdlopenflags( flags )
+else:
+    import liberspy
 liberspy.init( Issue )        
                   
 def debug( lvl, msg ):
