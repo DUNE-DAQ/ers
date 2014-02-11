@@ -572,6 +572,59 @@ if ( ers::debug_level() >= level ) \
   Note that the error handling catcher can be set only once for the lifetime of an application. 
   An attempt to set it again will fail and the ers::IssueCatcherAlreadySet will be thrown.
   
+  \section Receiving issues across application boundaries
+  There is an implementation of ERS input and output streams which allows to subscribe and receive messages
+  across application boundaries, i.e. one process may get ERS messages produces by others. ERS provides API
+  for setting up and removing a subscription. This API requires mentioning the name of the cross-boundaries
+  streams implementation, which is called "mts". A code to set up ERS subscription may look like:
+  
+  \code
+    #include <ers/InputStream.h>
+    #include <ers/ers.h>
+    
+    struct MyIssueReceiver : public ers::IssueReceiver
+    {
+	void receive( const ers::Issue & issue ) {
+	    std::cout << issue << std::endl;
+	}
+    };
+
+    MyIssueReceiver * receiver = new MyIssueReceiver;
+    try {
+	ers::StreamManager::instance().add_receiver( "mts", "*", receiver );
+    }
+    catch( ers::Issue & ex ) {
+	ers::fatal( ex );
+    }
+  \endcode
+  
+  This application will be getting all messages which are configured to be sent to the "mts" stream
+  from all applications working in the TDAQ partition which is given via the TDAQ_PARTITION environment
+  variable. Alternatively one may pass partition name via the "mts" stream parameters list:
+  
+  \code
+    std::string partition_name = ... // intitialize it to a desired name
+    MyIssueReceiver * receiver = new MyIssueReceiver;
+    try {
+	ers::StreamManager::instance().add_receiver( "mts", {partition_name, "*"}, receiver );
+    }
+    catch( ers::Issue & ex ) {
+	ers::fatal( ex );
+    }
+  \endcode
+  
+  One can also cancel a previously made subscription be calling the remove_receiver function and giving it a pointer to 
+  the receiver object, e.g.:
+  
+  \code
+    try {
+	ers::StreamManager::instance().remove_receiver( receiver );
+    }
+    catch( ers::Issue & ex ) {
+	ers::fatal( ex );
+    }
+  \endcode
+  
   \section ERS_HERE ERS_HERE macro
   The macro ERS_HERE is used to insert all the context information to an ers issue. 
   When constructing an issue one should always give the macro ERS_HERE as a first parameter. 
