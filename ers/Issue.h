@@ -83,7 +83,7 @@ namespace ers
 	
 	Issue( const Issue & other );
 	      
-	virtual ~Issue() throw();
+	virtual ~Issue() noexcept;
 	
 	virtual Issue * clone() const = 0;
 	
@@ -129,7 +129,7 @@ namespace ers
 	const system_clock::time_point & ptime() const		/**< \brief original time point of the issue */
 	{ return m_time; }
         
-        const char * what() const throw()			/**< \brief General cause of the issue. */
+        const char * what() const noexcept			/**< \brief General cause of the issue. */
 	{ return m_message.c_str(); }
         
 	ers::Severity set_severity( ers::Severity severity ) const;
