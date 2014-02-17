@@ -51,7 +51,7 @@ class Context( object ):
         self.thread_id = thread.get_ident()
         self.user_id = os.getuid()
         self.user_name = getpass.getuser()
-        self.application_name = os.getenv( "TDAQ_APPLICATION", "Undefined" )
+        self.application_name = os.getenv( "TDAQ_APPLICATION_NAME", "Undefined" )
                 
 class Issue( Exception ):
     "base class for ERS exceptions"    
