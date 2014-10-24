@@ -93,7 +93,7 @@ class Issue( Exception ):
         return self.message
 
 class Message( Issue ):
-    "this is wrapper for string mesages to be sent to debug, log and info streams"
+    "this is wrapper for string message to be sent to debug, log and info streams"
     def __init__( self, msg ):
     	Issue.__init__( self, msg, {}, None )
 
@@ -150,7 +150,7 @@ class LoggingHandler( logging.Handler ) :
         if isinstance( record.msg, Issue ):
             self.severity_mapper[record.levelname]( record.msg )
         else:
-            msg = Message( record.msg )
+            msg = Message( record.msg % record.args )
 	    msg.context.function_name = record.funcName;
 	    msg.context.file_name = record.filename
 	    msg.context.line_number = record.lineno
