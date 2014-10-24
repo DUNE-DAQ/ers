@@ -48,11 +48,12 @@ class Test:
         raise PermissionDenied( )
             
 def test_function( arg1, arg2 ):
-    logger.debug('This is a debug message')
-    logger.info('This is an info message')
-    logger.warning('This is a warning message')
-    logger.error('This is an error message')
-    logger.critical('This is a critical error message')
+    format = 'This is a %s message #%d'
+    logger.debug(format, 'debug', 1 )
+    logger.info(format, 'info', 2 )
+    logger.warning(format, 'warning', 3 )
+    logger.error(format, 'error', 4 )
+    logger.critical(format, 'critical', 5 )
     try:
         t = Test( )
         t.method( )
