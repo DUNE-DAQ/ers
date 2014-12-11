@@ -11,7 +11,7 @@
 /** \file ers.h This file defines the main functions and macros for ERS.
   * It also includes the main headers of the Error Reporting System and
   * contains the doxygen code to generate the general package documentation. 
-  * \author Matthias Wiesmann
+  * \author Serguei Kolos
   * \version 1.1 Removed dependency on System package
   * \brief ers header and documentation file 
   */
@@ -51,7 +51,7 @@ namespace ers
      *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
      *	\param issue the issue to be reported
      *	\return pointer to the handler object, which allows to remove the catcher by just destroying this object.
-     *			If an applications ignores this return value there will no way of deinstalling the issue catcher.
+     *			If an applications ignores this return value there will no way of de installing the issue catcher.
      *	\throw ers::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
      *	\see ers::error()
      *	\see ers::fatal()
@@ -197,16 +197,16 @@ if ( ers::debug_level() >= level ) \
   is defined by the implementation of the ers::fatal stream, which can be configured by the user:
   \li ERS_ASSERT( expression ) checks whether a given expression is valid. 
   \li ERS_PRECONDITION( expression ) should be used to check condition when entering functions.
-  For instance if you only accept certain values for parameters precondtions should verify that
-  those conditions are resepected. 
+  For instance if you only accept certain values for parameters pre-conditions should verify that
+  those conditions are respected.
   \li ERS_RANGE_CHECK( min, val, max ) is a special type of pre-condition, which checks that a value
   is in a range between min and max values. 
   \li ERS_STRICT_RANGE_CHECK( min, val, max ) is similar to the ERS_RANGE_CHECK
   but does not allow the checked value to be equal to either min or max values. 
 
   All macros create an object of the ers::Assertion class( which inherits ers::Issue) 
-  and send it to the ers::fatal stream. Futher processing depends on the configuration of the
-  ers::fatal stream. By default the issue is pronted to the standard error stream and then abort
+  and send it to the ers::fatal stream. Further processing depends on the configuration of the
+  ers::fatal stream. By default the issue is printed to the standard error stream and then abort
   function is called.
   \note All These macro are defined to empty statement if the \c ERS_NO_DEBUG macro is defined at compilation time.
 
@@ -226,14 +226,14 @@ if ( ers::debug_level() >= level ) \
   \code ERS_DEBUG( 1, "test debug output " << 123 << " which shows how to use debug macro" )
   \endcode
   
-  The actual behaviour of these macros depends on the configuration of respective streams. 
+  The actual behavior of these macros depends on the configuration of respective streams.
   Debug macros with levels larger than 0 can be disabled at run-time by defining the
   TDAQ_ERS_DEBUG_LEVEL environment variable to the highest possible debug level.
   For instance, if TDAQ_ERS_DEBUG_LEVEL is set to N, then ERS_DEBUG( M, ... ) where M > N
   will not be processed. The default value for the TDAQ_ERS_DEBUG_LEVEL is 0.
 
   The amount of information, which is printed for any issue depends on the ERS verbosity level,
-  which is set to 0 by default. In this case the follwing infomation is reported for any issue:
+  which is set to 0 by default. In this case the following information is reported for any issue:
   \li severity
   \li time
   \li context, which includes package name, file name, function name, line number etc.
@@ -243,7 +243,7 @@ if ( ers::debug_level() >= level ) \
   \code > export TDAQ_ERS_VERBOSITY_LEVEL=N \endcode
   where N is any positive integer or zero.
   
-  \li For N > 0 th following infomation the issue attributes names and values are reported in addition
+  \li For N > 0 th following information the issue attributes names and values are reported in addition
   to the 0-level data
   
   \li For N > 1 the following data is added:
@@ -260,7 +260,7 @@ if ( ers::debug_level() >= level ) \
   are instances of classes, which inherit the ers::Issue one, ERS offers different advantages in their
   handling:
   \li a possibility to report such exceptions to different streams
-  \li a possibility to use chaines of exceptions in order to keep as much as possible infomation
+  \li a possibility to use chains of exceptions in order to keep as much as possible information
   	about the issue, which has happened.
   \li a unified output operator, which can be used to print exceptions
   
@@ -285,7 +285,7 @@ if ( ers::debug_level() >= level ) \
   Note that attribute names may appear in the message expression. Also notice a special
   syntax of the attributes declaration, which must always be declared like \c ((attribute_type)attribute_name).
   All the brackets in this expression are essential. Do not put commas between different attributes.
-  The only requiremnt to the type of issue attributes is that such type must define the output 
+  The only requirement to the type of issue attributes is that such type must define the output
   operator to the standard C++ output stream and the input operator from the standard C++ input
   stream. It is important to note that these operator must  unambiguously match each other, i.e.
   the input operator must be able to unambiguously restore the state of the object from the stream,
@@ -305,8 +305,6 @@ if ( ers::debug_level() >= level ) \
             virtual ers::Issue * clone() const { return new ers::Assertion( *this ); }
             
           public:
-            virtual ~Assertion() throw( ) { ; }
-            
             Assertion( const ers::Context & context , const char * condition , const char * reason )
               : ers::Issue( context ) {
               	set_value( "condition", condition );
@@ -378,8 +376,6 @@ if ( ers::debug_level() >= level ) \
             virtual ers::Issue * clone() const { return new ers::Precondition( *this ); }
             
           public:
-            virtual ~Precondition() throw( ) { ; }
-
             Precondition( const ers::Context & context , const char * condition , const char * reason, const char * location )
               : ers::Assertion( context, condition, reason ) {
               	set_value( "location", location );
@@ -459,7 +455,7 @@ if ( ers::debug_level() >= level ) \
   
   \section StreamConfig Configuring Streams
   The ERS system use the abstraction of streams to handle issues. 
-  Conceptualy, a stream is simply an object that can the user can use to send (or receive) Issues. 
+  Conceptually, a stream is simply an object that can the user can use to send (or receive) Issues.
   Several streams can be associated with each severity level. If there is more then one stream
   defined for a certain severity then every issue will be passed sequentially to all of those
   streams. In the current ERS version the default configuration of the ERS streams looks like:
@@ -514,14 +510,14 @@ if ( ers::debug_level() >= level ) \
   \endcode
   Here the first parameter is the name of the class which implements the stream, the second one is the name 
   of the stream which can be used for configuring ERS output (this is the name which one can put to the 
-  TDAQ_ERS_<SEVERITY> environment variables) and the last one is a placeholder for the parameter of the 
+  TDAQ_ERS_<SEVERITY> environment variables) and the last one is a place holder for the parameter of the
   stream class constructor. If the constructor of your custom stream does not require parameters then you 
   should leave the last field empty.
 
   \subsection UsingCustomStream Using custom stream
   In order to use a custom stream one has to build a library out of the class which implements this stream 
   and then tell to ERS the name of that library by setting it to the TDAQ_ERS_STREAM_LIBS environment variable. 
-  For example if one sets this varibale to the following value:
+  For example if one sets this variable to the following value:
   \code
   export  TDAQ_ERS_STREAM_LIBS=MyCustomFilter
   \endcode
@@ -603,7 +599,7 @@ if ( ers::debug_level() >= level ) \
   variable. Alternatively one may pass partition name via the "mts" stream parameters list:
   
   \code
-    std::string partition_name = ... // intitialize it to a desired name
+    std::string partition_name = ... // initialize it to a desired name
     MyIssueReceiver * receiver = new MyIssueReceiver;
     try {
 	ers::StreamManager::instance().add_receiver( "mts", {partition_name, "*"}, receiver );
