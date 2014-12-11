@@ -68,14 +68,6 @@ namespace
 	}
 	return buf.c_str();
     }
-    
-    const char * get_app_name()
-    {
-	static const char * const env = ::getenv( "TDAQ_APPLICATION_NAME" ) 
-        		? ::getenv( "TDAQ_APPLICATION_NAME" ) 
-                        : "Undefined";
-	return env;
-    }
 }
 
 
@@ -96,9 +88,20 @@ ers::LocalContext::LocalContext(
 #endif
 { ; }
 
-const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(), 
-							 	getpid(),
+const char *
+ers::LocalContext::application_name() const
+{
+    static int pid = ::getpid();
+    static const char * env = ::getenv( "TDAQ_APPLICATION_NAME" ) ? ::getenv( "TDAQ_APPLICATION_NAME" ) : "Undefined";
+
+    if (pid != ::getpid()) {
+    	pid = ::getpid();
+	env = ::getenv( "TDAQ_APPLICATION_NAME" ) ? ::getenv( "TDAQ_APPLICATION_NAME" ) : "Undefined";
+    }
+    return env;
+}
+
+const ers::LocalProcessContext	ers::LocalContext::c_process(	get_host_name(),
                                                 	 	get_cwd(), 
                                                 	 	geteuid(), 
-                                                	 	get_user_name(),
-                                                                get_app_name() );
+                                                	 	get_user_name());

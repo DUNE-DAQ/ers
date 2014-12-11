@@ -17,7 +17,7 @@
 
 #include <ers/Context.h>
 
-#ifdef TDAQ_PACKAGE_NAME
+#ifdef  TDAQ_PACKAGE_NAME
 #define ERS_PACKAGE TDAQ_PACKAGE_NAME
 #else
 #define ERS_PACKAGE "unknown"
@@ -28,25 +28,19 @@ namespace ers
     struct LocalProcessContext
     {
 	LocalProcessContext(	const char * const host_name,
-				int pid,
 				const char * const cwd,
 				int uid,
-				const char * const uname,
-                                const char * const app_name )
+				const char * const uname )
 	  : m_host_name( host_name ),
-            m_pid( pid ),
             m_cwd( cwd ),
             m_uid( uid ),
-            m_uname( uname ),
-            m_app_name( app_name )
+            m_uname( uname )
         { ; }
         
 	const char * const	m_host_name;	/**< host name */
-	const pid_t 		m_pid;		/**< process id */
 	const char * const	m_cwd;		/**< process cwd */
 	const int		m_uid;		/**< user id */
 	const char * const	m_uname;	/**< user name */
-	const char * const	m_app_name;	/**< application name */
     };
     
     class LocalContext : public Context
@@ -89,7 +83,7 @@ namespace ers
         { return m_package_name; }
         
         pid_t process_id() const			/**< \return process id */
-        { return c_process.m_pid; }
+        { return ::getpid(); }
         
         pid_t thread_id() const				/**< \return thread id */
         { return m_thread_id; }
@@ -106,8 +100,9 @@ namespace ers
         const char * user_name() const			/**< \return user name */
         { return c_process.m_uname; }
 
-        const char * application_name() const		/**< \return application name */
-        { return c_process.m_app_name; }
+        const char * application_name() const;		/**< \return application name */
+
+        static void resetProcessContext();
 
       private:
         static const LocalProcessContext	c_process;

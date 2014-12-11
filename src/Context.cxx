@@ -76,7 +76,7 @@ ers::Context::stack( ) const
     char ** symbols = backtrace_symbols( (void**)stack_symbols(), stack_size() );
     
     //////////////////////////////////////////////////////////////////
-    // This stack frame is compiler dependant,
+    // This stack frame is compiler dependent,
     // For GCC the last frame contains some garbage
     //////////////////////////////////////////////////////////////////
     for (int i = 0; i < stack_size() - 1; i++)
