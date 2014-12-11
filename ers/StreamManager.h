@@ -83,11 +83,11 @@ namespace ers
 
         void add_receiver(	const std::string & stream,
         			const std::string & filter,
-                                ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
+                                ers::IssueReceiver * receiver );
 	
         void add_receiver(	const std::string & stream,
         			const std::initializer_list<std::string> & params,
-                                ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat );
+                                ers::IssueReceiver * receiver );
 	
         void remove_receiver( ers::IssueReceiver * receiver );
 	

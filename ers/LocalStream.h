@@ -55,7 +55,7 @@ namespace ers
         //! returns the singleton
         static LocalStream & instance();
 
-	//! sets local issue interceptor
+	//! sets local issue intercepter
 	IssueCatcherHandler * set_issue_catcher( 
         			const boost::function<void ( const ers::Issue & )> & catcher )
 			throw ( ers::IssueCatcherAlreadySet );

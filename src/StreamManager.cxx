@@ -97,6 +97,8 @@ namespace
 
 namespace ers
 {
+    // Performs lazy srteam initialization. Stream instances are created 
+    // at the first attempt of writing to the stream
     class StreamInitializer : public ers::OutputStream
     {
 	public:
@@ -177,7 +179,8 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
     if ( head && !head->isNull() )
     {
 	OutputStream * parent = head.get();
-        for ( OutputStream * stream = parent; !stream->isNull(); parent = stream, stream = &parent->chained() )
+        for ( OutputStream * stream = parent; !stream->isNull(); parent = stream, 
+        	stream = &parent->chained() )
             ;
                  
 	parent->chained( new_stream );
@@ -191,7 +194,7 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
 void
 ers::StreamManager::add_receiver( const std::string & stream,
 				  const std::string & filter,
-                                  ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat )
+                                  ers::IssueReceiver * receiver )
 {
     InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
     in->set_receiver( receiver );
@@ -203,7 +206,7 @@ ers::StreamManager::add_receiver( const std::string & stream,
 void 
 ers::StreamManager::add_receiver( const std::string & stream,
 				  const std::initializer_list<std::string> & params,
-				  ers::IssueReceiver * receiver ) throw ( ers::InvalidFormat )
+				  ers::IssueReceiver * receiver )
 {
     InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, params );
     in->set_receiver( receiver );
@@ -216,7 +219,8 @@ void
 ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
 {
     boost::mutex::scoped_lock lock( m_mutex );
-    for( std::list<boost::shared_ptr<InputStream> >::iterator it = m_in_streams.begin(); it != m_in_streams.end(); )
+    for( std::list<boost::shared_ptr<InputStream> >::iterator it = m_in_streams.begin(); 
+    	it != m_in_streams.end(); )
     {	
         if ( (*it) -> m_receiver == receiver )
             m_in_streams.erase( it++ );
@@ -252,7 +256,8 @@ ers::StreamManager::setup_stream( ers::severity severity )
         }
 	catch ( ers::BadConfiguration & ex )
 	{
-	    ERS_INTERNAL_ERROR( "Can not configure the \"" << severity << "\" stream because of the following issue {" << ex << "}" );
+	    ERS_INTERNAL_ERROR( "Can not configure the \"" << severity 
+            	<< "\" stream because of the following issue {" << ex << "}" );
 	}
     }   
     return ( main ? main : new ers::NullStream() );
@@ -367,7 +372,8 @@ ers::operator<<( std::ostream & out, const ers::StreamManager & )
 {
     for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-	out << (ers::severity)ss << "\t\"" << get_stream_description( (ers::severity)ss ) << "\"" << std::endl;
+	out << (ers::severity)ss << "\t\"" 
+        	<< get_stream_description( (ers::severity)ss ) << "\"" << std::endl;
     }
     return out;
 }
