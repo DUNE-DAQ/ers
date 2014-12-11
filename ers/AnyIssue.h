@@ -40,7 +40,7 @@ namespace ers
             m_type( type ) 
 	{ ; }
         
-        ~AnyIssue() throw() { ; }
+        ~AnyIssue() noexcept { ; }
         
         virtual ers::Issue * clone() const
         { return new AnyIssue( *this ); }
