@@ -26,15 +26,19 @@ namespace
 	PyTuple_SetItem( args, 1, PyDict_New() );
     	if ( !ex.cause() )
         {
-	    PyTuple_SetItem( args, 2, Py_None );
+    	    Py_INCREF( Py_None );
+    	    PyTuple_SetItem( args, 2, Py_None );
         }
 	else
 	{
 	    PyObject * t = 0;
             PyTuple_SetItem( args, 2, to_python( t, *ex.cause() ) );
+            Py_DECREF( t );
         }
 
         PyObject * e = PyObject_CallObject( custom_ex_type, args );
+        Py_DECREF( args );
+
         PyObject_SetAttrString( e, "severity", PyInt_FromLong((ers::severity)ex.severity()) );
         
         const std::vector<std::string> & q = ex.qualifiers();
@@ -69,6 +73,7 @@ namespace
         PyObject * t = 0;
         PyObject * e = to_python( t, ex );
         PyErr_SetObject( t, e );
+        Py_DECREF( t );
     }
 
     void 
