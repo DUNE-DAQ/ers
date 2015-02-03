@@ -40,9 +40,12 @@ class Context( object ):
         			 and self.stack[0].f_locals['self'].__class__.__name__ + '.'\
                                  or ''
 
-        self.function_name =	class_name() \
-        			+ self.stack[0].f_code.co_name \
-                                + inspect.formatargvalues( *inspect.getargvalues(self.stack[0]) );
+        self.function_name = class_name() + self.stack[0].f_code.co_name;
+	try:
+	    self.function_name += inspect.formatargvalues( *inspect.getargvalues(self.stack[0]) )
+	except Exception as exx:
+	    self.function_name += '(...)'
+		
 	self.file_name = self.stack[0].f_code.co_filename
         self.line_number = self.stack[0].f_lineno
         self.host_name = platform.node()
