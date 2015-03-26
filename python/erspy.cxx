@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
@@ -85,7 +87,10 @@ namespace
     ers::Issue * 
     issue( PyObject * o )
     {
-        std::string id	= PyString_AsString( 
+        if (!o)
+            return 0;
+
+	std::string id	= PyString_AsString(
         			PyObject_GetAttrString( 
                                 	PyObject_Type( o ), "__name__" ) );
 	
@@ -107,16 +112,32 @@ namespace
                             PyString_AsString( PyObject_GetAttrString( c, "application_name" ) ) ) );
                 
         PyObject * cause = PyObject_GetAttrString( o, "cause" );
-        if ( cause != Py_None )
-        {
-	    std::vector<std::string> qualifiers;
-	    std::map<std::string, std::string> parameters;
-	    return new ers::AnyIssue( id, ers::Error, context, 
-            				system_clock::now(),
-					msg, qualifiers, parameters, issue( cause ) );
+
+        std::vector<std::string> qualifiers;
+        PyObject * q = PyObject_GetAttrString( o, "qualifiers" );
+        int size = PyList_Size( q );
+        for (int i = 0; i < size; ++i ) {
+            qualifiers.push_back(PyString_AsString(PyList_GetItem(q, i)));
         }
-	
-        return new ers::AnyIssue( id, context, msg );
+
+	std::map<std::string, std::string> parameters;
+        PyObject * items = PyDict_Items(PyObject_GetAttrString(o, "parameters"));
+        size = PyList_Size( items );
+        for (int i = 0; i < size; ++i ) {
+            PyObject * item = PyList_GetItem(items, i);
+            parameters.insert( std::make_pair(
+        	PyString_AsString(PyTuple_GetItem(item, 0)),
+        	PyString_AsString(PyTuple_GetItem(item, 1))
+        	));
+        }
+
+	double t = PyFloat_AsDouble( PyObject_GetAttrString( o, "time" ) );
+	std::chrono::system_clock::time_point
+	    time(std::chrono::nanoseconds(static_cast<int64_t>(t*1000000000.)));
+
+	return new ers::AnyIssue( id, ers::Error, context, time, msg,
+				    qualifiers, parameters,
+				    cause != Py_None ? issue( cause ) : 0 );
     }
     
     void

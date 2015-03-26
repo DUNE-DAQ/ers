@@ -68,12 +68,17 @@ class Issue( Exception ):
         self.cause = cause
         self.__context = Context( self )
         self.qualifiers = [ self.__context.package_name ]
+	self.__parameters = dict([ (str(k), str(v)) for (k,v) in kwargs.items() ])
         self.__dict__.update( kwargs )
-    
+        
     @property
     def context( self ):
         return self.__context
             
+    @property
+    def parameters( self ):
+	return self.__parameters
+                    
     def isInstanceOf( self, cname ):
             return self.__class__.__name__ == cname and True or False
         
@@ -141,10 +146,10 @@ def fatal( issue ):
     liberspy.fatal( issue )
 
 class LoggingHandler( logging.Handler ) :
-    severity_mapper = { logging.getLevelName( logging.DEBUG )        : lambda m: debug( 0, m ),
-                        logging.getLevelName( logging.INFO )        : info,
-                        logging.getLevelName( logging.WARNING )        : warning,
-                        logging.getLevelName( logging.ERROR )        : error,
+    severity_mapper = { logging.getLevelName( logging.DEBUG )   : lambda m: debug( 0, m ),
+                        logging.getLevelName( logging.INFO )    : info,
+                        logging.getLevelName( logging.WARNING ) : warning,
+                        logging.getLevelName( logging.ERROR )   : error,
                         logging.getLevelName( logging.CRITICAL ): fatal }
     def __init__(self):
         logging.Handler.__init__(self)
