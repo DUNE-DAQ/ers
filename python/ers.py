@@ -68,7 +68,7 @@ class Issue( Exception ):
         self.cause = cause
         self.__context = Context( self )
         self.qualifiers = [ self.__context.package_name ]
-	self.__parameters = dict([ (str(k), str(v)) for (k,v) in kwargs.items() ])
+        self.__parameters = dict([ (str(k), str(v)) for (k,v) in kwargs.items() ])
         self.__dict__.update( kwargs )
         
     @property
@@ -77,7 +77,7 @@ class Issue( Exception ):
             
     @property
     def parameters( self ):
-	return self.__parameters
+        return self.__parameters
                     
     def isInstanceOf( self, cname ):
             return self.__class__.__name__ == cname and True or False
