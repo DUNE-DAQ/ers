@@ -20,7 +20,7 @@ void pass( int step )
 {
     ERS_RANGE_CHECK( 0, step, 8 );
     
-    ERS_DEBUG( 0, "performing step #" << step )
+    ERS_DEBUG( 0, "performing step #" << step );
     switch ( step )
     {
     	case 1:
@@ -70,14 +70,14 @@ void pass( int step )
 
 void test_function( int index )
 {
-    ERS_LOG( "starting thread #" << index )
+    ERS_LOG( "starting thread #" << index );
     sleep( 1 );
     ers::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
     sleep( 1 );
     ers::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
     sleep( 1 );
     ers::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
-    ERS_LOG( "finishing thread #" << index )
+    ERS_LOG( "finishing thread #" << index );
 }
 
 struct IssueCatcher
@@ -162,7 +162,7 @@ int main(int , char** )
 	}
 	catch ( ers::Issue & ex )
 	{
-	    ERS_DEBUG( 0, "Unknown issue caught: " << ex )
+	    ERS_DEBUG( 0, "Unknown issue caught: " << ex );
             ers::error( ex );
 	}
 	catch ( std::exception & ex )

@@ -133,28 +133,28 @@ ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
  * if level is less or equal to the TDAQ_ERS_DEBUG_LEVEL, which is equal to 0 by default.
  * \note This macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined
  */
-#define ERS_DEBUG( level, message ) { \
+#define ERS_DEBUG( level, message ) do { \
 if ( ers::debug_level() >= level ) \
 { \
     ERS_REPORT_IMPL( ers::debug, ers::Message, message, level ); \
-} }
+} } while(0)
 #else
-#define ERS_DEBUG( level, message ) { }
+#define ERS_DEBUG( level, message ) do { } while(0)
 #endif
 
 /** \def ERS_INFO( message ) This macro sends the message to the ers::info stream.
  */
-#define ERS_INFO( message ) \
+#define ERS_INFO( message ) do { \
 { \
     ERS_REPORT_IMPL( ers::info, ers::Message, message, ERS_EMPTY ); \
-}    	
+} } while(0)
 
 /** \def ERS_LOG( message ) This macro sends the message to the ers::log stream.
  */
-#define ERS_LOG( message ) \
+#define ERS_LOG( message ) do { \
 { \
     ERS_REPORT_IMPL( ers::log, ers::Message, message, ERS_EMPTY ); \
-}    	
+} } while(0)
 
 #endif // ERS_ERS_H
 
