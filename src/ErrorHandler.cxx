@@ -110,7 +110,7 @@ namespace ers
     void ErrorHandler::recursion_preventer()
     {
 	static bool same_shit_different_time = false;
-	ERS_ASSERT( !same_shit_different_time )
+	ERS_ASSERT( !same_shit_different_time );
 	same_shit_different_time = true;
     }
     
