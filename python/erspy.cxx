@@ -5,6 +5,9 @@
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
 
+#include <mutex>
+#include <unordered_map>
+
 #include <ers/ers.h>
 #include <ers/AnyIssue.h>
 #include <ers/RemoteContext.h>
@@ -32,11 +35,22 @@ namespace
     {
         static const std::string cpp_separator( "::" );
 	static const std::string py_separator( "." );
+	static std::unordered_map<std::string, PyObject *> ex_types;
+	static std::mutex types_mutex;
         
         std::string str = ex.get_class_name();
         boost::replace_all( str, cpp_separator, py_separator );
         
-	custom_ex_type = PyErr_NewException( (char*)str.c_str(), base_ex_type, 0 );
+        {
+            std::unique_lock<std::mutex> lock(types_mutex);
+            std::unordered_map<std::string, PyObject *>::iterator it = ex_types.find(str);
+	    if (it == ex_types.end()) {
+		custom_ex_type = PyErr_NewException( (char*)str.c_str(), base_ex_type, 0 );
+		ex_types[str] = custom_ex_type;
+	    } else {
+		custom_ex_type = it->second;
+	    }
+        }
 
 	Py_RH args(PyTuple_New( 3 ));
 	PyTuple_SetItem( args, 0, PyString_FromString(ex.what()) );
@@ -89,7 +103,7 @@ namespace
         PyObject * t = 0;
         PyObject * e = to_python( t, ex );
         PyErr_SetObject( t, e );
-        Py_DECREF( t );
+        Py_DECREF( e );
     }
 
     void 
