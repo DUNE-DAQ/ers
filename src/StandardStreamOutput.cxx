@@ -6,6 +6,7 @@
  *  Copyright 2007 CERN. All rights reserved.
  *
  */
+#include <ios>
 
 #include <ers/Issue.h>
 #include <ers/StandardStreamOutput.h>
@@ -119,7 +120,7 @@ ers::StandardStreamOutput::print( std::ostream & out, const Issue & issue, int v
 
     if ( verbosity > 3 )
     {
-	ios::fmtflags flags( out.flags() );
+	std::ios_base::fmtflags flags( out.flags() );
 
 	out << std::left;
         std::vector<std::string> stack = issue.context().stack();
