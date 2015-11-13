@@ -119,11 +119,16 @@ ers::StandardStreamOutput::print( std::ostream & out, const Issue & issue, int v
 
     if ( verbosity > 3 )
     {
-	std::vector<std::string> stack = issue.context().stack();
+	ios::fmtflags flags( out.flags() );
+
+	out << std::left;
+        std::vector<std::string> stack = issue.context().stack();
 	for( size_t i = 0; i < stack.size(); i++ )
 	{
-	    out << FIELD_SEPARATOR << "#" << std::setw(3) << std::left << i << stack[i];
+	    out << FIELD_SEPARATOR << "#" << std::setw(3) << i << stack[i];
 	}
+        // restore the original state
+	out.flags( flags );
     }
 
     if ( issue.cause() )

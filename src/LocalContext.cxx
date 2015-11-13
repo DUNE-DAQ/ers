@@ -84,6 +84,7 @@ ers::LocalContext::LocalContext(
 #ifndef ERS_NO_DEBUG
     m_stack_size( backtrace( m_stack, 128 ) )
 #else
+    m_stack(0),
     m_stack_size( 0 )
 #endif
 { ; }

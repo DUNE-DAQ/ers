@@ -85,7 +85,6 @@ ers::LocalStream::thread_wrapper()
 
 ers::IssueCatcherHandler *
 ers::LocalStream::set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher ) 
-		throw ( ers::IssueCatcherAlreadySet )
 {
     if ( m_issue_catcher_thread.get() )
     {

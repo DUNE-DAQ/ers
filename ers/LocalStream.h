@@ -57,8 +57,7 @@ namespace ers
 
 	//! sets local issue intercepter
 	IssueCatcherHandler * set_issue_catcher( 
-        			const boost::function<void ( const ers::Issue & )> & catcher )
-			throw ( ers::IssueCatcherAlreadySet );
+        			const boost::function<void ( const ers::Issue & )> & catcher );
 
 	void error( const ers::Issue & issue );
 	

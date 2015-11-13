@@ -59,7 +59,6 @@ namespace ers
      */
     inline IssueCatcherHandler * 
     	set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
-	    throw ( ers::IssueCatcherAlreadySet )
     { return LocalStream::instance().set_issue_catcher( catcher ); }
     
     /*! 

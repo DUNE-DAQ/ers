@@ -49,8 +49,8 @@ if( !(expression) ) \
     std::ostringstream ers_report_impl_out_buffer; \
     ers_report_impl_out_buffer << BOOST_PP_IF( ERS_IS_EMPTY( message ), "of unknown reason", message ); \
     std::string reason = ers_report_impl_out_buffer.str(); \
-    ers::Assertion issue( ERS_HERE, #expression, reason.c_str() ); \
-    ers::StreamManager::instance().report_issue( ers::Fatal, issue ); \
+    ers::Assertion __issue__( ERS_HERE, #expression, reason.c_str() ); \
+    ers::StreamManager::instance().report_issue( ers::Fatal, __issue__ ); \
     ERS_INTERNAL_ABORT(#expression); \
 }}
 
