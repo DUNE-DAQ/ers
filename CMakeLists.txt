@@ -14,7 +14,7 @@ tdaq_add_library(erspy MODULE
   LINK_LIBRARIES PRIVATE Boost::python ers
   INCLUDE_DIRECTORIES PRIVATE PythonLibs)
 
-install(FILES python/ers.py COMPONENT ${TDAQ_PACKAGE_NAME}_noarch DESTINATION share/lib/python)
+tdaq_add_python_files(python/ers.py)
 
 tdaq_add_executable(ers_test         test/test.cxx     NOINSTALL LINK_LIBRARIES ers)
 tdaq_add_executable(ers_print_config bin/config.cxx    LINK_LIBRARIES ers)
