@@ -64,7 +64,6 @@ namespace
 	{
 	    PyObject * t = 0;
             PyTuple_SetItem( args, 2, to_python( t, *ex.cause() ) );
-            Py_DECREF( t );
         }
 
     	PyObject * e = PyObject_CallObject( custom_ex_type, args );
