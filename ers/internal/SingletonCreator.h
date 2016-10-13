@@ -20,11 +20,12 @@
 namespace ers
 {
     template <class T>
-    struct SingletonCreator
+    class SingletonCreator
     {
 	static boost::mutex s_mutex;
 	static T *	    s_instance;
         
+      public:
         static T * create( )
         {
 	// on MacOS with gcc 4.2 the s_mutex is not yet created

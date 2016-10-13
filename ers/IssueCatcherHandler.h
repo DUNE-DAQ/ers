@@ -20,10 +20,11 @@ namespace ers
 {
     class LocalStream;
     
-    struct IssueCatcherHandler : boost::noncopyable
+    class IssueCatcherHandler : boost::noncopyable
     {
 	friend class LocalStream;
-	
+        
+      public:	
 	~IssueCatcherHandler();
         
       private:
