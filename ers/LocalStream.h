@@ -35,7 +35,7 @@ namespace ers
     class Issue;
     template <class > class SingletonCreator;
     
-    struct IssueCatcherHandler;
+    class IssueCatcherHandler;
     
     /** The \c LocalStream class implements error reporting between different threads within one application.
       *

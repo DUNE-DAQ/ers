@@ -70,8 +70,7 @@ namespace
 		OutDevice( out )
 	    { ; }
 
-	    // this constructor is not implemented because it must never be called !!!
-	    // nevertheless removing this declaration causes compilation error
+	    // this constructor is intentionaly not implemented because it must never be called !!!
 	    Lock( const Lock & );
             
           private:
