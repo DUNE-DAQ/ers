@@ -48,8 +48,8 @@ namespace ers
         virtual const char * get_class_name() const
         { return m_type.c_str(); }
        	
-        virtual void raise() const throw( std::exception )
-        { throw *this; }
+        virtual void raise() const
+        { throw AnyIssue(*this); }
         
       private:
       	std::string m_type;
