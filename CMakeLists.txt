@@ -7,7 +7,7 @@ tdaq_add_library(ers
 
 tdaq_add_library(ErsBaseStreams MODULE
   src/streams/*.cxx
-  LINK_LIBRARIES ers)
+  LINK_LIBRARIES ers Boost::regex)
 
 tdaq_add_library(erspy MODULE 
   python/erspy.cxx
