@@ -71,7 +71,7 @@ namespace namespace_name { \
         	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
                     ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
                     const std::exception & cause ); \
-	void raise() const { throw *this; } \
+	void raise() const { std::auto_ptr<const class_name> ap(this); throw class_name(*this); } \
 	const char * get_class_name() const { return get_uid(); } \
 	base_class_name * clone() const { return new namespace_name::class_name( *this ); } \
 	ERS_PRINT_LIST( ERS_ATTRIBUTE_ACCESSORS, ERS_EMPTY attributes ) \
