@@ -59,7 +59,7 @@ namespace
     
     void
     parse_stream_definition(	const std::string & text,
-				std::vector<std::string> & result ) throw ( ers::BadConfiguration )
+				std::vector<std::string> & result )
     {
 	std::string::size_type start_p = 0, end_p = 0;
 	short brackets_open = 0;

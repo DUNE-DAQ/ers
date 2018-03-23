@@ -128,7 +128,7 @@ Issue::Issue(	Severity severity,
     m_values( parameters )
 { ; }
 
-ers::Issue::~Issue() throw()
+ers::Issue::~Issue() noexcept
 { ; }
 
 std::time_t 
