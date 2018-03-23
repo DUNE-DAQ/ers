@@ -56,11 +56,18 @@ namespace
             return;
         }
         
-        const char * pos = strchr( function, '(' );
-	if ( pos )
+        const char * end = strchr( function, '(' );
+	if ( end )
 	{
-	    out.write( function, pos - function );
-	    out << "(...)";
+	    const char * beg = end;
+	    while ( beg > function ) {
+	        if ( *(beg-1) == ' ' ) {
+	            break;
+	        }
+	        --beg;
+	    }
+            out.write( beg, end - beg );
+            out << "(...)";
 	} else {
 	    out << function;
 	}
