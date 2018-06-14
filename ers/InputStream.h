@@ -26,10 +26,10 @@ namespace ers
     
     class Issue; 
 
-    /** ERS Issue stream interface.
-      * An ERS stream is a mean to send and receive issues.
-      * The two core method to do so are \c write and \c read.
-      * Certain subclasses of stream might implement only sending, or only receiving.
+    /** ERS Issue input stream interface.
+      * An ERS input stream is a mean to receive issues.
+      * The core method to do so is called \c receive.
+      * Any subclass of input stream must implement this method.
       * \author Serguei Kolos
       * \version 1.0
       * \brief ERS Issue stream interface.
@@ -46,14 +46,15 @@ namespace ers
       protected:
         InputStream( );
                         
-	void receive( const Issue & issue );	/**< \brief Must be called when the new issue is received */
+        /**< \brief Will be called when the new issue is received */
+	void receive( const Issue & issue );
       
       private:
 	//
 	// Disable copying
 	//
-	InputStream( const InputStream & other );
-        InputStream & operator=( const InputStream & );
+	InputStream( const InputStream & other ) = delete;
+        InputStream & operator=( const InputStream & ) = delete;
         
         void set_receiver( IssueReceiver * receiver )
         { m_receiver = receiver; }
