@@ -109,10 +109,17 @@ void test_local_catcher()
     ers::fatal( issue );
 }
 
+void Message( const int level, const std::string msg) {
+    //Deliver message to the proper stream
+    if (level <= 0) ERS_REPORT_IMPL( ers::debug, ers::Message, msg, level);
+    if (level == 1) ERS_REPORT_IMPL( ers::info, ers::Message, msg, );
+    if (level == 2) ERS_REPORT_IMPL( ers::warning, ers::Message, msg, );
+    if (level == 3) ERS_REPORT_IMPL( ers::error, ers::Message, msg, );
+    if (level >= 4) ERS_REPORT_IMPL( ers::fatal, ers::Message, msg, );
+}
+
 int main(int , char** )
 {
-    int step = 0;
-       
     test_function( 0 );
     test_function( 0 );
     
@@ -142,7 +149,8 @@ int main(int , char** )
     test_function( 0 );
     test_function( 0 );
     
-    while( step++ < 10 )
+    int step = 0;
+    while( step++ < 7 )
     {
 	try
 	{
