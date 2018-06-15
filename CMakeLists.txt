@@ -20,6 +20,4 @@ tdaq_add_executable(ers_test         test/test.cxx     NOINSTALL LINK_LIBRARIES 
 tdaq_add_executable(ers_print_config bin/config.cxx    LINK_LIBRARIES ers)
 tdaq_add_executable(ers_receiver     test/receiver.cxx LINK_LIBRARIES ers pthread)
 
-# find_program(CHECK_TARGET check_target.sh PATHS .)
 add_test(NAME ers_check COMMAND  ers_test)
-set_tests_properties(ers_check PROPERTIES WILL_FAIL TRUE)
