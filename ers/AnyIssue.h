@@ -49,7 +49,7 @@ namespace ers
         { return m_type.c_str(); }
        	
         virtual void raise() const
-        { std::auto_ptr<const AnyIssue> ap(this); throw AnyIssue(*this); }
+        { throw AnyIssue(*this); }
         
       private:
       	std::string m_type;

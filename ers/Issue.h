@@ -89,7 +89,7 @@ namespace ers
 	
         virtual const char * get_class_name() const = 0;	/**< \brief Get key for class (used for serialisation)*/
        	
-        virtual void raise() const = 0;
+        virtual void raise() const = 0;                         /**< \brief throws a copy of this issue preserving the real issue type*/
 	
 	void add_qualifier( const std::string & qualif );	/**< \brief adds a qualifier to the issue */
 	
