@@ -1,24 +1,5 @@
-#
-# You can customize this part with the  releases:, only: and except: keys
-#
-ci_trigger:
-   image: gitlab-registry.cern.ch/atlas-tdaq-software/tdaq_ci:trigger
-   script: ""
-   tags:
-        - tdaq
-   variables:
-        releases: tdaq-common-nightly
-        GIT_STRATEGY: none
-   only:
-        - tags
-   except:
-        - triggers
+variables:
+   project: tdaq-common
+   RELEASE: tdaq-common-nightly
+include: 'https://gitlab.cern.ch/atlas-tdaq-software/tdaq_ci/raw/master/includes/tdaq-ci.yml'
 
-# You should not have to modify the following
-ci_build:
-   image: $TDAQ_CI_IMAGE
-   script: ""
-   tags:
-        - tdaq
-   only:
-        - triggers
