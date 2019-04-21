@@ -9,9 +9,6 @@ tdaq_add_library(ErsBaseStreams MODULE
   src/streams/*.cxx
   LINK_LIBRARIES ers Boost::regex)
 
-find_package(PythonLibs REQUIRED)
-message(STATUS "PYTHONLIBS_VERSION_STRING = ${PYTHONLIBS_VERSION_STRING}")
-
 tdaq_add_library(erspy MODULE 
   python/erspy.cxx
   LINK_LIBRARIES PRIVATE Boost::python ers PythonLibs)
