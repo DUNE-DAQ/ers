@@ -14,7 +14,7 @@ message(STATUS "PYTHONLIBS_VERSION_STRING = ${PYTHONLIBS_VERSION_STRING}")
 
 tdaq_add_library(erspy MODULE 
   python/erspy.cxx
-  LINK_LIBRARIES PRIVATE Boost::python3 ers PythonLibs)
+  LINK_LIBRARIES PRIVATE Boost::python ers PythonLibs)
 
 tdaq_add_python_files(python/ers.py)
 
