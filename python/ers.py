@@ -4,6 +4,11 @@ This module is part of the Error Reporting Service (ERS)
 package of the ATLAS TDAQ system.
 """
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 __author__ = "Serguei Kolos (Serguei.Kolos@cern.ch)"
 __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2010/06/05 21:57:20 $"
@@ -15,14 +20,14 @@ import os
 import platform
 import re
 import sys
-import thread
+import _thread
 import time
 
 class Severity( object ):
     "defines supported severity values"
     values = ( DEBUG , LOG, INFO, WARNING, ERROR, FATAL ) = tuple( range( 6 ) )
 
-SeverityNames = tuple ( [ [k for k, v in Severity.__dict__.iteritems() if v == s][0] \
+SeverityNames = tuple ( [ [k for k, v in Severity.__dict__.items() if v == s][0] \
                                         for s in Severity.values ] )
 
 class Context( object ):
@@ -31,12 +36,12 @@ class Context( object ):
 
     def __init__( self, issue ):
         self.stack = [f[0] for f in inspect.stack() \
-                        if  f[1] <> self.__file \
-                        and (      not f[0].f_locals.has_key( 'self' )\
+                        if  f[1] != self.__file \
+                        and (      'self' not in f[0].f_locals\
                                 or not isinstance(f[0].f_locals['self'], Issue))]
                                 
         self.package_name = issue.__class__.__module__
-        class_name    = lambda : self.stack[0].f_locals.has_key( 'self' ) \
+        class_name    = lambda : 'self' in self.stack[0].f_locals \
                                  and self.stack[0].f_locals['self'].__class__.__name__ + '.'\
                                  or ''
 
@@ -51,7 +56,7 @@ class Context( object ):
         self.host_name = platform.node()
         self.cwd = os.getcwd()
         self.process_id = os.getpid()
-        self.thread_id = thread.get_ident()
+        self.thread_id = _thread.get_ident()
         self.user_id = os.getuid()
         self.user_name = getpass.getuser()
         self.application_name = os.getenv( "TDAQ_APPLICATION_NAME", "Undefined" )
@@ -68,7 +73,7 @@ class Issue( Exception ):
         self.cause = cause
         self.__context = Context( self )
         self.qualifiers = [ self.__context.package_name ]
-        self.__parameters = dict([ (str(k), str(v)) for (k,v) in kwargs.items() ])
+        self.__parameters = dict([ (str(k), str(v)) for (k,v) in list(kwargs.items()) ])
         self.__dict__.update( kwargs )
         
     @property
@@ -93,7 +98,7 @@ class Issue( Exception ):
                         self.__context.file_name,
                         self.__context.line_number,
                         self.message )
-        if self.cause <> None:
+        if self.cause != None:
             s += '\n\twas caused by: %s' % repr(self.cause)
         return s
 
@@ -173,6 +178,6 @@ def replaceAllLoggingHandlers( loggername = '' ):
     """removes all logging handlers from the given logger 
     and adds ERS logging handler to it"""
     l = logging.getLogger( loggername )
-    while len( l.handlers ) <> 0:
+    while len( l.handlers ) != 0:
         l.removeHandler(l.handlers[0])
     addLoggingHandler( loggername )

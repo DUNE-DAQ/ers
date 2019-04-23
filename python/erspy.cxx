@@ -53,7 +53,7 @@ namespace
         }
 
 	Py_RH args(PyTuple_New( 3 ));
-	PyTuple_SetItem( args, 0, PyString_FromString(ex.what()) );
+	PyTuple_SetItem( args, 0, PyUnicode_FromString(ex.what()) );
 	PyTuple_SetItem( args, 1, PyDict_New() );
     	if ( !ex.cause() )
         {
@@ -68,13 +68,13 @@ namespace
 
     	PyObject * e = PyObject_CallObject( custom_ex_type, args );
 
-        PyObject_SetAttrString( e, "severity", PyInt_FromLong((ers::severity)ex.severity()) );
+        PyObject_SetAttrString( e, "severity", PyLong_FromLong((ers::severity)ex.severity()) );
         
         const std::vector<std::string> & q = ex.qualifiers();
         Py_RH qualifiers(PyList_New(q.size()));
 	for ( size_t i = 0; i < q.size(); ++i )
 	{
-            PyList_SetItem( qualifiers, i, PyString_FromString( q[i].c_str() ) );
+            PyList_SetItem( qualifiers, i, PyUnicode_FromString( q[i].c_str() ) );
 	}
         PyObject_SetAttrString( e, "qualifiers", qualifiers );
         
@@ -83,15 +83,15 @@ namespace
 	for ( ers::string_map::const_iterator it = p.begin(); it != p.end(); ++it )
         {
             PyDict_SetItem( 	parameters, 
-            			PyString_FromString( it -> first.c_str() ), 
-                                PyString_FromString( it -> second.c_str() ) );
+            			PyUnicode_FromString( it -> first.c_str() ), 
+                                PyUnicode_FromString( it -> second.c_str() ) );
         }
 
 	Py_RH c(PyObject_GetAttrString( e, "_Issue__context" ));
-        PyObject_SetAttrString( c, "package_name", PyString_FromString(ex.context().package_name()) );
-        PyObject_SetAttrString( c, "file_name", PyString_FromString(ex.context().file_name()) );
-        PyObject_SetAttrString( c, "function_name", PyString_FromString(ex.context().function_name()) );
-        PyObject_SetAttrString( c, "line_number", PyInt_FromLong(ex.context().line_number()) );
+        PyObject_SetAttrString( c, "package_name", PyUnicode_FromString(ex.context().package_name()) );
+        PyObject_SetAttrString( c, "file_name", PyUnicode_FromString(ex.context().file_name()) );
+        PyObject_SetAttrString( c, "function_name", PyUnicode_FromString(ex.context().function_name()) );
+        PyObject_SetAttrString( c, "line_number", PyLong_FromLong(ex.context().line_number()) );
         
         return e;
     }
@@ -117,31 +117,31 @@ namespace
         if (!o)
             return 0;
 
-	std::string id	= PyString_AsString(
+	std::string id	= PyBytes_AsString(
 	    Py_RH( PyObject_GetAttrString( PyObject_Type( o ), "__name__" ) ) );
 	
-	std::string msg = PyString_AsString( Py_RH( PyObject_GetAttrString( o, "message" ) ) );
+	std::string msg = PyBytes_AsString( Py_RH( PyObject_GetAttrString( o, "message" ) ) );
         
 	Py_RH c(PyObject_GetAttrString( o, "context" ));
 	ers::RemoteContext context(
-		    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "package_name" ) ) ),
-		    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "file_name" ) ) ),
-		    PyInt_AsLong( Py_RH( PyObject_GetAttrString( c, "line_number" ) ) ),
-		    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "function_name" ) ) ),
+		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "package_name" ) ) ),
+		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "file_name" ) ) ),
+		    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "line_number" ) ) ),
+		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "function_name" ) ) ),
 		    ers::RemoteProcessContext(
-			    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "host_name" ) ) ),
-			    PyInt_AsLong( Py_RH( PyObject_GetAttrString( c, "process_id" ) ) ),
-			    PyInt_AsLong( Py_RH( PyObject_GetAttrString( c, "thread_id" ) ) ),
-			    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "cwd" ) ) ),
-			    PyInt_AsLong( Py_RH( PyObject_GetAttrString( c, "user_id" ) ) ),
-			    PyString_AsString( Py_RH( PyObject_GetAttrString( c, "user_name" ) ) ),
-                            PyString_AsString( Py_RH( PyObject_GetAttrString( c, "application_name" ) ) ) ) );
+			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "host_name" ) ) ),
+			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "process_id" ) ) ),
+			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "thread_id" ) ) ),
+			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "cwd" ) ) ),
+			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "user_id" ) ) ),
+			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "user_name" ) ) ),
+                            PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "application_name" ) ) ) ) );
 
         std::vector<std::string> qualifiers;
         Py_RH q(PyObject_GetAttrString( o, "qualifiers" ));
         int size = PyList_Size( q );
         for (int i = 0; i < size; ++i ) {
-            qualifiers.push_back(PyString_AsString(PyList_GetItem(q, i)));
+            qualifiers.push_back(PyBytes_AsString(PyList_GetItem(q, i)));
         }
 
 	std::map<std::string, std::string> parameters;
@@ -150,8 +150,8 @@ namespace
         for (int i = 0; i < size; ++i ) {
             PyObject * item = PyList_GetItem(items, i);
             parameters.insert( std::make_pair(
-        	PyString_AsString(PyTuple_GetItem(item, 0)),
-        	PyString_AsString(PyTuple_GetItem(item, 1))
+        	PyBytes_AsString(PyTuple_GetItem(item, 0)),
+        	PyBytes_AsString(PyTuple_GetItem(item, 1))
         	));
         }
 

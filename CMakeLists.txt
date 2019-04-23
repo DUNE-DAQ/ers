@@ -11,8 +11,7 @@ tdaq_add_library(ErsBaseStreams MODULE
 
 tdaq_add_library(erspy MODULE 
   python/erspy.cxx
-  LINK_LIBRARIES PRIVATE Boost::python ers
-  INCLUDE_DIRECTORIES PRIVATE PythonLibs)
+  LINK_LIBRARIES PRIVATE Boost::python ers PythonLibs)
 
 tdaq_add_python_files(python/ers.py)
 
