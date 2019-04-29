@@ -157,14 +157,16 @@ if ( ers::debug_level() >= level ) \
 
 /** \page main How to use ERS package
 
-  \li \ref macro
-      <ul>
-      <li> \ref Assertionmacro
-      <li> \ref Loggingmacro
-      </ul>
+  \li \ref HeaderFile
+  \li \ref AssertionMacro
+  \li \ref LoggingMacro
   \li \ref CustomIssues
+  \li \ref ERS_HERE
   \li \ref ExceptionHandling
   \li \ref StreamConfig
+      <ul>
+      <li> \ref DefaultStreams
+      </ul>
   \li \ref CustomStream
       <ul>
       <li> \ref ImplementingCustomStream
@@ -173,11 +175,8 @@ if ( ers::debug_level() >= level ) \
       </ul>
   \li \ref MultiThreadError
       <ul>
-      <li> \ref MultiThreadReporting
       <li> \ref ErrorCatcherThread
       </ul>
-  \li \ref ERS_HERE
-
 
   The Error Reporting System (ERS) software package provides a common API for error reporting
   in the ATLAS TDAQ system.
@@ -185,8 +184,8 @@ if ( ers::debug_level() >= level ) \
   conditions are violated at the level of C++ code. ERS also provides tools for defining
   custom classes that can be used for reporting high-level issues.
 
-  \section Header Header file
-  In order to use all available ERS functionality an application has to include a single
+  \section HeaderFile Header File
+  In order to use ERS functionality an application has to include a single
   header file \c ers/ers.h.
   
   \section AssertionMacro Assertion Macro
@@ -409,7 +408,7 @@ if ( ers::debug_level() >= level ) \
   line number and function where the issue was constructed, to the new issue. Therefore when a new issue is
   created one shall always use ERS_HERE macro as the first parameter of the issue constructor.
 
-  \section ExceptionHandling Exception handling
+  \section ExceptionHandling Exception Handling
   Functions, which can throw exceptions must be invoked inside \c try...catch statement.
   The following example shows a typical use case for ERS exceptions.
   
@@ -586,7 +585,7 @@ if ( ers::debug_level() >= level ) \
   Note that the error handling catcher can be set only once for the lifetime of an application. 
   An attempt to set it again will fail and the \c ers::IssueCatcherAlreadySet exception will be thrown.
   
-  \section Receiving Issues Across Application Boundaries
+  \section CrossAppIssues Receiving Issues Across Application Boundaries
   There is a specific implementation of ERS input (and output) stream which allows to exchange issue
   across application boundaries, i.e. one process may receive ERS issues produces by the other processes.
   The following example shows how to do that:
