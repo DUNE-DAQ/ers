@@ -1,3 +1,5 @@
+#ifndef ERS_ISSUE_DECLARATION_MACRO_H
+#define ERS_ISSUE_DECLARATION_MACRO_H
 
 #include <boost/preprocessor/if.hpp>
 #include <boost/preprocessor/seq.hpp>
@@ -140,3 +142,5 @@ namespace { \
 #define ERS_DECLARE_ISSUE( namespace_name, class_name, message, attributes ) \
 	__ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, attributes ) \
         __ERS_DEFINE_ISSUE_BASE__( inline, namespace_name, class_name, ers::Issue, ERS_EMPTY message, ERS_EMPTY, attributes )
+
+#endif

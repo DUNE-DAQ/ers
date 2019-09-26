@@ -23,7 +23,6 @@
 #include <ers/IssueFactory.h>
 #include <ers/LocalContext.h>
 #include <ers/Severity.h>
-#include <ers/internal/IssueDeclarationMacro.h>
 
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
@@ -176,6 +175,8 @@ namespace ers
     std::ostream & operator<<( std::ostream &, const ers::Issue & );    
 } // ers
         
+#include <ers/internal/IssueDeclarationMacro.h>
+
 ERS_DECLARE_ISSUE(  ers,
 		    NoValue,
 		    "value for the \"" << key << "\" key is not set ",
