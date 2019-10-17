@@ -155,7 +155,7 @@ if ( ers::debug_level() >= level ) \
 
 #endif // ERS_ERS_H
 
-/** \page main How to use ERS package
+/** \page ers_main How to use ERS package
 
   \li \ref HeaderFile
   \li \ref AssertionMacro
@@ -272,11 +272,11 @@ if ( ers::debug_level() >= level ) \
   from the ers::Issue as it is shown on the following example: 
   \code
   ERS_DECLARE_ISSUE(
-      ers,					                                        // namespace
-	  Assertion,				                                    // issue name
-	  "Assertion (" << condition << ") failed because " << reason,	// message
-	  ((const char *)condition )		                            // first attribute
-	  ((const char *)reason )			                            // second attribute
+      ers,					                                // namespace
+	  Assertion,				                                // issue name
+	  "Assertion (" << condition << ") failed because " << reason,	        // message
+	  ((const char *)condition )		                                // first attribute
+	  ((const char *)reason )			                        // second attribute
   )
   \endcode
 
@@ -349,11 +349,11 @@ if ( ers::debug_level() >= level ) \
   macro. For example, the following class inherits from the ers::Assertion class defined above:
   \code
   ERS_DECLARE_ISSUE_BASE(ers,							        // namespace name
-		Precondition,						                    // issue name
-		ers::Assertion,						                    // base issue name
+		Precondition,						                // issue name
+		ers::Assertion,						                // base issue name
 		"Precondition (" << condition << ") located in " << location
-                        	<< " failed because " << reason,	// message
-		((const char *)condition ) ((const char *)reason ),	    // base class attributes
+                        	<< " failed because " << reason,	                // message
+		((const char *)condition ) ((const char *)reason ),	                // base class attributes
 		((const char *)location )				                // this class attributes
   )
   \endcode
@@ -418,23 +418,23 @@ if ( ers::debug_level() >= level ) \
     ...
     
     try {
-	    foo( );
+        foo( );
     }
     catch ( ers::PermissionDenied & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
-	    ers::warning( issue );
+        ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+        ers::warning( issue );
     }
     catch ( ers::FileDoesNotExist & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
-	    ers::warning( issue );
+        ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+        ers::warning( issue );
     }
     catch ( ers::Issue & ex ) {
-	    ERS_DEBUG( 0, "Unknown issue caught: " << ex )
-	    ers::error( ex );
+        ERS_DEBUG( 0, "Unknown issue caught: " << ex )
+        ers::error( ex );
     }
     catch ( std::exception & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
-	    ers::warning( issue );
+        ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
+        ers::warning( issue );
     }
   \endcode  
   This example shows the main features of the ERS issues, namely:
@@ -512,9 +512,9 @@ if ( ers::debug_level() >= level ) \
   void
   ers::FilterStream::write( const ers::Issue & issue )
   {
-	if ( is_accepted( issue ) ) {
-	  chained().write( issue );
-	}
+    if ( is_accepted( issue ) ) {
+      chained().write( issue );
+    }
   }
   \endcode
   The implementation of the ers::OutputStream::write function must decide whether to pass the given 
@@ -524,7 +524,7 @@ if ( ers::debug_level() >= level ) \
 
   \subsection RegisteringCustomStream Registering a Custom Stream
   In order to register and use a custom ERS stream implementation one can use a simple macro called
-  ERS_REGISTER_STREAM in the followiung way:
+  ERS_REGISTER_STREAM in the following way:
   \code
   ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
   \endcode
@@ -564,11 +564,10 @@ if ( ers::debug_level() >= level ) \
   which allows to use plain C-style functions as well as C++ member functions for implementing a custom error
   catcher. For example one can define an error catcher as a member function of a certain class:
   \code
-  struct IssueCatcher
-  {
-    void handler( const ers::Issue & issue ) {
-	    std::cout << "IssueCatcher has been called: " << issue << std::endl;
-    }
+  struct IssueCatcher {
+      void handler( const ers::Issue & issue ) {
+	  std::cout << "IssueCatcher has been called: " << issue << std::endl;
+      }
   };
   \endcode
 
@@ -576,10 +575,10 @@ if ( ers::debug_level() >= level ) \
   \code
   IssueCatcher * catcher = new IssueCatcher();
   try {
-    ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, catcher, _1 ) );
+      ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, catcher, _1 ) );
   }
-  catch( ers::IssueCatcherAlreadySet & ex ){
-    ...
+  catch(ers::IssueCatcherAlreadySet & ex){
+      ...
   }
   \endcode
   Note that the error handling catcher can be set only once for the lifetime of an application. 
@@ -594,34 +593,33 @@ if ( ers::debug_level() >= level ) \
     #include <ers/InputStream.h>
     #include <ers/ers.h>
     
-    struct MyIssueReceiver : public ers::IssueReceiver
-    {
-	    void receive( const ers::Issue & issue ) {
-	        std::cout << issue << std::endl;
-	    }
+    struct MyIssueReceiver : public ers::IssueReceiver {
+        void receive( const ers::Issue & issue ) {
+            std::cout << issue << std::endl;
+        }
     };
 
     MyIssueReceiver * receiver = new MyIssueReceiver;
     try {
-	    ers::StreamManager::instance().add_receiver( "mts", "*", receiver );
+	ers::StreamManager::instance().add_receiver( "mts", "*", receiver );
     }
     catch( ers::Issue & ex ) {
-	    ers::fatal( ex );
+	ers::fatal( ex );
     }
   \endcode
   
   The MyIssueReceiver instance will be getting all messages, which are sent to the "mts" stream implementation
   by all applications working in the current TDAQ partition, which will be taken from the TDAQ_PARTITION environment variable.
-  Alternatively one may pass partition name explicitely via the "mts" stream parameters list:
+  Alternatively one may pass partition name explicitly via the "mts" stream parameters list:
   
   \code
     std::string partition_name = ... // initialize it to a desired name
     MyIssueReceiver * receiver = new MyIssueReceiver;
     try {
-	    ers::StreamManager::instance().add_receiver( "mts", {partition_name, "*"}, receiver );
+	ers::StreamManager::instance().add_receiver( "mts", {partition_name, "*"}, receiver );
     }
     catch( ers::Issue & ex ) {
-	    ers::fatal( ex );
+	ers::fatal( ex );
     }
   \endcode
   
@@ -630,10 +628,10 @@ if ( ers::debug_level() >= level ) \
   
   \code
     try {
-	    ers::StreamManager::instance().remove_receiver( receiver );
+	ers::StreamManager::instance().remove_receiver( receiver );
     }
     catch( ers::Issue & ex ) {
-	    ers::fatal( ex );
+	ers::error( ex );
     }
   \endcode
 */
