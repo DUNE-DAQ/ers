@@ -27,7 +27,7 @@ class Severity( object ):
     "defines supported severity values"
     values = ( DEBUG , LOG, INFO, WARNING, ERROR, FATAL ) = tuple( range( 6 ) )
 
-SeverityNames = tuple ( [ [k for k, v in Severity.__dict__.items() if v == s][0] \
+SeverityNames = tuple ( [ [k for k, v in list(Severity.__dict__.items()) if v == s][0] \
                                         for s in Severity.values ] )
 
 class Context( object ):
