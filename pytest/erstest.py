@@ -3,7 +3,7 @@
 This module is part of the Error Reporting Service (ERS) 
 package of the ATLAS TDAQ system.
 """
-
+from builtins import object
 __author__ = "Serguei Kolos (Serguei.Kolos@cern.ch)"
 __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2010/05/05 21:57:20 $"
@@ -18,15 +18,15 @@ import logging
 
 class Exception( ers.Issue ):
     def __init__( self, msg, args, cause ):
-	ers.Issue.__init__( self, msg, args, cause )
+        ers.Issue.__init__( self, msg, args, cause )
 
 class PermissionDenied( Exception ):
     def __init__( self, cause = None ):
-	Exception.__init__( self, 'Permission denied', {}, cause )
+        Exception.__init__( self, 'Permission denied', {}, cause )
 
 class CantOpenFile( Exception ):
     def __init__( self, fname, err, cause = None ):
-	Exception.__init__( 
+        Exception.__init__( 
 	    self,
 	    'Can not open "%s" file, error = %d' % ( fname, err ),
 	    { 'filename' : fname, 'error' : err },
@@ -43,7 +43,7 @@ cof = CantOpenFile( "t1", 1 )
 logger.error(cof);
 logger.error(CantOpenFile( "t2", 2 ));
 
-class Test:
+class Test(object):
     def method(self):
         raise PermissionDenied( )
             
@@ -57,13 +57,13 @@ def test_function( arg1, arg2 ):
     try:
         t = Test( )
         t.method( )
-    except PermissionDenied, e:
-	raise CantOpenFile( "test.py", 13, e )
+    except PermissionDenied as e:
+        raise CantOpenFile( "test.py", 13, e )
 
 import time
 
 if __name__ == "__main__":
     try:
     	test_function( "test", "ers" )
-    except ers.Issue, e:
-	ers.warning( e )
+    except ers.Issue as e:
+        ers.warning( e )

@@ -12,6 +12,10 @@
 #include <ers/AnyIssue.h>
 #include <ers/RemoteContext.h>
 
+#if PY_MAJOR_VERSION < 3
+#   define PyUnicode_AsUTF8(x) PyString_AsString(x)
+#endif
+
 namespace
 {
     struct Py_RH : boost::noncopyable {
@@ -117,31 +121,31 @@ namespace
         if (!o)
             return 0;
 
-	std::string id	= PyBytes_AsString(
+	std::string id	= PyUnicode_AsUTF8(
 	    Py_RH( PyObject_GetAttrString( PyObject_Type( o ), "__name__" ) ) );
 	
-	std::string msg = PyBytes_AsString( Py_RH( PyObject_GetAttrString( o, "message" ) ) );
+	std::string msg = PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( o, "message" ) ) );
         
 	Py_RH c(PyObject_GetAttrString( o, "context" ));
 	ers::RemoteContext context(
-		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "package_name" ) ) ),
-		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "file_name" ) ) ),
+		    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "package_name" ) ) ),
+		    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "file_name" ) ) ),
 		    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "line_number" ) ) ),
-		    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "function_name" ) ) ),
+		    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "function_name" ) ) ),
 		    ers::RemoteProcessContext(
-			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "host_name" ) ) ),
+			    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "host_name" ) ) ),
 			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "process_id" ) ) ),
 			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "thread_id" ) ) ),
-			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "cwd" ) ) ),
+			    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "cwd" ) ) ),
 			    PyLong_AsLong( Py_RH( PyObject_GetAttrString( c, "user_id" ) ) ),
-			    PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "user_name" ) ) ),
-                            PyBytes_AsString( Py_RH( PyObject_GetAttrString( c, "application_name" ) ) ) ) );
+			    PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "user_name" ) ) ),
+                            PyUnicode_AsUTF8( Py_RH( PyObject_GetAttrString( c, "application_name" ) ) ) ) );
 
         std::vector<std::string> qualifiers;
         Py_RH q(PyObject_GetAttrString( o, "qualifiers" ));
         int size = PyList_Size( q );
         for (int i = 0; i < size; ++i ) {
-            qualifiers.push_back(PyBytes_AsString(PyList_GetItem(q, i)));
+            qualifiers.push_back(PyUnicode_AsUTF8(PyList_GetItem(q, i)));
         }
 
 	std::map<std::string, std::string> parameters;
@@ -150,8 +154,8 @@ namespace
         for (int i = 0; i < size; ++i ) {
             PyObject * item = PyList_GetItem(items, i);
             parameters.insert( std::make_pair(
-        	PyBytes_AsString(PyTuple_GetItem(item, 0)),
-        	PyBytes_AsString(PyTuple_GetItem(item, 1))
+        	PyUnicode_AsUTF8(PyTuple_GetItem(item, 0)),
+        	PyUnicode_AsUTF8(PyTuple_GetItem(item, 1))
         	));
         }
 
