@@ -103,15 +103,18 @@ namespace ers
     ErrorHandler::~ErrorHandler()
     {
         std::map<int,SignalHandler*>::iterator it;
-        for( it = handlers.begin(); it != handlers.end(); ++it )
+        for( it = handlers.begin(); it != handlers.end(); ++it ) {
             delete it->second;
+        }
     }
     
     void ErrorHandler::recursion_preventer()
     {
-	static bool same_shit_different_time = false;
-	ERS_ASSERT( !same_shit_different_time );
-	same_shit_different_time = true;
+	static bool called_for_the_first_time = true;
+	if (!called_for_the_first_time) {
+	    ::abort();
+	}
+	called_for_the_first_time = false;
     }
     
     void ErrorHandler::terminate_handler()
@@ -135,7 +138,7 @@ namespace ers
     
     void ErrorHandler::abort( const ers::Issue & issue )
     {
-	StreamManager::instance().report_issue( Fatal, issue );
+        StreamManager::instance().report_issue( Fatal, issue );
         ERS_ASSERT(0);
     }
 }
