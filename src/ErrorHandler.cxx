@@ -6,7 +6,6 @@
  *  Copyright 2ERN. All rights reserved.
  *
  */
-
 #include <csignal>
 #include <map>
 #include <iomanip>
@@ -18,6 +17,7 @@
 
 #include <ers/Issue.h>
 #include <ers/ers.h>
+#include <ers/StandardStreamOutput.h>
 
 
 ERS_DECLARE_ISSUE(	ers, 
@@ -79,12 +79,17 @@ namespace ers
         static std::map<int,SignalHandler*> handlers;
     };
     
-    void ErrorHandler::SignalHandler::action( int signal, siginfo_t *, void * )
-    {
-	recursion_preventer();
-        
-        Configuration::instance().verbosity_level( 13 );
-        ErrorHandler::abort( ers::SignalCatched( ERS_HERE, signal, handlers[signal]->name_.c_str() ) );
+    void ErrorHandler::SignalHandler::action(int signal, siginfo_t*, void *ucontext) {
+        recursion_preventer();
+
+        ers::SignalCatched ex( ERS_HERE_DEBUG, signal, handlers[signal]->name_.c_str());
+        if (ex.context().stack_size() > 1) {
+            /* overwrite sigaction with caller's address */
+            ucontext_t *uc = (ucontext_t*) ucontext;
+            const_cast<void**>(ex.context().stack_symbols())[1] = (void*) uc->uc_mcontext.gregs[REG_RIP];
+        }
+
+        ErrorHandler::abort(ex);
     }   
     
     ErrorHandler::ErrorHandler()
@@ -121,25 +126,24 @@ namespace ers
     {
 	recursion_preventer();
             
-	Configuration::instance().verbosity_level( 13 );
     	try {
             throw;
         }
         catch( ers::Issue & ex ) {
-            ErrorHandler::abort( UnhandledException( ERS_HERE, ex.get_class_name(), ex ) );
+            ErrorHandler::abort( UnhandledException( ERS_HERE_DEBUG, ex.get_class_name(), ex ) );
         }
         catch( std::exception & ex ) {
-            ErrorHandler::abort( UnhandledException( ERS_HERE, "std::exception", ex ) );
+            ErrorHandler::abort( UnhandledException( ERS_HERE_DEBUG, "std::exception", ex ) );
         }
         catch(...) {
-            ErrorHandler::abort( UnhandledException( ERS_HERE, "unknown" ) );
+            ErrorHandler::abort( UnhandledException( ERS_HERE_DEBUG, "unknown" ) );
         }
     }
     
     void ErrorHandler::abort( const ers::Issue & issue )
     {
-        StreamManager::instance().report_issue( Fatal, issue );
-        ERS_ASSERT(0);
+        StandardStreamOutput::println(std::cerr, issue, 13);
+        ::abort();
     }
 }
 

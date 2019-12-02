@@ -27,22 +27,20 @@ char** backtrace_symbols (void ** , int size) {
 namespace
 {
     std::string
-    readable_type_name( char * mangled )
+    demangle( char * mangled )
     {
-	int status;
-	char * module = mangled;
-	char * function_begin = strchr( module, '(' );
-	char * function_end = strchr( module, '+' );
+        int status;
+	char * function_begin = ::strchr( mangled, '(' );
+	char * function_end = ::strchr( mangled, '+' );
 	if ( function_begin && function_end )
 	{
 	    *function_begin++ = 0;
-	    *function_end = 0;
+	    *function_end++ = 0;
 	    char * name = abi::__cxa_demangle( function_begin, 0, 0, &status );
-	    std::ostringstream out;
-	    out << ( name ? name : function_begin ) << " from " << module;
-	    if ( name )
-		free( name );
-	    return out.str();
+            std::ostringstream out;
+            out << mangled << "(" << (name ? name : function_begin) << "+" << function_end;
+            free( name );
+            return out.str();
 	}
 	return std::string( mangled );
     }
@@ -78,20 +76,14 @@ std::vector<std::string>
 ers::Context::stack( ) const
 {
     std::vector<std::string>	stack;
-    
-#ifndef ERS_NO_DEBUG
     char ** symbols = backtrace_symbols( (void**)stack_symbols(), stack_size() );
     
-    //////////////////////////////////////////////////////////////////
-    // This stack frame is compiler dependent,
-    // For GCC the last frame contains some garbage
-    //////////////////////////////////////////////////////////////////
-    for (int i = 0; i < stack_size() - 1; i++)
-    {
-	stack.push_back( readable_type_name( symbols[i] ) );
+    if (symbols) {
+        for (int i = 1; i < stack_size(); i++) {
+            stack.push_back( demangle(symbols[i]) );
+        }
+        free(symbols);
     }
-    free(symbols);
-#endif
 
     return stack;
 }

@@ -75,17 +75,14 @@ ers::LocalContext::LocalContext(
     const char * package_name,
     const char * filename,
     int line_number,
-    const char * function_name )
+    const char * function_name,
+    unsigned char stack_depth)
   : m_package_name( package_name ),
     m_file_name( filename ),
     m_function_name( function_name ),
     m_line_number( line_number ),
     m_thread_id( gettid() ),
-#ifndef ERS_NO_DEBUG
-    m_stack_size( backtrace( m_stack, 128 ) )
-#else
-    m_stack_size( 0 )
-#endif
+    m_stack_size( stack_depth ? backtrace( m_stack, stack_depth ) : 0)
 { ; }
 
 const char *

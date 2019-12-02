@@ -56,7 +56,8 @@ namespace ers
 	LocalContext(	const char * package_name,
         		const char * filename,
                         int line_number,
-                        const char * function_name );
+                        const char * function_name,
+                        unsigned char stack_depth = 0);
 
         virtual ~LocalContext()
         { ; }
@@ -112,14 +113,20 @@ namespace ers
 	const char * const			m_function_name;/**< source function name */
 	const int				m_line_number;	/**< source line-number */
 	const pid_t				m_thread_id;	/**< thread id */	
-        void *					m_stack[128];	/**< stack frames */
+        void *					m_stack[255];	/**< stack frames */
 	const int				m_stack_size;	/**< stack frames number */
     };
 }
 
 /** \def ERS_HERE This macro constructs a context object with all the current values 
-  */ 
-#define ERS_HERE ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
+  */
+#define ERS_HERE_DEBUG ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, 255 )
+
+#ifndef ERS_NO_DEBUG
+#define ERS_HERE ERS_HERE_DEBUG
+#else
+#define ERS_HERE ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, 0)
+#endif
 
 #endif
 

@@ -17,6 +17,7 @@
 #ifndef ERS_ERS_H
 #define ERS_ERS_H
 
+#include <sys/resource.h>
 #include <sstream>
 #include <ers/StreamManager.h>
 #include <ers/Configuration.h>
@@ -113,6 +114,11 @@ namespace ers
      */
     inline void warning( const Issue & issue )
     { LocalStream::instance().warning( issue ); }
+
+    inline int enable_core_dump() {
+        rlimit core_limit = { RLIM_INFINITY, RLIM_INFINITY };
+        return setrlimit( RLIMIT_CORE, &core_limit );
+    }
 }
 
 ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )

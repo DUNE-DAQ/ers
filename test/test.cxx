@@ -16,57 +16,60 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-void pass( int step )
-{
-    ERS_RANGE_CHECK( 0, step, 8 );
-    
-    ERS_DEBUG( 0, "performing step #" << step );
-    switch ( step )
+struct Test {
+    void pass( int step )
     {
-    	case 1:
-	    {
-		ers::PermissionDenied issue( ERS_HERE, "foo2", 0x777 );
-		throw issue;
-	    }
-        case 2:
-	    {
-		ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
-		throw issue;
-	    }
-        case 3:
-	    {
-		ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
-		issue.add_qualifier( "ers_test" );
-		throw issue;
-	    }
-        case 4:
-	    {
-		for ( int level = 0; level < 4; level++ )
-		    ERS_DEBUG( level, "Debug message with level " << level );
-	    }
-	    break;
-        case 5:
-	    {
-		throw std::runtime_error( "std::out_of_range error" );
-	    }
-        case 6:
-	    {
-		ERS_ASSERT_MSG( step <= 6, "it is been checked that ERS_PRECONDITION works properly" );
-	    }
-	    break;
-        case 7:
-	    {
-		ERS_ASSERT_MSG( step > 6, "it is been checked that ERS_PRECONDITION works properly" );
-	    }
-	    break;
-        default:
-	    {
-		ERS_INFO( "Unhandled exception will be thrown now. This is intentional !!! Program will be aborted. " );
-		struct UnhandledException {};
-		throw UnhandledException();
-	    }
+        ERS_RANGE_CHECK( 0, step, 8 );
+
+        ERS_DEBUG( 0, "performing step #" << step );
+        switch ( step )
+        {
+            case 1:
+                {
+                    ers::PermissionDenied issue( ERS_HERE, "foo2", 0x777 );
+                    throw issue;
+                }
+            case 2:
+                {
+                    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+                    throw issue;
+                }
+            case 3:
+                {
+                    ers::FileDoesNotExist issue( ERS_HERE, "foo3" );
+                    issue.add_qualifier( "ers_test" );
+                    throw issue;
+                }
+            case 4:
+                {
+                    for ( int level = 0; level < 4; level++ ) {
+                        ERS_DEBUG( level, "Debug message with level " << level );
+                    }
+                }
+                break;
+            case 5:
+                {
+                    throw std::runtime_error( "std::out_of_range error" );
+                }
+            case 6:
+                {
+                    ERS_ASSERT_MSG( step <= 6, "ERS_ASSERT_MSG does not work" );
+                }
+                break;
+            case 7:
+                {
+                    ERS_ASSERT_MSG( step > 6, "ERS_ASSERT_MSG does not work" );
+                }
+                break;
+            default:
+                {
+                    ERS_INFO( "Unhandled exception will be thrown now. This is intentional !!! Program will be aborted. " );
+                    struct UnhandledException {};
+                    throw UnhandledException();
+                }
+        }
     }
-}
+};
 
 void test_function( int index )
 {
@@ -122,9 +125,9 @@ int main(int , char** )
 {
     test_function( 0 );
     test_function( 0 );
-    
+
     test_local_catcher();
-    
+
     IssueCatcher catcher;
     boost::shared_ptr<ers::IssueCatcherHandler> handler;
     try
@@ -136,25 +139,26 @@ int main(int , char** )
     	ers::fatal( ex );
         return 1;
     }
-    
+
     test_local_catcher();
-    
+
     ERS_DEBUG( 0, "Testing output produced by different threads ... " );
     boost::thread thr1( boost::bind(test_function,1) );
     boost::thread thr2( boost::bind(test_function,2) );
     boost::thread thr3( boost::bind(test_function,3) );
     boost::thread thr4( boost::bind(test_function,4) );
     sleep( 4 );
-    
+
     test_function( 0 );
     test_function( 0 );
-    
-    int step = 0;
-    while( step++ < 7 )
+
+    int step = 7;
+    Test test;
+    while( step++ < 8 )
     {
 	try
 	{
-	    pass( step );
+	    test.pass( step );
 	}
 	catch ( ers::PermissionDenied & ex )
 	{
@@ -180,6 +184,6 @@ int main(int , char** )
 	    ers::warning( issue );
 	}
     }
-    return 0 ; 
+    return 0 ;
 }
 
