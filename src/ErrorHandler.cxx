@@ -83,12 +83,13 @@ namespace ers
         recursion_preventer();
 
         ers::SignalCatched ex( ERS_HERE_DEBUG, signal, handlers[signal]->name_.c_str());
+#ifdef __x86_64__
         if (ex.context().stack_size() > 1) {
             /* overwrite sigaction with caller's address */
             ucontext_t *uc = (ucontext_t*) ucontext;
             const_cast<void**>(ex.context().stack_symbols())[1] = (void*) uc->uc_mcontext.gregs[REG_RIP];
         }
-
+#endif
         ErrorHandler::abort(ex);
     }   
     
