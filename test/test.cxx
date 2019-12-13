@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 
 struct Test {
     void pass( int step )
@@ -74,11 +75,11 @@ struct Test {
 void test_function( int index )
 {
     ERS_LOG( "starting thread #" << index );
-    sleep( 1 );
+    usleep(10000);
     ers::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
-    sleep( 1 );
+    usleep(10000);
     ers::fatal( ers::FileDoesNotExist( ERS_HERE, "fatal file" ) );
-    sleep( 1 );
+    usleep(10000);
     ers::warning( ers::FileDoesNotExist( ERS_HERE, "warning file" ) );
     ERS_LOG( "finishing thread #" << index );
 }
@@ -121,7 +122,7 @@ void Message( const int level, const std::string msg) {
     if (level >= 4) ERS_REPORT_IMPL( ers::fatal, ers::Message, msg, );
 }
 
-int main(int , char** )
+int main(int ac, char** av)
 {
     test_function( 0 );
     test_function( 0 );
@@ -147,14 +148,14 @@ int main(int , char** )
     boost::thread thr2( boost::bind(test_function,2) );
     boost::thread thr3( boost::bind(test_function,3) );
     boost::thread thr4( boost::bind(test_function,4) );
-    sleep( 4 );
+    usleep(100000);
 
     test_function( 0 );
     test_function( 0 );
 
-    int step = 7;
+    int steps = ac > 1 ? boost::lexical_cast<int>(av[1]) : 9;
     Test test;
-    while( step++ < 8 )
+    for( int step = 1; step < steps; ++step )
     {
 	try
 	{

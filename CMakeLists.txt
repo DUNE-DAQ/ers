@@ -19,4 +19,4 @@ tdaq_add_executable(ers_test         test/test.cxx     NOINSTALL LINK_LIBRARIES 
 tdaq_add_executable(ers_print_config bin/config.cxx    LINK_LIBRARIES ers)
 tdaq_add_executable(ers_receiver     test/receiver.cxx LINK_LIBRARIES ers pthread)
 
-add_test(NAME ers_check COMMAND  ers_test)
+add_test(NAME ers_check COMMAND ers_test 8)
