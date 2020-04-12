@@ -1,5 +1,5 @@
 /*
- *  ThrowStream.h
+ *  ThrottleStream.h
  *  ers
  *
  *  Created by Gordon Crone on 02.08.05.

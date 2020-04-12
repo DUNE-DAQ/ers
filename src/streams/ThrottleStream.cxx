@@ -1,5 +1,5 @@
 /*
- *  ThrowStream.cxx
+ *  ThrottleStream.cxx
  *  ers
  *
  *  Created by Gordon Crone on 02.08.05.
