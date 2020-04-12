@@ -10,8 +10,6 @@
  *
  */
 
-#include <boost/noncopyable.hpp>
-
 /** \file IssueCatcherHandler.h This file declares utility class which is used to uninstall IssueCatcher.
   * \author Serguei Kolos
   * \brief ers header and documentation file
@@ -20,7 +18,7 @@ namespace ers
 {
     class LocalStream;
     
-    class IssueCatcherHandler : boost::noncopyable
+    class IssueCatcherHandler
     {
 	friend class LocalStream;
         
@@ -28,7 +26,10 @@ namespace ers
 	~IssueCatcherHandler();
         
       private:
-	IssueCatcherHandler();
+	IssueCatcherHandler() = default;
+
+	IssueCatcherHandler (const IssueCatcherHandler &) = delete;
+	IssueCatcherHandler & operator = (const IssueCatcherHandler &) = delete;
     };
 }
 

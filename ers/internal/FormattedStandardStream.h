@@ -15,8 +15,9 @@
 #ifndef ERS_FORMATTED_STANDARD_STREAM_H
 #define ERS_FORMATTED_STANDARD_STREAM_H
 
-#include <ers/OutputStream.h>
 #include <map>
+
+#include <ers/OutputStream.h>
 
 namespace ers
 {

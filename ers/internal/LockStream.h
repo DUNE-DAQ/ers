@@ -16,7 +16,7 @@
 #define ERS_LOCK_STREAM_H
 
 #include <ers/OutputStream.h>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 namespace ers
 {
@@ -33,7 +33,7 @@ namespace ers
 	void write( const Issue & issue );
         
       private:
-	boost::mutex	mutex_;
+	std::mutex mutex_;
     };
 }
 

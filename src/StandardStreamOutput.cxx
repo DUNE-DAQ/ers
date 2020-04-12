@@ -6,7 +6,7 @@
  *  Copyright 2007 CERN. All rights reserved.
  *
  */
-#include <ios>
+#include <iomanip>
 
 #include <ers/Issue.h>
 #include <ers/StandardStreamOutput.h>
@@ -19,50 +19,40 @@
 
 namespace
 {    
-    const char * const format = ers::read_from_environment(
-    		"TDAQ_ERS_TIMESTAMP_FORMAT", "%Y-%b-%d %H:%M:%S");
-
-    const bool isUTC = ::getenv("TDAQ_ERS_TIMESTAMP_UTC");
-
-    std::string timeToStringNano( const ers::Issue & issue ) {
-        return issue.time<std::chrono::nanoseconds>(format, isUTC);
-    }
-
-    std::string timeToStringMicro( const ers::Issue & issue ) {
-        return issue.time<std::chrono::microseconds>(format, isUTC);
-    }
-
-    std::string timeToStringMilli( const ers::Issue & issue ) {
-        return issue.time<std::chrono::milliseconds>(format, isUTC);
-    }
-
-    std::string timeToString( const ers::Issue & issue ) {
-        return issue.time(format, isUTC);
-    }
-    
-    std::function<std::string( const ers::Issue & issue )>
-    getTimeFormatter()
+    std::function<std::string( const ers::Issue & issue )> getTimeFormatter()
     {
-	static std::string env =
-        	::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
-                	? ::getenv( "TDAQ_ERS_TIMESTAMP_PRECISION" )
-                        : "MILLI";
+        static std::string format = ers::read_from_environment(
+                    "TDAQ_ERS_TIMESTAMP_FORMAT", "%Y-%b-%d %H:%M:%S");
+
+	static const std::string precision = ers::read_from_environment(
+        	"TDAQ_ERS_TIMESTAMP_PRECISION", "MILLI");
                         
-	boost::algorithm::to_upper(env);
+        static const bool isUTC = ::getenv("TDAQ_ERS_TIMESTAMP_UTC");
 
-        if ( boost::algorithm::find_first(env, "NANO") )
-            return timeToStringNano;
+        if ( boost::algorithm::ifind_first(precision, "NANO") ) {
+            return [](const ers::Issue & issue){
+                return issue.time<std::chrono::nanoseconds>(format, isUTC);
+            };
+        }
  
-        if ( boost::algorithm::find_first(env, "MICRO") )
-            return timeToStringMicro;
+        if ( boost::algorithm::ifind_first(precision, "MICRO") ) {
+            return [](const ers::Issue & issue){
+                return issue.time<std::chrono::microseconds>(format, isUTC);
+            };
+        }
 
-        if ( boost::algorithm::find_first(env, "MILLI") )
-            return timeToStringMilli;
+        if ( boost::algorithm::ifind_first(precision, "MILLI") ) {
+            return [](const ers::Issue & issue){
+                return issue.time<std::chrono::milliseconds>(format, isUTC);
+            };
+        }
 
-	return timeToString;
+	return [](const ers::Issue & issue) {
+            return issue.time(format, isUTC);
+        };
     }
     
-    const std::function<std::string( const ers::Issue & issue )> put_time = getTimeFormatter();    
+    const auto formatted_time = getTimeFormatter();
 }
 
 std::ostream &
@@ -78,7 +68,7 @@ ers::StandardStreamOutput::print( std::ostream & out, const Issue & issue, int v
 {
     if ( verbosity > -3 )
     {
-	out << put_time( issue ) << " ";
+	out << formatted_time( issue ) << " ";
     }
 
     if ( verbosity > -2 )
@@ -124,9 +114,10 @@ ers::StandardStreamOutput::print( std::ostream & out, const Issue & issue, int v
 
 	out << std::left;
         std::vector<std::string> stack = issue.context().stack();
+        out << FIELD_SEPARATOR << "stack trace of the crashing thread:";
 	for( size_t i = 0; i < stack.size(); i++ )
 	{
-	    out << FIELD_SEPARATOR << "#" << std::setw(3) << i << stack[i];
+	    out << FIELD_SEPARATOR << "  #" << std::setw(3) << i << stack[i];
 	}
         // restore the original state
 	out.flags( flags );

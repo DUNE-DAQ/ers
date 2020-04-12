@@ -9,8 +9,6 @@
 #include <cstdio>
 #include <iostream>
 
-#include <boost/lexical_cast.hpp>
-
 #include <ers/Configuration.h>
 #include <ers/ers.h>
 #include <ers/internal/SingletonCreator.h>

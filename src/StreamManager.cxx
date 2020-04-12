@@ -8,6 +8,7 @@
  *
  */
 
+#include <assert.h>
 #include <iostream>
 
 #include <ers/Issue.h>
@@ -79,6 +80,7 @@ namespace
 			result.push_back( text.substr( start_p, end_p - start_p ) );
 			start_p = end_p + 1;
 		    }
+                    break;
 		default:
 		    break;
 	    }
@@ -110,7 +112,7 @@ namespace ers
           void write( const Issue & issue ) 
           {
 	    ers::severity s = issue.severity();
-	    boost::recursive_mutex::scoped_lock lock( m_mutex );
+	    std::scoped_lock lock( m_mutex );
 
 	    if ( !m_in_progress ) {
 		m_in_progress = true;
@@ -127,14 +129,14 @@ namespace ers
 
 	    if ( m_manager.m_out_streams[s].get() == this ) {
 		m_manager.m_out_streams[s] =
-		    boost::shared_ptr<OutputStream>( m_manager.setup_stream( s ) );
+		    std::shared_ptr<OutputStream>( m_manager.setup_stream( s ) );
 	    }
 	    m_manager.report_issue( s, issue );
             m_in_progress = false;
 	  }
           
         private:
-	  boost::recursive_mutex m_mutex;
+	  std::recursive_mutex   m_mutex;
 	  StreamManager &	 m_manager; 
           bool			 m_in_progress;
     };
@@ -162,7 +164,7 @@ ers::StreamManager::StreamManager()
 {
     for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-       m_init_streams[ss] = boost::shared_ptr<OutputStream>( new StreamInitializer( *this ) );
+       m_init_streams[ss] = std::make_shared<StreamInitializer>( *this );
        m_out_streams[ss] = m_init_streams[ss];
     }
 }
@@ -175,7 +177,7 @@ ers::StreamManager::~StreamManager()
 void
 ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream * new_stream )
 {    
-    boost::shared_ptr<OutputStream> head = m_out_streams[severity];
+    std::shared_ptr<OutputStream> head = m_out_streams[severity];
     if ( head && !head->isNull() )
     {
 	OutputStream * parent = head.get();
@@ -187,7 +189,7 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
     }
     else
     {
-        m_out_streams[severity] = boost::shared_ptr<OutputStream>( new_stream );
+        m_out_streams[severity] = std::shared_ptr<OutputStream>( new_stream );
     }
 }	
 
@@ -199,8 +201,8 @@ ers::StreamManager::add_receiver( const std::string & stream,
     InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
     in->set_receiver( receiver );
     
-    boost::mutex::scoped_lock lock( m_mutex );
-    m_in_streams.push_back( boost::shared_ptr<InputStream>( in ) );
+    std::scoped_lock lock( m_mutex );
+    m_in_streams.push_back( std::shared_ptr<InputStream>( in ) );
 }
 
 void 
@@ -211,15 +213,15 @@ ers::StreamManager::add_receiver( const std::string & stream,
     InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, params );
     in->set_receiver( receiver );
     
-    boost::mutex::scoped_lock lock( m_mutex );
-    m_in_streams.push_back( boost::shared_ptr<InputStream>( in ) );
+    std::scoped_lock lock( m_mutex );
+    m_in_streams.push_back( std::shared_ptr<InputStream>( in ) );
 }
 
 void
 ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
 {
-    boost::mutex::scoped_lock lock( m_mutex );
-    for( std::list<boost::shared_ptr<InputStream> >::iterator it = m_in_streams.begin(); 
+    std::scoped_lock lock( m_mutex );
+    for( std::list<std::shared_ptr<InputStream> >::iterator it = m_in_streams.begin();
     	it != m_in_streams.end(); )
     {	
         if ( (*it) -> m_receiver == receiver )

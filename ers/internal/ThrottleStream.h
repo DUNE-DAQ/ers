@@ -1,28 +1,17 @@
-// -*- c++ -*-
-// $Id$ 
-//
-// $Log$
-// Revision 1.2  2008/03/26 08:37:14  kolos
-// Change the way in which parameters are passed to the throttle stream.
-//
-// Revision 1.1  2008/01/25 17:32:14  kolos
-// Add possibility to configure ERS streams dynamically, add Throttle and FormattedOutput streams.
-//
-// Revision 1.3  2007/09/28 13:00:54  gcrone
-// Wrap existing Issue with suppresion text instead of creating a ThrottleIssue
-//
-// Revision 1.2  2007/03/09 16:09:12  gcrone
-// Remove ROSException specific code and only output the summary Issue when suppressing, not the original
-//
-// Revision 1.1  2007/03/01 18:03:24  gcrone
-// Added simple ERS rate throttling library
-//
-//
+/*
+ *  ThrowStream.h
+ *  ers
+ *
+ *  Created by Gordon Crone on 02.08.05.
+ *  Copyright 2004 CERN. All rights reserved.
+ *
+ */
+
 #ifndef ERS_THROTTLE_STREAM_H
 #define ERS_THROTTLE_STREAM_H
 
 #include <map>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 #include <ers/OutputStream.h>
 
@@ -56,7 +45,7 @@ namespace ers
 
       int m_initialThreshold;
       int m_timeLimit;
-      boost::mutex m_mutex;
+      std::mutex m_mutex;
 
       void throttle(IssueRecord& record, const ers::Issue& issue);
       void reportSuppression(IssueRecord& record, const ers::Issue& issue);

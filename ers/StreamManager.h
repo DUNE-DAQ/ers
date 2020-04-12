@@ -12,8 +12,8 @@
 
 #include <initializer_list>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/thread.hpp>
+#include <memory>
+#include <mutex>
 
 #include <ers/Severity.h>
 #include <ers/Context.h>
@@ -102,10 +102,10 @@ namespace ers
 	OutputStream * setup_stream( const std::vector<std::string> & streams );
         
 	PluginManager					m_plugin_manager;
-	boost::mutex					m_mutex;
-	std::list<boost::shared_ptr<InputStream> >	m_in_streams;               
-	boost::shared_ptr<OutputStream>			m_init_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
-	boost::shared_ptr<OutputStream>			m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+	std::mutex					m_mutex;
+	std::list<std::shared_ptr<InputStream> >	m_in_streams;
+	std::shared_ptr<OutputStream>			m_init_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+	std::shared_ptr<OutputStream>			m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
     };
     
     std::ostream & operator<<( std::ostream &, const ers::StreamManager & );

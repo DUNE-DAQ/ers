@@ -10,10 +10,6 @@
 #include <ers/IssueCatcherHandler.h>
 #include <ers/LocalStream.h>
 
-ers::IssueCatcherHandler::IssueCatcherHandler()
-{
-}
-
 ers::IssueCatcherHandler::~IssueCatcherHandler()
 {
     LocalStream::instance().remove_issue_catcher();

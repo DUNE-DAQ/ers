@@ -16,8 +16,6 @@
   */
 
 #include <iostream>
-#include <boost/thread.hpp>
-#include <boost/function.hpp>
 
 namespace ers
 {   

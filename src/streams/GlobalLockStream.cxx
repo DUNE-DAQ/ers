@@ -11,10 +11,10 @@
 
 ERS_REGISTER_OUTPUT_STREAM( ers::GlobalLockStream, "glock", ERS_EMPTY )
 
-boost::mutex	ers::GlobalLockStream::mutex_;
+std::mutex ers::GlobalLockStream::mutex_;
 
 void ers::GlobalLockStream::write( const Issue & issue )
 {
-    boost::mutex::scoped_lock slock( mutex_ );
+    std::scoped_lock slock( mutex_ );
     chained().write( issue );
 }

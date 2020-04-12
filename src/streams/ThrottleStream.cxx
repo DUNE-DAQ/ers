@@ -1,44 +1,11 @@
-// $Id$
-// //////////////////////////////////////////////////////////////////////
-//  Simple filter to throttle messages sent to ERS
-//
-//  Author:  G.J.Crone
-//
-//  $Log$
-//  Revision 1.4  2008/05/16 13:30:13  kolos
-//  Fix memory leak in the IssueCatcher processing. Fix the bug of using uninitialized variable in the ThrottleStream.
-//
-//  Revision 1.3  2008/03/26 17:13:23  kolos
-//  Remove debug output from the constructor of the Throttle stream.
-//
-//  Revision 1.2  2008/03/26 08:37:17  kolos
-//  Change the way in which parameters are passed to the throttle stream.
-//
-//  Revision 1.1  2008/01/25 17:32:14  kolos
-//  Add possibility to configure ERS streams dynamically, add Throttle and FormattedOutput streams.
-//
-//  Revision 1.6  2007/11/08 08:43:36  gcrone
-//  Comment out debug cout
-//
-//  Revision 1.5  2007/09/28 13:00:54  gcrone
-//  Wrap existing Issue with suppresion text instead of creating a ThrottleIssue
-//
-//  Revision 1.4  2007/03/13 15:10:09  gcrone
-//  Issue summary message with Context of latest occurance rather than the
-//  Context of ThrottleStream.
-//
-//  Revision 1.3  2007/03/09 16:09:12  gcrone
-//  Remove ROSException specific code and only output the summary Issue when suppressing, not the original
-//
-//  Revision 1.2  2007/03/06 10:47:31  gcrone
-//  Handle Issues which aren't ROSExceptions by using the file name and
-//  line number retrieved from the ers::Context as the key.
-//
-//  Revision 1.1  2007/03/01 18:03:25  gcrone
-//  Added simple ERS rate throttling library
-//
-//
-// //////////////////////////////////////////////////////////////////////
+/*
+ *  ThrowStream.cxx
+ *  ers
+ *
+ *  Created by Gordon Crone on 02.08.05.
+ *  Copyright 2004 CERN. All rights reserved.
+ *
+ */
 #include <boost/lexical_cast.hpp>
 
 #include <ers/internal/FilterStream.h>
@@ -150,6 +117,6 @@ ers::ThrottleStream::write( const ers::Issue & issue )
     const ers::Context& context = issue.context();
     std::string issueId = context.file_name() + boost::lexical_cast<std::string>(context.line_number());
 
-    boost::mutex::scoped_lock ml(m_mutex);
+    std::scoped_lock ml(m_mutex);
     throttle( m_issueMap[issueId], issue );
 }

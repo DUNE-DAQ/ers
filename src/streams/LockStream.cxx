@@ -13,6 +13,6 @@ ERS_REGISTER_OUTPUT_STREAM( ers::LockStream, "lock", ERS_EMPTY)
 
 void ers::LockStream::write( const Issue & issue )
 {
-    boost::mutex::scoped_lock slock( mutex_ );
+    std::scoped_lock slock( mutex_ );
     chained().write( issue );
 }

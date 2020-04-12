@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <iterator>
+
 #include <ers/LocalContext.h>
 
 #if !defined(__APPLE__) && !defined(__rtems__)
@@ -76,13 +78,13 @@ ers::LocalContext::LocalContext(
     const char * filename,
     int line_number,
     const char * function_name,
-    unsigned char stack_depth)
+    bool debug)
   : m_package_name( package_name ),
     m_file_name( filename ),
     m_function_name( function_name ),
     m_line_number( line_number ),
     m_thread_id( gettid() ),
-    m_stack_size( stack_depth ? backtrace( m_stack, stack_depth ) : 0)
+    m_stack_size( debug ? backtrace( m_stack, std::size(m_stack) ) : 0)
 { ; }
 
 const char *

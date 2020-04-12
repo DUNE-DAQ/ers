@@ -6,7 +6,7 @@
   * \brief ers header file 
   */
 
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 /*
  *  SingletonCreator.h
@@ -22,8 +22,8 @@ namespace ers
     template <class T>
     class SingletonCreator
     {
-	static boost::mutex s_mutex;
-	static T *	    s_instance;
+	static std::mutex s_mutex;
+	static T *	  s_instance;
         
       public:
         static T * create( )
@@ -32,7 +32,7 @@ namespace ers
         // at this moment which causes crash. This might be fixed 
         // when movining to newer gcc version
         #if !defined( __APPLE__) && !defined(__rtems__)
-	    boost::mutex::scoped_lock lock(s_mutex);
+	    std::scoped_lock lock(s_mutex);
         #endif
 	    if ( !s_instance )
 	    {
@@ -43,10 +43,10 @@ namespace ers
     };
     
     template <class T>
-    boost::mutex 	SingletonCreator<T>::s_mutex;
+    std::mutex 	SingletonCreator<T>::s_mutex;
     
     template <class T>
-    T * 		SingletonCreator<T>::s_instance;
+    T * 	SingletonCreator<T>::s_instance;
 }
 
 #endif

@@ -15,6 +15,9 @@
   * which implements the ers::Context interface.
   */ 
 
+#include <sys/types.h>
+#include <unistd.h>
+
 #include <ers/Context.h>
 
 #ifdef  TDAQ_PACKAGE_NAME
@@ -57,7 +60,7 @@ namespace ers
         		const char * filename,
                         int line_number,
                         const char * function_name,
-                        unsigned char stack_depth = 0);
+                        bool debug = false);
 
         virtual ~LocalContext()
         { ; }
@@ -113,19 +116,19 @@ namespace ers
 	const char * const			m_function_name;/**< source function name */
 	const int				m_line_number;	/**< source line-number */
 	const pid_t				m_thread_id;	/**< thread id */	
-        void *					m_stack[255];	/**< stack frames */
+        void *					m_stack[64];	/**< stack frames */
 	const int				m_stack_size;	/**< stack frames number */
     };
 }
 
 /** \def ERS_HERE This macro constructs a context object with all the current values 
   */
-#define ERS_HERE_DEBUG ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, 255 )
+#define ERS_HERE_DEBUG ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, true )
 
 #ifndef ERS_NO_DEBUG
 #define ERS_HERE ERS_HERE_DEBUG
 #else
-#define ERS_HERE ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, 0)
+#define ERS_HERE ers::LocalContext( ERS_PACKAGE, __FILE__, __LINE__, __PRETTY_FUNCTION__, false)
 #endif
 
 #endif

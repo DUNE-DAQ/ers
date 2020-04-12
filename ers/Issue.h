@@ -12,6 +12,8 @@
 #define ERS_ISSUE_H
 
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <map>
 #include <string>
@@ -219,8 +221,7 @@ ers::Issue::time(const std::string & format, bool isUTC) const
     auto c = std::chrono::duration_cast<Precision>(
 			m_time.time_since_epoch()).count();
     double frac = c - (double)t*Precision::period::den;
-    if (frac)
-	sprintf(buff+strlen(buff), ",%0*.0f", width, frac);
+    sprintf(buff + strlen(buff), ",%0*.0f", width, frac);
 
     return buff;
 }

@@ -18,6 +18,7 @@
 #define ERS_ERS_H
 
 #include <sys/resource.h>
+#include <functional>
 #include <sstream>
 #include <ers/StreamManager.h>
 #include <ers/Configuration.h>
@@ -29,7 +30,6 @@
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/is_empty.hpp>
-#include <boost/function.hpp>
 
 /*! \namespace ers
  *  This is a wrapping namespace for all ERS classes and global functions.
@@ -57,7 +57,7 @@ namespace ers
      *	\see ers::warning()
      */
     inline IssueCatcherHandler * 
-    	set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher )
+    	set_issue_catcher( const std::function<void ( const ers::Issue & )> & catcher )
     { return LocalStream::instance().set_issue_catcher( catcher ); }
     
     /*! 
@@ -567,7 +567,7 @@ if ( ers::debug_level() >= level ) \
   it a function object as parameter. This function object will be executed in the context of a dedicated
   thread (created by the \c ers::set_issue_catcher function) for every issue which is reported by the current
   application to ers::fatal, ers::error and ers::warning streams.
-  The parameter of the ers::set_issue_catcher is of the \c boost::function<void ( const ers::Issue & )> type
+  The parameter of the ers::set_issue_catcher is of the \c std::function<void ( const ers::Issue & )> type
   which allows to use plain C-style functions as well as C++ member functions for implementing a custom error
   catcher. For example one can define an error catcher as a member function of a certain class:
   \code
@@ -582,7 +582,7 @@ if ( ers::debug_level() >= level ) \
   \code
   IssueCatcher * catcher = new IssueCatcher();
   try {
-      ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, catcher, _1 ) );
+      ers::set_issue_catcher( std::bind( &IssueCatcher::handler, catcher, std::placeholders::_1 ) );
   }
   catch(ers::IssueCatcherAlreadySet & ex){
       ...

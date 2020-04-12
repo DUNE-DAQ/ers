@@ -6,8 +6,6 @@
  *  Copyright 2005 CERN. All rights reserved.
  *
  */
-#include <boost/bind.hpp>
-
 #include <ers/LocalStream.h>
 #include <ers/StreamManager.h>
 #include <ers/internal/SingletonCreator.h>
@@ -42,31 +40,29 @@ ers::LocalStream::~LocalStream( )
 void
 ers::LocalStream::remove_issue_catcher( )
 {
+    std::unique_ptr<std::thread> catcher;
     {
-	boost::mutex::scoped_lock lock( m_mutex );
+	std::unique_lock lock( m_mutex );
 	if ( !m_issue_catcher_thread.get() )
 	{
 	    return ;
 	}
 	m_terminated = true;
 	m_condition.notify_one();
+	catcher.swap(m_issue_catcher_thread);
     }
     
-    m_issue_catcher_thread -> join();
-    m_issue_catcher_thread.release();
+    catcher -> join();
 }
 
 void
 ers::LocalStream::thread_wrapper()
 {
-    boost::mutex::scoped_lock lock( m_mutex );
+    std::unique_lock lock( m_mutex );
     m_catcher_thread_id = pthread_self();
     while( !m_terminated )
     {
-    	if ( m_issues.empty() )
-        {
-	    m_condition.wait( lock );
-        }
+	m_condition.wait( lock, [this](){return !m_issues.empty() || m_terminated;} );
         
         while( !m_terminated && !m_issues.empty() )
         {
@@ -84,14 +80,15 @@ ers::LocalStream::thread_wrapper()
 }
 
 ers::IssueCatcherHandler *
-ers::LocalStream::set_issue_catcher( const boost::function<void ( const ers::Issue & )> & catcher ) 
+ers::LocalStream::set_issue_catcher( const std::function<void ( const ers::Issue & )> & catcher )
 {
+    std::unique_lock lock( m_mutex );
     if ( m_issue_catcher_thread.get() )
     {
     	throw ers::IssueCatcherAlreadySet( ERS_HERE );
     }
     m_issue_catcher = catcher;
-    m_issue_catcher_thread.reset( new boost::thread( boost::bind( &ers::LocalStream::thread_wrapper, this ) ) );
+    m_issue_catcher_thread.reset( new std::thread( std::bind( &ers::LocalStream::thread_wrapper, this ) ) );
     
     return new ers::IssueCatcherHandler;
 }
@@ -103,7 +100,7 @@ ers::LocalStream::report_issue( ers::severity type, const ers::Issue & issue )
     {
 	ers::Issue * clone = issue.clone();
 	clone->set_severity( type );
-	boost::mutex::scoped_lock lock( m_mutex );
+	std::unique_lock lock( m_mutex );
 	m_issues.push( clone );
 	m_condition.notify_one();
     }

@@ -12,9 +12,9 @@
 #include <ers/StreamManager.h>
 
 #include <ers/ers.h>
+#include <csignal>
 #include <stdexcept>
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
+#include <thread>
 #include <boost/lexical_cast.hpp>
 
 struct Test {
@@ -46,25 +46,25 @@ struct Test {
                     for ( int level = 0; level < 4; level++ ) {
                         ERS_DEBUG( level, "Debug message with level " << level );
                     }
+                    throw ers::CantOpenFile( ERS_HERE, "foo3" );
                 }
-                break;
             case 5:
                 {
                     throw std::runtime_error( "std::out_of_range error" );
                 }
             case 6:
                 {
-                    ERS_ASSERT_MSG( step <= 6, "ERS_ASSERT_MSG does not work" );
+                    ERS_ASSERT_MSG( step <= 6, "ERS_ASSERT_MSG is broken" );
                 }
                 break;
             case 7:
                 {
-                    ERS_ASSERT_MSG( step > 6, "ERS_ASSERT_MSG does not work" );
+                    ERS_ASSERT_MSG( step > 6, "ERS_ASSERT_MSG is broken" );
                 }
                 break;
             default:
                 {
-                    ERS_INFO( "Unhandled exception will be thrown now. This is intentional !!! Program will be aborted. " );
+                    ERS_INFO( "Unhandled exception will be intentionally thrown. Program will be aborted." );
                     struct UnhandledException {};
                     throw UnhandledException();
                 }
@@ -96,10 +96,11 @@ struct IssueCatcher
 void test_local_catcher()
 {
     IssueCatcher catcher;
-    boost::shared_ptr<ers::IssueCatcherHandler> handler;
+    std::unique_ptr<ers::IssueCatcherHandler> handler;
     try
     {
-    	handler.reset( ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) ) );
+    	handler.reset( ers::set_issue_catcher(
+    	        std::bind( &IssueCatcher::handler, &catcher, std::placeholders::_1 ) ) );
     }
     catch( ers::IssueCatcherAlreadySet & ex )
     {
@@ -130,10 +131,11 @@ int main(int ac, char** av)
     test_local_catcher();
 
     IssueCatcher catcher;
-    boost::shared_ptr<ers::IssueCatcherHandler> handler;
+    std::unique_ptr<ers::IssueCatcherHandler> handler;
     try
     {
-    	handler.reset( ers::set_issue_catcher( boost::bind( &IssueCatcher::handler, &catcher, _1 ) ) );
+    	handler.reset( ers::set_issue_catcher(
+    	        std::bind( &IssueCatcher::handler, &catcher, std::placeholders::_1 ) ) );
     }
     catch( ers::IssueCatcherAlreadySet & ex )
     {
@@ -144,11 +146,14 @@ int main(int ac, char** av)
     test_local_catcher();
 
     ERS_DEBUG( 0, "Testing output produced by different threads ... " );
-    boost::thread thr1( boost::bind(test_function,1) );
-    boost::thread thr2( boost::bind(test_function,2) );
-    boost::thread thr3( boost::bind(test_function,3) );
-    boost::thread thr4( boost::bind(test_function,4) );
-    usleep(100000);
+    std::thread thr1( std::bind(test_function,1) );
+    std::thread thr2( std::bind(test_function,2) );
+    std::thread thr3( std::bind(test_function,3) );
+    std::thread thr4( std::bind(test_function,4) );
+    thr1.join();
+    thr2.join();
+    thr3.join();
+    thr4.join();
 
     test_function( 0 );
     test_function( 0 );
@@ -160,6 +165,7 @@ int main(int ac, char** av)
 	try
 	{
 	    test.pass( step );
+	    usleep(100000);
 	}
 	catch ( ers::PermissionDenied & ex )
 	{
@@ -183,6 +189,7 @@ int main(int ac, char** av)
 	    ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
 	    issue.add_qualifier( "q3" );
 	    ers::warning( issue );
+            handler.reset();
 	}
     }
     return 0 ;

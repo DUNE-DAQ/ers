@@ -8,13 +8,12 @@
  *
  */
  
+#include <csignal>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <ctime>
 #include <time.h>
-
-#include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include <ers/Issue.h>
 #include <ers/IssueFactory.h>
@@ -171,8 +170,9 @@ ers::Issue::get_value( const std::string & key, std::string & value ) const
 void 
 Issue::add_qualifier( const std::string & qualifier )
 {
-    if ( std::find( m_qualifiers.begin(), m_qualifiers.end(), qualifier ) == m_qualifiers.end() )
-	m_qualifiers.push_back( qualifier );
+    if ( std::find( m_qualifiers.begin(), m_qualifiers.end(), qualifier ) == m_qualifiers.end() ) {
+        m_qualifiers.push_back( qualifier );
+    }
 }
 
 ers::Severity

@@ -9,17 +9,18 @@
 
 #include <iostream>
 #include <fstream>
+#include <mutex>
+
 #include <ers/SampleIssues.h>
+
 #include <ers/internal/StandardStream.h>
 #include <ers/internal/FormattedStandardStream.h>
-#include <boost/thread/mutex.hpp>
-#include <boost/noncopyable.hpp>
 
 namespace
 {
-    struct OutDevice : boost::noncopyable
+    struct OutDevice
     {
-	OutDevice( std::ostream & out )
+	explicit OutDevice( std::ostream & out )
           : out_( out )
 	{ ; }
         
@@ -29,31 +30,47 @@ namespace
         const OutDevice & device()
         { return *this; }
       
-      private:        
+      private:
+        OutDevice(const OutDevice &) = delete;
+        OutDevice & operator=(const OutDevice &) = delete;
+
+      private:
       	std::ostream &	out_;
     };
     
-    struct ObjectLock : boost::noncopyable
+    struct ObjectLock
     {
       protected:
-	boost::mutex & mutex()
+        ObjectLock() = default;
+
+	std::mutex & mutex()
         {
             return mutex_;
         }
         
       private:
-        boost::mutex	mutex_;
+	ObjectLock(const ObjectLock &) = delete;
+	ObjectLock & operator=(const ObjectLock &) = delete;
+
+      private:
+        std::mutex	mutex_;
     };
     
     template <int LockDiscriminator>
-    struct ClassLock : boost::noncopyable
+    struct ClassLock
     {
       protected:
-	boost::mutex & mutex()
+        ClassLock() = default;
+
+	std::mutex & mutex()
         {
-            static boost::mutex * mutex_ = new boost::mutex;
-            return *mutex_;
+            static std::mutex * m = new std::mutex;
+            return *m;
         }
+
+      private:
+	ClassLock(const ClassLock &) = delete;
+	ClassLock & operator=(const ClassLock &) = delete;
     };
     
     template <class L=ObjectLock>
@@ -61,29 +78,29 @@ namespace
     			    public OutDevice
     {
 	using L::mutex;
-        
-        struct Lock : public boost::mutex::scoped_lock,
-		      public OutDevice
+
+        struct LockedDevice : public OutDevice
 	{            
-            Lock( std::ostream & out, boost::mutex & mutex )
-	      : boost::mutex::scoped_lock( mutex ),
-		OutDevice( out )
+	    LockedDevice( std::ostream & out, std::mutex & mutex )
+	      : OutDevice( out ),
+	        m_lock(mutex)
 	    { ; }
 
-	    // this constructor is intentionaly not implemented because it must never be called !!!
-	    Lock( const Lock & );
-            
-          private:
-	    Lock & operator=( const Lock & );
+        private:
+	    LockedDevice( const LockedDevice & ) = delete;
+	    LockedDevice & operator=( const LockedDevice & ) = delete;
+
+        private:
+	    std::unique_lock<std::mutex> m_lock;
 	};
         
 	LockableDevice( std::ostream & out )
 	  : OutDevice( out )
 	{ ; }
         
-        Lock device()
+	LockedDevice device()
         {
-	    return Lock( stream(), mutex() );
+	    return LockedDevice( stream(), mutex() );
         }
     };
         

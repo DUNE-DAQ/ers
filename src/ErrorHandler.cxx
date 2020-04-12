@@ -3,7 +3,7 @@
  *  ers
  *
  *  Created by Serguei Kolos on 02.08.05.
- *  Copyright 2ERN. All rights reserved.
+ *  Copyright 2005 CERN. All rights reserved.
  *
  */
 #include <csignal>
@@ -22,7 +22,7 @@
 
 ERS_DECLARE_ISSUE(	ers, 
 			UnhandledException,
-                        "Unhandled '" << name << "' exception was thrown",
+                        "Unhandled '" << name << "' exception has been thrown",
                         ((const char *)name) )
 
 ERS_DECLARE_ISSUE(	ers, 
@@ -72,7 +72,6 @@ namespace ers
         
       private:  
         
-        static void recursion_preventer();
         static void abort( const ers::Issue & issue );
         static void terminate_handler();
         
@@ -80,7 +79,13 @@ namespace ers
     };
     
     void ErrorHandler::SignalHandler::action(int signal, siginfo_t*, void *ucontext) {
-        recursion_preventer();
+        static bool recursive_invocation = false;
+        if (recursive_invocation) {
+            std::cerr << "Got signal " << signal << " " << handlers[signal]->name_
+                    << ", aborting the program ..." << std::endl;
+            ::abort();
+        }
+        recursive_invocation = true;
 
         ers::SignalCatched ex( ERS_HERE_DEBUG, signal, handlers[signal]->name_.c_str());
 #ifdef __x86_64__
@@ -113,19 +118,15 @@ namespace ers
             delete it->second;
         }
     }
-    
-    void ErrorHandler::recursion_preventer()
-    {
-	static bool called_for_the_first_time = true;
-	if (!called_for_the_first_time) {
-	    ::abort();
-	}
-	called_for_the_first_time = false;
-    }
-    
+
     void ErrorHandler::terminate_handler()
     {
-	recursion_preventer();
+        static bool recursive_invocation = false;
+        if (recursive_invocation) {
+            std::cerr << "Unhandled exception has been thrown, aborting the program ..." << std::endl;
+            ::abort();
+        }
+        recursive_invocation = true;
             
     	try {
             throw;

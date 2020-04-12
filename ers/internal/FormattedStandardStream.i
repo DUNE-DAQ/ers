@@ -7,9 +7,9 @@
  *
  */
 
+#include <iomanip>
 #include <iostream>
 #include <fstream>
-#include <boost/thread/mutex.hpp>
 
 #define FIELD_SEPARATOR "\n\t"
 #define DELIMITER ','
@@ -163,6 +163,7 @@ ers::FormattedStandardStream<Device>::report( std::ostream & out, const Issue & 
 		    out << FIELD_SEPARATOR << "was caused by: ";
 		    report( out, *issue.cause() );
 		}
+                break;
             default:
             	break;
 	}

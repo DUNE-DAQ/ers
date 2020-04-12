@@ -6,12 +6,14 @@
  *  Copyright 2004 CERN. All rights reserved.
  *
  */
-#include <iostream>
-#include <sstream>
+#include <string.h>
 #include <cxxabi.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
+
+#include <iostream>
+#include <sstream>
 
 #ifndef __rtems__
 #include <execinfo.h>
@@ -31,20 +33,26 @@ namespace
     {
         int status;
 	char * function_begin = ::strchr( mangled, '(' );
-	char * function_end = ::strchr( mangled, '+' );
-	if ( function_begin && function_end )
-	{
-	    *function_begin++ = 0;
-	    *function_end++ = 0;
-	    char * name = abi::__cxa_demangle( function_begin, 0, 0, &status );
-            std::ostringstream out;
-            out << mangled << "(" << (name ? name : function_begin) << "+" << function_end;
-            free( name );
-            return out.str();
-	}
+        if ( function_begin ) {
+            char * function_end = ::strchr( ++function_begin, '+' );
+            if ( function_end && function_end != function_begin)
+            {
+                std::string fname(function_begin, function_end - function_begin);
+                char * name = abi::__cxa_demangle( fname.c_str(), 0, 0, &status );
+
+                if (!name) {
+                    return std::string( mangled );
+                }
+
+                std::ostringstream out;
+                out << std::string(mangled, function_begin - mangled) << name << function_end;
+                free( name );
+                return out.str();
+            }
+        }
 	return std::string( mangled );
     }
-    
+
     void
     print_function( std::ostream & out, const char * function, int verbosity )
     {
@@ -76,6 +84,7 @@ std::vector<std::string>
 ers::Context::stack( ) const
 {
     std::vector<std::string>	stack;
+    stack.reserve( stack_size() );
     char ** symbols = backtrace_symbols( (void**)stack_symbols(), stack_size() );
     
     if (symbols) {

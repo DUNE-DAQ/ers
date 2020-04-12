@@ -15,11 +15,12 @@
   * \brief ers header and documentation file
   */
 
+#include <condition_variable>
+#include <functional>
 #include <iostream>
 #include <queue>
-#include <boost/thread.hpp>
-#include <boost/function.hpp>
-#include <boost/thread/condition.hpp>
+#include <mutex>
+#include <thread>
 
 #include <ers/Issue.h>
 #include <ers/IssueCatcherHandler.h>
@@ -57,7 +58,7 @@ namespace ers
 
 	//! sets local issue intercepter
 	IssueCatcherHandler * set_issue_catcher( 
-        			const boost::function<void ( const ers::Issue & )> & catcher );
+        			const std::function<void ( const ers::Issue & )> & catcher );
 
 	void error( const ers::Issue & issue );
 	
@@ -76,10 +77,10 @@ namespace ers
 	void thread_wrapper();
 
       private:
-	boost::function<void ( const ers::Issue & )>	m_issue_catcher;
-	std::unique_ptr<boost::thread>			m_issue_catcher_thread;
-	boost::mutex					m_mutex;
-	boost::condition				m_condition;
+	std::function<void ( const ers::Issue & )>	m_issue_catcher;
+	std::unique_ptr<std::thread>			m_issue_catcher_thread;
+	std::mutex					m_mutex;
+	std::condition_variable			        m_condition;
 	bool						m_terminated;
 	std::queue<ers::Issue *>			m_issues;
 	pthread_t					m_catcher_thread_id;
