@@ -20,36 +20,29 @@
 
 namespace ers
 {    
-    /** This stream offers basic filtering capacities 
-      * It basically hooks up in front of another stream and filters the data output.
-      * Filtering is based on two list and \e include list and and \e exclude list
-      * To be accepted an Issue needs two match two criteria 
-      * \li No qualifier in the issue should match strings in the exclude list 
-      * \li At least one qualifier in the issue should match a string in the include list
+    /** This stream offers basic filtering capability.
+      * It hooks up in front of another stream and filters the messages that are passed to it
+      * with respect to the given configuration.
+      * Filtering is based on using plain string comparison of the issue's qualifiers with
+      * the given configuration tokens. A stream configuration is composed of the stream name,
+      * that is "filter", followed by brackets with a comma separated list
+      * of string tokens, where any token can be preceded by an exclamation mark. For example:
+      *  \li filter(internal,test) - this stream will pass messages that have either
+      *         "internal" or "test" qualifier.
+      *  \li filter(!internal,!test) this stream will pass messages that have neither
+      *         "internal" nor "test" qualifier.
       * 
-      * If the include list is empty, the second condition is not applied. 
-      * This stream should only be used for severity levels where filtering makes sense, 
-      * i.e warning, debugs, etc...
-      * The syntax to request a filter stream is the following:<br> 
-      * <code>filter:filter:?include_qualifier1,include_qualifier2!exclude_qualifier1,exclude_qualifier2\@stream_identifier</code>
-      * The stream_identifier can be any stream_key used by the ERS system (including a second filter). 
-      * 
-      * For more information on associating a stream to a severity level, see the documentation on the StreamFactory class.
-      * \see ers::StreamFactory
-      * \author Matthias Wiesmann
-      * \version 1.0
-      * \brief filtering stream 
+      * \brief Filtering stream implementation.
       */
     
     class FilterStream : public OutputStream
     {
       public:
-	FilterStream( const std::string & format ); 
+	explicit FilterStream( const std::string & format );
 	
-        void write( const Issue & issue );		/**< \brief write method */
+        void write( const Issue & issue ) override;
         
       private:	
-        
         bool is_accepted( const ers::Issue & issue );
         
 	std::vector<std::string> m_include;		/**< \brief include list */

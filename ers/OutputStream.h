@@ -26,13 +26,13 @@ namespace ers
     
     class Issue; 
 
-    /** ERS Issue output stream interface.
-      * An ERS output stream is a mean to send issues.
-      * This interface defines the core method to \c write issues to the stream.
-      * Any subclass of output stream must implement this method.
+    /** The abstract ERS output stream interface.
+      * This interface defines the pure virtual method to \c write issues to the stream.
+      * Any subclass must implement this method.
+      *
       * \author Serguei Kolos
       * \version 1.0
-      * \brief ERS Output Issue stream interface.
+      * \brief ERS abstract output stream interface.
       */
     
     class OutputStream
@@ -54,9 +54,6 @@ namespace ers
         virtual bool isNull() const;
         
       private:
-	//
-	// Disable copying
-	//
 	OutputStream( const OutputStream & other ) = delete;
         OutputStream & operator=( const OutputStream & ) = delete;
         

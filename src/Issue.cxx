@@ -61,8 +61,8 @@ Issue::Issue( const Issue & other )
 { ; }
 
 
-/** Constructor - takes another exceptions as the cause for the current exception.
- * \param context the context of the Issue, e.g where in the code did the issue appear  
+/** This constructor create a new issue with the given message.
+ * \param context the context of the Issue, e.g where in the code the issue appeared
  * \param message the user message associated with this issue
  */
 Issue::Issue(	const Context & context,
@@ -76,9 +76,9 @@ Issue::Issue(	const Context & context,
     add_default_qualifiers( *this );
 }
 
-/** Constructor - takes another exceptions as the cause for the current exception.
- * \param context the context of the Issue, e.g where in the code did the issue appear  
- * \param cause exception that caused the current Issue
+/** This constructor takes another exceptions as its cause.
+ * \param context the context of the Issue, e.g where in the code the issue appeared
+ * \param cause the other exception that has caused this one
  */
 Issue::Issue(	const Context & context,
                 const std::exception & cause )
@@ -92,10 +92,10 @@ Issue::Issue(	const Context & context,
     add_default_qualifiers( *this );
 }
 
-/** Constructor - takes another exceptions as the cause for the current exception.
+/** This constructor takes another exceptions as its cause.
  * \param context the context of the Issue, e.g where in the code did the issue appear  
  * \param message the user message associated with this issue
- * \param cause exception that caused the current Issue
+ * \param cause exception that caused the current issue
  */
 Issue::Issue(	const Context & context,
 		const std::string & message,
@@ -164,8 +164,8 @@ ers::Issue::get_value( const std::string & key, std::string & value ) const
     }
 }
 
-/** Add a qualifier to the qualifier list
-  * \param qualif the qualifier to add
+/** Add a new qualifier to the qualifiers list of this issue
+  * \param qualifier the qualifier to add
   */
 void 
 Issue::add_qualifier( const std::string & qualifier )
@@ -183,7 +183,7 @@ Issue::set_severity( ers::Severity severity ) const
     return old_severity;
 }
 
-/** Add the given text to the beginning of the current issue's message
+/** Adds the given text to the beginning of the issue's message
   * \param msg text to be prepended
   */
 void
@@ -192,7 +192,7 @@ Issue::prepend_message( const std::string & msg )
     m_message = msg + m_message;
 }
 
-/** Add the given text strings to the beginning and to the end of the current issue's message
+/** Adds the given text strings to the beginning and to the end of the issue's message
   * \param begin text to be prepended
   * \param begin text to be appended
   */
@@ -204,8 +204,8 @@ Issue::wrap_message( const std::string & begin, const std::string & end )
 
 namespace ers
 {   
-    /** Standard streaming operator - puts the issue in human readable format into the OutputStream.
-     * \param out the destination OutputStream
+    /** Standard streaming operator - puts the issue in human readable format into the standard out stream.
+     * \param out the destination out stream
      * \param issue the Issue to be printed
      */
     std::ostream & operator<<( std::ostream & out, const ers::Issue & issue )

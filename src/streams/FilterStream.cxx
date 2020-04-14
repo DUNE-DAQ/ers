@@ -21,11 +21,9 @@ namespace
     const char * const SEPARATORS = "," ;
 } // anonymous namespace 
 
-/** Constructor 
-  * \param chained the chained stream, which will be filtered. Only messages, which pass the filter
-  * will go to the chained stream
-  * on the stack and owned by the current object, i.e it will be deleted upon destruction
-  * \param format describes filter expression.
+/** Constructor that creates a new instance of the filter stream with the given configuration.
+  * Only messages that pass the given filter will go through, the others will be filtered out.
+  * \param format filter expression.
   */
 ers::FilterStream::FilterStream( const std::string & format )
 {

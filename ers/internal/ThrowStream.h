@@ -19,19 +19,22 @@
 
 namespace ers
 {
-    
     class Issue; 
 
-    /** Throw stream.
-      * This stream class implements a stream, which throws the issue written to it as a normal C++ exception.
-      * \author Serguei Kolos
-      * \version 1.0
-      * \brief Throws issues as exceptions
-      */
+    /** This class implements a stream, which throws the issue written to it as a normal C++ exception.
+     * In order to employ this implementation in a stream configuration the name to be used is "throw".
+     * E.g. the following configuration will print a first issue that is passed to the FATAL ERS stream
+     * to the standard output and then throws this issue as a C++ exception:
+     *
+     *         export TDAQ_ERS_FATAL="stdout,throw"
+     *
+     * \author Serguei Kolos
+     * \brief Throws issues as exceptions
+     */
     
     struct ThrowStream : public OutputStream
     {
-	void write( const Issue & issue );	/**< \brief Sends an issue into the stream */
+	void write( const Issue & issue ) override;
     };
 }
 

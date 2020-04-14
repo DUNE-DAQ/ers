@@ -19,10 +19,9 @@
 
 namespace ers
 {
-
     class Issue;
     
-    /** This class defines print function for output an issue to any standard C++ output stream.
+    /** This class provides a namespace for the functions that can be used to print ERS issues to a standard C++ output stream.
       * \author Serguei Kolos
       * \version 1.0
       */

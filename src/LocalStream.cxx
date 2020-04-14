@@ -28,8 +28,7 @@ ers::LocalStream::instance()
   * \see instance()
   */
 ers::LocalStream::LocalStream( )
-  : m_terminated( false ),
-    m_catcher_thread_id( 0 )
+  : m_terminated( false )
 { }
 
 ers::LocalStream::~LocalStream( )
@@ -59,7 +58,7 @@ void
 ers::LocalStream::thread_wrapper()
 {
     std::unique_lock lock( m_mutex );
-    m_catcher_thread_id = pthread_self();
+    m_catcher_thread_id = std::this_thread::get_id();
     while( !m_terminated )
     {
 	m_condition.wait( lock, [this](){return !m_issues.empty() || m_terminated;} );
@@ -75,7 +74,7 @@ ers::LocalStream::thread_wrapper()
             lock.lock();            
         }
     }
-    m_catcher_thread_id = 0;
+    m_catcher_thread_id = {};
     m_terminated = false;
 }
 
@@ -96,7 +95,7 @@ ers::LocalStream::set_issue_catcher( const std::function<void ( const ers::Issue
 void 
 ers::LocalStream::report_issue( ers::severity type, const ers::Issue & issue )
 {
-    if ( m_issue_catcher_thread.get() && m_catcher_thread_id != pthread_self() )
+    if ( m_issue_catcher_thread.get() && m_catcher_thread_id != std::this_thread::get_id() )
     {
 	ers::Issue * clone = issue.clone();
 	clone->set_severity( type );

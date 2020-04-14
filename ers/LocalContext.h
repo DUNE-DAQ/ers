@@ -50,11 +50,12 @@ namespace ers
     {
       public:
 
-	/** Constructor - defines a local Issue context.
-	  * This constructor should generally not be called directly, instead use the macro \c ERS_HERE.
-	  * \param filename name of the source code file
+	/** creates a new instance of a local context for an issue.
+	  * This constructor should not be called directly, instead one should use the \c ERS_HERE macro.
+	  * \param package_name name of the current sw package
+          * \param filename name of the source code file
 	  * \param line_number line_number in the source code
-	  * \param function_name name of the function - either pretty printed or not
+	  * \param function_name name of the current function
 	  */
 	LocalContext(	const char * package_name,
         		const char * filename,

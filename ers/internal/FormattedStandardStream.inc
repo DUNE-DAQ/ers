@@ -15,7 +15,7 @@
 #define DELIMITER ','
 
 template <class Device>
-typename ers::FormattedStandardStream<Device>::Fields	ers::FormattedStandardStream<Device>::supported_fields_;
+typename ers::FormattedStandardStream<Device>::Fields	ers::FormattedStandardStream<Device>::s_supported_fields;
 
 template <class Device>
 ers::FormattedStandardStream<Device>::Fields::Fields( )
@@ -42,8 +42,8 @@ std::string
 ers::FormattedStandardStream<Device>::get_file_name( const std::string & param )
 {
     std::string first_token = param.substr( 0, param.find( ',' ) );
-    std::map<std::string,ers::format::Token>::iterator it = supported_fields_.find( first_token );
-    if ( it != supported_fields_.end() )
+    std::map<std::string,ers::format::Token>::iterator it = s_supported_fields.find( first_token );
+    if ( it != s_supported_fields.end() )
     	return "";
     else
     	return first_token;
@@ -54,8 +54,8 @@ std::string
 ers::FormattedStandardStream<Device>::get_format( const std::string & param )
 {
     std::string first_token = param.substr( 0, param.find( ',' ) );
-    std::map<std::string,ers::format::Token>::iterator it = supported_fields_.find( first_token );
-    if ( it != supported_fields_.end() )
+    std::map<std::string,ers::format::Token>::iterator it = s_supported_fields.find( first_token );
+    if ( it != s_supported_fields.end() )
     	return param;
     else
     	return param.substr( first_token.size() < param.size() ? first_token.size() + 1 : param.size() );
@@ -72,9 +72,9 @@ ers::FormattedStandardStream<Device>::FormattedStandardStream( const std::string
     do {
         index = format.find( DELIMITER, offset );
         std::string token = format.substr( offset, index - offset );
-	std::map<std::string,ers::format::Token>::iterator it = supported_fields_.find( token );
-	if ( it != supported_fields_.end() )
-	    tokens_.push_back( it->second );
+	std::map<std::string,ers::format::Token>::iterator it = s_supported_fields.find( token );
+	if ( it != s_supported_fields.end() )
+	    m_tokens.push_back( it->second );
         
         offset += token.size() + 1;
     } while ( index != std::string::npos );
@@ -84,9 +84,9 @@ template <class Device>
 void
 ers::FormattedStandardStream<Device>::report( std::ostream & out, const Issue & issue )
 {
-    for ( size_t i = 0; i < tokens_.size(); i++ )
+    for ( size_t i = 0; i < m_tokens.size(); i++ )
     {
-	switch ( tokens_[i] )
+	switch ( m_tokens[i] )
         {
 	    case format::Severity:
 		out << ers::to_string( issue.severity() );

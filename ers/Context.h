@@ -21,13 +21,10 @@
 
 namespace ers
 {   
-    /** This class provides an abstract interface for the Context information of an issue.
-      * The implementation might be different depending on wether the current context is
-      * local. i.e. produced in the current process or it was received as part of the
-      * issue, which has been cretaed in another process.
+    /** This class provides an abstract interface to access the context of an issue.
       *
       * \author Serguei Kolos
-      * \brief Context interface for Issue.
+      * \brief An abstract interface to access an Issue context.
       */
     class Context
     {

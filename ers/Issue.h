@@ -41,32 +41,27 @@ namespace ers
     typedef std::map<std::string, std::string>	string_map;
     
     template<class T>
-    class IssueRegistrator
-    {
-      public:
-	IssueRegistrator()
-	{ ers::IssueFactory::instance().register_issue( T::get_uid(), create ); }
-        
-      private:
-	static ers::Issue * create( const Context & context )
-	{ return new T( context ); }
+    class IssueRegistrator {
+    public:
+        IssueRegistrator() {
+            ers::IssueFactory::instance().register_issue(T::get_uid(), create);
+        }
+
+    private:
+        static ers::Issue* create(const Context &context) {
+            return new T(context);
+        }
     };
     
-    /** This class is the root Issue object.
-      *  The class does not contain any fields with information, instead everything is stored in a hashmap
-      *  as key - value paris (both strings).
-      *  The object contains utility methods to allow the manipulation of those key / values and
-      *  code to insert common values into it, like time, compilation information, host information etc.
-      *  For an example of how to build an actual subclass of issue look at the source at SampleIssues.h.
-      *  \author Matthias Wiesmann
-      *  \version 1.1
-      *  When the object is destroyed, it destroys the pointed issue. This means we can only chain issues that
-      *  correctly implement the factory methods required by the IssueFactory class
+    /** This is a base class for any user define issue.
+      *  The class stores all attributes declared in a user define descendant class in a hashmap
+      *  as sting key/value pairs. The object defines a number of methods for providing access to this map.
+      *  For an example of how to define a custom subclass of the Issue have a look at the SampleIssues.h file.
+      *
       *  \see ers::IssueFactory
       *  \see SampleIssues.h
-      *  \brief Root Issue class
+      *  \brief Base class for any user define issue.
       */
-    
     class Issue : public std::exception
     {
 	friend class IssueFactory;
@@ -106,7 +101,7 @@ namespace ers
 	const std::vector<std::string> & qualifiers() const	/**< \brief return array of qualifiers */
         { return m_qualifiers; }
         
-	const string_map & parameters() const /**< \brief return array of parameters */
+	const string_map & parameters() const                   /**< \brief return array of parameters */
         { return m_values; }
         
         ers::Severity severity() const				/**< \brief severity of the issue */
@@ -146,13 +141,15 @@ namespace ers
 		const std::map<std::string, std::string> & parameters,
 		const ers::Issue * cause = 0 );
         
+        /**< \brief Gets a value of any type that has an input operator for the standard stream defined */
 	template <typename T>
-	void get_value( const std::string & key, T & value ) const;	/**< \brief Gets a value of any type, which defines the standard stream input operator */
+	void get_value( const std::string & key, T & value ) const;
 	void get_value( const std::string & key, const char * & value ) const;
 	void get_value( const std::string & key, std::string & value ) const;
 	
+	/**< \brief Sets a value of any type that has an output operator for the standard stream defined */
 	template <typename T>
-	void set_value( const std::string & key, T value );	/**< \brief Sets a value of any type, which defines the standard stream output operator*/
+	void set_value( const std::string & key, T value );
 
 	void set_message( const std::string & message )
 	{ m_message = message; }
@@ -160,10 +157,7 @@ namespace ers
 	void prepend_message( const std::string & message );
         
       private:        
-        //////////////////////////////////////
-        // Copy operation is not allowed
-        //////////////////////////////////////
-        Issue & operator=( const Issue & other );
+        Issue & operator=( const Issue & other ) = delete;
 					  
 	std::unique_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
 	std::unique_ptr<Context>	m_context;		/**< \brief Context of the current issue */

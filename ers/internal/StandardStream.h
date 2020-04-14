@@ -22,8 +22,8 @@ namespace ers
 {
 
     /** This class streams an issue into standard C++ output stream.
+     *
       * \author Serguei Kolos
-      * \version 1.0
       * \brief Single line, human readable format stream.
       */
 

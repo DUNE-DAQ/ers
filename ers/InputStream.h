@@ -2,12 +2,10 @@
  *  InputStream.h
  *  ers
  *
- *  Created by Matthias Wiesmann on 02.12.04.
- *  Modified by Serguei Kolos on 02.08.05.
+ *  Created by Serguei Kolos on 02.08.05.
  *  Copyright 2004 CERN. All rights reserved.
  *
  */
-
 
 #ifndef ERS_INPUT_STREAM_H
 #define ERS_INPUT_STREAM_H
@@ -17,49 +15,40 @@
 #include <ers/IssueReceiver.h>
 
 /** \file InputStream.h Defines abstract interface for ERS input streams.
-  * \author Serguei Kolos
-  * \brief ers header and documentation file 
-  */
-
-namespace ers
-{
-    
-    class Issue; 
+ * \author Serguei Kolos
+ * \brief ers header and documentation file
+ */
+namespace ers {
+    class Issue;
 
     /** ERS Issue input stream interface.
-      * An ERS input stream is a mean to receive issues.
-      * The core method to do so is called \c receive.
-      * Any subclass of input stream must implement this method.
-      * \author Serguei Kolos
-      * \version 1.0
-      * \brief ERS Issue stream interface.
-      */
-    
-    class InputStream
-    {
-      friend class StreamManager;
-      
-      public:
-	virtual ~InputStream()
-        { ; }
-              
-      protected:
-        InputStream( );
-                        
-        /**< \brief Will be called when the new issue is received */
-	void receive( const Issue & issue );
-      
-      private:
-	//
-	// Disable copying
-	//
-	InputStream( const InputStream & other ) = delete;
-        InputStream & operator=( const InputStream & ) = delete;
-        
-        void set_receiver( IssueReceiver * receiver )
-        { m_receiver = receiver; }
-        
-        IssueReceiver * m_receiver;
+     *
+     * \author Serguei Kolos
+     * \brief ERS Issue input stream interface.
+     */
+    class InputStream {
+        friend class StreamManager;
+
+    public:
+        virtual ~InputStream() {
+            ;
+        }
+
+    protected:
+        InputStream();
+
+        /**< \brief Will be called when a new issue is received */
+        void receive(const Issue &issue);
+
+    private:
+        InputStream(const InputStream &other) = delete;
+        InputStream& operator=(const InputStream&) = delete;
+
+        void set_receiver(IssueReceiver *receiver) {
+            m_receiver = receiver;
+        }
+
+        IssueReceiver *m_receiver;
     };
 }
 

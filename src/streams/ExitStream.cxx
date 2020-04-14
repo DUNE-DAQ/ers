@@ -13,14 +13,14 @@
 ERS_REGISTER_OUTPUT_STREAM( ers::ExitStream, "exit", exit_code )
 
 ers::ExitStream::ExitStream( const std::string & exit_code )
-  : exit_code_( 13 )
+  : m_exit_code( 1 )
 {
     std::istringstream in( exit_code );
-    in >> exit_code_;
+    in >> m_exit_code;
 }
 
 void ers::ExitStream::write( const Issue & )
 {
-    ::exit( exit_code_ );
+    ::exit( m_exit_code );
 }
 

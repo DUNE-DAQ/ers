@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <ers/internal/Util.h>
 #include <ers/internal/macro.h>
 

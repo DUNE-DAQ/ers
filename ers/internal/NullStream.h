@@ -9,7 +9,7 @@
 
 /** \file NullStream.h This file defines NullStream ERS stream.
   * \author Serguei Kolos
-  * \brief ers header file 
+  * \brief ers header file
   */
 
 #ifndef ERS_NULL_STREAM_H
@@ -20,23 +20,24 @@
 
 namespace ers
 {
-    
     class Issue;
 
-    /** Null stream.
-      * This stream class implements a null stream, i.e a stream where no issue can be read from
-      * and it also silently discards sent issues.
-      * \author Serguei Kolos
-      * \version 1.0
-      * \brief Null stream
-      */
-    
+    /** This stream implementation silently discards any issue that is sent to it.
+     * In order to employ this implementation in a stream configuration the name to be used is "null".
+     * E.g. the following configuration will result in no output been produced for the ERROR stream:
+     *
+     *         export TDAQ_ERS_ERROR="null"
+     *
+     * \author Serguei Kolos
+     * \brief Null stream
+     */
+
     struct NullStream : public OutputStream
-    {        	
-        void write( const Issue & )	/**< \brief Sends an issue into the stream */
+    {
+        void write( const Issue & ) override
         { ; }
-        
-        bool isNull() const
+
+        bool isNull() const override
         { return true; }
     };
 }

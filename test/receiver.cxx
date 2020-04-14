@@ -10,7 +10,6 @@
 #include <ers/InputStream.h>
 #include <ers/SampleIssues.h>
 #include <ers/ers.h>
-#include <semaphore.h>
 
 struct MyIssueReceiver : public ers::IssueReceiver
 {
@@ -31,9 +30,9 @@ int main(int , char** )
     	return 1;
     }
     
-    sem_t semaphore;
-    sem_init( &semaphore, 0, 0 );
-    sem_wait( &semaphore );
+    while (true) {
+        sleep(1);
+    }
     
     return 0; 
 }

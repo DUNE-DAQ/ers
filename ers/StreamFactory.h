@@ -30,18 +30,16 @@ ERS_DECLARE_ISSUE(  ers,
 
 namespace ers
 {
-    
     class InputStream; 
     class OutputStream; 
     template <class > class SingletonCreator;
     
-    /** The \c StreamFactory class is responsible for creating all the ers streams
-      * used by the system. It implements the singleton pattern and the factory pattern. 
-      * Users should not use functions of this class apart from for registering new streams.
+    /** The \c StreamFactory class is responsible for creating a new instance of a known stream implementation.
+      * This class uses singleton pattern.
+      * Users should not use this class directly but use the \c ERS_REGISTER_OUTPUT_STREAM macro instead.
       * 
       * \author Serguei Kolos
-      * \version 1.2
-      * \brief Factory for ERS streams. 
+      * \brief Factory for ERS stream implementations.
       * \see ers::StreamManager
       */
     

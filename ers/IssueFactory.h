@@ -32,14 +32,13 @@ namespace ers
     class Context;
     template <class > class SingletonCreator;
     
-    /** This class implements the factory pattern for Issues.
-      * The main responsability of this class is to keep track of the existing types of Issues
-      * Each issue should register one factory method for instances of this class.
-      * This is needed for deserializing of Issues. 
+    /** This class implements factory pattern for Issues.
+      * The main responsibility of this class is to keep track of the existing types of Issues
+      * Each user defined issue class should register one factory method for creating instances of this class.
+      * This is required for reconstructing issues produced in the context of a different process.
       * 
-      * \author Matthias Wiesmann
-      * \version 1.0
-      * \brief Factory for all Issues 
+      * \author Serguei Kolos
+      * \brief Implements factory pattern for user defined Issues.
       */
     
     class IssueFactory
@@ -71,10 +70,10 @@ namespace ers
         { ; }
         
 	FunctionMap m_creators;     
-    }; // IssueFactory
+    };
 
     std::ostream& operator<<(std::ostream&, const IssueFactory& factory);         /**< \brief streaming operator */
-} // ers
+}
 
 #endif
 

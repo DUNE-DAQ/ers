@@ -22,18 +22,23 @@ namespace ers
 {
 
     /** This class can be used to lock a particular ERS output streams to prevent 
-      * simultaneous output from different threads.
+      * output to this stream produced by concurrent threads from been mixed up.
+     * In order to employ this implementation in a stream configuration the name to be used is "lock".
+     * E.g. the following configuration will assure that the output sent to the LOG stream by
+     * concurrent threads is never mixed up:
+     *
+     *         export TDAQ_ERS_LOG="lock,stdout"
+      *
       * \author Serguei Kolos
-      * \version 1.0
-      * \brief Lock for ERS streams.
+      * \brief Lock implementation for an ERS stream.
       */
 
     struct LockStream : public OutputStream
     {
-	void write( const Issue & issue );
+	void write( const Issue & issue ) override;
         
       private:
-	std::mutex mutex_;
+	std::mutex m_mutex;
     };
 }
 

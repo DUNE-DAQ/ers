@@ -50,11 +50,11 @@ namespace ers
     {
       public:
 
-	/** Constructor - defines a local Issue context.
-	  * This constructor should generally not be called directly, instead use the macro \c ERS_HERE.
-	  * \param filename name of the source code file
+	/** creates a new instance of a context for an Issue that has been originated from another process.
+	  * \param package_name name of the sw package
+          * \param filename name of the source code file
 	  * \param line_number line_number in the source code
-	  * \param function_name name of the function - either pretty printed or not
+	  * \param function_name name of the function
 	  */
 	RemoteContext(	const std::string & package,
         		const std::string & filename,

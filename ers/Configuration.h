@@ -30,7 +30,8 @@ namespace ers
       * \see ers::debug
       * \see ers::error
       * \see ers::fatal
-      * \see ers::infomation
+      * \see ers::information
+      * \see ers::log
       * \see ers::warning
       */
     

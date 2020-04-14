@@ -13,14 +13,14 @@ namespace
 {
     struct DummyReceiver: public ers::IssueReceiver
     {
-	void receive( const ers::Issue & ) { ; }
+	void receive( const ers::Issue & ) override { ; }
     };
     
-    DummyReceiver __dummy__receiver__;
+    DummyReceiver dummy_receiver;
 }
        
 ers::InputStream::InputStream( )
-  : m_receiver( &__dummy__receiver__ )
+  : m_receiver( &dummy_receiver )
 { ; }
 
 void ers::InputStream::receive( const Issue & issue )

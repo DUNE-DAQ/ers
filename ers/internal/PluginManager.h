@@ -39,7 +39,7 @@ namespace ers
 	class SharedLibrary
 	{
 	  public:
-	    /**	 Loads the shared library and locates the create function.
+	    /**	 Loads a shared library and locates the create function.
 	    Stores a pointer to the create function in the map indexed by
 	    the library name.
 	    @param name Name of the class to be loaded (library name excluding

@@ -28,7 +28,6 @@
   * \author Serguei Kolos
   * \brief ers header and documentation file 
   */
-
 namespace ers
 {    
     class InputStream; 
@@ -39,20 +38,20 @@ namespace ers
     class StreamInitializer;
     template <class > class SingletonCreator;
     
-    /** The \c StreamManager class is responsible for creating and handling all the ers
+    /** The \c StreamManager class is responsible for creating and handling all the ERS
       * streams used by an application. It implements the singleton pattern and handles a 
       * table of the different stream attached to each severity. 
-      * When issues occurs, they can be dispatched using this instance.
-      * Users should not use functions of this class directly.
-      * In order to report issues one should use global functions declared in the ers namespace.
+      * When issues occur they are dispatched to an appropriate stream by the singleton
+      * instance of this class. Users should not use this class directly.
+      * In order to report issues users should use global functions declared in the \c ers namespace.
       * 
       * \author Serguei Kolos
-      * \version 1.2
-      * \brief Manager of ERS streams. 
+      * \brief This class manages and provides access to ERS streams.
       * \see ers::debug
       * \see ers::error
       * \see ers::fatal
       * \see ers::infomation
+      * \see ers::log
       * \see ers::warning
       */
     

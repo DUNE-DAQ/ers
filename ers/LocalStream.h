@@ -38,12 +38,10 @@ namespace ers
     
     class IssueCatcherHandler;
     
-    /** The \c LocalStream class implements error reporting between different threads within one application.
+    /** The \c LocalStream class can be used for passing issues between threads of the same process.
       *
       * \author Serguei Kolos
       * \version 1.2
-      * \brief Manager of ERS streams configuration.
-      * \see ers::Configuration
       */
 
     class LocalStream
@@ -56,7 +54,7 @@ namespace ers
         //! returns the singleton
         static LocalStream & instance();
 
-	//! sets local issue intercepter
+	//! sets local issue catcher
 	IssueCatcherHandler * set_issue_catcher( 
         			const std::function<void ( const ers::Issue & )> & catcher );
 
@@ -83,7 +81,7 @@ namespace ers
 	std::condition_variable			        m_condition;
 	bool						m_terminated;
 	std::queue<ers::Issue *>			m_issues;
-	pthread_t					m_catcher_thread_id;
+	std::thread::id					m_catcher_thread_id;
     };
 }
 

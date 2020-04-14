@@ -1,5 +1,5 @@
 /*
- *  QAnyIssue.h
+ *  AnyIssue.h
  *  ers
  *
  *  Created by Serguei Kolos on 26.06.10.
