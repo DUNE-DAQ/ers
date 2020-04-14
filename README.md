@@ -100,11 +100,11 @@ from the **ers::Issue** as it is shown on the following example:
 
 ~~~cpp
 ERS_DECLARE_ISSUE(
-ers,					                                			// namespace
-	  Assertion,				                                	// issue name
-	  "Assertion (" << condition << ") failed because " << reason,	// message
-	  ((const char *)condition )								// first attribute
-	  ((const char *)reason )			                        	// second attribute
+ers,                                                              // namespace
+    Assertion,                                                    // issue name
+    "Assertion (" << condition << ") failed because " << reason,  // message
+    ((const char *)condition )                                    // first attribute
+    ((const char *)reason )                                       // second attribute
 )
 ~~~
 
@@ -122,53 +122,53 @@ The result of the **ERS_DECLARE_ISSUE** macro expansion would look like:
 
 ~~~cpp
 namespace ers {
-	class Assertion : public ers::Issue {
-	    template <class> friend class ers::IssueRegistrator;
-		Assertion() { ; }
-		
-		static const char * get_uid() { return "ers::Assertion"; }
-		
-		virtual void raise() const throw( std::exception ) { throw *this; }
-		virtual const char * get_class_name() const { return get_uid(); }
-		virtual ers::Issue * clone() const { return new ers::Assertion( *this ); }
-		
-	public:
-		Assertion( const ers::Context & context , const char * condition , const char * reason )
-			: ers::Issue( context ) {
-			set_value( "condition", condition );
-			set_value( "reason", reason );
-			std::ostringstream out;
-			out << "Assertion (" << condition << ") failed because " << reason;
-			set_message( out.str() );
-		}
-		
-		Assertion( const ers::Context & context, const std::string & msg , const char * condition , const char * reason )
-			: ers::Issue( context, msg ) {
-			set_value( "condition", condition );
-			set_value( "reason", reason );
-		}
-		
-		Assertion( const ers::Context & context , const char * condition , const char * reason , const std::exception & cause )
-			: ers::Issue( context, cause ) {
-			set_value( "condition", condition );
-			set_value( "reason", reason );
-			std::ostringstream out;
-			out << "Assertion (" << condition << ") failed because " << reason;
-			set_message( out.str() );
-		}
-		
-		const char * get_condition () {
-			const char * val;
-			get_value( "condition", val );
-			return val;
-		}
-		
-		const char * get_reason () {
-			const char * val;
-			get_value( "reason", val );
-			return val;
-		}
-	};
+    class Assertion : public ers::Issue {
+        template <class> friend class ers::IssueRegistrator;
+        Assertion() { ; }
+        
+        static const char * get_uid() { return "ers::Assertion"; }
+        
+        virtual void raise() const throw( std::exception ) { throw *this; }
+        virtual const char * get_class_name() const { return get_uid(); }
+        virtual ers::Issue * clone() const { return new ers::Assertion( *this ); }
+        
+    public:
+        Assertion( const ers::Context & context , const char * condition , const char * reason )
+            : ers::Issue( context ) {
+            set_value( "condition", condition );
+            set_value( "reason", reason );
+            std::ostringstream out;
+            out << "Assertion (" << condition << ") failed because " << reason;
+            set_message( out.str() );
+        }
+        
+        Assertion( const ers::Context & context, const std::string & msg , const char * condition , const char * reason )
+            : ers::Issue( context, msg ) {
+            set_value( "condition", condition );
+            set_value( "reason", reason );
+        }
+        
+        Assertion( const ers::Context & context , const char * condition , const char * reason , const std::exception & cause )
+            : ers::Issue( context, cause ) {
+            set_value( "condition", condition );
+            set_value( "reason", reason );
+            std::ostringstream out;
+            out << "Assertion (" << condition << ") failed because " << reason;
+            set_message( out.str() );
+        }
+        
+        const char * get_condition () {
+            const char * val;
+            get_value( "condition", val );
+            return val;
+        }
+        
+        const char * get_reason () {
+            const char * val;
+            get_value( "reason", val );
+            return val;
+        }
+    };
 }
 ~~~
 
@@ -178,13 +178,13 @@ which inherits from one of the other custom ERS issue classes. For example, the 
 inherits from the **ers::Assertion** class defined above:
 
 ~~~cpp
-ERS_DECLARE_ISSUE_BASE(ers,							        			// namespace name
-		Precondition,						                			// issue name
-		ers::Assertion,						                		// base issue name
-		"Precondition (" << condition << ") located in " << location
-	<< " failed because " << reason,	                				// message
-		((const char *)condition ) ((const char *)reason ),	         // base class attributes
-		((const char *)location )				                		// this class attributes
+ERS_DECLARE_ISSUE_BASE(ers,                                          // namespace name
+      Precondition,                                                  // issue name
+      ers::Assertion,                                                // base issue name
+      "Precondition (" << condition << ") located in " << location
+    << " failed because " << reason,                                 // message
+      ((const char *)condition ) ((const char *)reason ),            // base class attributes
+       ((const char *)location )                                     // this class attributes
 )
 ~~~
 
@@ -192,45 +192,45 @@ The result of the **ERS_DECLARE_ISSUE_BASE** macro expansion looks like:
 
 ~~~cpp
 namespace ers {
-	class Precondition : public ers::Assertion {
-	    template <class> friend class ers::IssueRegistrator;
-		Precondition() { ; }
-		
-		static const bool registered = ers::IssueRegistrator< ers::Precondition >::instance.done;
-		static const char * get_uid() { return "ers::Precondition"; }
-		
-		virtual void raise() const throw( std::exception ) { throw *this; }
-		virtual const char * get_class_name() const { return get_uid(); }
-		virtual ers::Issue * clone() const { return new ers::Precondition( *this ); }
-		
-	public:
-		Precondition( const ers::Context & context , const char * condition , const char * reason, const char * location )
-			: ers::Assertion( context, condition, reason ) {
-				set_value( "location", location );
-			std::ostringstream out;
-			out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
-			set_message( out.str() );
-		}
-		
-		Precondition( const ers::Context & context, const std::string & msg , const char * condition , const char * reason, const char * location )
-			: ers::Assertion( context, msg, condition, reason ) {
-			set_value( "location", location );
-		}
-		
-		Precondition( const ers::Context & context , const char * condition , const char * reason , const char * location, const std::exception & cause )
-			: ers::Assertion( context, condition, reason, cause ) {
-			set_value( "location", location );
-			std::ostringstream out;
-			out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
-			set_message( out.str() );
-		}
-		
-		const char * get_location () {
-			const char * val;
-			get_value( "location", val );
-			return val;
-		}
-	};
+    class Precondition : public ers::Assertion {
+        template <class> friend class ers::IssueRegistrator;
+        Precondition() { ; }
+        
+        static const bool registered = ers::IssueRegistrator< ers::Precondition >::instance.done;
+        static const char * get_uid() { return "ers::Precondition"; }
+        
+        virtual void raise() const throw( std::exception ) { throw *this; }
+        virtual const char * get_class_name() const { return get_uid(); }
+        virtual ers::Issue * clone() const { return new ers::Precondition( *this ); }
+        
+    public:
+        Precondition( const ers::Context & context , const char * condition , const char * reason, const char * location )
+            : ers::Assertion( context, condition, reason ) {
+                set_value( "location", location );
+            std::ostringstream out;
+            out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
+            set_message( out.str() );
+        }
+        
+        Precondition( const ers::Context & context, const std::string & msg , const char * condition , const char * reason, const char * location )
+            : ers::Assertion( context, msg, condition, reason ) {
+            set_value( "location", location );
+        }
+        
+        Precondition( const ers::Context & context , const char * condition , const char * reason , const char * location, const std::exception & cause )
+            : ers::Assertion( context, condition, reason, cause ) {
+            set_value( "location", location );
+            std::ostringstream out;
+            out << "Precondition (" << condition << ") located in " << location << ") failed because " << reason;
+            set_message( out.str() );
+        }
+        
+        const char * get_location () {
+            const char * val;
+            get_value( "location", val );
+            return val;
+        }
+    };
 }
 ~~~
 
@@ -247,25 +247,25 @@ The following example shows a typical use case of handling ERS exceptions.
 ~~~cpp
 #include <ers/SampleIssues.h>
 
-	try {
-	    foo( );
-	}
-	catch ( ers::PermissionDenied & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
-	    ers::warning( issue );
-	}
-	catch ( ers::FileDoesNotExist & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
-	    ers::warning( issue );
-	}
-	catch ( ers::Issue & ex ) {
-	    ERS_DEBUG( 0, "Unknown issue caught: " << ex )
-	    ers::error( ex );
-	}
-	catch ( std::exception & ex ) {
-	    ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
-	    ers::warning( issue );
-	}
+    try {
+        foo( );
+    }
+    catch ( ers::PermissionDenied & ex ) {
+        ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+        ers::warning( issue );
+    }
+    catch ( ers::FileDoesNotExist & ex ) {
+        ers::CantOpenFile issue( ERS_HERE, ex.get_file_name(), ex );
+        ers::warning( issue );
+    }
+    catch ( ers::Issue & ex ) {
+        ERS_DEBUG( 0, "Unknown issue caught: " << ex )
+        ers::error( ex );
+    }
+    catch ( std::exception & ex ) {
+        ers::CantOpenFile issue( ERS_HERE, "unknown", ex );
+        ers::warning( issue );
+    }
 ~~~
 
 This example demonstrates the main features of the ERS API:
@@ -275,7 +275,7 @@ ers::debug, ers::info, ers::warning, ers::error, ers::fatal
  * Any ERS issue has a constructor, which accepts another issue as its last parameter. If this
 constructor is used the new issue will hold the copy of the original one and will report it as its cause.
  * Any ERS issue has a constructor, which accepts std::exception issue as its last parameter.
-	If it is used the new issue will hold the copy of the given std::exception one and will report it as its cause.
+    If it is used the new issue will hold the copy of the given std::exception one and will report it as its cause.
 
 ##Configuring ERS Streams
 The ERS system provides multiple instances of the stream API, one per severity level, to report issues.
@@ -354,9 +354,9 @@ FilterStream stream implementation:
 void
 ers::FilterStream::write( const ers::Issue & issue )
 {
-	if ( is_accepted( issue ) ) {
-		chained().write( issue );
-	}
+    if ( is_accepted( issue ) ) {
+        chained().write( issue );
+    }
 }
 ~~~
 
@@ -413,7 +413,7 @@ catcher. For example one can define an error catcher as a member function of a c
 ~~~cpp
 struct IssueCatcher {
    void handler( const ers::Issue & issue ) {
-	  std::cout << "IssueCatcher has been called: " << issue << std::endl;
+      std::cout << "IssueCatcher has been called: " << issue << std::endl;
    }
 };
 ~~~
@@ -424,10 +424,10 @@ This error catcher can be registered with ERS in the following way:
 IssueCatcher * catcher = new IssueCatcher();
 ers::IssueCatcherHandler * handler;
 try {
-	handler = ers::set_issue_catcher( std::bind( &IssueCatcher::handler, catcher, std::placeholders::_1 ) );
+    handler = ers::set_issue_catcher( std::bind( &IssueCatcher::handler, catcher, std::placeholders::_1 ) );
 }
 catch(ers::IssueCatcherAlreadySet & ex){
-	...
+    ...
 }
 ~~~
 
@@ -451,17 +451,17 @@ The following example shows how to do that:
 #include <ers/ers.h>
 
 struct MyIssueReceiver : public ers::IssueReceiver {
-	void receive( const ers::Issue & issue ) {
-		std::cout << issue << std::endl;
-	}
+    void receive( const ers::Issue & issue ) {
+        std::cout << issue << std::endl;
+    }
 };
 
 MyIssueReceiver * receiver = new MyIssueReceiver;
 try {
-	ers::StreamManager::instance().add_receiver( "mts", "*", receiver );
+    ers::StreamManager::instance().add_receiver( "mts", "*", receiver );
 }
 catch( ers::Issue & ex ) {
-	ers::fatal( ex );
+    ers::fatal( ex );
 }
 ~~~
 
@@ -472,10 +472,10 @@ environment variable. Alternatively one may pass partition name explicitly via t
 ~~~cpp
 MyIssueReceiver * receiver = new MyIssueReceiver;
 try {
-	ers::StreamManager::instance().add_receiver( "mts", {"my partition name", "*"}, receiver );
+    ers::StreamManager::instance().add_receiver( "mts", {"my partition name", "*"}, receiver );
 }
 catch( ers::Issue & ex ) {
-	ers::fatal( ex );
+    ers::fatal( ex );
 }
 ~~~
 
@@ -484,10 +484,10 @@ and giving it a pointer to the corresponding receiver object, e.g.:
 
 ~~~cpp
 try {
-	ers::StreamManager::instance().remove_receiver( receiver );
+    ers::StreamManager::instance().remove_receiver( receiver );
 }
 catch( ers::Issue & ex ) {
-	ers::error( ex );
+    ers::error( ex );
 }
 ~~~
 
