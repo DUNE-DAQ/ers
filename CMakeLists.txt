@@ -1,25 +1,15 @@
 
-tdaq_package()
+cmake_minimum_required(VERSION 3.12)
+project(ers)
 
-tdaq_add_library(ers 
-  src/*.cxx
-  INCLUDE_DIRECTORIES Boost
-  LINK_LIBRARIES pthread dl)
+set(Boost_USE_STATIC_LIBS OFF)
+# set(Boost_NO_BOOST_CMAKE ON)
+set(BUILD_SHARED_LIBS ON)
 
-tdaq_add_library(ErsBaseStreams MODULE
-  src/streams/*.cxx
-  LINK_LIBRARIES ers Boost::regex)
+set(CMAKE_CXX_STANDARD 17)
 
-find_package(Python QUIET REQUIRED COMPONENTS Development)
+include_directories(${CMAKE_SOURCE_DIR})
 
-tdaq_add_library(erspy MODULE 
-  python/erspy.cxx
-  LINK_LIBRARIES PRIVATE Boost::python ers Python::Module)
-
-tdaq_add_python_files(python/ers.py)
-
-tdaq_add_executable(ers_test         test/test.cxx     NOINSTALL LINK_LIBRARIES ers)
-tdaq_add_executable(ers_print_config bin/config.cxx    LINK_LIBRARIES ers)
-tdaq_add_executable(ers_receiver     test/receiver.cxx LINK_LIBRARIES ers)
-
-add_test(NAME ers_check COMMAND ers_test 8)
+add_subdirectory(bin)
+add_subdirectory(src)
+add_subdirectory(test)
