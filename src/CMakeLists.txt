@@ -1,10 +1,12 @@
 
+find_package(Boost COMPONENTS regex preprocessor) 
+
 file(GLOB source_files "*.cxx")
 add_library(ers SHARED ${source_files})
-target_link_libraries(ers pthread dl)
+target_link_libraries(ers pthread dl Boost::preprocessor)
 
 
-find_package(Boost COMPONENTS regex) 
+
 message(${Boost_REGEX_LIBRARIES})
 
 file(GLOB streams_srcs "streams/*.cxx")
