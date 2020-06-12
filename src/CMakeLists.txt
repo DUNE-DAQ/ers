@@ -1,9 +1,11 @@
 
-find_package(Boost COMPONENTS regex preprocessor) 
+find_package(Boost COMPONENTS regex REQUIRED) 
+
+include_directories(${Boost_INCLUDE_DIRS})
 
 file(GLOB source_files "*.cxx")
 add_library(ers SHARED ${source_files})
-target_link_libraries(ers pthread dl Boost::preprocessor)
+target_link_libraries(ers pthread dl)
 
 
 
