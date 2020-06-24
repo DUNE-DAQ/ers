@@ -14,7 +14,7 @@ target_link_libraries(ers pthread dl)
 target_include_directories(ers
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:ers>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 file(GLOB streams_srcs "streams/*.cxx")
