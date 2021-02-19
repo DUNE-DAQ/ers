@@ -246,7 +246,7 @@ The following example shows a typical use case of handling ERS exceptions.
 This example demonstrates the main features of the ERS API:
  * An issue does not have severity by itself. Severity of the issue is defined by the stream to which this issue is reported.
  * An issue can be send to one of the existing ERS streams using one of the following functions:
-ers::debug, ers::info, ers::warning, ers::error, ers::fatal
+ers::info, ers::warning, ers::error, ers::fatal
  * Any ERS issue has a constructor, which accepts another issue as its last parameter. If this
 constructor is used the new issue will hold the copy of the original one and will report it as its cause.
  * Any ERS issue has a constructor, which accepts std::exception issue as its last parameter.
@@ -256,8 +256,6 @@ constructor is used the new issue will hold the copy of the original one and wil
 The ERS system provides multiple instances of the stream API, one per severity level, to report issues.
 The issues which are sent to different streams may be forwarded to different destinations depending on a
 particular stream configuration. By default the ERS streams are configured in the following way:
- * ers::debug - "lstdout" - prints issues to the standard C++ output stream
- * ers::log - "lstdout" - prints issues to the standard C++ output stream
  * ers::info - "throttle,lstdout" - prints throttled issues to the standard C++ output stream
  * ers::warning - "throttle,lstderr" - prints throttled issues to the standard C++ error stream
  * ers::error - "throttle,lstderr" - prints throttled issues to the standard C++ error stream
