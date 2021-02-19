@@ -69,7 +69,6 @@ namespace ers
 	}
 	catch( PluginException & ex )
 	{
-	    ERS_INTERNAL_DEBUG( 1, "Library " << MRSStreamLibraryName << " can not be loaded because " << ex.reason() )
 	}
         
 	for ( size_t i = 0; i < libs.size(); i++ )

@@ -64,6 +64,8 @@ namespace ers
 	
         void warning( const ers::Issue & issue );
 
+        void information( const ers::Issue & issue );
+
       private:
 	LocalStream( );
 	~LocalStream( );

@@ -39,8 +39,6 @@ namespace
     
     const char * const DefaultOutputStreams[] =
     {
-	"lstdout",		// Debug
-	"lstdout",		// Log
 	"throttle,lstdout",	// Information
 	"throttle,lstderr",	// Warning
         "throttle,lstderr",	// Error
@@ -50,7 +48,7 @@ namespace
     const char *
     get_stream_description( ers::severity severity )
     {
-	assert( ers::Debug <= severity && severity <= ers::Fatal );
+	assert( ers::Information <= severity && severity <= ers::Fatal );
         
 	std::string env_name( "TDAQ_ERS_" );
 	env_name += ers::to_string( severity );
@@ -162,7 +160,7 @@ ers::StreamManager::instance()
   */
 ers::StreamManager::StreamManager()
 {
-    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
+    for( short ss = ers::Information; ss <= ers::Fatal; ++ss )
     {	
        m_init_streams[ss] = std::make_shared<StreamInitializer>( *this );
        m_out_streams[ss] = m_init_streams[ss];
@@ -318,21 +316,6 @@ ers::StreamManager::error( const Issue & issue )
     report_issue( ers::Error, issue );
 } // error
 
-/** Sends an issue to the debug stream 
- * \param issue the Issue to send
- * \param level the debug level. 
- */
-void
-ers::StreamManager::debug( const Issue & issue, int level )
-{
-    if ( Configuration::instance().debug_level() >= level )
-    {
-	ers::severity old_severity = issue.set_severity( ers::Severity( ers::Debug, level ) );
-	m_out_streams[ers::Debug]->write( issue );
-	issue.set_severity( old_severity );
-    }
-}
-
 /** Sends an Issue to the fatal error stream 
  * \param issue 
  */
@@ -360,19 +343,10 @@ ers::StreamManager::information( const Issue & issue )
     report_issue( ers::Information, issue );
 }
 
-/** Sends an issue to the log stream 
- * \param issue the Issue to send
- */
-void
-ers::StreamManager::log( const Issue & issue )
-{
-    report_issue( ers::Log, issue );
-}
-
 std::ostream & 
 ers::operator<<( std::ostream & out, const ers::StreamManager & )
 {
-    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
+    for( short ss = ers::Information; ss <= ers::Fatal; ++ss )
     {	
 	out << (ers::severity)ss << "\t\"" 
         	<< get_stream_description( (ers::severity)ss ) << "\"" << std::endl;

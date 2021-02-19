@@ -27,11 +27,9 @@ namespace ers
       * \author Serguei Kolos
       * \version 1.2
       * \brief Manager of ERS streams configuration. 
-      * \see ers::debug
       * \see ers::error
       * \see ers::fatal
       * \see ers::information
-      * \see ers::log
       * \see ers::warning
       */
     
@@ -44,21 +42,14 @@ namespace ers
 	        
   	static Configuration & instance();	/**< \brief return the singleton */
         
-        int debug_level() const			/**< \brief returns current debug level */
-        { return m_debug_level; }
-        
         int verbosity_level() const		/**< \brief returns current verbosity level */
         { return m_verbosity_level; }
-        
-        void debug_level( int debug_level )	/**< \brief can be used to set the current debug level */
-        { m_debug_level = debug_level; }
         
         void verbosity_level( int verbosity_level );	/**< \brief can be used to set the current verbosity level */
         
       private:	
 	Configuration( );
                 
-        int m_debug_level;		/**< \brief current active level for the debug stream */	
     	int m_verbosity_level;		/**< \brief current verbosity level for all streams */
     };
     

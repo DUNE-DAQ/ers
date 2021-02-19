@@ -34,7 +34,7 @@ class CantOpenFile( Exception ):
 
 #create the logger
 logger = logging.getLogger("main")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 #add ers handler
 ers.addLoggingHandler("main")
@@ -49,7 +49,6 @@ class Test(object):
             
 def test_function( arg1, arg2 ):
     format = 'This is a %s message #%d'
-    logger.debug(format, 'debug', 1 )
     logger.info(format, 'info', 2 )
     logger.warning(format, 'warning', 3 )
     logger.error(format, 'error', 4 )

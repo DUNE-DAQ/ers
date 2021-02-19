@@ -47,7 +47,7 @@ namespace ers
     /*!
      *	This function sets up the local issue handler function. This function will be executed in the context
      *	of dedicated thread which will be created as a result of this call. All the issues which are reported
-     *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
+     *	via the ers::error, ers::fatal and ers::warning ers::info functions will be forwarded to this thread.
      *	\param issue the issue to be reported
      *	\return pointer to the handler object, which allows to remove the catcher by just destroying this object.
      *			If an applications ignores this return value there will no way of de installing the issue catcher.
@@ -55,24 +55,12 @@ namespace ers
      *	\see ers::error()
      *	\see ers::fatal()
      *	\see ers::warning()
+     *	\see ers::info()
      */
     inline IssueCatcherHandler * 
     	set_issue_catcher( const std::function<void ( const ers::Issue & )> & catcher )
     { return LocalStream::instance().set_issue_catcher( catcher ); }
     
-    /*! 
-     *  This function returns the current debug level for ERS.
-     */
-    inline int debug_level( )
-    { return Configuration::instance().debug_level( ); }
-    
-    /*! 
-     *  This function sends the issue to the ERS DEBUG stream which corresponds to the given debug level.
-     *  \param issue the issue to be reported
-     *  \level debug level which will be associated with the reported issue
-     */
-    inline void debug( const Issue & issue, int level = debug_level() )
-    { StreamManager::instance().debug( issue, level ); }
     
     /*! 
      *  This function sends the issue to the ERS ERROR stream.
@@ -93,14 +81,7 @@ namespace ers
      *  \param issue the issue to be reported
      */
     inline void info( const Issue & issue )
-    { StreamManager::instance().information( issue ); }
-    
-    /*! 
-     *  This function sends the issue to the ERS LOG stream.
-     *  \param issue the issue to be reported
-     */
-    inline void log( const Issue & issue )
-    { StreamManager::instance().log( issue ); }
+    { LocalStream::instance().information( issue ); }
     
     /*! 
      *  This function returns the current verbosity level for ERS.
@@ -121,7 +102,7 @@ namespace ers
     }
 }
 
-ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
+//ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
 
 #define ERS_REPORT_IMPL( stream, issue, message, level ) \
 { \
@@ -130,34 +111,6 @@ ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
     stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) \
 	    BOOST_PP_COMMA_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY level ) ) ) level ); \
 }
-
-#ifndef ERS_NO_DEBUG
-/** \def ERS_DEBUG( level, message) This macro sends the message to the ers::debug stream
- * if level is less or equal to the TDAQ_ERS_DEBUG_LEVEL, which is equal to 0 by default.
- * \note This macro is defined to empty statement if the \c ERS_NO_DEBUG macro is defined
- */
-#define ERS_DEBUG( level, message ) do { \
-if ( ers::debug_level() >= level ) \
-{ \
-    ERS_REPORT_IMPL( ers::debug, ers::Message, message, level ); \
-} } while(0)
-#else
-#define ERS_DEBUG( level, message ) do { } while(0)
-#endif
-
-/** \def ERS_INFO( message ) This macro sends the message to the ers::info stream.
- */
-#define ERS_INFO( message ) do { \
-{ \
-    ERS_REPORT_IMPL( ers::info, ers::Message, message, ERS_EMPTY ); \
-} } while(0)
-
-/** \def ERS_LOG( message ) This macro sends the message to the ers::log stream.
- */
-#define ERS_LOG( message ) do { \
-{ \
-    ERS_REPORT_IMPL( ers::log, ers::Message, message, ERS_EMPTY ); \
-} } while(0)
 
 #endif // ERS_ERS_H
 

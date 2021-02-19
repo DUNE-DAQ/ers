@@ -25,7 +25,7 @@ import time
 
 class Severity( object ):
     "defines supported severity values"
-    values = ( DEBUG , LOG, INFO, WARNING, ERROR, FATAL ) = tuple( range( 6 ) )
+    values = ( INFO, WARNING, ERROR, FATAL ) = tuple( range( 4 ) )
 
 SeverityNames = tuple ( [ [k for k, v in list(Severity.__dict__.items()) if v == s][0] \
                                         for s in Severity.values ] )
@@ -105,11 +105,6 @@ class Issue( Exception ):
     def __str__( self ):
         return self.message
 
-class Message( Issue ):
-    "this is wrapper for string message to be sent to debug, log and info streams"
-    def __init__( self, msg ):
-            Issue.__init__( self, msg, {}, None )
-
 if sys.platform == 'linux2':
     import DLFCN
     flags = sys.getdlopenflags()
@@ -119,17 +114,11 @@ if sys.platform == 'linux2':
 else:
     import liberspy
 liberspy.init( Issue )        
-                  
-def debug( lvl, msg ):
-    "sends msg to the debug stream"
-    liberspy.debug( lvl, isinstance( msg, Issue ) and msg or Message( msg ) )
-
-def log( msg ):
-    "sends msg to the log stream"
-    liberspy.log( isinstance( msg, Issue ) and msg or Message( msg ) )
 
 def info( msg ):
     "sends msg to the information stream"
+    assert isinstance(issue,Issue), \
+            'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
     liberspy.info( isinstance( msg, Issue ) and msg or Message( msg ) )
 
 def warning( issue ):
@@ -151,8 +140,7 @@ def fatal( issue ):
     liberspy.fatal( issue )
 
 class LoggingHandler( logging.Handler ) :
-    severity_mapper = { logging.getLevelName( logging.DEBUG )   : lambda m: debug( 0, m ),
-                        logging.getLevelName( logging.INFO )    : info,
+    severity_mapper = { logging.getLevelName( logging.INFO )    : info,
                         logging.getLevelName( logging.WARNING ) : warning,
                         logging.getLevelName( logging.ERROR )   : error,
                         logging.getLevelName( logging.CRITICAL ): fatal }

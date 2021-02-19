@@ -171,20 +171,6 @@ namespace
     }
     
     void
-    debug( int level, PyObject * o )
-    {
-    	std::unique_ptr<ers::Issue> a( issue( o ) );
-        ers::debug( *a, level );
-    }
-    
-    void
-    log( PyObject * o )
-    {
-    	std::unique_ptr<ers::Issue> a( issue( o ) );
-    	ers::log( *a );
-    }
-    
-    void
     info( PyObject * o )
     {
     	std::unique_ptr<ers::Issue> a( issue( o ) );
@@ -216,8 +202,6 @@ namespace
     {
 	boost::python::register_exception_translator<ers::Issue>(&translate_exception);
 	boost::python::def("init", &init);
-	boost::python::def("debug", &debug);
-	boost::python::def("log", &log);
 	boost::python::def("info", &info);
 	boost::python::def("warning", &warning);
 	boost::python::def("error", &error);

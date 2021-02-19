@@ -22,16 +22,6 @@ namespace { \
         { ers::StreamFactory::instance().register_out_stream( name, create ); } \
     } BOOST_PP_CAT( registrator, __LINE__ ); \
 }
- 
-#define ERS_INTERNAL_DEBUG( level, message ) { \
-if ( ers::debug_level() >= level ) \
-{ \
-    std::ostringstream out; \
-    out << message; \
-    ers::InternalMessage info( ERS_HERE, out.str() ); \
-    info.set_severity( ers::Severity( ers::Debug, level ) ); \
-    ers::StandardStreamOutput::println( std::cout, info, 0 ); \
-} }
 
 #define ERS_INTERNAL_INFO( message ) { \
     std::ostringstream out; \

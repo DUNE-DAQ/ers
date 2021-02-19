@@ -32,10 +32,8 @@ ers::Configuration::instance()
   * \see instance() 
   */
 ers::Configuration::Configuration()
-  : m_debug_level( 0 ),
-    m_verbosity_level( 0 )
+  : m_verbosity_level( 0 )
 {
-    m_debug_level = read_from_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
     m_verbosity_level = read_from_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
 }
 
@@ -48,6 +46,6 @@ ers::Configuration::verbosity_level( int verbosity_level )
 std::ostream & 
 ers::operator<<( std::ostream & out, const ers::Configuration & conf )
 {
-    out << "debug level = " << conf.m_debug_level << " verbosity level = " << conf.m_verbosity_level;
+    out << " verbosity level = " << conf.m_verbosity_level;
     return out;
 }

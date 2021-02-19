@@ -126,3 +126,9 @@ ers::LocalStream::warning( const ers::Issue & issue )
 {
     report_issue( ers::Warning, issue );
 }
+
+void
+ers::LocalStream::information( const ers::Issue & issue )
+{
+    report_issue( ers::Information, issue );
+}

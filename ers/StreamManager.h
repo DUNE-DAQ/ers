@@ -47,11 +47,9 @@ namespace ers
       * 
       * \author Serguei Kolos
       * \brief This class manages and provides access to ERS streams.
-      * \see ers::debug
       * \see ers::error
       * \see ers::fatal
       * \see ers::infomation
-      * \see ers::log
       * \see ers::warning
       */
     
@@ -67,16 +65,12 @@ namespace ers
         ~StreamManager();
         
   	static StreamManager & instance();		/**< \brief return the singleton */
-        
-	void debug( const Issue & issue, int level );	/**< \brief sends an Issue to the debug stream */
 	
         void error( const Issue & issue );		/**< \brief sends an issue to the error stream */
 	
         void fatal( const Issue & issue );		/**< \brief sends an issue to the fatal stream */
 	
         void information( const Issue & issue );	/**< \brief sends an issue to the information stream */
-	
-        void log( const Issue & issue );		/**< \brief sends an issue to the log stream */
         
         void warning( const Issue & issue );		/**< \brief sends an issue to the warning stream */
 

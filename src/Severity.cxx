@@ -6,8 +6,6 @@ namespace
 {
     const char * SeverityNames[] =
     { 
-	"DEBUG",
-	"LOG",
 	"INFO",
 	"WARNING",
 	"ERROR",
@@ -29,7 +27,7 @@ ERS_DECLARE_ISSUE(	ers,
 std::string
 ers::to_string( ers::severity severity )
 {
-    assert( ers::Debug <= severity && severity <= ers::Fatal );
+    assert( ers::Information <= severity && severity <= ers::Fatal );
     return SeverityNames[severity];
 }
 
@@ -41,14 +39,8 @@ ers::to_string( ers::severity severity )
 std::string
 ers::to_string( ers::Severity severity )
 {
-    assert( ers::Debug <= severity && severity <= ers::Fatal );
+    assert( ers::Information <= severity && severity <= ers::Fatal );
 
-    if ( severity.type == ers::Debug )
-    {
-	std::ostringstream out;
-	out << SeverityNames[severity] << "_" << severity.rank;
-	return out.str();
-    }
     return SeverityNames[severity.type];
 }
 
@@ -59,7 +51,7 @@ ers::to_string( ers::Severity severity )
 ers::severity
 ers::parse( const std::string & string, ers::severity & s )
 {
-    for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
+    for( short ss = ers::Information; ss <= ers::Fatal; ++ss )
     {
 	if ( string == SeverityNames[ss] )
 	{
