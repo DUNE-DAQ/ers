@@ -32,31 +32,6 @@ but does not allow the checked value to be equal to either min or max values.
 
 > **Note:** These macro are defined to empty statements if **ERS_NO_DEBUG** macro is defined at compilation time.
 
-## Logging Macro
-ERS package offers a set of macro for infromation logging:
- * **ERS_DEBUG( level, message )** - sends ers::Message issue to the ers::debug stream
- * **ERS_LOG( message )** - sends ers::Message issue to the ers::log stream
- * **ERS_INFO( message )** - sends ers::Message issue to the ers::information stream
- 
-> **Note:** ERS_DEBUG macro is defined to empty statement if **ERS_NO_DEBUG** macro is defined at compilation time.
-
-Each of these macro constructs an new issue of ers::Message time and sends it to an appropriate stream.
-The **message** argument of these macro can be any value, for which the standard C++ output stream operator
-(**operator<<**) is defined. This means that the message can be a single value of a certain type as well
-as a sequence of output operations of any supported types.
-For example:
-
-~~~cpp
-ERS_DEBUG( 1, "simple debug output " << 123 << " that shows how to use debug macro" )
-~~~
-
-The actual behavior of these macro depends on the configuration of a respective stream.
-Debug macro can be disabled at run-time by defining the **TDAQ_ERS_DEBUG_LEVEL** environment 
-variable to the highest possible debug level.
-For instance, if **TDAQ_ERS_DEBUG_LEVEL** is set to N, then **ERS_DEBUG( M, ... )** where **M > N**
-will not produce any output. The default value for the **TDAQ_ERS_DEBUG_LEVEL** is 0. Negative
-debug levels are also allowed.
-
 The amount of information, which is printed for an issue depends on the actual ERS verbosity level,
 which can be controlled via the **TDAQ_ERS_VERBOSITY_LEVEL** macro. Default verbosity level is zero.
 In this case the following information is reported for any issue:
