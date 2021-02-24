@@ -26,7 +26,7 @@ namespace ers
      * In order to employ this implementation in a stream configuration the name to be used is "null".
      * E.g. the following configuration will result in no output been produced for the ERROR stream:
      *
-     *         export TDAQ_ERS_ERROR="null"
+     *         export DUNEDAQ_ERS_ERROR="null"
      *
      * \author Serguei Kolos
      * \brief Null stream

@@ -30,7 +30,7 @@ namespace
 {
     int get_default_qualifiers( std::vector<std::string> & qualifiers )
     {
-    	static const char * environment = ::getenv( "TDAQ_ERS_QUALIFIERS" );
+    	static const char * environment = ::getenv( "DUNEDAQ_ERS_QUALIFIERS" );
         if ( environment )
         {
 	    ers::tokenize( environment, ",", qualifiers );

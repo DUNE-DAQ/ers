@@ -20,8 +20,8 @@
 
 #include <ers/Context.h>
 
-#ifdef  TDAQ_PACKAGE_NAME
-#define ERS_PACKAGE TDAQ_PACKAGE_NAME
+#ifdef  DUNEDAQ_PACKAGE_NAME
+#define ERS_PACKAGE DUNEDAQ_PACKAGE_NAME
 #else
 #define ERS_PACKAGE "unknown"
 #endif

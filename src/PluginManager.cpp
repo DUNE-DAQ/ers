@@ -11,9 +11,8 @@
 namespace
 {
     const char * const SEPARATOR = ":";
-    const char * const DefaultLibraryName = "ErsBaseStreams";
-    const char * const MRSStreamLibraryName = "mtsStreams";
-    const char * const EnvironmentName = "TDAQ_ERS_STREAM_LIBS";
+    const char * const DefaultLibraryName = "ers_AbortStream_ersStream:ers_ExitStream_ersStream:ers_FilterStream_ersStream:ers_GlobalLockStream_ersStream:ers_LockStream_ersStream:ers_NullStream_ersStream:ers_RFilterStream_ersStream:ers_StandardStream_ersStream:ers_ThrottleStream_ersStream:ers_ThrowStream_ersStream";
+    const char * const EnvironmentName = "DUNEDAQ_ERS_STREAM_LIBS";
 }
 
 namespace ers
@@ -63,14 +62,6 @@ namespace ers
         std::vector<std::string> libs;
     	ers::tokenize( config, SEPARATOR, libs );
         
-	try
-	{
-	    libraries_[MRSStreamLibraryName] = new SharedLibrary( MRSStreamLibraryName );
-	}
-	catch( PluginException & ex )
-	{
-	    ERS_INTERNAL_DEBUG( 1, "Library " << MRSStreamLibraryName << " can not be loaded because " << ex.reason() )
-	}
         
 	for ( size_t i = 0; i < libs.size(); i++ )
 	{

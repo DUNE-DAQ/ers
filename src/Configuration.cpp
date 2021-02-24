@@ -35,8 +35,8 @@ ers::Configuration::Configuration()
   : m_debug_level( 0 ),
     m_verbosity_level( 0 )
 {
-    m_debug_level = read_from_environment( "TDAQ_ERS_DEBUG_LEVEL", m_debug_level );
-    m_verbosity_level = read_from_environment( "TDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
+    m_debug_level = read_from_environment( "DUNEDAQ_ERS_DEBUG_LEVEL", m_debug_level );
+    m_verbosity_level = read_from_environment( "DUNEDAQ_ERS_VERBOSITY_LEVEL", m_verbosity_level );
 }
 
 void 

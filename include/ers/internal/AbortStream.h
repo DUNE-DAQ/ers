@@ -26,7 +26,7 @@ namespace ers
      * E.g. the following configuration will print a first issue that is passed to the FATAL ERS stream
      * to the standard output and then aborts the application:
      *
-     *         export TDAQ_ERS_FATAL="stdout,abort"
+     *         export DUNEDAQ_ERS_FATAL="stdout,abort"
      *
      * \author Serguei Kolos
      * \brief Aborts the current application

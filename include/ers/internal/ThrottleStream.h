@@ -21,7 +21,7 @@ namespace ers
      * In order to employ this implementation in a stream configuration the name to be used is "throttle".
      * E.g. the following configuration will suppress identical issues from been printed to the standard output:
      *
-     *         export TDAQ_ERS_FATAL="throttle(10, 20),stdout"
+     *         export DUNEDAQ_ERS_FATAL="throttle(10, 20),stdout"
      *
      * This stream has two configuration parameters:
      *   - first parameter defines an initial number of identical messages after which the throttling shall be started

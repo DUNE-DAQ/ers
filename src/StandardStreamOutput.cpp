@@ -22,12 +22,12 @@ namespace
     std::function<std::string( const ers::Issue & issue )> getTimeFormatter()
     {
         static std::string format = ers::read_from_environment(
-                    "TDAQ_ERS_TIMESTAMP_FORMAT", "%Y-%b-%d %H:%M:%S");
+                    "DUNEDAQ_ERS_TIMESTAMP_FORMAT", "%Y-%b-%d %H:%M:%S");
 
 	static const std::string precision = ers::read_from_environment(
-        	"TDAQ_ERS_TIMESTAMP_PRECISION", "MILLI");
+        	"DUNEDAQ_ERS_TIMESTAMP_PRECISION", "MILLI");
                         
-        static const bool isUTC = ::getenv("TDAQ_ERS_TIMESTAMP_UTC");
+        static const bool isUTC = ::getenv("DUNEDAQ_ERS_TIMESTAMP_UTC");
 
         if ( boost::algorithm::ifind_first(precision, "NANO") ) {
             return [](const ers::Issue & issue){

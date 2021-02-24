@@ -91,11 +91,11 @@ const char *
 ers::LocalContext::application_name() const
 {
     static int pid = ::getpid();
-    static const char * env = ::getenv( "TDAQ_APPLICATION_NAME" ) ? ::getenv( "TDAQ_APPLICATION_NAME" ) : "Undefined";
+    static const char * env = ::getenv( "DUNEDAQ_APPLICATION_NAME" ) ? ::getenv( "DUNEDAQ_APPLICATION_NAME" ) : "Undefined";
 
     if (pid != ::getpid()) {
     	pid = ::getpid();
-	env = ::getenv( "TDAQ_APPLICATION_NAME" ) ? ::getenv( "TDAQ_APPLICATION_NAME" ) : "Undefined";
+	env = ::getenv( "DUNEDAQ_APPLICATION_NAME" ) ? ::getenv( "DUNEDAQ_APPLICATION_NAME" ) : "Undefined";
     }
     return env;
 }

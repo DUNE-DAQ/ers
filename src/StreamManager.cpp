@@ -52,7 +52,7 @@ namespace
     {
 	assert( ers::Debug <= severity && severity <= ers::Fatal );
         
-	std::string env_name( "TDAQ_ERS_" );
+	std::string env_name( "DUNEDAQ_ERS_" );
 	env_name += ers::to_string( severity );
 	const char * env = ::getenv( env_name.c_str() );
 	return env ? env : DefaultOutputStreams[severity];

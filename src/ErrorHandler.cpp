@@ -100,7 +100,7 @@ namespace ers
     
     ErrorHandler::ErrorHandler()
     {
-        if ( !::getenv( "TDAQ_ERS_NO_SIGNAL_HANDLERS" ) )
+        if ( !::getenv( "DUNEDAQ_ERS_NO_SIGNAL_HANDLERS" ) )
         {
 	    handlers[SIGSEGV] = new SignalHandler( SIGSEGV, "Segmentation fault (invalid memory reference)" );
 	    handlers[SIGBUS]  = new SignalHandler( SIGBUS, "Bus error (bad memory access)" );

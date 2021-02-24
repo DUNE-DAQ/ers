@@ -27,7 +27,7 @@ namespace ers
      * E.g. the following configuration will assure that the output sent to the LOG stream by
      * concurrent threads is never mixed up:
      *
-     *         export TDAQ_ERS_LOG="lock,stdout"
+     *         export DUNEDAQ_ERS_LOG="lock,stdout"
       *
       * \author Serguei Kolos
       * \brief Lock implementation for an ERS stream.

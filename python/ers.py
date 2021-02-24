@@ -59,11 +59,11 @@ class Context( object ):
         self.thread_id = _thread.get_ident()
         self.user_id = os.getuid()
         self.user_name = getpass.getuser()
-        self.application_name = os.getenv( "TDAQ_APPLICATION_NAME", "Undefined" )
+        self.application_name = os.getenv( "DUNEDAQ_APPLICATION_NAME", "Undefined" )
                 
 class Issue( Exception ):
     "base class for ERS exceptions"    
-    __verbosity = int( os.getenv( "TDAQ_ERS_VERBOSITY_LEVEL", "0" ) )
+    __verbosity = int( os.getenv( "DUNEDAQ_ERS_VERBOSITY_LEVEL", "0" ) )
     
     def __init__( self, message, kwargs, cause ):
         Exception.__init__( self )

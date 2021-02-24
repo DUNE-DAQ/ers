@@ -26,7 +26,7 @@ namespace ers
      * E.g. the following configuration will print a first issue that is passed to the FATAL ERS stream
      * to the standard output and then throws this issue as a C++ exception:
      *
-     *         export TDAQ_ERS_FATAL="stdout,throw"
+     *         export DUNEDAQ_ERS_FATAL="stdout,throw"
      *
      * \author Serguei Kolos
      * \brief Throws issues as exceptions

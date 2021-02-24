@@ -1,5 +1,0 @@
-variables:
-   project: tdaq-common
-   RELEASE: tdaq-common-nightly
-include: 'https://gitlab.cern.ch/atlas-tdaq-software/tdaq_ci/raw/master/includes/tdaq-ci.yml'
-
