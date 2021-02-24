@@ -8,7 +8,9 @@ daq_setup_environment()
 
 find_package(Boost 1.70.0 COMPONENTS unit_test_framework program_options REQUIRED)
 
-daq_add_library(*.cpp LINK_LIBRARIES Boost::regex)
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
+
+daq_add_application( config config.cxx LINK_LIBRARIES ers )
 
 daq_add_plugin( AbortStream ersStream LINK_LIBRARIES ers )
 daq_add_plugin( ExitStream ersStream LINK_LIBRARIES ers )
@@ -20,5 +22,8 @@ daq_add_plugin( RFilterStream ersStream LINK_LIBRARIES ers )
 daq_add_plugin( StandardStream ersStream LINK_LIBRARIES ers )
 daq_add_plugin( ThrottleStream ersStream LINK_LIBRARIES ers )
 daq_add_plugin( ThrowStream ersStream LINK_LIBRARIES ers )
+
+daq_add_application( receiver receiver.cxx TEST LINK_LIBRARIES ers )
+daq_add_application( test test.cxx TEST LINK_LIBRARIES ers )
 
 daq_install()
