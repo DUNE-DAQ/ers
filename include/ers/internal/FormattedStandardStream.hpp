@@ -69,6 +69,6 @@ namespace ers
     };
 }
 
-#include <ers/internal/FormattedStandardStream.inc>
+#include <ers/internal/FormattedStandardStream.hpp>
     
 #endif

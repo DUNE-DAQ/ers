@@ -30,21 +30,22 @@ namespace
 {
     int get_default_qualifiers( std::vector<std::string> & qualifiers )
     {
-    	static const char * environment = ::getenv( "DUNEDAQ_ERS_QUALIFIERS" );
+        static const char * environment = ::getenv( "DUNEDAQ_ERS_QUALIFIERS" );
         if ( environment )
         {
-	    ers::tokenize( environment, ",", qualifiers );
+        ers::tokenize( environment, ",", qualifiers );
         }
         return 1;
     }
     
     void add_default_qualifiers( Issue & issue )
     {
-    	static std::vector<std::string> qualifiers;
-        static int _unused_ = get_default_qualifiers( qualifiers );
-	for ( std::vector<std::string>::const_iterator it = qualifiers.begin(); it != qualifiers.end(); ++it )
+        static std::vector<std::string> qualifiers;
+        // static int _unused_ = get_default_qualifiers( qualifiers );
+        get_default_qualifiers( qualifiers );
+    for ( std::vector<std::string>::const_iterator it = qualifiers.begin(); it != qualifiers.end(); ++it )
         {
-	    issue.add_qualifier( *it );
+        issue.add_qualifier( *it );
         }
     }    
 }
@@ -65,8 +66,8 @@ Issue::Issue( const Issue & other )
  * \param context the context of the Issue, e.g where in the code the issue appeared
  * \param message the user message associated with this issue
  */
-Issue::Issue(	const Context & context,
-		const std::string & message )
+Issue::Issue(   const Context & context,
+        const std::string & message )
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
@@ -80,7 +81,7 @@ Issue::Issue(	const Context & context,
  * \param context the context of the Issue, e.g where in the code the issue appeared
  * \param cause the other exception that has caused this one
  */
-Issue::Issue(	const Context & context,
+Issue::Issue(   const Context & context,
                 const std::exception & cause )
   : m_context( context.clone() ),
     m_severity( ers::Error ),
@@ -97,9 +98,9 @@ Issue::Issue(	const Context & context,
  * \param message the user message associated with this issue
  * \param cause exception that caused the current issue
  */
-Issue::Issue(	const Context & context,
-		const std::string & message,
-		const std::exception & cause )
+Issue::Issue(   const Context & context,
+        const std::string & message,
+        const std::exception & cause )
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
@@ -111,13 +112,13 @@ Issue::Issue(	const Context & context,
     add_default_qualifiers( *this );
 }
 
-Issue::Issue(	Severity severity,
-		const system_clock::time_point & time,
+Issue::Issue(   Severity severity,
+        const system_clock::time_point & time,
                 const ers::Context & context,
-		const std::string & message,
-		const std::vector<std::string> & qualifiers,
-		const std::map<std::string, std::string> & parameters,
-		const ers::Issue * cause )
+        const std::string & message,
+        const std::vector<std::string> & qualifiers,
+        const std::map<std::string, std::string> & parameters,
+        const ers::Issue * cause )
   : m_cause( cause ),
     m_context( context.clone() ),
     m_message( message ),
@@ -142,11 +143,11 @@ ers::Issue::get_value( const std::string & key, const char * & value ) const
     string_map::const_iterator it = m_values.find(key);
     if ( it != m_values.end() )
     {
-	value = it->second.c_str();
+    value = it->second.c_str();
     }
     else
     {
-    	throw ers::NoValue( ERS_HERE, key );
+        throw ers::NoValue( ERS_HERE, key );
     }
 }
 
@@ -156,11 +157,11 @@ ers::Issue::get_value( const std::string & key, std::string & value ) const
     string_map::const_iterator it = m_values.find(key);
     if ( it != m_values.end() )
     {
-	value = it->second;
+    value = it->second;
     }
     else
     {
-    	throw ers::NoValue( ERS_HERE, key );
+        throw ers::NoValue( ERS_HERE, key );
     }
 }
 

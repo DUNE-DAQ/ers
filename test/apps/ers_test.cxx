@@ -69,7 +69,7 @@ struct Test {
     }
 };
 
-void test_function( int index )
+void test_function( int /* index */ )
 {
     usleep(10000);
     ers::error( ers::FileDoesNotExist( ERS_HERE, "error file" ) );
