@@ -17,7 +17,7 @@
 
 #include <map>
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 
 namespace ers
 {

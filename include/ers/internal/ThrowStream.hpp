@@ -15,7 +15,7 @@
 #ifndef ERS_THROW_STREAM_H
 #define ERS_THROW_STREAM_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 
 namespace ers
 {

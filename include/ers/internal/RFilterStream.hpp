@@ -15,7 +15,7 @@
 #ifndef ERS_STREAM_RFILTER_H 
 #define ERS_STREAM_RFILTER_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 #include <boost/regex.hpp>
 
 namespace ers

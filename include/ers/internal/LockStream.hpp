@@ -15,7 +15,7 @@
 #ifndef ERS_LOCK_STREAM_H
 #define ERS_LOCK_STREAM_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 #include <mutex>
 
 namespace ers

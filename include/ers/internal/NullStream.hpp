@@ -15,7 +15,7 @@
 #ifndef ERS_NULL_STREAM_H
 #define ERS_NULL_STREAM_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 #include <ers/InputStream.h>
 
 namespace ers

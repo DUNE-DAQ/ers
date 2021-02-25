@@ -16,7 +16,7 @@
 #ifndef ERS_STREAM_FILTER_H 
 #define ERS_STREAM_FILTER_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 
 namespace ers
 {    

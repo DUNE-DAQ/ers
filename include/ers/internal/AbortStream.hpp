@@ -15,7 +15,7 @@
 #ifndef ERS_ABORT_STREAM_H
 #define ERS_ABORT_STREAM_H
 
-#include <ers/OutputStream.h>
+#include <ers/OutputStream.hpp>
 
 namespace ers
 {
