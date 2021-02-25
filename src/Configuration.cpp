@@ -9,10 +9,10 @@
 #include <cstdio>
 #include <iostream>
 
-#include <ers/Configuration.h>
-#include <ers/ers.h>
-#include <ers/internal/SingletonCreator.h>
-#include <ers/internal/Util.h>
+#include <ers/Configuration.hpp>
+#include <ers/ers.hpp>
+#include <ers/internal/SingletonCreator.hpp>
+#include <ers/internal/Util.hpp>
 
 /** This method returns the singleton instance. 
   * It should be used for every operation on the factory. 

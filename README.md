@@ -220,7 +220,7 @@ Functions, which can throw exceptions must be invoked inside **try...catch** sta
 The following example shows a typical use case of handling ERS exceptions.
 
 ~~~cpp
-#include <ers/SampleIssues.h>
+#include <ers/SampleIssues.hpp>
 
     try {
         foo( );
@@ -422,8 +422,8 @@ across application boundaries, i.e. one process may receive ERS issues produces 
 The following example shows how to do that:
 
 ~~~cpp
-#include <ers/InputStream.h>
-#include <ers/ers.h>
+#include <ers/InputStream.hpp>
+#include <ers/ers.hpp>
 
 struct MyIssueReceiver : public ers::IssueReceiver {
     void receive( const ers::Issue & issue ) {

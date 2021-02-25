@@ -6,7 +6,7 @@
  *
  */
 
-#include <ers/ers.h>
+#include <ers/ers.hpp>
 #include <string.h>
 
 /** \file config.cxx 

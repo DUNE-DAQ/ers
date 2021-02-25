@@ -17,7 +17,7 @@
 
 #include <string>
 #include <vector>
-#include <ers/Configuration.h>
+#include <ers/Configuration.hpp>
 
 namespace ers
 {   

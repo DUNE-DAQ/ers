@@ -18,7 +18,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <ers/Context.h>
+#include <ers/Context.hpp>
 
 #ifdef  DUNEDAQ_PACKAGE_NAME
 #define ERS_PACKAGE DUNEDAQ_PACKAGE_NAME

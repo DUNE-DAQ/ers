@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/GlobalLockStream.h>
+#include <ers/internal/GlobalLockStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::GlobalLockStream, "glock", ERS_EMPTY )
 

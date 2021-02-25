@@ -15,7 +15,7 @@
   * which implements the ers::Context interface.
   */ 
 
-#include <ers/Context.h>
+#include <ers/Context.hpp>
 
 namespace ers
 {   

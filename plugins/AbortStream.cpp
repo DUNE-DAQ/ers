@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/AbortStream.h>
+#include <ers/internal/AbortStream.hpp>
 #include <stdlib.h>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::AbortStream, "abort", ERS_EMPTY)

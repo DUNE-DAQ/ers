@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/InputStream.h>
+#include <ers/InputStream.hpp>
 
 namespace 
 {

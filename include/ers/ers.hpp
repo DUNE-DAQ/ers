@@ -20,12 +20,12 @@
 #include <sys/resource.h>
 #include <functional>
 #include <sstream>
-#include <ers/StreamManager.h>
-#include <ers/Configuration.h>
-#include <ers/Issue.h>
-#include <ers/Assertion.h>
-#include <ers/Severity.h>
-#include <ers/LocalStream.h>
+#include <ers/StreamManager.hpp>
+#include <ers/Configuration.hpp>
+#include <ers/Issue.hpp>
+#include <ers/Assertion.hpp>
+#include <ers/Severity.hpp>
+#include <ers/LocalStream.hpp>
 
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>

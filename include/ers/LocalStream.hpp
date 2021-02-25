@@ -22,8 +22,8 @@
 #include <mutex>
 #include <thread>
 
-#include <ers/Issue.h>
-#include <ers/IssueCatcherHandler.h>
+#include <ers/Issue.hpp>
+#include <ers/IssueCatcherHandler.hpp>
 
 ERS_DECLARE_ISSUE(  ers,					// namespace
 		    IssueCatcherAlreadySet, 			// issue class name

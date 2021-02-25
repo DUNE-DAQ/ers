@@ -7,9 +7,9 @@
  *
  */
 
-#include <ers/InputStream.h>
-#include <ers/SampleIssues.h>
-#include <ers/ers.h>
+#include <ers/InputStream.hpp>
+#include <ers/SampleIssues.hpp>
+#include <ers/ers.hpp>
 
 struct MyIssueReceiver : public ers::IssueReceiver
 {

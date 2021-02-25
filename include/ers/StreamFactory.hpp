@@ -11,9 +11,9 @@
 #ifndef ERS_STREAM_FACTORY_H
 #define ERS_STREAM_FACTORY_H
 
-#include <ers/Severity.h>
-#include <ers/Context.h>
-#include <ers/Issue.h>
+#include <ers/Severity.hpp>
+#include <ers/Context.hpp>
+#include <ers/Issue.hpp>
 
 #include <map>
 

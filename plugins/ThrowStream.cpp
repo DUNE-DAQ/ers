@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/ThrowStream.h>
+#include <ers/internal/ThrowStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", ERS_EMPTY)
 

@@ -4,9 +4,9 @@
 
 #include <vector>
 
-#include <ers/internal/Util.h>
-#include <ers/internal/PluginManager.h>
-#include <ers/internal/macro.h>
+#include <ers/internal/Util.hpp>
+#include <ers/internal/PluginManager.hpp>
+#include <ers/internal/macro.hpp>
 
 namespace
 {

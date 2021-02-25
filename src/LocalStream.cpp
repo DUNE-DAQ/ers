@@ -6,9 +6,9 @@
  *  Copyright 2005 CERN. All rights reserved.
  *
  */
-#include <ers/LocalStream.h>
-#include <ers/StreamManager.h>
-#include <ers/internal/SingletonCreator.h>
+#include <ers/LocalStream.hpp>
+#include <ers/StreamManager.hpp>
+#include <ers/internal/SingletonCreator.hpp>
 
 /** This method returns the singleton instance.
   * It should be used for every operation on the factory.

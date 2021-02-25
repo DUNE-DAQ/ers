@@ -7,8 +7,8 @@
  *
  */
 
-#include <ers/IssueCatcherHandler.h>
-#include <ers/LocalStream.h>
+#include <ers/IssueCatcherHandler.hpp>
+#include <ers/LocalStream.hpp>
 
 ers::IssueCatcherHandler::~IssueCatcherHandler()
 {

@@ -14,7 +14,7 @@
   * This file defines the ers::AnyIssue class
   */ 
 
-#include <ers/Issue.h>
+#include <ers/Issue.hpp>
 
 namespace ers
 {   

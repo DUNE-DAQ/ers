@@ -8,12 +8,12 @@
  *
  */
 
-#include <ers/ers.h>
-#include <ers/IssueFactory.h>
-#include <ers/StreamFactory.h>
-#include <ers/AnyIssue.h>
-#include <ers/internal/SingletonCreator.h>
-#include <ers/internal/macro.h>
+#include <ers/ers.hpp>
+#include <ers/IssueFactory.hpp>
+#include <ers/StreamFactory.hpp>
+#include <ers/AnyIssue.hpp>
+#include <ers/internal/SingletonCreator.hpp>
+#include <ers/internal/macro.hpp>
 
 /** Returns the singleton instance of the factory.
   * \return a reference to the singleton instance 

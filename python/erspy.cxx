@@ -8,9 +8,9 @@
 #include <mutex>
 #include <unordered_map>
 
-#include <ers/ers.h>
-#include <ers/AnyIssue.h>
-#include <ers/RemoteContext.h>
+#include <ers/ers.hpp>
+#include <ers/AnyIssue.hpp>
+#include <ers/RemoteContext.hpp>
 
 #if PY_MAJOR_VERSION < 3
 #   define PyUnicode_AsUTF8(x) PyString_AsString(x)

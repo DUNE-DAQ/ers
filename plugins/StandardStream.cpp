@@ -11,10 +11,10 @@
 #include <fstream>
 #include <mutex>
 
-#include <ers/SampleIssues.h>
+#include <ers/SampleIssues.hpp>
 
-#include <ers/internal/StandardStream.h>
-#include <ers/internal/FormattedStandardStream.h>
+#include <ers/internal/StandardStream.hpp>
+#include <ers/internal/FormattedStandardStream.hpp>
 
 namespace
 {

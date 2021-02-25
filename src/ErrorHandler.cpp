@@ -15,9 +15,9 @@
 #undef ERS_NO_DEBUG
 #endif
 
-#include <ers/Issue.h>
-#include <ers/ers.h>
-#include <ers/StandardStreamOutput.h>
+#include <ers/Issue.hpp>
+#include <ers/ers.hpp>
+#include <ers/StandardStreamOutput.hpp>
 
 
 ERS_DECLARE_ISSUE(	ers, 

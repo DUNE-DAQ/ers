@@ -15,12 +15,12 @@
 #include <ctime>
 #include <time.h>
 
-#include <ers/Issue.h>
-#include <ers/IssueFactory.h>
-#include <ers/OutputStream.h>
-#include <ers/StandardStreamOutput.h>
-#include <ers/ers.h>
-#include <ers/internal/Util.h>
+#include <ers/Issue.hpp>
+#include <ers/IssueFactory.hpp>
+#include <ers/OutputStream.hpp>
+#include <ers/StandardStreamOutput.hpp>
+#include <ers/ers.hpp>
+#include <ers/internal/Util.hpp>
 
 using namespace ers;
 

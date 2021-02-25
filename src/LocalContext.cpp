@@ -13,7 +13,7 @@
 
 #include <iterator>
 
-#include <ers/LocalContext.h>
+#include <ers/LocalContext.hpp>
 
 #if !defined(__APPLE__) && !defined(__rtems__)
 #include <sys/syscall.h>

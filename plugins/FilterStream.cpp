@@ -8,9 +8,9 @@
  *
  */
 
-#include <ers/internal/FilterStream.h>
-#include <ers/internal/Util.h>
-#include <ers/StreamFactory.h>
+#include <ers/internal/FilterStream.hpp>
+#include <ers/internal/Util.hpp>
+#include <ers/StreamFactory.hpp>
 #include <algorithm>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )

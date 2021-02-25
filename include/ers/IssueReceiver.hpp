@@ -10,7 +10,7 @@
 #ifndef ERS_ISSUE_RECEIVER_H
 #define ERS_ISSUE_RECEIVER_H
 
-#include <ers/Issue.h>
+#include <ers/Issue.hpp>
 
 /** \file IssueReceiver.h Defines abstract interface for ERS input streams.
   * \author Serguei Kolos

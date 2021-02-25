@@ -11,19 +11,19 @@
 #include <assert.h>
 #include <iostream>
 
-#include <ers/Issue.h>
-#include <ers/InputStream.h>
-#include <ers/OutputStream.h>
-#include <ers/StreamManager.h>
-#include <ers/StreamFactory.h>
-#include <ers/Severity.h>
-#include <ers/Configuration.h>
-#include <ers/ers.h>
-#include <ers/internal/macro.h>
-#include <ers/internal/Util.h>
-#include <ers/internal/PluginManager.h>
-#include <ers/internal/NullStream.h>
-#include <ers/internal/SingletonCreator.h>
+#include <ers/Issue.hpp>
+#include <ers/InputStream.hpp>
+#include <ers/OutputStream.hpp>
+#include <ers/StreamManager.hpp>
+#include <ers/StreamFactory.hpp>
+#include <ers/Severity.hpp>
+#include <ers/Configuration.hpp>
+#include <ers/ers.hpp>
+#include <ers/internal/macro.hpp>
+#include <ers/internal/Util.hpp>
+#include <ers/internal/PluginManager.hpp>
+#include <ers/internal/NullStream.hpp>
+#include <ers/internal/SingletonCreator.hpp>
 
 ERS_DECLARE_ISSUE(      ers,
                         BadConfiguration,

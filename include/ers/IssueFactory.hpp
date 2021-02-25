@@ -16,7 +16,7 @@
 #include <vector>
 #include <map>
 
-#include <ers/Severity.h>
+#include <ers/Severity.hpp>
 
 /** \file IssueFactory.h This file defines the IssueFactory class, 
   * which is responsible for registration and creation of user defined issues.

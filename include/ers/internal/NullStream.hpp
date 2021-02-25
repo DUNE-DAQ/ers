@@ -16,7 +16,7 @@
 #define ERS_NULL_STREAM_H
 
 #include <ers/OutputStream.hpp>
-#include <ers/InputStream.h>
+#include <ers/InputStream.hpp>
 
 namespace ers
 {

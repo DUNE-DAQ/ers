@@ -23,8 +23,8 @@ char** backtrace_symbols (void ** , int size) {
 }
 #endif
 
-#include <ers/Context.h>
-#include <ers/Configuration.h>
+#include <ers/Context.hpp>
+#include <ers/Configuration.hpp>
 
 namespace
 {

@@ -15,11 +15,11 @@
 #include <memory>
 #include <mutex>
 
-#include <ers/Severity.h>
-#include <ers/Context.h>
-#include <ers/IssueReceiver.h>
-#include <ers/StreamFactory.h>
-#include <ers/internal/PluginManager.h>
+#include <ers/Severity.hpp>
+#include <ers/Context.hpp>
+#include <ers/IssueReceiver.hpp>
+#include <ers/StreamFactory.hpp>
+#include <ers/internal/PluginManager.hpp>
 
 #include <list>
 

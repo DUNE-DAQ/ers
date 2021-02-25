@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/ExitStream.h>
+#include <ers/internal/ExitStream.hpp>
 #include <stdlib.h>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ExitStream, "exit", exit_code )

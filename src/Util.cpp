@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include <ers/internal/Util.h>
-#include <ers/internal/macro.h>
+#include <ers/internal/Util.hpp>
+#include <ers/internal/macro.hpp>
 
 void
 ers::tokenize(	const std::string & text,

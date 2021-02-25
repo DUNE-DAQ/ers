@@ -11,8 +11,8 @@
 #define ERS_INPUT_STREAM_H
 
 #include <string>
-#include <ers/Issue.h>
-#include <ers/IssueReceiver.h>
+#include <ers/Issue.hpp>
+#include <ers/IssueReceiver.hpp>
 
 /** \file InputStream.h Defines abstract interface for ERS input streams.
  * \author Serguei Kolos
@@ -52,7 +52,7 @@ namespace ers {
     };
 }
 
-#include <ers/StreamFactory.h>
+#include <ers/StreamFactory.hpp>
 
 #define ERS_REGISTER_INPUT_STREAM( class, name, params ) \
 namespace { \

@@ -14,7 +14,7 @@
 
 #include <string>
 #include <memory>
-#include <ers/Issue.h>
+#include <ers/Issue.hpp>
 
 /** \file OutputStream.h Defines abstract interface for ERS output streams.
   * \author Serguei Kolos
@@ -63,7 +63,7 @@ namespace ers
     };
 }
 
-#include <ers/internal/macro.h>
+#include <ers/internal/macro.hpp>
 
 #endif
 

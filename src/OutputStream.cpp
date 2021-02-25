@@ -7,8 +7,8 @@
  *
  */
 
-#include <ers/OutputStream.h>
-#include <ers/internal/NullStream.h>
+#include <ers/OutputStream.hpp>
+#include <ers/internal/NullStream.hpp>
 
 
 ers::OutputStream::OutputStream( )

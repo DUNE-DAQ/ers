@@ -7,11 +7,11 @@
  *
  */
 
-#include <ers/SampleIssues.h>
-#include <ers/OutputStream.h>
-#include <ers/StreamManager.h>
+#include <ers/SampleIssues.hpp>
+#include <ers/OutputStream.hpp>
+#include <ers/StreamManager.hpp>
 
-#include <ers/ers.h>
+#include <ers/ers.hpp>
 #include <csignal>
 #include <stdexcept>
 #include <thread>

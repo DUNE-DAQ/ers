@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/LockStream.h>
+#include <ers/internal/LockStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::LockStream, "lock", ERS_EMPTY)
 

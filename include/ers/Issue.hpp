@@ -22,9 +22,9 @@
 #include <memory>
 #include <chrono>
 
-#include <ers/IssueFactory.h>
-#include <ers/LocalContext.h>
-#include <ers/Severity.h>
+#include <ers/IssueFactory.hpp>
+#include <ers/LocalContext.hpp>
+#include <ers/Severity.hpp>
 
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
@@ -171,7 +171,7 @@ namespace ers
     std::ostream & operator<<( std::ostream &, const ers::Issue & );    
 } // ers
         
-#include <ers/internal/IssueDeclarationMacro.h>
+#include <ers/internal/IssueDeclarationMacro.hpp>
 
 ERS_DECLARE_ISSUE(  ers,
 		    NoValue,

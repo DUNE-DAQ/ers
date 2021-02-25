@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <sstream>
-#include <ers/ers.h>
+#include <ers/ers.hpp>
 
 namespace 
 {

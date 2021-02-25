@@ -11,7 +11,7 @@
  *
  */
 
-#include <ers/Issue.h>
+#include <ers/Issue.hpp>
 
 
 /** \file SampleIssues.h Defines examples of user issues. 

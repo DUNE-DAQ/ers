@@ -6,9 +6,9 @@
   * \brief ers header file 
   */
 
-#include <ers/ers.h>
-#include <ers/StreamFactory.h>
-#include <ers/StandardStreamOutput.h>
+#include <ers/ers.hpp>
+#include <ers/StreamFactory.hpp>
+#include <ers/StandardStreamOutput.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 ERS_DECLARE_ISSUE( ers, InternalMessage, ERS_EMPTY, ERS_EMPTY )

@@ -8,10 +8,10 @@
  */
 #include <iomanip>
 
-#include <ers/Issue.h>
-#include <ers/StandardStreamOutput.h>
-#include <ers/Severity.h>
-#include <ers/internal/Util.h>
+#include <ers/Issue.hpp>
+#include <ers/StandardStreamOutput.hpp>
+#include <ers/Severity.hpp>
+#include <ers/internal/Util.hpp>
 
 #include <boost/algorithm/string.hpp>
 

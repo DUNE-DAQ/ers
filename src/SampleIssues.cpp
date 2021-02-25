@@ -1,4 +1,4 @@
-#include <ers/SampleIssues.h>
+#include <ers/SampleIssues.hpp>
 
 /** \def ers::File This is the base class for all file related issues. 
  */

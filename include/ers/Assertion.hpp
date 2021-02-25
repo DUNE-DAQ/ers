@@ -15,9 +15,9 @@
 #ifndef ERS_ASSERTION_H
 #define ERS_ASSERTION_H
 
-#include <ers/Issue.h>
-#include <ers/Severity.h>
-#include <ers/StreamManager.h>
+#include <ers/Issue.hpp>
+#include <ers/Severity.hpp>
+#include <ers/StreamManager.hpp>
 
 /** This class represents an assertion in the code, it is an issue with two fields:
   * \li A condition
