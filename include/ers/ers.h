@@ -121,7 +121,7 @@ namespace ers
     }
 }
 
-ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
+// ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
 
 #define ERS_REPORT_IMPL( stream, issue, message, level ) \
 { \
