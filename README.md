@@ -33,17 +33,17 @@ but does not allow the checked value to be equal to either min or max values.
 > **Note:** These macro are defined to empty statements if **ERS_NO_DEBUG** macro is defined at compilation time.
 
 The amount of information, which is printed for an issue depends on the actual ERS verbosity level,
-which can be controlled via the **TDAQ_ERS_VERBOSITY_LEVEL** macro. Default verbosity level is zero.
+which can be controlled via the **DUNEDAQ_ERS_VERBOSITY_LEVEL** macro. Default verbosity level is zero.
 In this case the following information is reported for any issue:
  * severity (DEBUG, LOG, INFO, WARNING, ERROR, FATAL)
  * the time of the issue occurrence
  * the issue's context, which includes package name, file name, function name and line number
  * the issue's message
 
-One can control the current verbosity level via the **TDAQ_ERS_VERBOSITY_LEVEL** macro:
+One can control the current verbosity level via the **DUNEDAQ_ERS_VERBOSITY_LEVEL** macro:
 
 ~~~
-export TDAQ_ERS_VERBOSITY_LEVEL=N
+export DUNEDAQ_ERS_VERBOSITY_LEVEL=N
 ~~~
 
 where N must be an integer number.
@@ -220,7 +220,7 @@ Functions, which can throw exceptions must be invoked inside **try...catch** sta
 The following example shows a typical use case of handling ERS exceptions.
 
 ~~~cpp
-#include <ers/SampleIssues.h>
+#include <ers/SampleIssues.hpp>
 
     try {
         foo( );
@@ -268,10 +268,10 @@ particular stream configuration. By default the ERS streams are configured in th
 > issues reported from different threads will not be mixed up in the output.
 
 In order to change the default configuration for an ERS stream one should use
-the **TDAQ_ERS_<SEVERITY>** environment variable. For example the following command:
+the **DUNEDAQ_ERS_<SEVERITY>** environment variable. For example the following command:
 
 ~~~
-export TDAQ_ERS_ERROR="lstderr,throw" 
+export DUNEDAQ_ERS_ERROR="lstderr,throw" 
 ~~~
 
 will cause all the issues, which are sent to the ers::error stream, been printed to 
@@ -280,7 +280,7 @@ the standard C++ error stream and then been thrown using the C++ throw operator.
 A filter stream can also be associated with any severity level. For example:
 
 ~~~ 
-export TDAQ_ERS_ERROR="lstderr,filter(ipc),throw" 
+export DUNEDAQ_ERS_ERROR="lstderr,filter(ipc),throw" 
 ~~~
 
 The difference with the previous configuration is that only errors, which have "ipc" qualifier
@@ -292,7 +292,7 @@ where the issue object is constructed.
 One can also define complex and reversed filters like in the following example:
 
 ~~~
-> export TDAQ_ERS_ERROR="lstderr,filter(!ipc,!is),throw"
+> export DUNEDAQ_ERS_ERROR="lstderr,filter(!ipc,!is),throw"
 ~~~
 
 This configuration will throw all the errors, which come neither from "ipc" nor from "is" TDAQ packages.
@@ -350,17 +350,17 @@ ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
 
 The first parameter of this macro is the name of the class which implements the new stream; the second one
 gives a new stream name to be used in ERS stream configurations (this is the name which one can put to the
-**TDAQ_ERS_<SEVERITY>** environment variables); and the last parameter is a placeholder for the stream class
+**DUNEDAQ_ERS_<SEVERITY>** environment variables); and the last parameter is a placeholder for the stream class
 constructor parameters. If the constructor of the new custom stream does not require parameters then last
 field of this macro should be left empty.
 
 ### Using Custom Stream
 In order to use a custom stream one has to build a new shared library from the class that implements this stream
-and pass this library to ERS by setting its name to the **TDAQ_ERS_STREAM_LIBS** environment variable.
+and pass this library to ERS by setting its name to the **DUNEDAQ_ERS_STREAM_LIBS** environment variable.
 For example if this macro is set to the following value:
 
 ~~~
-export  TDAQ_ERS_STREAM_LIBS=MyCustomFilter
+export  DUNEDAQ_ERS_STREAM_LIBS=MyCustomFilter
 ~~~
 
 then ERS will be looking for the libMyCustomFilter.so library in all the directories which appear in the 
@@ -422,8 +422,8 @@ across application boundaries, i.e. one process may receive ERS issues produces 
 The following example shows how to do that:
 
 ~~~cpp
-#include <ers/InputStream.h>
-#include <ers/ers.h>
+#include <ers/InputStream.hpp>
+#include <ers/ers.hpp>
 
 struct MyIssueReceiver : public ers::IssueReceiver {
     void receive( const ers::Issue & issue ) {
@@ -441,7 +441,7 @@ catch( ers::Issue & ex ) {
 ~~~
 
 The MyIssueReceiver instance will be getting all messages, which are sent to the "mts" stream implementation
-by all applications working in the current TDAQ partition whose name will be taken from the **TDAQ_PARTITION** 
+by all applications working in the current TDAQ partition whose name will be taken from the **DUNEDAQ_PARTITION** 
 environment variable. Alternatively one may pass partition name explicitly via the "mts" stream parameters list:
 
 ~~~cpp

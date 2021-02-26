@@ -1,78 +1,29 @@
 cmake_minimum_required(VERSION 3.12)
-project(ers VERSION 1.0.0)
+project(ers VERSION 1.1.0)
 
-set(Boost_USE_STATIC_LIBS OFF)
-# set(Boost_NO_BOOST_CMAKE ON)
-set(BUILD_SHARED_LIBS ON)
+find_package(daq-cmake REQUIRED )
+find_package(Boost COMPONENTS regex REQUIRED) 
 
-set(CMAKE_CXX_STANDARD 17)
+daq_setup_environment()
 
-include_directories(${CMAKE_SOURCE_DIR}/ers)
-include_directories(${CMAKE_SOURCE_DIR})
+find_package(Boost 1.70.0 COMPONENTS unit_test_framework program_options REQUIRED)
 
-add_subdirectory(bin)
-add_subdirectory(src)
-add_subdirectory(test)
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
 
-# Installation stuff copied from the double-conversion CMakeLists.txt, which in turn got it from
-# https://github.com/forexample/package-example
+daq_add_application( ers_config ers_config.cxx LINK_LIBRARIES ers )
 
-include(GNUInstallDirs)
+daq_add_plugin( AbortStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ExitStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( FilterStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( GlobalLockStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( LockStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( NullStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( RFilterStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( StandardStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ThrottleStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ThrowStream ersStream LINK_LIBRARIES ers )
 
-# Layout. This works for all platforms:
-#   * <prefix>/lib/cmake/<PROJECT-NAME>
-#   * <prefix>/lib/
-#   * <prefix>/include/
-set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+daq_add_application( ers_receiver ers_receiver.cxx TEST LINK_LIBRARIES ers )
+daq_add_application( ers_test ers_test.cxx TEST LINK_LIBRARIES ers )
 
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-
-# Configuration
-set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
-set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
-set(targets_export_name "${PROJECT_NAME}Targets")
-set(namespace "${PROJECT_NAME}::")
-
-# Include module with function 'write_basic_package_version_file'
-include(CMakePackageConfigHelpers)
-
-# Configure '<PROJECT-NAME>ConfigVersion.cmake'
-# Note: PROJECT_VERSION is used as a VERSION
-write_basic_package_version_file(
-    "${version_config}" COMPATIBILITY SameMajorVersion
-)
-
-# Configure '<PROJECT-NAME>Config.cmake'
-# Use variables:
-#   * targets_export_name
-#   * PROJECT_NAME
-configure_package_config_file(
-    "cmake/Config.cmake.in"
-    "${project_config}"
-    INSTALL_DESTINATION "${config_install_dir}"
-)
-
-install(
-    TARGETS ers ErsBaseStreams config
-    EXPORT "${targets_export_name}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-install(
-    DIRECTORY ers
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-install(
-    FILES "${project_config}" "${version_config}"
-    DESTINATION "${config_install_dir}"
-)
-
-install(
-    EXPORT "${targets_export_name}"
-    NAMESPACE "${namespace}"
-    DESTINATION "${config_install_dir}"
-)
+daq_install()
