@@ -12,10 +12,10 @@ ERS offers several macro that can be used for reporting pre-defined errors if so
 conditions are violated at the level of C++ code. ERS also provides tools for defining
 custom classes that can be used for reporting high-level issues.
 
-##Header File
+## Header File
 In order to use ERS functionality an application has to include a single header file **ers/ers.h**
 
-##Assertion Macro
+## Assertion Macro
 ERS provides several convenience macro for checking conditions in a C++ code. If a certain condition
 is violated a corresponding macro creates a new instance of **ers::Assertion** class and sends it to
 the **ers::fatal** stream. Further processing depends on the **ers::fatal** stream configuration.
@@ -32,43 +32,18 @@ but does not allow the checked value to be equal to either min or max values.
 
 > **Note:** These macro are defined to empty statements if **ERS_NO_DEBUG** macro is defined at compilation time.
 
-##Logging Macro
-ERS package offers a set of macro for infromation logging:
- * **ERS_DEBUG( level, message )** - sends ers::Message issue to the ers::debug stream
- * **ERS_LOG( message )** - sends ers::Message issue to the ers::log stream
- * **ERS_INFO( message )** - sends ers::Message issue to the ers::information stream
- 
-> **Note:** ERS_DEBUG macro is defined to empty statement if **ERS_NO_DEBUG** macro is defined at compilation time.
-
-Each of these macro constructs an new issue of ers::Message time and sends it to an appropriate stream.
-The **message** argument of these macro can be any value, for which the standard C++ output stream operator
-(**operator<<**) is defined. This means that the message can be a single value of a certain type as well
-as a sequence of output operations of any supported types.
-For example:
-
-~~~cpp
-ERS_DEBUG( 1, "simple debug output " << 123 << " that shows how to use debug macro" )
-~~~
-
-The actual behavior of these macro depends on the configuration of a respective stream.
-Debug macro can be disabled at run-time by defining the **TDAQ_ERS_DEBUG_LEVEL** environment 
-variable to the highest possible debug level.
-For instance, if **TDAQ_ERS_DEBUG_LEVEL** is set to N, then **ERS_DEBUG( M, ... )** where **M > N**
-will not produce any output. The default value for the **TDAQ_ERS_DEBUG_LEVEL** is 0. Negative
-debug levels are also allowed.
-
 The amount of information, which is printed for an issue depends on the actual ERS verbosity level,
-which can be controlled via the **TDAQ_ERS_VERBOSITY_LEVEL** macro. Default verbosity level is zero.
+which can be controlled via the **DUNEDAQ_ERS_VERBOSITY_LEVEL** macro. Default verbosity level is zero.
 In this case the following information is reported for any issue:
  * severity (DEBUG, LOG, INFO, WARNING, ERROR, FATAL)
  * the time of the issue occurrence
  * the issue's context, which includes package name, file name, function name and line number
  * the issue's message
 
-One can control the current verbosity level via the **TDAQ_ERS_VERBOSITY_LEVEL** macro:
+One can control the current verbosity level via the **DUNEDAQ_ERS_VERBOSITY_LEVEL** macro:
 
 ~~~
-export TDAQ_ERS_VERBOSITY_LEVEL=N
+export DUNEDAQ_ERS_VERBOSITY_LEVEL=N
 ~~~
 
 where N must be an integer number.
@@ -81,7 +56,7 @@ where N must be an integer number.
      * process current working directory
  * For N > 2 a stack trace is added to each issue if the code was compiled without **ERS_NO_DEBUG** macro.
 
-##Using Custom Issue Classes
+## Using Custom Issue Classes
 ERS assumes that user functions should throw exceptions in case of errors. If such exceptions
 are instances of classes, which inherit the **ers::Issue** one, ERS offers a number of advantages with 
 respect to their handling:
@@ -234,18 +209,18 @@ namespace ers {
 }
 ~~~
 
-##ERS_HERE macro
+## ERS_HERE macro
 The macro ERS_HERE is a convenience macro that is used to add the context information, like the file name,
 the line number and the signature of the function where the issue was constructed, to the new issue object.
 This means that when a new issue is created one shall always use ERS_HERE macro as the first parameter of the
 issue constructor.
 
-##Exception Handling
+## Exception Handling
 Functions, which can throw exceptions must be invoked inside **try...catch** statement.
 The following example shows a typical use case of handling ERS exceptions.
 
 ~~~cpp
-#include <ers/SampleIssues.h>
+#include <ers/SampleIssues.hpp>
 
     try {
         foo( );
@@ -277,7 +252,7 @@ constructor is used the new issue will hold the copy of the original one and wil
  * Any ERS issue has a constructor, which accepts std::exception issue as its last parameter.
     If it is used the new issue will hold the copy of the given std::exception one and will report it as its cause.
 
-##Configuring ERS Streams
+## Configuring ERS Streams
 The ERS system provides multiple instances of the stream API, one per severity level, to report issues.
 The issues which are sent to different streams may be forwarded to different destinations depending on a
 particular stream configuration. By default the ERS streams are configured in the following way:
@@ -293,10 +268,10 @@ particular stream configuration. By default the ERS streams are configured in th
 > issues reported from different threads will not be mixed up in the output.
 
 In order to change the default configuration for an ERS stream one should use
-the **TDAQ_ERS_<SEVERITY>** environment variable. For example the following command:
+the **DUNEDAQ_ERS_<SEVERITY>** environment variable. For example the following command:
 
 ~~~
-export TDAQ_ERS_ERROR="lstderr,throw" 
+export DUNEDAQ_ERS_ERROR="lstderr,throw" 
 ~~~
 
 will cause all the issues, which are sent to the ers::error stream, been printed to 
@@ -305,7 +280,7 @@ the standard C++ error stream and then been thrown using the C++ throw operator.
 A filter stream can also be associated with any severity level. For example:
 
 ~~~ 
-export TDAQ_ERS_ERROR="lstderr,filter(ipc),throw" 
+export DUNEDAQ_ERS_ERROR="lstderr,filter(ipc),throw" 
 ~~~
 
 The difference with the previous configuration is that only errors, which have "ipc" qualifier
@@ -317,12 +292,12 @@ where the issue object is constructed.
 One can also define complex and reversed filters like in the following example:
 
 ~~~
-> export TDAQ_ERS_ERROR="lstderr,filter(!ipc,!is),throw"
+> export DUNEDAQ_ERS_ERROR="lstderr,filter(!ipc,!is),throw"
 ~~~
 
 This configuration will throw all the errors, which come neither from "ipc" nor from "is" TDAQ packages.
 
-###Existing Stream Implementations
+### Existing Stream Implementations
 ERS provides several stream implementations which can be used in any combination in ERS streams configurations.
 Here is the list of available stream implementations:
  * "stdout" - prints issues to the standard C++ output stream. It is not thread-safe.
@@ -341,11 +316,11 @@ This stream can be used for adding thread-safety to an arbitrary non-thread-safe
  * "throttle(initial_threshold, time_interval)" - rejects the same issues reported within the **time_interval** after
 passing through the **initial_threshold** number of them.
 
-##Custom Stream Implementation
+## Custom Stream Implementation
 While ERS provides a set of basic stream implementations one can also implement a custom one if this is required.
 Custom streams can be plugged into any existing application which is using ERS without recompiling this application.
 
-###Implementing a Custom Stream
+### Implementing a Custom Stream
 In order to provide a new custom stream implementation one has to declare a sub-class of the ers::OutputStream
 class and implement its pure virtual method called **write**. Here is an example of how this is done by the 
 FilterStream stream implementation:
@@ -365,7 +340,7 @@ issue to the next stream in the chain or not. If a custom stream does not provid
 functionality then it shall always pass the input message to the next stream by using the
 **chained().write( issue )** code.
 
-###Registering a Custom Stream
+### Registering a Custom Stream
 In order to register and use a custom ERS stream implementation one can use a dedicated macro called
 **ERS_REGISTER_STREAM** in the following way:
 
@@ -375,23 +350,23 @@ ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
 
 The first parameter of this macro is the name of the class which implements the new stream; the second one
 gives a new stream name to be used in ERS stream configurations (this is the name which one can put to the
-**TDAQ_ERS_<SEVERITY>** environment variables); and the last parameter is a placeholder for the stream class
+**DUNEDAQ_ERS_<SEVERITY>** environment variables); and the last parameter is a placeholder for the stream class
 constructor parameters. If the constructor of the new custom stream does not require parameters then last
 field of this macro should be left empty.
 
-###Using Custom Stream
+### Using Custom Stream
 In order to use a custom stream one has to build a new shared library from the class that implements this stream
-and pass this library to ERS by setting its name to the **TDAQ_ERS_STREAM_LIBS** environment variable.
+and pass this library to ERS by setting its name to the **DUNEDAQ_ERS_STREAM_LIBS** environment variable.
 For example if this macro is set to the following value:
 
 ~~~
-export  TDAQ_ERS_STREAM_LIBS=MyCustomFilter
+export  DUNEDAQ_ERS_STREAM_LIBS=MyCustomFilter
 ~~~
 
 then ERS will be looking for the libMyCustomFilter.so library in all the directories which appear in the 
 **LD_LIBRARY_PATH** environment variable.
 
-##Error Reporting in Multi-threaded Applications
+## Error Reporting in Multi-threaded Applications
 ERS can be used for error reporting in multi-threaded applications. As C++ language does not provide a way of
 passing exceptions across thread boundaries, ERS provides the **ers::set_issue_catcher** function to overcome this
 limitation.
@@ -401,7 +376,7 @@ in this application the new issue will be forwarded to the respective ERS stream
 stream configuration. Otherwise if a custom issue catcher is installed the issue will be passed to the dedicated
 thread which will call the custom error catcher function.
 
-###Setting up an Error Catcher
+### Setting up an Error Catcher
 An error catcher should be installed by calling the **ers::set_issue_catcher** function and passing
 it a function object as parameter. This function object will be executed in the context of a dedicated
 thread (created by the **ers::set_issue_catcher** function) for every issue which is reported by the current
@@ -447,8 +422,8 @@ across application boundaries, i.e. one process may receive ERS issues produces 
 The following example shows how to do that:
 
 ~~~cpp
-#include <ers/InputStream.h>
-#include <ers/ers.h>
+#include <ers/InputStream.hpp>
+#include <ers/ers.hpp>
 
 struct MyIssueReceiver : public ers::IssueReceiver {
     void receive( const ers::Issue & issue ) {
@@ -466,7 +441,7 @@ catch( ers::Issue & ex ) {
 ~~~
 
 The MyIssueReceiver instance will be getting all messages, which are sent to the "mts" stream implementation
-by all applications working in the current TDAQ partition whose name will be taken from the **TDAQ_PARTITION** 
+by all applications working in the current TDAQ partition whose name will be taken from the **DUNEDAQ_PARTITION** 
 environment variable. Alternatively one may pass partition name explicitly via the "mts" stream parameters list:
 
 ~~~cpp

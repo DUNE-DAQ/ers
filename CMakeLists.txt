@@ -1,25 +1,29 @@
+cmake_minimum_required(VERSION 3.12)
+project(ers VERSION 1.1.1)
 
-tdaq_package()
+find_package(daq-cmake REQUIRED )
+find_package(Boost COMPONENTS regex REQUIRED) 
 
-tdaq_add_library(ers 
-  src/*.cxx
-  INCLUDE_DIRECTORIES Boost
-  LINK_LIBRARIES pthread dl)
+daq_setup_environment()
 
-tdaq_add_library(ErsBaseStreams MODULE
-  src/streams/*.cxx
-  LINK_LIBRARIES ers Boost::regex)
+find_package(Boost 1.70.0 COMPONENTS unit_test_framework program_options REQUIRED)
 
-find_package(Python QUIET REQUIRED COMPONENTS Development)
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
 
-tdaq_add_library(erspy MODULE 
-  python/erspy.cxx
-  LINK_LIBRARIES PRIVATE Boost::python ers Python::Module)
+daq_add_application( ers_config ers_config.cxx LINK_LIBRARIES ers )
 
-tdaq_add_python_files(python/ers.py)
+daq_add_plugin( AbortStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ExitStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( FilterStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( GlobalLockStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( LockStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( NullStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( RFilterStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( StandardStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ThrottleStream ersStream LINK_LIBRARIES ers )
+daq_add_plugin( ThrowStream ersStream LINK_LIBRARIES ers )
 
-tdaq_add_executable(ers_test         test/test.cxx     NOINSTALL LINK_LIBRARIES ers)
-tdaq_add_executable(ers_print_config bin/config.cxx    LINK_LIBRARIES ers)
-tdaq_add_executable(ers_receiver     test/receiver.cxx LINK_LIBRARIES ers)
+daq_add_application( ers_receiver ers_receiver.cxx TEST LINK_LIBRARIES ers )
+daq_add_application( ers_test ers_test.cxx TEST LINK_LIBRARIES ers )
 
-add_test(NAME ers_check COMMAND ers_test 8)
+daq_install()
