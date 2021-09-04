@@ -13,7 +13,7 @@ conditions are violated at the level of C++ code. ERS also provides tools for de
 custom classes that can be used for reporting high-level issues.
 
 ## Header File
-In order to use ERS functionality an application has to include a single header file **ers/ers.h**
+In order to use ERS functionality an application has to include a single header file **ers/ers.hpp**
 
 ## Assertion Macro
 ERS provides several convenience macro for checking conditions in a C++ code. If a certain condition
