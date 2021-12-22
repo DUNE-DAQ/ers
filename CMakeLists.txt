@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.12)
 project(ers VERSION 1.1.4)
 
 find_package(daq-cmake REQUIRED )
-find_package(Boost COMPONENTS regex REQUIRED) 
 
 daq_setup_environment()
 
-find_package(Boost 1.70.0 COMPONENTS unit_test_framework program_options REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
 
 daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
 
