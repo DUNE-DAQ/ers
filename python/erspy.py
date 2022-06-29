@@ -9,6 +9,7 @@ import re
 import time
 import getpass
 import _thread
+import logging
 
 from ers import AnyIssue
 
@@ -94,3 +95,37 @@ def fatal( issue ):
     assert isinstance(issue,ers.AnyIssue), \
             'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
     ers.fatal( issue )
+
+
+
+class LoggingHandler( logging.Handler ) :
+    severity_mapper = { logging.getLevelName( logging.DEBUG )   : lambda m: debug( 0, m ),
+                        logging.getLevelName( logging.INFO )    : info,
+                        logging.getLevelName( logging.WARNING ) : warning,
+                        logging.getLevelName( logging.ERROR )   : error,
+                        logging.getLevelName( logging.CRITICAL ): fatal }
+    def __init__(self):
+        logging.Handler.__init__(self)
+        
+    def emit(self, record):
+        if isinstance( record.msg, Issue ):
+            self.severity_mapper[record.levelname]( record.msg )
+        else:
+            msg = Message( record.msg % record.args )
+            msg.context.function_name = record.funcName;
+            msg.context.file_name = record.filename
+            msg.context.line_number = record.lineno
+            msg.context.package_name = record.module
+            self.severity_mapper[record.levelname]( msg )
+
+def addLoggingHandler( loggername = '' ):
+    "adds ERS logging handler to the given logger"
+    logging.getLogger( loggername ).addHandler( LoggingHandler() )
+
+def replaceAllLoggingHandlers( loggername = '' ):
+    """removes all logging handlers from the given logger 
+    and adds ERS logging handler to it"""
+    l = logging.getLogger( loggername )
+    while len( l.handlers ) != 0:
+        l.removeHandler(l.handlers[0])
+    addLoggingHandler( loggername )
