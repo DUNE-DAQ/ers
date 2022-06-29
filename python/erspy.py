@@ -5,33 +5,57 @@ import inspect
 import platform
 import os
 import sys
+import re
 import time
 import getpass
 import _thread
 
 from ers import AnyIssue
 
+'''Extract context information for creating an ers message '''
+class Context( object ):
+    "extracts context for an ERS issue"    
+    __file = re.sub( r'\.pyc$', '.py', __file__ )
+
+    def __init__( self ):
+        self.stack = [f[0] for f in inspect.stack() \
+                        if  f[1] != self.__file \
+                        and (      'self' not in f[0].f_locals\
+                                or not isinstance(f[0].f_locals['self'], Issue))]
+                                
+        class_name    = lambda : 'self' in self.stack[0].f_locals \
+                                 and self.stack[0].f_locals['self'].__class__.__name__ + '.'\
+                                 or ''
+
+        self.function_name = class_name() + self.stack[0].f_code.co_name;
+        try:
+            self.function_name += inspect.formatargvalues( *inspect.getargvalues(self.stack[0]) )
+        except Exception as exx:
+            self.function_name += '(...)'
+                
+        self.file_name = self.stack[0].f_code.co_filename
+        self.line_number = self.stack[0].f_lineno
+        self.host_name = platform.node()
+        self.cwd = os.getcwd()
+        self.process_id = os.getpid()
+        # Need to truncate this to fit 32 bit signed int
+        self.thread_id = int(_thread.get_ident()%2**31)
+        self.user_id = os.getuid()
+        self.user_name = getpass.getuser()
+        self.application_name = os.getenv( "DUNEDAQ_APPLICATION_NAME", "Undefined" )
+
+
 '''Wrap a message string as an ERS issue'''
 def Message(message):
-	# Stuff needed for the Context
-    host_name = platform.node()
-    cwd = os.getcwd()
-    user_id = os.getuid()
-    user_name = getpass.getuser()
-    process_id = os.getpid() 
-    thread_id = int(_thread.get_ident())
-    thread_id = int(thread_id%2**31)
-    app_name = os.getenv( "DUNEDAQ_APPLICATION_NAME", "Undefined" )
-    # This hard-coded stuff should be filled with the correct information, as in the old python Context class
-    package_name = "pytest2"
-    filename = "pytest2.py"
-    line_number = 42
-    function_name = "test"
+    # This class collects information needed for message context
+    ct = Context()
+    # Still need to do something about these
+    package_name = "erspy"
     type="Warning"
     # Create Context using the ers-python bindings
-    rpc = ers.RemoteProcessContext(host_name,process_id,thread_id,cwd,user_id,user_name,app_name)
-    rc = ers.RemoteContext(package_name,filename,line_number,function_name,rpc)
-    # Creat and return an ers issue
+    rpc = ers.RemoteProcessContext(ct.host_name,ct.process_id,ct.thread_id,ct.cwd,ct.user_id,ct.user_name,ct.application_name)
+    rc = ers.RemoteContext(package_name,ct.file_name,ct.line_number,ct.function_name,rpc)
+    # Create and return an ers issue
     return ers.AnyIssue(type, rc, message)
 
 
