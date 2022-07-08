@@ -1,5 +1,4 @@
 """Error reporting test program
-
 This module is part of the Error Reporting Service (ERS) 
 package of the ATLAS TDAQ system.
 """
@@ -13,12 +12,13 @@ __date__ = "$Date: 2010/05/05 21:57:20 $"
 #sys.setdlopenflags(dl.RTLD_LAZY|dl.RTLD_GLOBAL)
 
 import ers
-import ipc
+import erspy
+#import ipc
 import logging
 
-class Exception( ers.Issue ):
+class Exception( erspy.Issue ):
     def __init__( self, msg, args, cause ):
-        ers.Issue.__init__( self, msg, args, cause )
+        erspy.Issue.__init__( self, msg, args, cause )
 
 class PermissionDenied( Exception ):
     def __init__( self, cause = None ):
@@ -37,18 +37,19 @@ logger = logging.getLogger("main")
 logger.setLevel(logging.DEBUG)
 
 #add ers handler
-ers.addLoggingHandler("main")
+erspy.addLoggingHandler("main")
 
 cof = CantOpenFile( "t1", 1 )
 logger.error(cof);
 logger.error(CantOpenFile( "t2", 2 ));
+
 
 class Test(object):
     def method(self):
         raise PermissionDenied( )
             
 def test_function( arg1, arg2 ):
-    format = 'This is a %s message #%d'
+    format = "This is a %s message #%s" %(arg1, arg2)
     logger.debug(format, 'debug', 1 )
     logger.info(format, 'info', 2 )
     logger.warning(format, 'warning', 3 )
@@ -64,6 +65,7 @@ import time
 
 if __name__ == "__main__":
     try:
-    	test_function( "test", "ers" )
-    except ers.Issue as e:
-        ers.warning( e )
+        test_function( "test", 1 )
+    except erspy.Issue as e:
+        ers.warning( e.issue() )
+
