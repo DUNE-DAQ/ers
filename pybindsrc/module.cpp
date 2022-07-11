@@ -14,7 +14,7 @@
 namespace py = pybind11;
 
 
-PYBIND11_MODULE(_daq_ers_py, liberspy) {
+PYBIND11_MODULE(_daq_ers_py, module) {
 
   
   // Class inheritence to be included
@@ -22,11 +22,11 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
   // Abstract classes (like ers::Issue) cannot be called with
   // pybind11. Line 24 is only a decleration of ers::Issue.
   
-  py::class_<std::exception>(liberspy, "Exception");
+  py::class_<std::exception>(module, "Exception");
   
-  py::class_<ers::Issue, std::exception>(liberspy, "Issue");
+  py::class_<ers::Issue, std::exception>(module, "Issue");
   
-  py::class_<ers::AnyIssue, ers::Issue>(liberspy, "AnyIssue")
+  py::class_<ers::AnyIssue, ers::Issue>(module, "AnyIssue")
     // constructor 1
     .def(py::init<const std::string &, const ers::Context &, 
 	 const std::string &>())
@@ -47,7 +47,7 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
 
   // Same concept as mentioned in line 18 applies
 
-  py::class_<ers::Context>(liberspy, "Context")
+  py::class_<ers::Context>(module, "Context")
     .def("cwd", &ers::Context::cwd)
     .def("function_name", &ers::Context::function_name)
     .def("file_name", &ers::Context::file_name)
@@ -62,20 +62,20 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
     .def("process_id", &ers::Context::process_id)
     .def("thread_id", &ers::Context::thread_id);
 
-  py::class_<ers::LocalContext, ers::Context>(liberspy, "LocalContext")
+  py::class_<ers::LocalContext, ers::Context>(module, "LocalContext")
     .def(py::init<const char *, const char *, int, const char *, bool>());
 
-  py::class_<ers::RemoteProcessContext>(liberspy, "RemoteProcessContext")
+  py::class_<ers::RemoteProcessContext>(module, "RemoteProcessContext")
     .def(py::init<const std::string &, int, int, const std::string &, int, const std::string &, const std::string &>());
 
-  py::class_<ers::RemoteContext, ers::Context>(liberspy, "RemoteContext")
+  py::class_<ers::RemoteContext, ers::Context>(module, "RemoteContext")
     .def(py::init<const std::string &, const std::string &, int, const std::string &, ers::RemoteProcessContext &>());
 
-  py::class_<ers::Severity>(liberspy,"Severity")
+  py::class_<ers::Severity>(module,"Severity")
     .def(py::init<ers::severity &, int &>())
     .def_readwrite("type", &ers::Severity::type)
     .def_readwrite("rank", &ers::Severity::rank);
-  py::enum_<ers::severity>(liberspy,"severity")
+  py::enum_<ers::severity>(module,"severity")
     .value("Debug",ers::severity::Debug)
     .value("Log",ers::severity::Log)
     .value("Information",ers::severity::Information)
@@ -85,13 +85,13 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
     .export_values();
 
   // Bind the various logging calls
-  liberspy.def("debug", &ers::debug, "sends issue to the debug stream", py::arg("issue"), py::arg("level") );
-  liberspy.def("log", &ers::log, "sends issue to the log stream", py::arg("issue"));
-  liberspy.def("info", &ers::info, "sends issue to the information stream", py::arg("issue"));
-  liberspy.def("warning", &ers::warning,  "sends issue to the warning stream", py::arg("issue"));
-  liberspy.def("error", &ers::error, "sends issue to the error stream", py::arg("issue"));
-  liberspy.def("fatal", &ers::fatal, "sends issue to the fatal stream", py::arg("issue"));
-  liberspy.def("debug_level", &ers::debug_level, "returns current debug level for ERS");
-  liberspy.def("verbosity_level", &ers::verbosity_level, "returns current verbosity level for ERS");
-  liberspy.def("enable_core_dump", &ers::enable_core_dump, "does what the name implies I guess");
+  module.def("debug", &ers::debug, "sends issue to the debug stream", py::arg("issue"), py::arg("level") );
+  module.def("log", &ers::log, "sends issue to the log stream", py::arg("issue"));
+  module.def("info", &ers::info, "sends issue to the information stream", py::arg("issue"));
+  module.def("warning", &ers::warning,  "sends issue to the warning stream", py::arg("issue"));
+  module.def("error", &ers::error, "sends issue to the error stream", py::arg("issue"));
+  module.def("fatal", &ers::fatal, "sends issue to the fatal stream", py::arg("issue"));
+  module.def("debug_level", &ers::debug_level, "returns current debug level for ERS");
+  module.def("verbosity_level", &ers::verbosity_level, "returns current verbosity level for ERS");
+  module.def("enable_core_dump", &ers::enable_core_dump, "does what the name implies I guess");
 }
