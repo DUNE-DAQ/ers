@@ -22,7 +22,7 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
   // Abstract classes (like ers::Issue) cannot be called with
   // pybind11. Line 24 is only a decleration of ers::Issue.
   
-  py::class_<std::exception>(liberspy, "Exception");
+  py::class_<std::exception>(liberspy, "STDException");
   
   py::class_<ers::Issue, std::exception>(liberspy, "Issue");
   
@@ -50,8 +50,23 @@ PYBIND11_MODULE(_daq_ers_py, liberspy) {
 
   // And now some concrete classes deriving from Context
   py::class_<ers::LocalContext, ers::Context>(liberspy, "LocalContext")
-    .def(py::init<const char *, const char *, int, const char *, bool>());
-
+    .def(py::init<const char *, const char *, int, const char *, bool>())
+    .def("process_id", &ers::LocalContext::process_id)
+    .def("cwd", &ers::LocalContext::cwd)
+    .def("file_name", &ers::LocalContext::file_name)
+    .def("function_name", &ers::LocalContext::function_name)
+    .def("host_name", &ers::LocalContext::host_name)
+    .def("line_number", &ers::LocalContext::line_number)
+    .def("package_name", &ers::LocalContext::package_name)
+    .def("process_id", &ers::LocalContext::process_id)
+    .def("thread_id", &ers::LocalContext::thread_id)
+    .def("stack_symbols", &ers::LocalContext::stack_symbols)
+    .def("line_number", &ers::LocalContext::stack_size)
+    .def("user_id", &ers::LocalContext::user_id)
+    .def("user_name", &ers::LocalContext::user_name)
+    .def("application_name", &ers::LocalContext::application_name);
+    //   .def("resetProcessContext", &ers::LocalContext::resetProcessContext);
+  
   py::class_<ers::RemoteProcessContext>(liberspy, "RemoteProcessContext")
     .def(py::init<const std::string &, int, int, const std::string &, int, const std::string &, const std::string &>());
 
