@@ -16,3 +16,5 @@ ai = ers.AnyIssue(name, lc, name)
 nm = ai.get_class_name()
 
 print(nm)
+
+ers.info(ai)
