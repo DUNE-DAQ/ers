@@ -57,4 +57,3 @@ if __name__ == "__main__":
         ers.info(e.ai)
         ers.error(e.ai)
         print(vars(e))
-
