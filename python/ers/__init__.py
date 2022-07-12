@@ -75,4 +75,54 @@ class PyIssue( Exception ):
         
     def __str__( self ):
         return self.message
+
+'''Wrap a message string as an ERS issue'''
+def Message(message):
+    # This class collects information needed for message context
+    ct = PyContext(message)
+    # Still need to do something about these
+    package_name = "erspy"
+    type="Warning"
+    # Create Context using the ers-python bindings
+    rpc = ers.RemoteProcessContext(ct.host_name,ct.process_id,ct.thread_id,ct.cwd,ct.user_id,ct.user_name,ct.application_name)
+    rc = ers.RemoteContext(package_name,ct.file_name,ct.line_number,ct.function_name,rpc)
+    # Create and return an ers issue
+    return ers.AnyIssue(type, rc, message)
+
+
+'''Bunch of functions to wrap a text string and inject it as an ers message of different types'''
+def pydebug( msg, lvl ):
+    "sends msg to the debug stream"
+    ers.debug( isinstance( msg, ers.AnyIssue ) and msg or Message( msg ), lvl )
+
+def pylog( msg ):
+    "sends msg to the log stream"
+    ers.log( isinstance( msg, ers.AnyIssue ) and msg or Message( msg ) )
+
+def pyinfo( msg ):
+    "sends msg to the information stream"
+    ers.info( isinstance( msg, ers.AnyIssue ) and msg or Message( msg ) )
+
+'''These just inject an issue into the more serious streams.
+   The only thing these add over just calling the bound ers function directly is that they
+   warn you if you use the wrong type of argument.
+   Mainly here because the old ers.py had them, and they provide a consistency of interface
+   rather than forcing the user to use these calls for some things and direct ers calls for others'''
+def pywarning( issue ):
+    "sends issue to the warning stream"
+    assert isinstance(issue,ers.AnyIssue), \
+            'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
+    ers.warning( issue )
+
+def pyerror( issue ):
+    "sends issue to the error stream"
+    assert isinstance(issue,ers.AnyIssue), \
+            'Only an instance of ers.Issue sub-class can be sent to the ers.error stream'
+    ers.error( issue )
+
+def pyfatal( issue ):
+    "sends issue to the fatal stream"
+    assert isinstance(issue,ers.AnyIssue), \
+            'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
+    ers.fatal( issue )    
         
