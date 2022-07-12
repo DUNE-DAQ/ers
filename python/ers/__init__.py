@@ -77,7 +77,7 @@ class PyIssue( Exception ):
         return self.message
 
 '''Wrap a message string as an ERS issue'''
-def Message(message):
+def message(message):
     # This class collects information needed for message context
     ct = PyContext(message)
     # Still need to do something about these
