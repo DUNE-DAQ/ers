@@ -26,11 +26,11 @@ ers.error(ai)
 
 
 class PermissionDenied( ers.PyIssue ):
-    def __init__( self, cause = "" ):
+    def __init__( self, cause = None ):
         ers.PyIssue.__init__( self, 'Permission denied', {}, cause )
 
 class CantOpenFile( ers.PyIssue ):
-    def __init__( self, fname, err, cause = "" ):
+    def __init__( self, fname, err, cause = None ):
         ers.PyIssue.__init__( self, 'Can not open "%s" file, error = %d' % ( fname, err ),
 	    { 'filename' : fname, 'error' : err },
 	    cause )
@@ -40,21 +40,9 @@ class Test(object):
         raise PermissionDenied( )
 
 def test_function( arg1, arg2 ):
-    format = 'This is a %s message #%d'
-    name = "JOEL"
-    lc = ers.LocalContext(name, name,1,name,False)
-    ers.info(ers.AnyIssue("HEY", lc, "YOU"))
-    #print("Using python logging\n")
-    #logging.info(format, 'info', 2 )
-    #logging.warning(format, 'warning', 3 )
-    #logging.error(format, 'error', 4 )
-    #logging.critical(format, 'critical', 5 )
-
     try:
         t = Test( )
         t.method( )
-    #except:
-    #    pass
     except PermissionDenied as e:
         raise CantOpenFile( "test.py", 13, e )
 
@@ -66,5 +54,7 @@ if __name__ == "__main__":
     	test_function( "test", "ers" )
     except ers.PyIssue as e:
         ers.warning(e.ai)
-        print(type(e.cause))
-        print(type(e.message))
+        ers.info(e.ai)
+        ers.error(e.ai)
+        print(vars(e))
+

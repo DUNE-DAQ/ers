@@ -55,11 +55,12 @@ class PyIssue( Exception ):
         self.message = message
         self.cause = cause
         self.__context = PyContext(self)
+        self.context_parameters = vars(self.__context)
         self.qualifiers = [ self.__context.package_name ]
         self.__parameters = dict([ (str(k), str(v)) for (k,v) in list(kwargs.items()) ])
         self.__dict__.update( kwargs )
         self.lc = ers.LocalContext(self.__context.application_name, self.__context.file_name, self.__context.line_number, self.__context.function_name, False)
-        self.ai = ers.AnyIssue( message, self.lc, message )        
+        self.ai = ers.AnyIssue( self.__context.function_name, self.lc, message )        
         
     @property
     def context( self ):
