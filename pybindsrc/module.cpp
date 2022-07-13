@@ -22,7 +22,7 @@ PYBIND11_MODULE(_daq_ers_py, module) {
   // Abstract classes (like ers::Issue) cannot be called with
   // pybind11. Line 24 is only a decleration of ers::Issue.
   
-  py::class_<std::exception>(module, "Exception");
+  py::class_<std::exception>(module, "STDException");
   
   py::class_<ers::Issue, std::exception>(module, "Issue");
   
@@ -36,7 +36,6 @@ PYBIND11_MODULE(_daq_ers_py, module) {
 	 const system_clock::time_point &,const std::string &,
 	 const std::vector<std::string> &, const std::map<std::string,
 	 std::string> &, const ers::Issue *>())    
-    .def("context", &ers::AnyIssue::context)
     .def("get_class_name", &ers::AnyIssue::get_class_name)
     .def("raise", &ers::AnyIssue::raise)
     .def("what", &ers::AnyIssue::what)
@@ -45,7 +44,7 @@ PYBIND11_MODULE(_daq_ers_py, module) {
     .def("qualifiers",&ers::AnyIssue::qualifiers)
     .def("parameters", &ers::AnyIssue::parameters);
 
-  // Same concept as mentioned in line 18 applies
+  // Bindings for Context base class and derived classes
 
   py::class_<ers::Context>(module, "Context")
     .def("cwd", &ers::Context::cwd)
@@ -56,21 +55,24 @@ PYBIND11_MODULE(_daq_ers_py, module) {
     .def("user_name", &ers::Context::user_name)
     .def("application_name", &ers::Context::application_name)
     .def("user_id", &ers::Context::user_id)
+    .def("user_name", &ers::Context::user_name)
     .def("stack_size", &ers::Context::stack_size)
     .def("stack_symbols", &ers::Context::stack_symbols)
     .def("line_number", &ers::Context::line_number)
     .def("process_id", &ers::Context::process_id)
     .def("thread_id", &ers::Context::thread_id);
 
+  // And now some concrete classes deriving from Context
   py::class_<ers::LocalContext, ers::Context>(module, "LocalContext")
     .def(py::init<const char *, const char *, int, const char *, bool>());
-
+  
   py::class_<ers::RemoteProcessContext>(module, "RemoteProcessContext")
     .def(py::init<const std::string &, int, int, const std::string &, int, const std::string &, const std::string &>());
 
   py::class_<ers::RemoteContext, ers::Context>(module, "RemoteContext")
     .def(py::init<const std::string &, const std::string &, int, const std::string &, ers::RemoteProcessContext &>());
 
+  // Severity includes both a class and and enum. 
   py::class_<ers::Severity>(module,"Severity")
     .def(py::init<ers::severity &, int &>())
     .def_readwrite("type", &ers::Severity::type)
@@ -93,5 +95,5 @@ PYBIND11_MODULE(_daq_ers_py, module) {
   module.def("fatal", &ers::fatal, "sends issue to the fatal stream", py::arg("issue"));
   module.def("debug_level", &ers::debug_level, "returns current debug level for ERS");
   module.def("verbosity_level", &ers::verbosity_level, "returns current verbosity level for ERS");
-  module.def("enable_core_dump", &ers::enable_core_dump, "does what the name implies I guess");
+  module.def("enable_core_dump", &ers::enable_core_dump, "does what the name implies");
 }

@@ -11,8 +11,6 @@ import _thread
 
 # This is the pybind11 binding 
 import ers
-# This is a python script with some interface classes and functions
-import erspy
 
 from ers import AnyIssue
 
@@ -72,13 +70,12 @@ ers.fatal(ai2)
 ers.debug(ai2,5)
 
 # Use python interfaces to log string as issue
-erspy.info(message)
-erspy.log(message)
+ers.pyinfo(message)
+ers.pylog(message)
 # Use python def to wrap string as an ers issue
-ai3 = erspy.Message(message)
+ai3 = ers.message(message)
 # These python methods only accept issues as input
-erspy.warning(ai3)
-erspy.error(ai3)
-erspy.fatal(ai3)
-erspy.debug(ai2, 5)
-
+ers.pywarning(ai3)
+ers.pyerror(ai3)
+ers.pyfatal(ai3)
+ers.pydebug(ai2, 5)

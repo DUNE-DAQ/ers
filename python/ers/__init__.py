@@ -110,7 +110,7 @@ def pyinfo( msg ):
    rather than forcing the user to use these calls for some things and direct ers calls for others'''
 def pywarning( issue ):
     "sends issue to the warning stream"
-    assert isinstance(issue, ers.AnyIssue), \
+    assert isinstance(issue,ers.AnyIssue), \
             'Only an instance of ers.Issue sub-class can be sent to the ers.warning stream'
     ers.warning( issue )
 
@@ -122,6 +122,6 @@ def pyerror( issue ):
 
 def pyfatal( issue ):
     "sends issue to the fatal stream"
-    assert isinstance(issue, ers.AnyIssue), \
+    assert isinstance(issue,ers.AnyIssue), \
             'Only an instance of ers.Issue sub-class can be sent to the ers.fatal stream'
     ers.fatal( issue )
