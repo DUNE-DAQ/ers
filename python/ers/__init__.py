@@ -46,7 +46,7 @@ class PyContext( object ):
 
 class PyIssue( Exception ):
     "base class for Python  ERS exceptions"    
-    __verbosity = int( os.getenv( "DUNEDAQ_ERS_VERBOSITY_LEVEL", "0" ) )
+    __verbosity = int( os.getenv( "DUNEDAQ_ERS_VERBOSITY_LEVEL", "2" ) )
     
     def __init__( self, message, kwargs, cause ):
         Exception.__init__( self, message, kwargs, cause )
@@ -59,8 +59,12 @@ class PyIssue( Exception ):
         self.qualifiers = [ self.__context.package_name ]
         self.__parameters = dict([ (str(k), str(v)) for (k,v) in list(kwargs.items()) ])
         self.__dict__.update( kwargs )
-        self.lc = ers.LocalContext(self.__context.application_name, self.__context.file_name, self.__context.line_number, self.__context.function_name, False)
-        self.ai = ers.AnyIssue( self.__context.function_name, self.lc, message )        
+        self.rpc = ers.RemoteProcessContext(self.__context.host_name,self.__context.process_id,self.__context.thread_id,
+                                            self.__context.cwd,self.__context.user_id,self.__context.user_name,
+                                            self.__context.application_name)
+        self.rc = ers.RemoteContext(self.__context.package_name,self.__context.file_name,self.__context.line_number,self.__context.function_name,self.rpc)
+        #self.lc = ers.LocalContext(self.__context.application_name, self.__context.file_name, self.__context.line_number, self.__context.function_name, False)
+        self.ai = ers.AnyIssue( self.__context.function_name, self.rc, message )
         
     @property
     def context( self ):
