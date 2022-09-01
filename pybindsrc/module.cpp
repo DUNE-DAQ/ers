@@ -6,6 +6,7 @@
 #include "ers/RemoteContext.hpp"
 #include "ers/Severity.hpp"
 #include "ers/ers.hpp"
+#include "ers/OutputStream.hpp"
 
 #include <exception>
 #include <pybind11/pybind11.h>
@@ -20,29 +21,32 @@ PYBIND11_MODULE(_daq_ers_py, module) {
   // Class inheritence to be included
   // std::exception -> ers::Issue -> ers::AnyIssue
   // Abstract classes (like ers::Issue) cannot be called with
-  // pybind11. Line 24 is only a decleration of ers::Issue.
+  // pybind11. Line below is only a decleration of ers::Issue.
   
   py::class_<std::exception>(module, "STDException");
   
   py::class_<ers::Issue, std::exception>(module, "Issue");
+
+  py::class_<ers::OutputStream>(module, "OutputStream");
   
+  // Concrete Issue class 
   py::class_<ers::AnyIssue, ers::Issue>(module, "AnyIssue")
-    // constructor 1
-    .def(py::init<const std::string &, const ers::Context &, 
-	 const std::string &>())
-    // constructor 2
-    .def(py::init<const std::string &,
-	 ers::Severity, const ers::Context &,
-	 const system_clock::time_point &,const std::string &,
-	 const std::vector<std::string> &, const std::map<std::string,
-	 std::string> &, const ers::Issue *>())    
-    .def("get_class_name", &ers::AnyIssue::get_class_name)
-    .def("raise", &ers::AnyIssue::raise)
-    .def("what", &ers::AnyIssue::what)
-    .def("cause", &ers::AnyIssue::cause)
-    .def("severity", &ers::AnyIssue::severity)
-    .def("qualifiers",&ers::AnyIssue::qualifiers)
-    .def("parameters", &ers::AnyIssue::parameters);
+   // constructor 1
+   .def(py::init<const std::string &, const ers::Context &, 
+        const std::string &>())
+   // constructor 2
+   .def(py::init<const std::string &,
+        ers::Severity, const ers::Context &,
+	const system_clock::time_point &,const std::string &,
+	const std::vector<std::string> &, const std::map<std::string,
+	std::string> &, const ers::Issue *>())    
+   .def("get_class_name", &ers::AnyIssue::get_class_name)
+   .def("raise", &ers::AnyIssue::raise)
+   .def("what", &ers::AnyIssue::what)
+   .def("cause", &ers::AnyIssue::cause)
+   .def("severity", &ers::AnyIssue::severity)
+   .def("qualifiers",&ers::AnyIssue::qualifiers)
+   .def("parameters", &ers::AnyIssue::parameters);
 
   // Bindings for Context base class and derived classes
 
