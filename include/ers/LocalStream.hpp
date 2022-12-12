@@ -11,79 +11,77 @@
  */
 
 /** \file LocalStream.h This file defines ERS LocalStream class.
-  * \author Serguei Kolos
-  * \brief ers header and documentation file
-  */
+ * \author Serguei Kolos
+ * \brief ers header and documentation file
+ */
 
 #include <condition_variable>
 #include <functional>
 #include <iostream>
-#include <queue>
 #include <mutex>
+#include <queue>
 #include <thread>
 
 #include <ers/Issue.hpp>
 #include <ers/IssueCatcherHandler.hpp>
 
-ERS_DECLARE_ISSUE(  ers,					// namespace
-		    IssueCatcherAlreadySet, 			// issue class name
-		    "Local error catcher has been already set",	//
-		     ERS_EMPTY					// no attributes
-		 )
-                     
-namespace ers
-{    
-    class Issue;
-    template <class > class SingletonCreator;
-    
-    class IssueCatcherHandler;
-    
-    /** The \c LocalStream class can be used for passing issues between threads of the same process.
-      *
-      * \author Serguei Kolos
-      * \version 1.2
-      */
+ERS_DECLARE_ISSUE(ers,                                        // namespace
+                  IssueCatcherAlreadySet,                     // issue class name
+                  "Local error catcher has been already set", //
+                  ERS_EMPTY                                   // no attributes
+)
 
-    class LocalStream
-    {
-        friend class IssueCatcherHandler;
-	template <class > friend class SingletonCreator;
-        
-      public:
-	        
-        //! returns the singleton
-        static LocalStream & instance();
+namespace ers {
+class Issue;
+template<class>
+class SingletonCreator;
 
-	//! sets local issue catcher
-	IssueCatcherHandler * set_issue_catcher( 
-        			const std::function<void ( const ers::Issue & )> & catcher );
+class IssueCatcherHandler;
 
-	void error( const ers::Issue & issue );
-	
-        void fatal( const ers::Issue & issue );
-	
-        void warning( const ers::Issue & issue );
+/** The \c LocalStream class can be used for passing issues between threads of the same process.
+ *
+ * \author Serguei Kolos
+ * \version 1.2
+ */
 
-      private:
-	LocalStream( );
-	~LocalStream( );
-        
-        void remove_issue_catcher();
+class LocalStream
+{
+  friend class IssueCatcherHandler;
+  template<class>
+  friend class SingletonCreator;
 
-	void report_issue( ers::severity type, const ers::Issue & issue );
-        
-	void thread_wrapper();
+public:
+  //! returns the singleton
+  static LocalStream& instance();
 
-      private:
-	std::function<void ( const ers::Issue & )>	m_issue_catcher;
-	std::unique_ptr<std::thread>			m_issue_catcher_thread;
-	std::mutex					m_mutex;
-	std::condition_variable			        m_condition;
-	bool						m_terminated;
-	std::queue<ers::Issue *>			m_issues;
-	std::thread::id					m_catcher_thread_id;
-    };
+  //! sets local issue catcher
+  IssueCatcherHandler* set_issue_catcher(const std::function<void(const ers::Issue&)>& catcher);
+
+  void error(const ers::Issue& issue);
+
+  void fatal(const ers::Issue& issue);
+
+  void warning(const ers::Issue& issue);
+
+private:
+  LocalStream();
+  ~LocalStream();
+
+  void remove_issue_catcher();
+
+  void report_issue(ers::severity type, const ers::Issue& issue);
+
+  void thread_wrapper();
+
+private:
+  std::function<void(const ers::Issue&)> m_issue_catcher;
+  std::unique_ptr<std::thread> m_issue_catcher_thread;
+  std::mutex m_mutex;
+  std::condition_variable m_condition;
+  bool m_terminated;
+  std::queue<ers::Issue*> m_issues;
+  std::thread::id m_catcher_thread_id;
+};
 }
 
 #endif
-

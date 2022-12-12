@@ -9,14 +9,11 @@
 
 #include <ers/internal/ThrowStream.hpp>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", ERS_EMPTY)
+ERS_REGISTER_OUTPUT_STREAM(ers::ThrowStream, "throw", ERS_EMPTY)
 
-void ers::ThrowStream::write( const Issue & issue )
+void
+ers::ThrowStream::write(const Issue& issue)
 {
-    chained().write( issue );
-    issue.raise();
+  chained().write(issue);
+  issue.raise();
 }
-
-
-
-

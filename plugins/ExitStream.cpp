@@ -10,17 +10,17 @@
 #include <ers/internal/ExitStream.hpp>
 #include <stdlib.h>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::ExitStream, "exit", exit_code )
+ERS_REGISTER_OUTPUT_STREAM(ers::ExitStream, "exit", exit_code)
 
-ers::ExitStream::ExitStream( const std::string & exit_code )
-  : m_exit_code( 1 )
+ers::ExitStream::ExitStream(const std::string& exit_code)
+  : m_exit_code(1)
 {
-    std::istringstream in( exit_code );
-    in >> m_exit_code;
+  std::istringstream in(exit_code);
+  in >> m_exit_code;
 }
 
-void ers::ExitStream::write( const Issue & )
+void
+ers::ExitStream::write(const Issue&)
 {
-    ::exit( m_exit_code );
+  ::exit(m_exit_code);
 }
-

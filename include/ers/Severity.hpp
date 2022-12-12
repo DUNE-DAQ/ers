@@ -8,69 +8,85 @@
  */
 
 /** \file Severity.h This file defines Severity type for ERS.
-  * \author Serguei Kolos
-  * \brief ers header and documentation file 
-  */
+ * \author Serguei Kolos
+ * \brief ers header and documentation file
+ */
 
 #ifndef ERS_SEVERITY_H
 #define ERS_SEVERITY_H
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
-namespace ers
+namespace ers {
+class BadSeverity;
+
+enum severity
 {
-    class BadSeverity;
-    
-    enum severity { Debug, Log, Information, Warning, Error, Fatal };
-    
-    struct Severity
-    {
-    	Severity( ers::severity severity, int level = 0 )
-          : type( severity ),
-            rank( level )
-        { ; }
-        
-        operator ers::severity()
-        { return type; }
-        
-        enum severity	type;
-        int		rank;
-    };
-        
-    severity 	parse( const std::string & s, severity & );
-    Severity 	parse( const std::string & s, Severity & );
-    std::string	to_string( severity s );
-    std::string	to_string( Severity s );
+  Debug,
+  Log,
+  Information,
+  Warning,
+  Error,
+  Fatal
+};
 
-    inline std::ostream & operator<<( std::ostream & out, ers::severity severity )
-    {
-	out << to_string( severity );
-	return out;
-    }
+struct Severity
+{
+  Severity(ers::severity severity, int level = 0)
+    : type(severity)
+    , rank(level)
+  {
+    ;
+  }
 
-    inline std::ostream & operator<<( std::ostream & out, const ers::Severity & severity )
-    {
-	out << to_string( severity );
-	return out;
-    }
+  operator ers::severity() { return type; }
 
-    inline std::istream & operator>>( std::istream & in, ers::severity & severity )
-    {
-	std::string string;
-	in >> string;
-	parse( string, severity );
-	return in;
-    }
+  enum severity type;
+  int rank;
+};
 
-    inline std::istream & operator>>( std::istream & in, ers::Severity & severity )
-    {
-	std::string string;
-	in >> string;
-	parse( string, severity );
-	return in;
-    }
+severity
+parse(const std::string& s, severity&);
+Severity
+parse(const std::string& s, Severity&);
+std::string
+to_string(severity s);
+std::string
+to_string(Severity s);
+
+inline std::ostream&
+operator<<(std::ostream& out, ers::severity severity)
+{
+  out << to_string(severity);
+  return out;
+}
+
+inline std::ostream&
+operator<<(std::ostream& out, const ers::Severity& severity)
+{
+  out << to_string(severity);
+  return out;
+}
+
+inline std::istream&
+operator>>(std::istream& in, ers::severity& severity)
+{
+  std::string string;
+  in >> string;
+  parse(string, severity);
+  return in;
+}
+
+inline std::istream&
+operator>>(std::istream& in, ers::Severity& severity)
+{
+  std::string string;
+  in >> string;
+  parse(string, severity);
+  return in;
+}
 }
 
 #endif
