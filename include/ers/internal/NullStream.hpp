@@ -8,39 +8,35 @@
  */
 
 /** \file NullStream.h This file defines NullStream ERS stream.
-  * \author Serguei Kolos
-  * \brief ers header file
-  */
+ * \author Serguei Kolos
+ * \brief ers header file
+ */
 
 #ifndef ERS_NULL_STREAM_H
 #define ERS_NULL_STREAM_H
 
-#include <ers/OutputStream.hpp>
 #include <ers/InputStream.hpp>
+#include <ers/OutputStream.hpp>
 
-namespace ers
+namespace ers {
+class Issue;
+
+/** This stream implementation silently discards any issue that is sent to it.
+ * In order to employ this implementation in a stream configuration the name to be used is "null".
+ * E.g. the following configuration will result in no output been produced for the ERROR stream:
+ *
+ *         export DUNEDAQ_ERS_ERROR="null"
+ *
+ * \author Serguei Kolos
+ * \brief Null stream
+ */
+
+struct NullStream : public OutputStream
 {
-    class Issue;
+  void write(const Issue&) override { ; }
 
-    /** This stream implementation silently discards any issue that is sent to it.
-     * In order to employ this implementation in a stream configuration the name to be used is "null".
-     * E.g. the following configuration will result in no output been produced for the ERROR stream:
-     *
-     *         export DUNEDAQ_ERS_ERROR="null"
-     *
-     * \author Serguei Kolos
-     * \brief Null stream
-     */
-
-    struct NullStream : public OutputStream
-    {
-        void write( const Issue & ) override
-        { ; }
-
-        bool isNull() const override
-        { return true; }
-    };
+  bool isNull() const override { return true; }
+};
 }
 
 #endif
-

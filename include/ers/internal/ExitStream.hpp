@@ -19,35 +19,34 @@
 
 namespace ers {
 
-    class Issue;
+class Issue;
 
-    /** This class implements a stream, which exits the application whenever it receives an issue.
-     * In order to employ this implementation in a stream configuration the name to be used is "exit".
-     * E.g. the following configuration will print a first issue that is passed to the FATAL ERS stream
-     * to the standard output and then terminates the application:
-     *
-     *         export DUNEDAQ_ERS_FATAL="stdout,exit"
-     *
-     * \author Serguei Kolos
-     * \version 1.0
-     * \brief Terminates the current application
-     */
+/** This class implements a stream, which exits the application whenever it receives an issue.
+ * In order to employ this implementation in a stream configuration the name to be used is "exit".
+ * E.g. the following configuration will print a first issue that is passed to the FATAL ERS stream
+ * to the standard output and then terminates the application:
+ *
+ *         export DUNEDAQ_ERS_FATAL="stdout,exit"
+ *
+ * \author Serguei Kolos
+ * \version 1.0
+ * \brief Terminates the current application
+ */
 
-    struct ExitStream: public OutputStream
-    {
-        /**
-         * Creates a new instance of Exit stream.
-         *
-         * @param exit_code This sting shall contain a number that will be used as the application exit status.
-         */
-        explicit ExitStream(const std::string &exit_code = "1");
+struct ExitStream : public OutputStream
+{
+  /**
+   * Creates a new instance of Exit stream.
+   *
+   * @param exit_code This sting shall contain a number that will be used as the application exit status.
+   */
+  explicit ExitStream(const std::string& exit_code = "1");
 
-        void write(const Issue &issue) override;
+  void write(const Issue& issue) override;
 
-    private:
-        int m_exit_code;
-    };
+private:
+  int m_exit_code;
+};
 }
 
 #endif
-

@@ -6,11 +6,11 @@
  *  Copyright 2004 CERN. All rights reserved.
  *
  */
- 
+
 /** \file LockStream.h This file defines LockStream ERS stream.
-  * \author Serguei Kolos
-  * \brief ers header file 
-  */
+ * \author Serguei Kolos
+ * \brief ers header file
+ */
 
 #ifndef ERS_LOCK_STREAM_H
 #define ERS_LOCK_STREAM_H
@@ -18,28 +18,27 @@
 #include <ers/OutputStream.hpp>
 #include <mutex>
 
-namespace ers
+namespace ers {
+
+/** This class can be used to lock a particular ERS output streams to prevent
+ * output to this stream produced by concurrent threads from been mixed up.
+ * In order to employ this implementation in a stream configuration the name to be used is "lock".
+ * E.g. the following configuration will assure that the output sent to the LOG stream by
+ * concurrent threads is never mixed up:
+ *
+ *         export DUNEDAQ_ERS_LOG="lock,stdout"
+ *
+ * \author Serguei Kolos
+ * \brief Lock implementation for an ERS stream.
+ */
+
+struct LockStream : public OutputStream
 {
+  void write(const Issue& issue) override;
 
-    /** This class can be used to lock a particular ERS output streams to prevent 
-      * output to this stream produced by concurrent threads from been mixed up.
-     * In order to employ this implementation in a stream configuration the name to be used is "lock".
-     * E.g. the following configuration will assure that the output sent to the LOG stream by
-     * concurrent threads is never mixed up:
-     *
-     *         export DUNEDAQ_ERS_LOG="lock,stdout"
-      *
-      * \author Serguei Kolos
-      * \brief Lock implementation for an ERS stream.
-      */
-
-    struct LockStream : public OutputStream
-    {
-	void write( const Issue & issue ) override;
-        
-      private:
-	std::mutex m_mutex;
-    };
+private:
+  std::mutex m_mutex;
+};
 }
 
 #endif

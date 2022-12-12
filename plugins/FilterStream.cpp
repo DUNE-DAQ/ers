@@ -8,81 +8,72 @@
  *
  */
 
+#include <algorithm>
+#include <ers/StreamFactory.hpp>
 #include <ers/internal/FilterStream.hpp>
 #include <ers/internal/Util.hpp>
-#include <ers/StreamFactory.hpp>
-#include <algorithm>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
+ERS_REGISTER_OUTPUT_STREAM(ers::FilterStream, "filter", format)
 
-namespace
-{
-    const char NOT = '!';
-    const char * const SEPARATORS = "," ;
-} // anonymous namespace 
+namespace {
+const char NOT = '!';
+const char* const SEPARATORS = ",";
+} // anonymous namespace
 
 /** Constructor that creates a new instance of the filter stream with the given configuration.
-  * Only messages that pass the given filter will go through, the others will be filtered out.
-  * \param format filter expression.
-  */
-ers::FilterStream::FilterStream( const std::string & format )
+ * Only messages that pass the given filter will go through, the others will be filtered out.
+ * \param format filter expression.
+ */
+ers::FilterStream::FilterStream(const std::string& format)
 {
-    std::vector<std::string> tokens;
-    ers::tokenize( format, SEPARATORS, tokens );
-    for( size_t i = 0; i < tokens.size(); i++ )
-    {
-    	if ( !tokens[i].empty() && tokens[i][0] == NOT )
-            m_exclude.push_back( tokens[i].substr( 1 ) );
-        else
-            m_include.push_back( tokens[i] );
-    }
+  std::vector<std::string> tokens;
+  ers::tokenize(format, SEPARATORS, tokens);
+  for (size_t i = 0; i < tokens.size(); i++) {
+    if (!tokens[i].empty() && tokens[i][0] == NOT)
+      m_exclude.push_back(tokens[i].substr(1));
+    else
+      m_include.push_back(tokens[i]);
+  }
 }
 
-
-/** Filtering method 
-  * This method checks if an Issue is to be accepted or not. 
-  * \param issue_ptr the issue to check 
-  * \return \c true if the Issue passes filtering, \c false otherwise.
-  */
+/** Filtering method
+ * This method checks if an Issue is to be accepted or not.
+ * \param issue_ptr the issue to check
+ * \return \c true if the Issue passes filtering, \c false otherwise.
+ */
 bool
-ers::FilterStream::is_accepted( const ers::Issue & issue )
+ers::FilterStream::is_accepted(const ers::Issue& issue)
 {
-    const std::vector<std::string> & qualifiers = issue.qualifiers( );
-               
-    std::vector<std::string>::const_iterator it;
-    for( it = m_exclude.begin(); it != m_exclude.end(); ++it )
-    {
-	std::vector<std::string>::const_iterator conflict = std::find( qualifiers.begin(), qualifiers.end(), *it );
-	if ( conflict != qualifiers.end() )
-	{
-	    return false;
-	}
-    }
-    
-    for( it = m_include.begin(); it != m_include.end(); ++it )
-    {
-	std::vector<std::string>::const_iterator match = std::find( qualifiers.begin(), qualifiers.end(), *it );
-	if ( match != qualifiers.end() )
-	{
-            return true;
-	}
-    }
+  const std::vector<std::string>& qualifiers = issue.qualifiers();
 
-    return m_include.empty(); 
+  std::vector<std::string>::const_iterator it;
+  for (it = m_exclude.begin(); it != m_exclude.end(); ++it) {
+    std::vector<std::string>::const_iterator conflict = std::find(qualifiers.begin(), qualifiers.end(), *it);
+    if (conflict != qualifiers.end()) {
+      return false;
+    }
+  }
+
+  for (it = m_include.begin(); it != m_include.end(); ++it) {
+    std::vector<std::string>::const_iterator match = std::find(qualifiers.begin(), qualifiers.end(), *it);
+    if (match != qualifiers.end()) {
+      return true;
+    }
+  }
+
+  return m_include.empty();
 }
 
-/** Write method 
-  * basically calls \c is_accept to check if the issue is accepted. 
-  * If this is the case, the \c write method on the chained stream is called with 
-  * \c issue. 
-  * \param issue issue to be sent.
-  */
+/** Write method
+ * basically calls \c is_accept to check if the issue is accepted.
+ * If this is the case, the \c write method on the chained stream is called with
+ * \c issue.
+ * \param issue issue to be sent.
+ */
 void
-ers::FilterStream::write( const ers::Issue & issue )
+ers::FilterStream::write(const ers::Issue& issue)
 {
-    if ( is_accepted( issue ) )
-    {
-	chained().write( issue ); 
-    }
+  if (is_accepted(issue)) {
+    chained().write(issue);
+  }
 } // send
-
