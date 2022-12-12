@@ -9,23 +9,21 @@
 
 #include <ers/InputStream.hpp>
 
-namespace {
-struct DummyReceiver : public ers::IssueReceiver
+namespace 
 {
-  void receive(const ers::Issue&) override { ; }
-};
-
-DummyReceiver dummy_receiver;
+    struct DummyReceiver: public ers::IssueReceiver
+    {
+	void receive( const ers::Issue & ) override { ; }
+    };
+    
+    DummyReceiver dummy_receiver;
 }
+       
+ers::InputStream::InputStream( )
+  : m_receiver( &dummy_receiver )
+{ ; }
 
-ers::InputStream::InputStream()
-  : m_receiver(&dummy_receiver)
+void ers::InputStream::receive( const Issue & issue )
 {
-  ;
-}
-
-void
-ers::InputStream::receive(const Issue& issue)
-{
-  m_receiver->receive(issue);
+    m_receiver->receive( issue );
 }

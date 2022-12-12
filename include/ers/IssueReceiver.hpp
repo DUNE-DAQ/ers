@@ -13,33 +13,36 @@
 #include <ers/Issue.hpp>
 
 /** \file IssueReceiver.h Defines abstract interface for ERS input streams.
- * \author Serguei Kolos
- * \brief ers header and documentation file
- */
-namespace ers {
-class Issue;
-
-/** ERS Issue receiver abstract interface.
- * User must create a subsclass of this class in order to receive issues.
- *
- * \author Serguei Kolos
- * \brief ERS Issue receiver interface.
- */
-
-class IssueReceiver
+  * \author Serguei Kolos
+  * \brief ers header and documentation file 
+  */
+namespace ers
 {
-public:
-  virtual ~IssueReceiver() { ; }
+    class Issue; 
 
-  virtual void receive(const Issue& issue) = 0; /**< \brief Is called when a new issue is received */
+    /** ERS Issue receiver abstract interface.
+      * User must create a subsclass of this class in order to receive issues.
+      *
+      * \author Serguei Kolos
+      * \brief ERS Issue receiver interface.
+      */
+    
+    class IssueReceiver
+    {
+      public:
+	virtual ~IssueReceiver()
+        { ; }
+        
+	virtual void receive( const Issue & issue ) = 0;	/**< \brief Is called when a new issue is received */
+              
+      protected:
+        IssueReceiver() = default;
 
-protected:
-  IssueReceiver() = default;
-
-private:
-  IssueReceiver(const IssueReceiver&) = delete;
-  IssueReceiver& operator=(const IssueReceiver&) = delete;
-};
+      private:
+	IssueReceiver( const IssueReceiver & ) = delete;
+        IssueReceiver & operator=( const IssueReceiver & ) = delete;
+    };
 }
 
 #endif
+
