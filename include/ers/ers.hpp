@@ -9,151 +9,127 @@
  */
 
 /** \file ers.h This file defines the basic ERS API.
- * \author Serguei Kolos
- * \version 1.1
- * \brief ers main header and documentation file
- */
+  * \author Serguei Kolos
+  * \version 1.1
+  * \brief ers main header and documentation file
+  */
 
 #ifndef ERS_ERS_H
 #define ERS_ERS_H
 
-#include <ers/Assertion.hpp>
-#include <ers/Configuration.hpp>
-#include <ers/Issue.hpp>
-#include <ers/LocalStream.hpp>
-#include <ers/Severity.hpp>
-#include <ers/StreamManager.hpp>
+#include <sys/resource.h>
 #include <functional>
 #include <sstream>
-#include <sys/resource.h>
+#include <ers/StreamManager.hpp>
+#include <ers/Configuration.hpp>
+#include <ers/Issue.hpp>
+#include <ers/Assertion.hpp>
+#include <ers/Severity.hpp>
+#include <ers/LocalStream.hpp>
 
-#include <boost/preprocessor/facilities/is_empty.hpp>
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/facilities/is_empty.hpp>
 
 /*! \namespace ers
  *  This is a wrapping namespace for all ERS classes and global functions.
  */
 
-namespace ers {
-typedef Issue Exception;
-
-/*! \namespace thread
- *	This is a wrapping namespace for ERS classes and global functions
- *  which can be used for the local inter-thread error reporting.
- */
-
-/*!
- *	This function sets up the local issue handler function. This function will be executed in the context
- *	of dedicated thread which will be created as a result of this call. All the issues which are reported
- *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
- *	\param issue the issue to be reported
- *	\return pointer to the handler object, which allows to remove the catcher by just destroying this object.
- *			If an applications ignores this return value there will no way of de installing the issue
- *catcher. \throw ers::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once \see
- *ers::error() \see ers::fatal() \see ers::warning()
- */
-inline IssueCatcherHandler*
-set_issue_catcher(const std::function<void(const ers::Issue&)>& catcher)
+namespace ers
 {
-  return LocalStream::instance().set_issue_catcher(catcher);
-}
+    typedef Issue Exception;
+    
+    /*! \namespace thread
+     *	This is a wrapping namespace for ERS classes and global functions
+     *  which can be used for the local inter-thread error reporting.
+     */
 
-/*!
- *  This function returns the current debug level for ERS.
- */
-inline int
-debug_level()
-{
-  return Configuration::instance().debug_level();
-}
+    /*!
+     *	This function sets up the local issue handler function. This function will be executed in the context
+     *	of dedicated thread which will be created as a result of this call. All the issues which are reported
+     *	via the ers::error, ers::fatal and ers::warning functions will be forwarded to this thread.
+     *	\param issue the issue to be reported
+     *	\return pointer to the handler object, which allows to remove the catcher by just destroying this object.
+     *			If an applications ignores this return value there will no way of de installing the issue catcher.
+     *	\throw ers::IssueCatcherAlreadySet for safety reasons local issue handler can be set only once
+     *	\see ers::error()
+     *	\see ers::fatal()
+     *	\see ers::warning()
+     */
+    inline IssueCatcherHandler * 
+    	set_issue_catcher( const std::function<void ( const ers::Issue & )> & catcher )
+    { return LocalStream::instance().set_issue_catcher( catcher ); }
+    
+    /*! 
+     *  This function returns the current debug level for ERS.
+     */
+    inline int debug_level( )
+    { return Configuration::instance().debug_level( ); }
+    
+    /*! 
+     *  This function sends the issue to the ERS DEBUG stream which corresponds to the given debug level.
+     *  \param issue the issue to be reported
+     *  \level debug level which will be associated with the reported issue
+     */
+    inline void debug( const Issue & issue, int level = debug_level() )
+    { StreamManager::instance().debug( issue, level ); }
+    
+    /*! 
+     *  This function sends the issue to the ERS ERROR stream.
+     *  \param issue the issue to be reported
+     */
+    inline void error( const Issue & issue )
+    { LocalStream::instance().error( issue ); }
+    
+    /*! 
+     *  This function sends the issue to the ERS FATAL stream.
+     *  \param issue the issue to be reported
+     */
+    inline void fatal( const Issue & issue )
+    { LocalStream::instance().fatal( issue ); }
+    
+    /*! 
+     *  This function sends the issue to the ERS INFO stream.
+     *  \param issue the issue to be reported
+     */
+    inline void info( const Issue & issue )
+    { StreamManager::instance().information( issue ); }
+    
+    /*! 
+     *  This function sends the issue to the ERS LOG stream.
+     *  \param issue the issue to be reported
+     */
+    inline void log( const Issue & issue )
+    { StreamManager::instance().log( issue ); }
+    
+    /*! 
+     *  This function returns the current verbosity level for ERS.
+     */
+    inline int verbosity_level( )
+    { return Configuration::instance().verbosity_level( ); }
 
-/*!
- *  This function sends the issue to the ERS DEBUG stream which corresponds to the given debug level.
- *  \param issue the issue to be reported
- *  \level debug level which will be associated with the reported issue
- */
-inline void
-debug(const Issue& issue, int level = debug_level())
-{
-  StreamManager::instance().debug(issue, level);
-}
+    /*! 
+     *  This function sends the issue to the ERS WARNING stream.
+     *  \param issue the issue to be reported
+     */
+    inline void warning( const Issue & issue )
+    { LocalStream::instance().warning( issue ); }
 
-/*!
- *  This function sends the issue to the ERS ERROR stream.
- *  \param issue the issue to be reported
- */
-inline void
-error(const Issue& issue)
-{
-  LocalStream::instance().error(issue);
-}
-
-/*!
- *  This function sends the issue to the ERS FATAL stream.
- *  \param issue the issue to be reported
- */
-inline void
-fatal(const Issue& issue)
-{
-  LocalStream::instance().fatal(issue);
-}
-
-/*!
- *  This function sends the issue to the ERS INFO stream.
- *  \param issue the issue to be reported
- */
-inline void
-info(const Issue& issue)
-{
-  StreamManager::instance().information(issue);
-}
-
-/*!
- *  This function sends the issue to the ERS LOG stream.
- *  \param issue the issue to be reported
- */
-inline void
-log(const Issue& issue)
-{
-  StreamManager::instance().log(issue);
-}
-
-/*!
- *  This function returns the current verbosity level for ERS.
- */
-inline int
-verbosity_level()
-{
-  return Configuration::instance().verbosity_level();
-}
-
-/*!
- *  This function sends the issue to the ERS WARNING stream.
- *  \param issue the issue to be reported
- */
-inline void
-warning(const Issue& issue)
-{
-  LocalStream::instance().warning(issue);
-}
-
-inline int
-enable_core_dump()
-{
-  rlimit core_limit = { RLIM_INFINITY, RLIM_INFINITY };
-  return setrlimit(RLIMIT_CORE, &core_limit);
-}
+    inline int enable_core_dump() {
+        rlimit core_limit = { RLIM_INFINITY, RLIM_INFINITY };
+        return setrlimit( RLIMIT_CORE, &core_limit );
+    }
 }
 
 // ERS_DECLARE_ISSUE( ers, Message, ERS_EMPTY, ERS_EMPTY )
 
-#define ERS_REPORT_IMPL(stream, issue, message, level)                                                                 \
-  {                                                                                                                    \
-    std::ostringstream ers_report_impl_out_buffer;                                                                     \
-    ers_report_impl_out_buffer << message;                                                                             \
-    stream(issue(ERS_HERE, ers_report_impl_out_buffer.str())                                                           \
-             BOOST_PP_COMMA_IF(BOOST_PP_NOT(ERS_IS_EMPTY(ERS_EMPTY level))) level);                                    \
-  }
+#define ERS_REPORT_IMPL( stream, issue, message, level ) \
+{ \
+    std::ostringstream ers_report_impl_out_buffer; \
+    ers_report_impl_out_buffer << message; \
+    stream( issue( ERS_HERE, ers_report_impl_out_buffer.str() ) \
+	    BOOST_PP_COMMA_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY level ) ) ) level ); \
+}
 
 #endif // ERS_ERS_H
+

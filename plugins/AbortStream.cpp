@@ -10,11 +10,14 @@
 #include <ers/internal/AbortStream.hpp>
 #include <stdlib.h>
 
-ERS_REGISTER_OUTPUT_STREAM(ers::AbortStream, "abort", ERS_EMPTY)
+ERS_REGISTER_OUTPUT_STREAM( ers::AbortStream, "abort", ERS_EMPTY)
 
-void
-ers::AbortStream::write(const Issue& issue)
+void ers::AbortStream::write( const Issue & issue )
 {
-  chained().write(issue);
-  ::abort();
+    chained().write( issue );
+    ::abort();
 }
+
+
+
+

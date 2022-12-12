@@ -13,23 +13,27 @@
 
 struct MyIssueReceiver : public ers::IssueReceiver
 {
-  void receive(const ers::Issue& issue) { std::cout << issue << std::endl; }
+    void receive( const ers::Issue & issue )
+    {
+    	std::cout << issue << std::endl;
+    }
 };
 
-int
-main(int, char**)
+int main(int , char** )
 {
-
-  try {
-    ers::StreamManager::instance().add_receiver("mts", "*", new MyIssueReceiver);
-  } catch (ers::Issue& ex) {
-    ers::fatal(ex);
-    return 1;
-  }
-
-  while (true) {
-    sleep(1);
-  }
-
-  return 0;
+    
+    try {
+    	ers::StreamManager::instance().add_receiver( "mts", "*", new MyIssueReceiver );
+    }
+    catch( ers::Issue & ex ) {
+    	ers::fatal( ex );
+    	return 1;
+    }
+    
+    while (true) {
+        sleep(1);
+    }
+    
+    return 0; 
 }
+

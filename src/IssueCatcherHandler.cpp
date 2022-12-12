@@ -12,5 +12,5 @@
 
 ers::IssueCatcherHandler::~IssueCatcherHandler()
 {
-  LocalStream::instance().remove_issue_catcher();
+    LocalStream::instance().remove_issue_catcher();
 }
