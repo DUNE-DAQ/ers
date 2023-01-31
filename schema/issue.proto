@@ -28,6 +28,9 @@ enum Severity {
   FATAL = 5;  
 }
 
+
+import "google/protobuf/timestamp.proto";
+
 message IssueObject {
 
   Context context = 1;
@@ -37,5 +40,5 @@ message IssueObject {
   Severity severity = 4;
 
   map<string, string> parameters = 5;
-  Timestamp time = 6;
+  google.protobuf.Timestamp time = 6;
 }
