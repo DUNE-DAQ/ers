@@ -8,8 +8,7 @@ daq_setup_environment()
 
 find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
 
-daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
-daq_add_library(*.pb.cc LINK_LIBRARIES Protobuf)
+daq_add_library(*.cpp *.pb.cc LINK_LIBRARIES Boost::regex pthread dl Protobuf)
 
 daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME})
 
