@@ -33,15 +33,20 @@ int main( int argc, char* argv[] ) {
   context.set_application_name("ers_schema_test");
 
   IssueObject issue;
-  issue.set_context(context);
+  (*issue.mutable_context())=context;
   issue.set_name("test_issue");
   issue.set_message("This is a message of test");
   issue.set_severity(Severity::LOG);
 
+  (*issue.mutable_parameters())["p"]="perfect";
+    
   google::protobuf::Timestamp time;
   time.set_seconds( chrono::system_clock::now().time_since_epoch().count() );
 
-  issue.set_time( time);
+  (*issue.mutable_time())=time;
+  
+
+
   
   string serial;
   
@@ -60,8 +65,19 @@ int main( int argc, char* argv[] ) {
   }
 
   string json;
-  MessageToJsonString(context, & json);
+  MessageToJsonString(issue, & json);
+  json += '}';
   cout << json << endl ;
+
+  IssueObject reco_issue;
+  JsonStringToMessage( json, & reco_issue);
+
+  if ( issue.name() == reco_issue.name() ) {
+    cout << "json success" << endl ;
+  } else {
+    cout << "Jons failure" << endl;
+  }
+    
   
   google::protobuf::ShutdownProtobufLibrary();
 
