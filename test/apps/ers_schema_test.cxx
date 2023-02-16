@@ -64,13 +64,19 @@ int main( int argc, char* argv[] ) {
     cout << "failure" << endl;
   }
 
+  JsonPrintOptions opt;
+  opt.add_whitespace = true;
+  opt.preserve_proto_field_names = true;
+  
   string json;
-  MessageToJsonString(issue, & json);
+  MessageToJsonString(issue, & json, opt);
   json += '}';
   cout << json << endl ;
 
   IssueObject reco_issue;
+
   JsonStringToMessage( json, & reco_issue);
+  
 
   if ( issue.name() == reco_issue.name() ) {
     cout << "json success" << endl ;
