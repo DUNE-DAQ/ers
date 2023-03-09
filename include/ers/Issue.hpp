@@ -97,7 +97,10 @@ namespace ers
         
         const std::string & message() const			/**< \brief General cause of the issue. */
 	{ return m_message; }
-        
+
+        const std::string & inheritance_chain() const		/**< \brief Inheritance chain */
+	{ return m_inheritance_chain; }
+      
 	const std::vector<std::string> & qualifiers() const	/**< \brief return array of qualifiers */
         { return m_qualifiers; }
         
@@ -155,17 +158,24 @@ namespace ers
 	{ m_message = message; }
         
 	void prepend_message( const std::string & message );
-        
+
+        void add_inheritance_step(const std::string & class_name) {
+	  m_inheritance_chain += '/' + class_name;
+        }
+      
       private:        
         Issue & operator=( const Issue & other ) = delete;
 					  
 	std::unique_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
 	std::unique_ptr<Context>	m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
+      	std::string			m_inheritance_chain;	/**< \brief inheritance_chain */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
 	system_clock::time_point	m_time;			/**< \brief Time when issue was thrown */
-	string_map			m_values;		/**< \brief List of user defined attributes. */	
+	string_map			m_values;		/**< \brief List of user defined attributes. */
+
+        static std::string s_base_inheritance ;
     };
 
     std::ostream & operator<<( std::ostream &, const ers::Issue & );    

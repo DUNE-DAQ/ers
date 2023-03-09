@@ -26,6 +26,8 @@ using namespace ers;
 
 ERS_DECLARE_ISSUE( ers, StdIssue, ERS_EMPTY, ERS_EMPTY )
 
+std::string Issue::s_base_inheritance = "ers::Issue" ;
+
 namespace
 {
     int get_default_qualifiers( std::vector<std::string> & qualifiers )
@@ -55,6 +57,7 @@ Issue::Issue( const Issue & other )
     m_cause( other.m_cause.get() ? other.m_cause->clone() : 0 ),
     m_context( other.m_context->clone() ),
     m_message( other.m_message ),
+    m_inheritance_chain( other.m_inheritance_chain ),
     m_qualifiers( other.m_qualifiers ),
     m_severity( other.m_severity ),
     m_time( other.m_time ),
@@ -75,6 +78,7 @@ Issue::Issue(   const Context & context,
 {
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
+    add_inheritance_step(Issue::s_base_inheritance);
 }
 
 /** This constructor takes another exceptions as its cause.
@@ -91,6 +95,7 @@ Issue::Issue(   const Context & context,
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
+    add_inheritance_step(Issue::s_base_inheritance);
 }
 
 /** This constructor takes another exceptions as its cause.
@@ -99,8 +104,8 @@ Issue::Issue(   const Context & context,
  * \param cause exception that caused the current issue
  */
 Issue::Issue(   const Context & context,
-        const std::string & message,
-        const std::exception & cause )
+		const std::string & message,
+		const std::exception & cause )
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
@@ -110,15 +115,16 @@ Issue::Issue(   const Context & context,
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
+    add_inheritance_step(Issue::s_base_inheritance);
 }
 
 Issue::Issue(   Severity severity,
-        const system_clock::time_point & time,
-                const ers::Context & context,
-        const std::string & message,
-        const std::vector<std::string> & qualifiers,
-        const std::map<std::string, std::string> & parameters,
-        const ers::Issue * cause )
+		const system_clock::time_point & time,
+		const ers::Context & context,
+		const std::string & message,
+		const std::vector<std::string> & qualifiers,
+		const std::map<std::string, std::string> & parameters,
+		const ers::Issue * cause )
   : m_cause( cause ),
     m_context( context.clone() ),
     m_message( message ),
@@ -126,7 +132,9 @@ Issue::Issue(   Severity severity,
     m_severity( severity ),
     m_time( time ),
     m_values( parameters )
-{ ; }
+{
+  add_inheritance_step(Issue::s_base_inheritance);
+}
 
 ers::Issue::~Issue() noexcept
 { ; }
