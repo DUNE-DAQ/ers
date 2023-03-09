@@ -163,6 +163,11 @@ namespace ers
         void add_inheritance_step(const std::string & class_name) {
 	  m_inheritance_chain += '/' + class_name;
         }
+
+        void set_inheritance_chain(const std::string & chain) {
+	  m_inheritance_chain = chain;
+        }
+
       
       private:        
         Issue & operator=( const Issue & other ) = delete;

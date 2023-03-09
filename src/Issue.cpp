@@ -70,7 +70,7 @@ Issue::Issue( const Issue & other )
  * \param message the user message associated with this issue
  */
 Issue::Issue(   const Context & context,
-        const std::string & message )
+		const std::string & message )
   : m_context( context.clone() ),
     m_message( message ),
     m_severity( ers::Error ),
@@ -78,7 +78,7 @@ Issue::Issue(   const Context & context,
 {
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
-    add_inheritance_step(Issue::s_base_inheritance);
+    add_inheritance_step( Issue::s_base_inheritance );
 }
 
 /** This constructor takes another exceptions as its cause.
@@ -95,7 +95,7 @@ Issue::Issue(   const Context & context,
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
-    add_inheritance_step(Issue::s_base_inheritance);
+    add_inheritance_step( Issue::s_base_inheritance );
 }
 
 /** This constructor takes another exceptions as its cause.
@@ -115,26 +115,26 @@ Issue::Issue(   const Context & context,
     m_cause.reset( issue ? issue->clone() : new StdIssue( ERS_HERE, cause.what() ) );
     add_qualifier( m_context->package_name() );
     add_default_qualifiers( *this );
-    add_inheritance_step(Issue::s_base_inheritance);
+    add_inheritance_step( Issue::s_base_inheritance );
 }
 
 Issue::Issue(   Severity severity,
 		const system_clock::time_point & time,
 		const ers::Context & context,
 		const std::string & message,
+		const std::string & inheritance_chain,
 		const std::vector<std::string> & qualifiers,
 		const std::map<std::string, std::string> & parameters,
 		const ers::Issue * cause )
   : m_cause( cause ),
     m_context( context.clone() ),
     m_message( message ),
+    m_inheritance_chain( inheritance_chain),
     m_qualifiers( qualifiers ),
     m_severity( severity ),
     m_time( time ),
     m_values( parameters )
-{
-  add_inheritance_step(Issue::s_base_inheritance);
-}
+{ ; }
 
 ers::Issue::~Issue() noexcept
 { ; }
