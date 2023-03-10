@@ -26,7 +26,7 @@ namespace ers
 		  const std::string & message = "" )
           : ers::Issue( context, message ),
             m_type( type )
-        { ; }
+      { ; }
         
         AnyIssue( const std::string & type,
         	  Severity severity,

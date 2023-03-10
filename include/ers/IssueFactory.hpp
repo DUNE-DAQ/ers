@@ -59,6 +59,7 @@ namespace ers
                         Severity severity,
                         const system_clock::time_point & time,
                         const std::string & message,
+			const std::string & inheritance_chain,
                         const std::vector<std::string> & qualifiers,
                         const std::map<std::string, std::string> & parameters,
                         const Issue * cause = 0 ) const ;			/**< \brief build issue out of all the given parameters */

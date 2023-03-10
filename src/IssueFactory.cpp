@@ -67,17 +67,20 @@ ers::IssueFactory::create(	const std::string & name,
                                 Severity severity,
                                 const system_clock::time_point & time,
 				const std::string & message,
+				const std::string & inheritance_chain,
 				const std::vector<std::string> & qualifiers,
 				const ers::string_map & parameters,
                                 const Issue * cause ) const
 {
     ers::Issue * issue = create( name, context );
     issue->m_message = message;
+    issue->set_inheritance_chain( inheritance_chain );
     issue->m_severity = severity;
     issue->m_qualifiers = qualifiers;
     issue->m_values = parameters;
     issue->m_time = time;
     issue->m_cause.reset( cause );
+
     return issue;
 }
 
