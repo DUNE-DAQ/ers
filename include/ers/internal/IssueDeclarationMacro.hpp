@@ -54,7 +54,8 @@ namespace namespace_name { \
       template <class> friend class ers::IssueRegistrator;\
       protected: \
 	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), \
-        	class_name( const ers::Context & context ) : base_class_name( context ) { ; } )\
+        	class_name( const ers::Context & context ) : base_class_name( context ) { \
+			    add_inheritance_step( #namespace_name "::" #class_name ) ; } ) \
       public: \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	class_name( const ers::Context & context \
@@ -73,9 +74,9 @@ namespace namespace_name { \
         	    ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
                     ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
                     const std::exception & cause ); \
-	void raise() const { throw class_name(*this); } \
-	const char * get_class_name() const { return get_uid(); } \
-	base_class_name * clone() const { return new namespace_name::class_name( *this ); } \
+	void raise() const override { throw class_name(*this); } \
+	const char * get_class_name() const override { return get_uid(); } \
+	base_class_name * clone() const override { return new namespace_name::class_name( *this ); } \
 	ERS_PRINT_LIST( ERS_ATTRIBUTE_ACCESSORS, ERS_EMPTY attributes ) \
     }; \
 }
@@ -89,6 +90,7 @@ namespace namespace_name { \
     { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
       BOOST_PP_EXPR_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY message ) ), ERS_SET_MESSAGE( ERS_EMPTY message ) )\
+      add_inheritance_step( #namespace_name "::" #class_name ); \
     } \
     \
     INLINE class_name::class_name( const ers::Context & context, \
@@ -98,6 +100,7 @@ namespace namespace_name { \
       : base_class_name( context, msg ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ) ) \
     { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
+      add_inheritance_step( #namespace_name "::" #class_name ); \
     } \
     \
     INLINE class_name::class_name( const ers::Context & context, \
@@ -108,7 +111,8 @@ namespace namespace_name { \
       : base_class_name( context, msg ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME, ERS_EMPTY base_attributes ), cause ) \
     { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
-    } \
+      add_inheritance_step( #namespace_name "::" #class_name ); \
+     } \
     INLINE class_name::class_name( const ers::Context & context \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY base_attributes ) \
 		ERS_PRINT_LIST( ERS_ATTRIBUTE_NAME_TYPE, ERS_EMPTY attributes ), \
@@ -117,7 +121,8 @@ namespace namespace_name { \
     { \
       ERS_PRINT_LIST( ERS_ATTRIBUTE_SERIALIZATION, ERS_EMPTY attributes ) \
       BOOST_PP_EXPR_IF( BOOST_PP_NOT( ERS_IS_EMPTY( ERS_EMPTY message ) ), ERS_SET_MESSAGE( ERS_EMPTY message ) )\
-    } \
+      add_inheritance_step( #namespace_name "::" #class_name ); \
+     } \
 } \
 namespace { \
     ers::IssueRegistrator<namespace_name::class_name> namespace_name##_##class_name##_instance; \
