@@ -33,7 +33,7 @@ namespace ers
                   const ers::Context & context,
 		  const system_clock::time_point & time,
 		  const std::string & message,
-		  const std::string & inheritance_chain,
+		  const std::vector<std::string> & inheritance_chain,
 		  const std::vector<std::string> & qualifiers,
 		  const std::map<std::string, std::string> & parameters,
                   const ers::Issue * cause = 0 )
