@@ -38,9 +38,11 @@ PYBIND11_MODULE(_daq_ers_py, module) {
    .def(py::init<const std::string &,
         ers::Severity, const ers::Context &,
 	const system_clock::time_point &,
-	const std::string &, const std::string &,
-	const std::vector<std::string> &, const std::map<std::string,
-	std::string> &, const ers::Issue *>())    
+	const std::string &,
+	const std::vector<std::string> &,
+	const std::vector<std::string> &,
+	const std::map<std::string, std::string> &,
+	const ers::Issue *>())    
    .def("get_class_name", &ers::AnyIssue::get_class_name)
    .def("raise", &ers::AnyIssue::raise)
    .def("what", &ers::AnyIssue::what)

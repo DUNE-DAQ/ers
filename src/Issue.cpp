@@ -122,7 +122,7 @@ Issue::Issue(   Severity severity,
 		const system_clock::time_point & time,
 		const ers::Context & context,
 		const std::string & message,
-		const std::string & inheritance_chain,
+		const std::vector<std::string> & inheritance_chain,
 		const std::vector<std::string> & qualifiers,
 		const std::map<std::string, std::string> & parameters,
 		const ers::Issue * cause )

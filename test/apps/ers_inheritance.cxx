@@ -33,14 +33,14 @@ ERS_DECLARE_ISSUE_BASE(weird,                                        // namespac
 
 int main(int ac, char** av) {
 
-  std::vector<ers::Issue> issues;
-  issues.push_back( test::Base(ERS_HERE) );
-  issues.push_back( test::daughter(ERS_HERE) );
-  issues.push_back( other::A(ERS_HERE) );
-  issues.push_back( weird::B(ERS_HERE) );
+  std::vector<std::unique_ptr<ers::Issue>> issues;
+  issues.push_back( std::make_unique<test::Base>( ERS_HERE ) );
+  issues.push_back( std::make_unique<test::daughter>(ERS_HERE) );
+  issues.push_back( std::make_unique<other::A>(ERS_HERE) );
+  issues.push_back( std::make_unique<weird::B>(ERS_HERE) );
   
   for ( const auto & i : issues ) {
-    auto chain = i.inheritance_chain();
+    auto chain = i->inheritance_chain();
     for ( const auto & c : chain ) {
       std::cout << c << "\t" ;
     }

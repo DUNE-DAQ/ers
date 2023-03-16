@@ -164,7 +164,7 @@ namespace ers
 	  m_inheritance_chain.push_back(class_name);
         }
 
-        void set_inheritance_chain(const std::vector<std::string> chain) {
+        void set_inheritance_chain(const std::vector<std::string> & chain) {
 	  m_inheritance_chain = chain;
         }
 
