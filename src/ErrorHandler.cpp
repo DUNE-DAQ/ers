@@ -107,7 +107,9 @@ namespace ers
 	    handlers[SIGILL]  = new SignalHandler( SIGILL, "Illegal Instruction" );
 	    handlers[SIGFPE]  = new SignalHandler( SIGFPE, "Floating point exception" );
 	    std::set_terminate( terminate_handler );
+#if __cplusplus < 201703L
 	    std::set_unexpected( terminate_handler );
+#endif
         }
     }
     
