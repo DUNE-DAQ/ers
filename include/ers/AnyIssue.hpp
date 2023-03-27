@@ -22,12 +22,10 @@ namespace ers
     {
       public:
         AnyIssue( const std::string & type,
-		  const inheritance_type & chain,
 		  const ers::Context & context,
 		  const std::string & message = "" )
           : ers::Issue( context, message ),
-            m_type( type ),
-	    m_inheritance( chain )
+            m_type( type )
         { ; }
         
         AnyIssue( const std::string & type,
@@ -41,7 +39,7 @@ namespace ers
                   const ers::Issue * cause = 0 )
           : ers::Issue( severity, time, context, message, qualifiers, parameters, cause ),
             m_type( type ),
-	    m_inheritance( chain );
+	    m_inheritance( chain )
 	{ ; }
         
         ~AnyIssue() noexcept { ; }
@@ -52,7 +50,7 @@ namespace ers
         virtual const char * get_class_name() const
         { return m_type.c_str(); }
 
-        virtual inheritance_type get_inheritance() const final {
+        virtual inheritance_type get_class_inheritance() const final {
 	  return m_inheritance ;
 	}
        	
