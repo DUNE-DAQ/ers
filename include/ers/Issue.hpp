@@ -21,6 +21,7 @@
 #include <sstream>
 #include <memory>
 #include <chrono>
+#include <list>
 
 #include <ers/IssueFactory.hpp>
 #include <ers/LocalContext.hpp>
@@ -39,7 +40,9 @@ namespace ers
     class OutputStream;
         
     typedef std::map<std::string, std::string>	string_map;
-    
+
+    using inheritance_type = std::list<std::string> ;
+  
     template<class T>
     class IssueRegistrator {
     public:
@@ -84,7 +87,9 @@ namespace ers
 	virtual Issue * clone() const = 0;
 	
         virtual const char * get_class_name() const = 0;	/**< \brief Get key for class (used for serialisation)*/
-       	
+      
+        virtual inheritance_type get_class_inheritance() const = 0; /**< \brief Get inheritance chain */
+
         virtual void raise() const = 0;                         /**< \brief throws a copy of this issue preserving the real issue type*/
 	
 	void add_qualifier( const std::string & qualif );	/**< \brief adds a qualifier to the issue */
@@ -155,7 +160,13 @@ namespace ers
 	{ m_message = message; }
         
 	void prepend_message( const std::string & message );
-        
+
+        static auto _get_inheritance() {
+	  inheritance_type chain;
+	  chain.push_back( "ers::Issue" ) ;
+	  return chain;
+	}
+      
       private:        
         Issue & operator=( const Issue & other ) = delete;
 					  

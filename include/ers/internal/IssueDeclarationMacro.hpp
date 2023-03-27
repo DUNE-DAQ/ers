@@ -75,6 +75,7 @@ namespace namespace_name { \
                     const std::exception & cause ); \
 	void raise() const { throw class_name(*this); } \
 	const char * get_class_name() const { return get_uid(); } \
+	virtual inheritance_type get_class_inheritance() const override { return _get_inheritance() ; } \
 	base_class_name * clone() const { return new namespace_name::class_name( *this ); } \
 	ERS_PRINT_LIST( ERS_ATTRIBUTE_ACCESSORS, ERS_EMPTY attributes ) \
     }; \
