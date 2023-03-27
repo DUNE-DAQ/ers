@@ -20,6 +20,9 @@ namespace ers
 {   
     class AnyIssue : public ers::Issue
     {
+
+      friend class IssueFactory;
+      
       public:
         AnyIssue( const std::string & type,
 		  const ers::Context & context,

@@ -63,6 +63,7 @@ ers::IssueFactory::create(	const std::string & name,
 
 ers::Issue *
 ers::IssueFactory::create(	const std::string & name,
+				const std::list<std::string> & inheritance,
 				const ers::Context & context,
                                 Severity severity,
                                 const system_clock::time_point & time,
@@ -78,6 +79,11 @@ ers::IssueFactory::create(	const std::string & name,
     issue->m_values = parameters;
     issue->m_time = time;
     issue->m_cause.reset( cause );
+
+    auto * any = dynamic_cast<ers::AnyIssue *>( issue );
+    if ( any ) {
+      any -> m_inheritance = inheritance;
+    }
     return issue;
 }
 
