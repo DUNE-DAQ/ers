@@ -36,11 +36,13 @@ PYBIND11_MODULE(_daq_ers_py, module) {
         const std::string &>())
    // constructor 2
    .def(py::init<const std::string &,
+	const ers::inheritance_type &,
         ers::Severity, const ers::Context &,
 	const system_clock::time_point &,const std::string &,
 	const std::vector<std::string> &, const std::map<std::string,
 	std::string> &, const ers::Issue *>())    
    .def("get_class_name", &ers::AnyIssue::get_class_name)
+   .def("get_class_inheritance", &ers::AnyIssue::get_class_inheritance)    
    .def("raise", &ers::AnyIssue::raise)
    .def("what", &ers::AnyIssue::what)
    .def("cause", &ers::AnyIssue::cause)
