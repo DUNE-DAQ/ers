@@ -55,6 +55,7 @@ namespace ers
         		const Context & context ) const ;			/**< \brief build an empty issue for a given name */
 	
         Issue * create( const std::string & name,
+			const std::list<std::string> & inheritance,
         		const Context & context,
                         Severity severity,
                         const system_clock::time_point & time,
