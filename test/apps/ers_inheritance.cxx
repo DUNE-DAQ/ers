@@ -40,7 +40,7 @@ int main(int ac, char** av) {
   issues.push_back( std::make_unique<weird::B>(ERS_HERE) );
   
   for ( const auto & i : issues ) {
-    auto chain = i->inheritance_chain();
+    auto chain = i->get_class_inheritance();
     for ( const auto & c : chain ) {
       std::cout << c << "\t" ;
     }
