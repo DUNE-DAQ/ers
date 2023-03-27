@@ -55,6 +55,11 @@ namespace namespace_name { \
       protected: \
 	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), \
         	class_name( const ers::Context & context ) : base_class_name( context ) { ; } )\
+	static std::list<std::string> _get_inheritance() { \
+	  auto chain = base_class_name::_get_inheritance(); \
+	  chain.push_back( get_uid() ); \
+	  return chain; \
+	} \
       public: \
 	static const char * get_uid() { return BOOST_PP_STRINGIZE( namespace_name::class_name ); } \
 	class_name( const ers::Context & context \
