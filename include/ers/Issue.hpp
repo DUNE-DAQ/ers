@@ -83,31 +83,30 @@ namespace ers
 	
 	virtual Issue * clone() const = 0;
 	
-        virtual const char * get_class_name() const = 0;	/**< \brief Get key for class (used for serialisation)*/
-       	
-        virtual void raise() const = 0;                         /**< \brief throws a copy of this issue preserving the real issue type*/
-	
-	void add_qualifier( const std::string & qualif );	/**< \brief adds a qualifier to the issue */
-	
-	const Issue * cause() const				/**< \brief return the cause Issue of this Issue */
-	{ return m_cause.get(); }
-        
-	const Context & context() const				/**< \brief Context of the issue. */
-        { return *(m_context.get()); }
-        
-        const std::string & message() const			/**< \brief General cause of the issue. */
+        virtual const char * get_class_name() const = 0;	  /**< \brief Get key for class (used for serialisation)*/
+       	  
+        virtual void raise() const = 0;                           /**< \brief throws a copy of this issue preserving the real issue type*/
+	  
+	void add_qualifier( const std::string & qualif );	  /**< \brief adds a qualifier to the issue */
+	  
+	const Issue * cause() const				  /**< \brief return the cause Issue of this Issue */
+	{ return m_cause.get(); }  
+          
+	const Context & context() const				  /**< \brief Context of the issue. */
+        { return *(m_context.get()); }  
+          
+        const std::string & message() const			  /**< \brief General cause of the issue. */
 	{ return m_message; }
 
-        const std::vector<std::string> & inheritance_chain() const	/**< \brief Inheritance chain */
-        { return m_inheritance_chain; }
-      
-	const std::vector<std::string> & qualifiers() const	/**< \brief return array of qualifiers */
-        { return m_qualifiers; }
-        
-	const string_map & parameters() const                   /**< \brief return array of parameters */
-        { return m_values; }
-        
-        ers::Severity severity() const				/**< \brief severity of the issue */
+        std::list<std::string> get_class_inheritance() const = 0  /**< \brief Inheritance chain */
+
+	const std::vector<std::string> & qualifiers() const	  /**< \brief return array of qualifiers */
+        { return m_qualifiers; }  
+          
+	const string_map & parameters() const                     /**< \brief return array of parameters */
+        { return m_values; }  
+          
+        ers::Severity severity() const				  /**< \brief severity of the issue */
 	{ return m_severity; }
         
 	template <class Precision=std::chrono::seconds>
@@ -140,7 +139,6 @@ namespace ers
 		const system_clock::time_point & time,
 		const ers::Context & context,
 		const std::string & message,
-		const std::vector<std::string> & inheritance_chain,
 		const std::vector<std::string> & qualifiers,
 		const std::map<std::string, std::string> & parameters,
 		const ers::Issue * cause = 0 );
@@ -160,28 +158,23 @@ namespace ers
         
 	void prepend_message( const std::string & message );
 
-        void add_inheritance_step(const std::string & class_name) {
-	  m_inheritance_chain.push_back(class_name);
+        statit auto _get_inheritance() { 
+          std::list<std::string> chain;
+          chain.push_back("ers::Issue");
+          return chain;
         }
 
-        void set_inheritance_chain(const std::vector<std::string> & chain) {
-	  m_inheritance_chain = chain;
-        }
-
-      
-      private:        
+       private:        
         Issue & operator=( const Issue & other ) = delete;
 					  
 	std::unique_ptr<const Issue>	m_cause;		/**< \brief Issue that caused the current issue */
 	std::unique_ptr<Context>	m_context;		/**< \brief Context of the current issue */
 	std::string			m_message;		/**< \brief Issue's explanation text */
-        std::vector<std::string>        m_inheritance_chain;	/**< \brief inheritance_chain */
 	std::vector<std::string>	m_qualifiers;		/**< \brief List of associated qualifiers */
 	mutable Severity		m_severity;		/**< \brief Issue's severity */
 	system_clock::time_point	m_time;			/**< \brief Time when issue was thrown */
 	string_map			m_values;		/**< \brief List of user defined attributes. */
 
-        static std::string s_base_inheritance ;
     };
 
     std::ostream & operator<<( std::ostream &, const ers::Issue & );    
