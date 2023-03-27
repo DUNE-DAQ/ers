@@ -22,13 +22,16 @@ namespace ers
     {
       public:
         AnyIssue( const std::string & type,
-                  const ers::Context & context,
+		  const inheritance_type & chain,
+		  const ers::Context & context,
 		  const std::string & message = "" )
           : ers::Issue( context, message ),
-            m_type( type )
+            m_type( type ),
+	    m_inheritance( chain )
         { ; }
         
         AnyIssue( const std::string & type,
+		  const inheritance_type & chain,
         	  Severity severity,
                   const ers::Context & context,
 		  const system_clock::time_point & time,
@@ -37,7 +40,8 @@ namespace ers
 		  const std::map<std::string, std::string> & parameters,
                   const ers::Issue * cause = 0 )
           : ers::Issue( severity, time, context, message, qualifiers, parameters, cause ),
-            m_type( type ) 
+            m_type( type ),
+	    m_inheritance( chain );
 	{ ; }
         
         ~AnyIssue() noexcept { ; }
@@ -47,12 +51,17 @@ namespace ers
 	
         virtual const char * get_class_name() const
         { return m_type.c_str(); }
+
+        virtual inheritance_type get_inheritance() const final {
+	  return m_inheritance ;
+	}
        	
         virtual void raise() const
         { throw AnyIssue(*this); }
         
       private:
       	std::string m_type;
+        inheritance_type m_inheritance;
     };
 }
 
