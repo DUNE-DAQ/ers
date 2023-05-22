@@ -6,11 +6,11 @@ find_package(daq-cmake REQUIRED )
 daq_setup_environment()
 
 find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
-find_package(Protobuf  REQUIRED )
+find_package(Protobuf  REQUIRED)
 
-include_directories(${Protobuf_INCLUDE_DIRS})
+daq_protobuf( *.proto )
 
-daq_add_library(*.cpp *.pb.cc LINK_LIBRARIES Boost::regex pthread dl ${Protobuf_LIBRARY})
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
 
 daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME})
 
@@ -29,7 +29,6 @@ daq_add_plugin( ThrowStream ersStream LINK_LIBRARIES ers )
 
 daq_add_application( ers_receiver ers_receiver.cxx TEST LINK_LIBRARIES ers )
 daq_add_application( ers_test ers_test.cxx TEST LINK_LIBRARIES ers )
-daq_add_application( ers_schema_test ers_schema_test.cxx TEST LINK_LIBRARIES ers ${Protobuf_LIBRARY} )
 daq_add_application( ers_inheritance ers_inheritance.cxx TEST LINK_LIBRARIES ers )
-
+daq_add_application( ers_schema_test ers_schema_test.cxx TEST LINK_LIBRARIES ers )
 daq_install()
