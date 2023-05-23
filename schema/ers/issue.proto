@@ -1,6 +1,7 @@
 
 syntax = "proto3";
 
+package dunedaq.ers;
 
 message Context {
 
@@ -41,4 +42,11 @@ message IssueObject {
 
   map<string, string> parameters = 5;
   google.protobuf.Timestamp time = 6;
+}
+
+message IssueChain {
+
+  IssueObject message = 1;
+  repeated IssueObject causes = 2;
+  
 }
