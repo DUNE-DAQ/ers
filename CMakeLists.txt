@@ -8,7 +8,7 @@ daq_setup_environment()
 find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
 find_package(Protobuf  REQUIRED)
 
-daq_protobuf( *.proto )
+daq_protobuf_codegen( *.proto )
 
 daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
 
