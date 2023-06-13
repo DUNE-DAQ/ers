@@ -205,7 +205,15 @@ Issue::wrap_message( const std::string & begin, const std::string & end )
 
 namespace ers
 {   
-    /** Standard streaming operator - puts the issue in human readable format into the standard out stream.
+  dunedaq::ersschema::IssueChain IssueToSchema( const Issue &/* i*/) {
+
+    dunedaq::ersschema::IssueChain out;
+
+    return out;    
+  }
+
+
+  /** Standard streaming operator - puts the issue in human readable format into the standard out stream.
      * \param out the destination out stream
      * \param issue the Issue to be printed
      */

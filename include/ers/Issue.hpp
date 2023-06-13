@@ -27,6 +27,8 @@
 #include <ers/LocalContext.hpp>
 #include <ers/Severity.hpp>
 
+#include <ers/issue.pb.h>
+
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
   * \author Serguei Kolos
@@ -179,9 +181,12 @@ namespace ers
 	string_map			m_values;		/**< \brief List of user defined attributes. */	
     };
 
-    std::ostream & operator<<( std::ostream &, const ers::Issue & );    
+  std::ostream & operator<<( std::ostream &, const ers::Issue & );
+
+  dunedaq::ersschema::IssueChain IssueToSchema( const Issue & );
 } // ers
-        
+
+
 #include <ers/internal/IssueDeclarationMacro.hpp>
 
 ERS_DECLARE_ISSUE(  ers,

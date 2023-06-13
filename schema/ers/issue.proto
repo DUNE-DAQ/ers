@@ -1,7 +1,7 @@
 
 syntax = "proto3";
 
-package dunedaq.ers;
+package dunedaq.ersschema;
 
 message Context {
 

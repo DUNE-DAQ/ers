@@ -13,7 +13,7 @@
 using namespace std;
 using namespace google::protobuf::util;
 
-using namespace dunedaq::ers;
+using namespace dunedaq::ersschema;
 
 int main( int argc, char* argv[] ) {
 
