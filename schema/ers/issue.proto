@@ -19,29 +19,16 @@ message Context {
   string application_name = 15;
 }
 
-enum Severity {
-
-  DEBUG = 0;
-  LOG = 1;
-  INFORMATION = 2;
-  WARNING = 3;
-  ERROR = 4;
-  FATAL = 5;  
-}
-
-
-import "google/protobuf/timestamp.proto";
-
 message IssueObject {
 
   Context context = 1;
 
   string name = 2;
   string message = 3;
-  Severity severity = 4;
+  string severity = 4;
 
-  map<string, string> parameters = 5;
-  google.protobuf.Timestamp time = 6;
+  uint64 time = 5;
+  map<string, string> parameters = 6;	
 }
 
 message IssueChain {

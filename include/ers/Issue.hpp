@@ -183,7 +183,9 @@ namespace ers
 
   std::ostream & operator<<( std::ostream &, const ers::Issue & );
 
-  dunedaq::ersschema::IssueChain IssueToSchema( const Issue & );
+  dunedaq::ersschema::IssueChain ToChain( const Issue & );
+  dunedaq::ersschema::IssueObject ToObject( const Issue & );
+  dunedaq::ersschema::Context ToObject( const Context & );
 } // ers
 
 

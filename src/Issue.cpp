@@ -203,15 +203,67 @@ Issue::wrap_message( const std::string & begin, const std::string & end )
     m_message = begin + m_message + end;
 }
 
-namespace ers
-{   
-  dunedaq::ersschema::IssueChain IssueToSchema( const Issue &/* i*/) {
+namespace ers {
+  
+  dunedaq::ersschema::IssueChain ToChain( const Issue & i) {
 
     dunedaq::ersschema::IssueChain out;
+
+    (* out.mutable_message()) = ToObject(i);
+
+    auto cause = i.cause();
+
+    while ( cause ) {
+      auto ptr = i.add_causes() ;
+      *ptr = ToObject( *cause );
+      cause = cause -> cause();
+    }
 
     return out;    
   }
 
+  dunedaq::ersschema::IssueObject ToObject( const Issue & i ) {
+
+    auto c = ToObject( i.context() );
+    
+    dunedaq::ersschema::IssueObject out;
+
+    (*out.mutable_context())=c;
+
+    out.set_name( i.get_class_name() );
+    out.set_message( i.message() ) ;
+    out.set_severity( std::to_string( i.severity() ) );
+    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(i.ptime().time_since_epoch()).count();
+    out.set_time(time);
+    
+    auto & params = (* out.mutable_parameters());
+    for ( auto p : i.parameters() ) {
+      params[p.first] = p.second;
+    }
+    
+    return out;    
+  }
+
+  dunedaq::ersschema::Context ToObject( const Context & c) {
+
+    dunedaq::ersschema::Context out;
+    out.set_cwd( c.cwd() );
+    out.set_file_name( c.file_name() );
+    out.set_function_name( c.function_name() );
+    out.set_host_name( c.host_name() );
+    out.set_line_number( c.line_number() );
+    out.set_package_name( c.package_name() );
+
+    out.set_process_id( c.process_id() );
+    out.set_thread_id( c.thread_id() );
+    out.set_user_id( c.user_id() );
+    out.set_user_name( c.user_name() );
+    out.set_application_name( c.application_name() );
+    
+    return out;    
+  }
+
+  
 
   /** Standard streaming operator - puts the issue in human readable format into the standard out stream.
      * \param out the destination out stream
