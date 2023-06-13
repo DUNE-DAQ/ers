@@ -214,7 +214,7 @@ namespace ers {
     auto cause = i.cause();
 
     while ( cause ) {
-      auto ptr = i.add_causes() ;
+      auto ptr = out.add_causes() ;
       *ptr = ToObject( *cause );
       cause = cause -> cause();
     }

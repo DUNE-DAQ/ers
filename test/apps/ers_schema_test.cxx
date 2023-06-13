@@ -37,14 +37,15 @@ int main( int argc, char* argv[] ) {
   (*issue.mutable_context())=context;
   issue.set_name("test_issue");
   issue.set_message("This is a message of test");
-  issue.set_severity(Severity::LOG);
+  issue.set_severity("LOG");
 
   (*issue.mutable_parameters())["p"]="perfect";
     
-  google::protobuf::Timestamp time;
-  time.set_seconds( chrono::system_clock::now().time_since_epoch().count() );
+  // google::protobuf::Timestamp time;
+  // time.set_seconds( chrono::system_clock::now().time_since_epoch().count() );
+  // (*issue.mutable_time())=time;
 
-  (*issue.mutable_time())=time;
+  issue.set_time( chrono::system_clock::now().time_since_epoch().count() );
   
 
 
