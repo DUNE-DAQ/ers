@@ -15,76 +15,60 @@ using namespace google::protobuf::util;
 
 using namespace dunedaq::ersschema;
 
+#include "ers/ers.hpp"
+
+ERS_DECLARE_ISSUE( ersschema,
+		   TestIssue,
+		   "this is issue with ID: " << id,
+		   ((int)id)
+		   )
+		   
+
 int main( int argc, char* argv[] ) {
 
   GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  ersschema::TestIssue first(ERS_HERE, 0);
+  ersschema::TestIssue second(ERS_HERE, 1, first);
+  ersschema::TestIssue third(ERS_HERE, 2, second);
   
-  Context context;
-  context.set_cwd("my_work_area");
-  context.set_file_name("lost.cpp");
-  context.set_function_name("test");
-  context.set_host_name(boost::asio::ip::host_name());
-  context.set_line_number(93);
-  context.set_package_name("ers");
-
-  context.set_process_id(100);
-  context.set_thread_id(12345);
-  context.set_user_id(12);
-  context.set_user_name("maroda");
-  context.set_application_name("ers_schema_test");
-
-  IssueObject issue;
-  (*issue.mutable_context())=context;
-  issue.set_name("test_issue");
-  issue.set_message("This is a message of test");
-  issue.set_severity("LOG");
-
-  (*issue.mutable_parameters())["p"]="perfect";
-    
-  // google::protobuf::Timestamp time;
-  // time.set_seconds( chrono::system_clock::now().time_since_epoch().count() );
-  // (*issue.mutable_time())=time;
-
-  issue.set_time( chrono::system_clock::now().time_since_epoch().count() );
-  
-
-
-  
-  string serial;
-  
-  context.SerializeToString( & serial );
-
-  Context reco;
-  reco.ParseFromString(serial.c_str());
-
- 
-  
-  if ( context.cwd() == reco.cwd() ) {
-    cout << "success" << endl;
-  }
-  else {
-    cout << "failure" << endl;
-  }
+  auto schema = ToChain(third);
 
   JsonPrintOptions opt;
   opt.add_whitespace = true;
   opt.preserve_proto_field_names = true;
   
   string json;
-  MessageToJsonString(issue, & json, opt);
-  json += '}';
+  MessageToJsonString(schema, & json, opt);
   cout << json << endl ;
 
-  IssueObject reco_issue;
+  // google::protobuf::Timestamp time;
+  // time.set_seconds( chrono::system_clock::now().time_since_epoch().count() );
+  // (*issue.mutable_time())=time;
 
-  JsonStringToMessage( json, & reco_issue);
+    
+  string serial;
+  
+  schema.SerializeToString( & serial );
+
+  IssueChain reco;
+  reco.ParseFromString(serial.c_str());
+
+  if ( schema.message().severity() == reco.message().severity() ) {
+    cout << "success" << endl;
+  }
+  else {
+    cout << "failure" << endl;
+  }
+
+  // JsonStringToMessage( json, & reco_issue);
   
 
-  if ( issue.name() == reco_issue.name() ) {
-    cout << "json success" << endl ;
-  } else {
-    cout << "Jons failure" << endl;
-  }
+  // if ( issue.name() == reco_issue.name() ) {
+  //   cout << "json success" << endl ;
+  // } else {
+  //   cout << "Jons failure" << endl;
+  // }
     
   
   google::protobuf::ShutdownProtobufLibrary();
