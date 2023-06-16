@@ -138,7 +138,11 @@ namespace ers
 	ers::Severity set_severity( ers::Severity severity ) const;
 
 	void wrap_message( const std::string & begin, const std::string & end );
-        
+
+        dunedaq::ersschema::SimpleIssue schema( const std::string & session = "Unknown" ) const;
+        dunedaq::ersschema::IssueChain schema_chain(  const std::string & session = "Unknown" ) const; 
+
+      
       protected:
         Issue(	Severity severity,
 		const system_clock::time_point & time,
@@ -183,9 +187,6 @@ namespace ers
 
   std::ostream & operator<<( std::ostream &, const ers::Issue & );
 
-  dunedaq::ersschema::IssueChain ToChain( const Issue & );
-  dunedaq::ersschema::IssueObject ToObject( const Issue & );
-  dunedaq::ersschema::Context ToObject( const Context & );
 } // ers
 
 

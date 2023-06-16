@@ -32,7 +32,7 @@ int main( int argc, char* argv[] ) {
   ersschema::TestIssue second(ERS_HERE, 1, first);
   ersschema::TestIssue third(ERS_HERE, 2, second);
   
-  auto schema = ToChain(third);
+  auto schema = third.schema_chain("None");
 
   JsonPrintOptions opt;
   opt.add_whitespace = true;
@@ -54,7 +54,7 @@ int main( int argc, char* argv[] ) {
   IssueChain reco;
   reco.ParseFromString(serial.c_str());
 
-  if ( schema.message().severity() == reco.message().severity() ) {
+  if ( schema.final().severity() == reco.final().severity() ) {
     cout << "success" << endl;
   }
   else {

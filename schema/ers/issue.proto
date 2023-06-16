@@ -17,9 +17,10 @@ message Context {
   uint32 user_id = 13;
   string user_name = 14;
   string application_name = 15;
+  string session = 16;
 }
 
-message IssueObject {
+message SimpleIssue {
 
   Context context = 1;
 
@@ -33,7 +34,7 @@ message IssueObject {
 
 message IssueChain {
 
-  IssueObject message = 1;
-  repeated IssueObject causes = 2;
+  SimpleIssue final = 1;
+  repeated SimpleIssue causes = 2;
   
 }

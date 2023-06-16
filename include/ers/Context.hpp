@@ -19,6 +19,8 @@
 #include <vector>
 #include <ers/Configuration.hpp>
 
+#include "ers/issue.pb.h"
+
 namespace ers
 {   
     /** This class provides an abstract interface to access the context of an issue.
@@ -50,6 +52,8 @@ namespace ers
         virtual int user_id() const = 0;			/**< \return user id */
         virtual const char * user_name() const = 0;		/**< \return user name */
         virtual const char * application_name() const = 0;	/**< \return application name */
+
+        dunedaq::ersschema::Context schema(const std::string & session="Uknown") const;  /**< \return the equivalent schema object */
     };
 }
 
