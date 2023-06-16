@@ -139,8 +139,8 @@ namespace ers
 
 	void wrap_message( const std::string & begin, const std::string & end );
 
-        dunedaq::ersschema::SimpleIssue schema( const std::string & session = "Unknown" ) const;
-        dunedaq::ersschema::IssueChain schema_chain(  const std::string & session = "Unknown" ) const; 
+        dunedaq::ersschema::SimpleIssue schema() const;
+        dunedaq::ersschema::IssueChain schema_chain() const; 
 
       
       protected:

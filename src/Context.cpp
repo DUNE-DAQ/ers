@@ -123,7 +123,7 @@ ers::Context::position( int verbosity ) const
 
 
 dunedaq::ersschema::Context
-ers::Context::schema(const std::string & session) const {
+ers::Context::schema() const {
 
   dunedaq::ersschema::Context out;
   out.set_cwd( cwd() );
@@ -138,7 +138,6 @@ ers::Context::schema(const std::string & session) const {
   out.set_user_id( user_id() );
   out.set_user_name( user_name() );
   out.set_application_name( application_name() );
-  out.set_session( session );
   
   return out;    
   }

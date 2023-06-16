@@ -206,17 +206,17 @@ Issue::wrap_message( const std::string & begin, const std::string & end )
 namespace ers {
   
   dunedaq::ersschema::IssueChain
-  Issue::schema_chain(  const std::string & session ) const {
+  Issue::schema_chain() const {
 
     dunedaq::ersschema::IssueChain out;
 
-    (* out.mutable_final()) = this->schema(session);
+    (* out.mutable_final()) = this->schema();
 
     auto cause_ptr = cause();
 
     while ( cause_ptr ) {
       auto ptr = out.add_causes() ;
-      *ptr = cause_ptr -> schema(session);
+      *ptr = cause_ptr -> schema();
       cause_ptr = cause_ptr -> cause();
     }
 
@@ -224,9 +224,9 @@ namespace ers {
   }
 
   dunedaq::ersschema::SimpleIssue
-  Issue::schema( const std::string & session ) const {
+  Issue::schema() const {
 
-    auto c = context().schema(session);
+    auto c = context().schema();
     
     dunedaq::ersschema::SimpleIssue out;
 

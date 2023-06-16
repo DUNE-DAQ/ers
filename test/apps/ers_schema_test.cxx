@@ -32,7 +32,9 @@ int main( int argc, char* argv[] ) {
   ersschema::TestIssue second(ERS_HERE, 1, first);
   ersschema::TestIssue third(ERS_HERE, 2, second);
   
-  auto schema = third.schema_chain("None");
+  auto schema = third.schema_chain();
+  schema.set_session("None");
+  schema.set_application("ers_schema_test");
 
   JsonPrintOptions opt;
   opt.add_whitespace = true;

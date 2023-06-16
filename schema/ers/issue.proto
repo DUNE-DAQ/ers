@@ -17,7 +17,6 @@ message Context {
   uint32 user_id = 13;
   string user_name = 14;
   string application_name = 15;
-  string session = 16;
 }
 
 message SimpleIssue {
@@ -36,5 +35,9 @@ message IssueChain {
 
   SimpleIssue final = 1;
   repeated SimpleIssue causes = 2;
-  
+
+  string session = 10;
+  string application = 11;
+  // string module = 12;
+
 }

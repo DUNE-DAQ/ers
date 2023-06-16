@@ -53,7 +53,7 @@ namespace ers
         virtual const char * user_name() const = 0;		/**< \return user name */
         virtual const char * application_name() const = 0;	/**< \return application name */
 
-        dunedaq::ersschema::Context schema(const std::string & session="Uknown") const;  /**< \return the equivalent schema object */
+        dunedaq::ersschema::Context schema() const;  /**< \return the equivalent schema object */
     };
 }
 
