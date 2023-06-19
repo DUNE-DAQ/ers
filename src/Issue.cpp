@@ -233,6 +233,12 @@ namespace ers {
     (*out.mutable_context())=c;
 
     out.set_name( get_class_name() );
+
+    auto inheritance = get_class_inheritance();
+    for ( auto & c : inheritance ) {
+      out.add_inheritance(c);
+    }
+    
     out.set_message( message() ) ;
     out.set_severity( std::to_string( severity() ) );
     auto time = std::chrono::duration_cast<std::chrono::milliseconds>(ptime().time_since_epoch()).count();

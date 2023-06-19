@@ -24,11 +24,11 @@ message SimpleIssue {
   Context context = 1;
 
   string name = 2;
-  string message = 3;
-  string severity = 4;
-
-  uint64 time = 5;
-  map<string, string> parameters = 6;	
+  repeated string inheritance = 3;  
+  string message = 4;
+  string severity = 5;
+  uint64 time = 6;
+  map<string, string> parameters = 7;	
 }
 
 message IssueChain {
@@ -38,6 +38,6 @@ message IssueChain {
 
   string session = 10;
   string application = 11;
-  // string module = 12;
+  // optional string module = 12;
 
 }
