@@ -38,6 +38,6 @@ message IssueChain {
 
   string session = 10;
   string application = 11;
-  // optional string module = 12;
+  string module = 12;
 
 }
