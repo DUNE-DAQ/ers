@@ -50,8 +50,8 @@
 
 #define __ERS_DECLARE_ISSUE_BASE__( namespace_name, class_name, base_class_name, message, base_attributes, attributes ) \
 namespace namespace_name { \
-    class class_name : public base_class_name { \
-      template <class> friend class ers::IssueRegistrator;\
+  class class_name : public base_class_name {	\
+      template <class> friend class ::ers::IssueRegistrator;	\
       protected: \
 	BOOST_PP_EXPR_IF( BOOST_PP_NOT_EQUAL( BOOST_PP_SEQ_SIZE( base_attributes attributes ), 0 ), \
         	class_name( const ers::Context & context ) : base_class_name( context ) { ; } )\

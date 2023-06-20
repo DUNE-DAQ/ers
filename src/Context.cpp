@@ -120,3 +120,5 @@ ers::Context::position( int verbosity ) const
     out << ":" << line_number();
     return out.str();
 }
+
+

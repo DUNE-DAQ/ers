@@ -50,6 +50,7 @@ namespace ers
         virtual int user_id() const = 0;			/**< \return user id */
         virtual const char * user_name() const = 0;		/**< \return user name */
         virtual const char * application_name() const = 0;	/**< \return application name */
+
     };
 }
 

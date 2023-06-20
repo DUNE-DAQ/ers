@@ -136,7 +136,7 @@ namespace ers
 	ers::Severity set_severity( ers::Severity severity ) const;
 
 	void wrap_message( const std::string & begin, const std::string & end );
-        
+      
       protected:
         Issue(	Severity severity,
 		const system_clock::time_point & time,
@@ -179,9 +179,11 @@ namespace ers
 	string_map			m_values;		/**< \brief List of user defined attributes. */	
     };
 
-    std::ostream & operator<<( std::ostream &, const ers::Issue & );    
+  std::ostream & operator<<( std::ostream &, const ers::Issue & );
+
 } // ers
-        
+
+
 #include <ers/internal/IssueDeclarationMacro.hpp>
 
 ERS_DECLARE_ISSUE(  ers,
