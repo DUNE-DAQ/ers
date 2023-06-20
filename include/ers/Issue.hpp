@@ -27,8 +27,6 @@
 #include <ers/LocalContext.hpp>
 #include <ers/Severity.hpp>
 
-#include <ers/issue.pb.h>
-
 /** \file Issue.h This file defines the ers::Issue class, 
   * which is the base class for any user defined issue.
   * \author Serguei Kolos
@@ -138,10 +136,6 @@ namespace ers
 	ers::Severity set_severity( ers::Severity severity ) const;
 
 	void wrap_message( const std::string & begin, const std::string & end );
-
-        dunedaq::ersschema::SimpleIssue schema() const;
-        dunedaq::ersschema::IssueChain schema_chain() const; 
-
       
       protected:
         Issue(	Severity severity,

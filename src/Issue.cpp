@@ -205,55 +205,6 @@ Issue::wrap_message( const std::string & begin, const std::string & end )
 
 namespace ers {
   
-  dunedaq::ersschema::IssueChain
-  Issue::schema_chain() const {
-
-    dunedaq::ersschema::IssueChain out;
-
-    (* out.mutable_final()) = this->schema();
-
-    auto cause_ptr = cause();
-
-    while ( cause_ptr ) {
-      auto ptr = out.add_causes() ;
-      *ptr = cause_ptr -> schema();
-      cause_ptr = cause_ptr -> cause();
-    }
-
-    return out;    
-  }
-
-  dunedaq::ersschema::SimpleIssue
-  Issue::schema() const {
-
-    auto c = context().schema();
-    
-    dunedaq::ersschema::SimpleIssue out;
-
-    (*out.mutable_context())=c;
-
-    out.set_name( get_class_name() );
-
-    auto inheritance = get_class_inheritance();
-    for ( auto & c : inheritance ) {
-      out.add_inheritance(c);
-    }
-    
-    out.set_message( message() ) ;
-    out.set_severity( std::to_string( severity() ) );
-    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(ptime().time_since_epoch()).count();
-    out.set_time(time);
-    
-    auto & params = (* out.mutable_parameters());
-    for ( auto p : parameters() ) {
-      params[p.first] = p.second;
-    }
-    
-    return out;    
-  }
-
- 
-
   /** Standard streaming operator - puts the issue in human readable format into the standard out stream.
      * \param out the destination out stream
      * \param issue the Issue to be printed

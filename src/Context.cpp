@@ -122,22 +122,3 @@ ers::Context::position( int verbosity ) const
 }
 
 
-dunedaq::ersschema::Context
-ers::Context::schema() const {
-
-  dunedaq::ersschema::Context out;
-  out.set_cwd( cwd() );
-  out.set_file_name( file_name() );
-  out.set_function_name( function_name() );
-  out.set_host_name( host_name() );
-  out.set_line_number( line_number() );
-  out.set_package_name( package_name() );
-  
-  out.set_process_id( process_id() );
-  out.set_thread_id( thread_id() );
-  out.set_user_id( user_id() );
-  out.set_user_name( user_name() );
-  out.set_application_name( application_name() );
-  
-  return out;    
-  }
