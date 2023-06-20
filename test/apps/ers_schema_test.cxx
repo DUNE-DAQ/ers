@@ -1,4 +1,4 @@
-#include "ers/issue.pb.h"
+#include "ers/Schema.hpp"
 #include <google/protobuf/util/json_util.h>
 
 
@@ -32,7 +32,8 @@ int main( int argc, char* argv[] ) {
   ersschema::TestIssue second(ERS_HERE, 1, first);
   ersschema::TestIssue third(ERS_HERE, 2, second);
   
-  auto schema = third.schema_chain();
+  dunedaq::ersschema::IssueChain schema;
+  to_schema(third, schema);
   schema.set_session("None");
   schema.set_application("ers_schema_test");
 

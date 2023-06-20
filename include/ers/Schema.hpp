@@ -11,9 +11,12 @@
 #include <ers/Issue.hpp>
 
 namespace ers {
+  dunedaq::ersschema::Context to_schema( const Context & c );
+  dunedaq::ersschema::SimpleIssue to_schema( const Issue & i ); 
+  dunedaq::ersschema::IssueChain to_schema_chain(const Issue & i);
   
-  void ersschema::to_schema ( const Context & c, dunedaq::ersschema::Context & out) {
-
+  void to_schema ( const Context & c, dunedaq::ersschema::Context & out) {
+    
     out.set_cwd( c.cwd() );
     out.set_file_name( c.file_name() );
     out.set_function_name( c.function_name() );
@@ -29,30 +32,30 @@ namespace ers {
     
   }
   
-void ersschema::to_schema ( const Issue & i,   dunedaq::ersschema::SimpleIssue & out) {
-  
-  auto c = to_schema( i.context() ) ;
-  
-  (*out.mutable_context())=c;
-  
-  out.set_name( i.get_class_name() );
-  
-  auto inheritance = i.get_class_inheritance();
-  for ( auto & c : inheritance ) {
-    out.add_inheritance(c);
+  void to_schema ( const Issue & i,   dunedaq::ersschema::SimpleIssue & out) {
+    
+    auto c = to_schema( i.context() ) ;
+    
+    (*out.mutable_context())=c;
+    
+    out.set_name( i.get_class_name() );
+    
+    auto inheritance = i.get_class_inheritance();
+    for ( auto & c : inheritance ) {
+      out.add_inheritance(c);
+    }
+    
+    out.set_message( i.message() ) ;
+    out.set_severity( std::to_string( i.severity() ) );
+    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(i.ptime().time_since_epoch()).count();
+    out.set_time(time);
+    
+    auto & params = (* out.mutable_parameters());
+    for ( auto p : i.parameters() ) {
+      params[p.first] = p.second;
+    }
+    
   }
-  
-  out.set_message( i.message() ) ;
-  out.set_severity( std::to_string( i.severity() ) );
-  auto time = std::chrono::duration_cast<std::chrono::milliseconds>(i.ptime().time_since_epoch()).count();
-  out.set_time(time);
-  
-  auto & params = (* out.mutable_parameters());
-  for ( auto p : i.parameters() ) {
-    params[p.first] = p.second;
-  }
-  
-}
   
   void to_schema ( const Issue & i,   dunedaq::ersschema::IssueChain & out) {
     
@@ -62,7 +65,7 @@ void ersschema::to_schema ( const Issue & i,   dunedaq::ersschema::SimpleIssue &
     
     while ( cause_ptr ) {
       auto ptr = out.add_causes() ;
-      ers::to_schema( *cause_ptr, *ptr);
+      to_schema( *cause_ptr, *ptr);
       cause_ptr = cause_ptr -> cause();
     }
     
