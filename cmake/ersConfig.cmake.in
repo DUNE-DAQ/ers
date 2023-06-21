@@ -8,6 +8,7 @@ include(CMakeFindDependencyMacro)
 # find_package calls in your package's CMakeLists.txt file
 
 find_dependency(Boost COMPONENTS program_options regex REQUIRED) 
+find_dependency(Protobuf)
 
 # Figure out whether or not this dependency is an installed package or
 # in repo form
