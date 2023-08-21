@@ -11,7 +11,7 @@ find_package(absl  REQUIRED)
 
 daq_protobuf_codegen( *.proto )
 
-daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl ${PROTOBUF_LIBRARY})
 
 daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME})
 
