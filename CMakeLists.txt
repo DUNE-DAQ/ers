@@ -7,6 +7,7 @@ daq_setup_environment()
 
 find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
 find_package(Protobuf  REQUIRED)
+find_package(absl  REQUIRED)
 
 daq_protobuf_codegen( *.proto )
 
