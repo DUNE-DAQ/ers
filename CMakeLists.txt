@@ -7,10 +7,11 @@ daq_setup_environment()
 
 find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED)
 find_package(Protobuf  REQUIRED)
+find_package(absl  REQUIRED)
 
 daq_protobuf_codegen( *.proto )
 
-daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl)
+daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl ${PROTOBUF_LIBRARY} absl::status)
 
 daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME})
 
