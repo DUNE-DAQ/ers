@@ -27,8 +27,9 @@ message SimpleIssue {
   repeated string inheritance = 3;  
   string message = 4;
   string severity = 5;
-  uint64 time = 6;
-  map<string, string> parameters = 7;	
+  uint64 time = 6;  // nanoseconds since epoch
+  
+  map<string, string> parameters = 11;	
 }
 
 message IssueChain {
