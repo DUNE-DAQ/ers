@@ -56,7 +56,7 @@ void ers::to_schema ( const Issue & i,   dunedaq::ersschema::SimpleIssue & out) 
   }
   
   out.set_message( i.message() ) ;
-  out.set_severity( std::to_string( i.severity() ) );
+  out.set_severity( ers::to_string( i.severity() ) );
   auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(i.ptime().time_since_epoch()).count();
   out.set_time(time);
   
