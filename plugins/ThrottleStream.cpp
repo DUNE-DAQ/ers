@@ -15,6 +15,7 @@
 #include <ers/internal/ThrottleStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ThrottleStream, "throttle", format )
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::ThrottleStream, format)
 
 ers::ThrottleStream::IssueRecord::IssueRecord()
 {

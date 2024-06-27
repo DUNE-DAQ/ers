@@ -14,6 +14,7 @@
 #include <algorithm>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::FilterStream, "filter", format )
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::FilterStream, format)
 
 namespace
 {

@@ -15,13 +15,13 @@
 #include <ers/InputStream.hpp>
 #include <ers/OutputStream.hpp>
 #include <ers/StreamManager.hpp>
-#include <ers/StreamFactory.hpp>
+// #include <ers/StreamFactory.hpp>
 #include <ers/Severity.hpp>
 #include <ers/Configuration.hpp>
 #include <ers/ers.hpp>
 #include <ers/internal/macro.hpp>
 #include <ers/internal/Util.hpp>
-#include <ers/internal/PluginManager.hpp>
+// #include <ers/internal/PluginManager.hpp>
 #include <ers/internal/NullStream.hpp>
 #include <ers/internal/SingletonCreator.hpp>
 
@@ -39,10 +39,10 @@ namespace
     
     const char * const DefaultOutputStreams[] =
     {
-	"lstdout",		// Debug
-	"lstdout",		// Log
-	"throttle,lstdout",	// Information
-	"throttle,lstderr",	// Warning
+        "lstdout",		// Debug
+        "lstdout",		// Log
+        "throttle,lstdout",	// Information
+        "throttle,lstderr",	// Warning
         "throttle,lstderr",	// Error
         "lstderr"		// Fatal
     };
@@ -50,49 +50,49 @@ namespace
     const char *
     get_stream_description( ers::severity severity )
     {
-	assert( ers::Debug <= severity && severity <= ers::Fatal );
+        assert( ers::Debug <= severity && severity <= ers::Fatal );
         
-	std::string env_name( "DUNEDAQ_ERS_" );
-	env_name += ers::to_string( severity );
-	const char * env = ::getenv( env_name.c_str() );
-	return env ? env : DefaultOutputStreams[severity];
+        std::string env_name( "DUNEDAQ_ERS_" );
+        env_name += ers::to_string( severity );
+        const char * env = ::getenv( env_name.c_str() );
+        return env ? env : DefaultOutputStreams[severity];
     }
     
     void
     parse_stream_definition(	const std::string & text,
-				std::vector<std::string> & result )
+                                std::vector<std::string> & result )
     {
-	std::string::size_type start_p = 0, end_p = 0;
-	short brackets_open = 0;
-	while ( end_p < text.length() )
-	{
-	    switch ( text[end_p] )
-	    {
-		case '(':
-		    ++brackets_open;
-		    break;
-		case ')':
-		    --brackets_open;
-		    break;
-		case SEPARATOR:
-		    if ( !brackets_open )
-		    {
-			result.push_back( text.substr( start_p, end_p - start_p ) );
-			start_p = end_p + 1;
-		    }
+        std::string::size_type start_p = 0, end_p = 0;
+        short brackets_open = 0;
+        while ( end_p < text.length() )
+        {
+            switch ( text[end_p] )
+            {
+                case '(':
+                    ++brackets_open;
                     break;
-		default:
-		    break;
-	    }
-	    end_p++;
-	}
+                case ')':
+                    --brackets_open;
+                    break;
+                case SEPARATOR:
+                    if ( !brackets_open )
+                    {
+                        result.push_back( text.substr( start_p, end_p - start_p ) );
+                        start_p = end_p + 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            end_p++;
+        }
         if ( brackets_open )
         {
             throw ers::BadConfiguration( ERS_HERE, text );
         }
         if ( start_p != end_p )
         {
-	    result.push_back( text.substr( start_p, end_p - start_p ) );
+            result.push_back( text.substr( start_p, end_p - start_p ) );
         }
     }
 }
@@ -103,22 +103,22 @@ namespace ers
     // at the first attempt of writing to the stream
     class StreamInitializer : public ers::OutputStream
     {
-	public:
-	  StreamInitializer( StreamManager & manager )
+        public:
+          StreamInitializer( StreamManager & manager )
             : m_manager( manager ),
               m_in_progress( false )
           { ; }
         
           void write( const Issue & issue ) 
           {
-	    ers::severity s = issue.severity();
-	    std::scoped_lock lock( m_mutex );
+            ers::severity s = issue.severity();
+            std::scoped_lock lock( m_mutex );
 
-	    if ( !m_in_progress ) {
-		m_in_progress = true;
+            if ( !m_in_progress ) {
+                m_in_progress = true;
             }
-	    else {
-		// The issue is coming from the stream constructor
+            else {
+                // The issue is coming from the stream constructor
                 // We can't use ERS streams, so print it to std
                 if ( s < ers::Warning )
                     std::cout << issue << std::endl;
@@ -127,20 +127,23 @@ namespace ers
                 return ;
             }
 
-	    if ( m_manager.m_out_streams[s].get() == this ) {
-		m_manager.m_out_streams[s] =
-		    std::shared_ptr<OutputStream>( m_manager.setup_stream( s ) );
-	    }
-	    m_manager.report_issue( s, issue );
+            if ( m_manager.m_out_streams[s].get() == this ) {
+                m_manager.m_out_streams[s] = 
+		            std::shared_ptr<OutputStream>( m_manager.setup_stream( s ) );
+            }
+            m_manager.report_issue( s, issue );
             m_in_progress = false;
-	  }
+          }
           
         private:
-	  std::recursive_mutex   m_mutex;
-	  StreamManager &	 m_manager; 
+          std::recursive_mutex   m_mutex;
+          StreamManager &	 m_manager; 
           bool			 m_in_progress;
     };
     
+    static cet::BasicPluginFactory out_stream_factory("ersOutStream", "make");
+    static cet::BasicPluginFactory in_stream_factory("ersInStream", "make");
+
 }
 
 /** This method returns the singleton instance. 
@@ -180,12 +183,12 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
     std::shared_ptr<OutputStream> head = m_out_streams[severity];
     if ( head && !head->isNull() )
     {
-	OutputStream * parent = head.get();
+        OutputStream * parent = head.get();
         for ( OutputStream * stream = parent; !stream->isNull(); parent = stream, 
-        	stream = &parent->chained() )
+                stream = &parent->chained() )
             ;
                  
-	parent->chained( new_stream );
+        parent->chained( new_stream );
     }
     else
     {
@@ -195,10 +198,11 @@ ers::StreamManager::add_output_stream( ers::severity severity, ers::OutputStream
 
 void
 ers::StreamManager::add_receiver( const std::string & stream,
-				  const std::string & filter,
+                                  const std::string & filter,
                                   ers::IssueReceiver * receiver )
 {
-    InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
+    // InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, filter );
+    InputStream * in = in_stream_factory.makePlugin<InputStream*, const std::initializer_list<std::string> &>( stream, { filter } );
     in->set_receiver( receiver );
     
     std::scoped_lock lock( m_mutex );
@@ -207,10 +211,11 @@ ers::StreamManager::add_receiver( const std::string & stream,
 
 void 
 ers::StreamManager::add_receiver( const std::string & stream,
-				  const std::initializer_list<std::string> & params,
-				  ers::IssueReceiver * receiver )
+                                  const std::initializer_list<std::string> & params,
+                                  ers::IssueReceiver * receiver )
 {
-    InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, params );
+    // InputStream * in = ers::StreamFactory::instance().create_in_stream( stream, params );
+    InputStream * in = in_stream_factory.makePlugin<InputStream*, const std::initializer_list<std::string> &>( stream, params );
     in->set_receiver( receiver );
     
     std::scoped_lock lock( m_mutex );
@@ -222,7 +227,7 @@ ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
 {
     std::scoped_lock lock( m_mutex );
     for( std::list<std::shared_ptr<InputStream> >::iterator it = m_in_streams.begin();
-    	it != m_in_streams.end(); )
+            it != m_in_streams.end(); )
     {	
         if ( (*it) -> m_receiver == receiver )
             m_in_streams.erase( it++ );
@@ -231,70 +236,69 @@ ers::StreamManager::remove_receiver( ers::IssueReceiver * receiver )
     }
 }
 
-ers::OutputStream * 
-ers::StreamManager::setup_stream( ers::severity severity )
-{    
-    std::string config = get_stream_description( severity );
-    std::vector<std::string> streams;
-    try
-    {
-    	parse_stream_definition( config, streams );
-    }
-    catch ( ers::BadConfiguration & ex )
-    {
-	ERS_INTERNAL_ERROR(	"Configuration for the \"" << severity << "\" stream is invalid. "
-        			"Default configuration will be used." );
-    }
+ers::OutputStream*
+ers::StreamManager::setup_stream(ers::severity severity)
+{
+  std::string config = get_stream_description(severity);
+  std::vector<std::string> streams;
+  try {
+    parse_stream_definition(config, streams);
+  } catch (ers::BadConfiguration& ex) {
+    ERS_INTERNAL_ERROR("Configuration for the \"" << severity
+                                                  << "\" stream is invalid. "
+                                                     "Default configuration will be used.");
+  }
 
-    ers::OutputStream * main = setup_stream( streams );
-    
-    if ( !main )
-    {
-	std::vector<std::string> default_streams;
-	try
-	{
-	    parse_stream_definition( DefaultOutputStreams[severity], default_streams );
-	    main = setup_stream( default_streams );
-        }
-	catch ( ers::BadConfiguration & ex )
-	{
-	    ERS_INTERNAL_ERROR( "Can not configure the \"" << severity 
-            	<< "\" stream because of the following issue {" << ex << "}" );
-	}
-    }   
-    return ( main ? main : new ers::NullStream() );
+  OutputStream* main = setup_stream(streams);
+
+  if (!main) {
+    std::vector<std::string> default_streams;
+    try {
+      parse_stream_definition(DefaultOutputStreams[severity], default_streams);
+      main = setup_stream(default_streams);
+    } catch (ers::BadConfiguration& ex) {
+      ERS_INTERNAL_ERROR("Can not configure the \"" << severity << "\" stream because of the following issue {" << ex << "}");
+    }
+  }
+  return (main ? main : new ers::NullStream());
 }
 
-ers::OutputStream * 
-ers::StreamManager::setup_stream( const std::vector<std::string> & streams )
-{    
-    size_t cnt = 0;
-    ers::OutputStream * main = 0;
-    for ( ; cnt < streams.size(); ++cnt )
-    {
-	main = ers::StreamFactory::instance().create_out_stream( streams[cnt] );
-        if ( main )
-            break;
+ers::OutputStream*
+ers::StreamManager::setup_stream(const std::vector<std::string>& streams)
+{
+  size_t cnt = 0;
+  OutputStream* main = 0;
+  for (; cnt < streams.size(); ++cnt) {
+    // main = ers::StreamFactory::instance().create_out_stream(streams[cnt]);
+    try {
+        main = out_stream_factory.makePlugin<OutputStream*>(streams[cnt]);
+        break;
+    } catch (const cet::exception& cexpt) {
+        continue;
     }
-    
-    if ( !main )
-    {
-    	return 0;
-    }
-    
-    ers::OutputStream * head = main;
-    for ( ++cnt; cnt < streams.size(); ++cnt )
-    {
-	ers::OutputStream * chained = ers::StreamFactory::instance().create_out_stream( streams[cnt] );
-       
-	if ( chained )
-	{
-	    head->chained( chained );
-	    head = chained;
-        }
-    }
-        
+  }
+
+  if (!main) {
     return main;
+  }
+
+  OutputStream* head = main;
+  for (++cnt; cnt < streams.size(); ++cnt) {
+    try {
+        OutputStream* chained = out_stream_factory.makePlugin<OutputStream*>(streams[cnt]);
+        head->chained(chained);
+        head = chained;
+    } catch (const cet::exception& cexpt) {
+        continue;
+    }
+    // std::shared_ptr<OutputStream> chained = ers::StreamFactory::instance().create_out_stream(streams[cnt]);
+    // if (chained) {
+    //   head->chained(chained);
+    //   head = chained;
+    // }
+  }
+
+  return main;
 }
 
 /** Sends an Issue to an appropriate stream 
@@ -327,9 +331,9 @@ ers::StreamManager::debug( const Issue & issue, int level )
 {
     if ( Configuration::instance().debug_level() >= level )
     {
-	ers::severity old_severity = issue.set_severity( ers::Severity( ers::Debug, level ) );
-	m_out_streams[ers::Debug]->write( issue );
-	issue.set_severity( old_severity );
+        ers::severity old_severity = issue.set_severity( ers::Severity( ers::Debug, level ) );
+        m_out_streams[ers::Debug]->write( issue );
+        issue.set_severity( old_severity );
     }
 }
 
@@ -374,8 +378,8 @@ ers::operator<<( std::ostream & out, const ers::StreamManager & )
 {
     for( short ss = ers::Debug; ss <= ers::Fatal; ++ss )
     {	
-	out << (ers::severity)ss << "\t\"" 
-        	<< get_stream_description( (ers::severity)ss ) << "\"" << std::endl;
+        out << (ers::severity)ss << "\t\"" 
+                << get_stream_description( (ers::severity)ss ) << "\"" << std::endl;
     }
     return out;
 }

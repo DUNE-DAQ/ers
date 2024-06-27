@@ -14,6 +14,28 @@
 #include <ers/Issue.hpp>
 #include <ers/IssueReceiver.hpp>
 
+#ifndef EXTERN_C_FUNC_DECLARE_START
+// NOLINTNEXTLINE(build/define_used)
+#define EXTERN_C_FUNC_DECLARE_START                                                                                    \
+  extern "C"                                                                                                           \
+  {
+#endif
+
+
+/**
+ * @brief Declare the function that will be called by the plugin loader
+ * @param klass Class to be defined as a DUNE DAQ Module
+ */
+// NOLINTNEXTLINE(build/define_used)
+#define DEFINE_DUNE_ERS_INPUT_STREAM(klass)                                                                            \
+  EXTERN_C_FUNC_DECLARE_START                                                                                          \
+  ers::InputStream* make(const std::initializer_list<std::string> & params)                                            \
+  {                                                                                                                    \
+    return dynamic_cast<ers::InputStream*>(new klass(params));                                                         \
+  }                                                                                                                    \
+  }
+  
+
 /** \file InputStream.h Defines abstract interface for ERS input streams.
  * \author Serguei Kolos
  * \brief ers header and documentation file

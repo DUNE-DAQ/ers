@@ -12,6 +12,8 @@
 
 ERS_REGISTER_OUTPUT_STREAM( ers::AbortStream, "abort", ERS_EMPTY)
 
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::AbortStream, ERS_EMPTY )
+
 void ers::AbortStream::write( const Issue & issue )
 {
     chained().write( issue );

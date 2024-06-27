@@ -10,6 +10,7 @@
 #include <ers/internal/ThrowStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", ERS_EMPTY)
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::ThrowStream, ERS_EMPTY )
 
 void ers::ThrowStream::write( const Issue & issue )
 {

@@ -63,48 +63,48 @@ namespace ers
       template <class > friend class SingletonCreator;
       
       public:
-	
+        
         ~StreamManager();
         
-  	static StreamManager & instance();		/**< \brief return the singleton */
+          static StreamManager & instance();		/**< \brief return the singleton */
         
-	void debug( const Issue & issue, int level );	/**< \brief sends an Issue to the debug stream */
-	
+        void debug( const Issue & issue, int level );	/**< \brief sends an Issue to the debug stream */
+        
         void error( const Issue & issue );		/**< \brief sends an issue to the error stream */
-	
+        
         void fatal( const Issue & issue );		/**< \brief sends an issue to the fatal stream */
-	
+        
         void information( const Issue & issue );	/**< \brief sends an issue to the information stream */
-	
+        
         void log( const Issue & issue );		/**< \brief sends an issue to the log stream */
         
         void warning( const Issue & issue );		/**< \brief sends an issue to the warning stream */
 
         void add_receiver(	const std::string & stream,
-        			const std::string & filter,
+                                const std::string & filter,
                                 ers::IssueReceiver * receiver );
-	
+        
         void add_receiver(	const std::string & stream,
-        			const std::initializer_list<std::string> & params,
+                                const std::initializer_list<std::string> & params,
                                 ers::IssueReceiver * receiver );
-	
+        
         void remove_receiver( ers::IssueReceiver * receiver );
-	
+        
         void add_output_stream( ers::severity severity, ers::OutputStream * new_stream );	
       
-	void report_issue( ers::severity type, const Issue & issue );
+        void report_issue( ers::severity type, const Issue & issue );
 
       private:	
-	StreamManager( );
+        StreamManager( );
 
-	OutputStream * setup_stream( ers::severity severity );	
-	OutputStream * setup_stream( const std::vector<std::string> & streams );
+        OutputStream* setup_stream( ers::severity severity );	
+        OutputStream* setup_stream( const std::vector<std::string> & streams );
         
-	PluginManager					m_plugin_manager;
-	std::mutex					m_mutex;
-	std::list<std::shared_ptr<InputStream> >	m_in_streams;
-	std::shared_ptr<OutputStream>			m_init_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
-	std::shared_ptr<OutputStream>			m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+        // PluginManager					m_plugin_manager;
+        std::mutex					m_mutex;
+        std::list<std::shared_ptr<InputStream> >	m_in_streams;
+        std::shared_ptr<OutputStream>			m_init_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
+        std::shared_ptr<OutputStream>			m_out_streams[ers::Fatal + 1];	/**< \brief array of pointers to streams per severity */
     };
     
     std::ostream & operator<<( std::ostream &, const ers::StreamManager & );

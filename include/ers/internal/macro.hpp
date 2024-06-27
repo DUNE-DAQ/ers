@@ -11,6 +11,29 @@
 #include <ers/StandardStreamOutput.hpp>
 #include <boost/preprocessor/cat.hpp>
 
+#include "cetlib/BasicPluginFactory.h"
+#include "cetlib/compiler_macros.h"
+
+#ifndef EXTERN_C_FUNC_DECLARE_START
+// NOLINTNEXTLINE(build/define_used)
+#define EXTERN_C_FUNC_DECLARE_START                                                                                    \
+  extern "C"                                                                                                           \
+  {
+#endif
+
+/**
+ * @brief Declare the function that will be called by the plugin loader
+ * @param klass Class to be defined as a DUNE DAQ Module
+ */
+// NOLINTNEXTLINE(build/define_used)
+#define DEFINE_DUNE_ERS_OUTPUT_STREAM(klass, param)                                                                    \
+  EXTERN_C_FUNC_DECLARE_START                                                                                          \
+  ers::OutputStream* make(const std::string & param)                                                                                            \
+  {                                                                                                                    \
+    return dynamic_cast<ers::OutputStream*>(new klass(param));                                                         \
+  }                                                                                                                    \
+  }
+
 ERS_DECLARE_ISSUE( ers, InternalMessage, ERS_EMPTY, ERS_EMPTY )
 
 #define ERS_REGISTER_OUTPUT_STREAM( class, name, param ) \
@@ -22,7 +45,7 @@ namespace { \
         { ers::StreamFactory::instance().register_out_stream( name, create ); } \
     } BOOST_PP_CAT( registrator, __LINE__ ); \
 }
- 
+
 #define ERS_INTERNAL_DEBUG( level, message ) { \
 if ( ers::debug_level() >= level ) \
 { \

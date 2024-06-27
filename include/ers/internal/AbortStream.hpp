@@ -34,7 +34,7 @@ namespace ers
     
     struct AbortStream : public OutputStream
     {
-	void write( const Issue & issue ) override;
+        void write( const Issue & issue ) override;
     };
 }
 

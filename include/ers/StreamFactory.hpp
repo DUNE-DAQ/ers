@@ -24,9 +24,9 @@
   */
 
 ERS_DECLARE_ISSUE(  ers,
-		    InvalidFormat,
-		    "Creator for the \"" << key << "\" stream is not found",
-		    ((std::string)key ) )
+                    InvalidFormat,
+                    "Creator for the \"" << key << "\" stream is not found",
+                    ((std::string)key ) )
 
 namespace ers
 {
@@ -45,39 +45,39 @@ namespace ers
     
     class StreamFactory
     {	
-	friend std::ostream & operator<<( std::ostream &, const ers::StreamFactory & );
-	template <class > friend class SingletonCreator;
+        friend std::ostream & operator<<( std::ostream &, const ers::StreamFactory & );
+        template <class > friend class SingletonCreator;
         
         typedef ers::InputStream * (*InputStreamCreator) ( const std::initializer_list<std::string> & params );
         typedef ers::OutputStream * (*OutputStreamCreator)( const std::string & format );
               
       public:
-	        
-  	static StreamFactory & instance();					/**< \brief return the singleton */
+                
+          static StreamFactory & instance();					/**< \brief return the singleton */
 
-	void register_in_stream( const std::string & name,
-        			 InputStreamCreator callback );			/**< \brief register a stream creator */
-	
-	void register_out_stream( const std::string & name,
-        			  OutputStreamCreator callback );		/**< \brief register a stream creator */
-	
+        void register_in_stream( const std::string & name,
+                                 InputStreamCreator callback );			/**< \brief register a stream creator */
+        
+        void register_out_stream( const std::string & name,
+                                  OutputStreamCreator callback );		/**< \brief register a stream creator */
+        
         InputStream * create_in_stream( const std::string & stream, 
-        				const std::string & filter ) const;	/**< \brief create new stream */
-	
+                                        const std::string & filter ) const;	/**< \brief create new stream */
+        
         InputStream * create_in_stream( const std::string & stream, 
-		const std::initializer_list<std::string> & params ) const;	/**< \brief create new stream */
-	
+                const std::initializer_list<std::string> & params ) const;	/**< \brief create new stream */
+        
         OutputStream * create_out_stream( const std::string & format ) const;	/**< \brief create new stream */
-	
+        
       private:	
-	StreamFactory( )
+        StreamFactory( )
         { ; }
 
-	typedef std::map<std::string, InputStreamCreator>	InFunctionMap;
-	typedef std::map<std::string, OutputStreamCreator>	OutFunctionMap;
+        typedef std::map<std::string, InputStreamCreator>	InFunctionMap;
+        typedef std::map<std::string, OutputStreamCreator>	OutFunctionMap;
         
-	InFunctionMap	m_in_factories;		/**< \brief collection of factories to build input streams */	
-	OutFunctionMap	m_out_factories;	/**< \brief collection of factories to build output streams */	
+        InFunctionMap	m_in_factories;		/**< \brief collection of factories to build input streams */	
+        OutFunctionMap	m_out_factories;	/**< \brief collection of factories to build output streams */	
     };
     
     std::ostream & operator<<( std::ostream &, const ers::StreamFactory & );

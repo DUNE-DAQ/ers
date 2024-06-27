@@ -12,6 +12,7 @@
 #include <ers/StreamFactory.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::RFilterStream, "rfilter", format )
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::RFilterStream, format )
 
 namespace
 {

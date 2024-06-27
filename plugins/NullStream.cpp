@@ -10,3 +10,4 @@
 #include <ers/internal/NullStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::NullStream, "null", ERS_EMPTY)
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::NullStream, ERS_EMPTY )

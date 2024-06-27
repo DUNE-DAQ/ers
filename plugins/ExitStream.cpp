@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ExitStream, "exit", exit_code )
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::ExitStream, exit_code )
 
 ers::ExitStream::ExitStream( const std::string & exit_code )
   : m_exit_code( 1 )

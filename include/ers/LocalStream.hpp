@@ -26,10 +26,10 @@
 #include <ers/IssueCatcherHandler.hpp>
 
 ERS_DECLARE_ISSUE(  ers,					// namespace
-		    IssueCatcherAlreadySet, 			// issue class name
-		    "Local error catcher has been already set",	//
-		     ERS_EMPTY					// no attributes
-		 )
+                    IssueCatcherAlreadySet, 			// issue class name
+                    "Local error catcher has been already set",	//
+                     ERS_EMPTY					// no attributes
+                 )
                      
 namespace ers
 {    
@@ -47,41 +47,41 @@ namespace ers
     class LocalStream
     {
         friend class IssueCatcherHandler;
-	template <class > friend class SingletonCreator;
+        template <class > friend class SingletonCreator;
         
       public:
-	        
+                
         //! returns the singleton
         static LocalStream & instance();
 
-	//! sets local issue catcher
-	IssueCatcherHandler * set_issue_catcher( 
-        			const std::function<void ( const ers::Issue & )> & catcher );
+        //! sets local issue catcher
+        IssueCatcherHandler * set_issue_catcher( 
+                                const std::function<void ( const ers::Issue & )> & catcher );
 
-	void error( const ers::Issue & issue );
-	
+        void error( const ers::Issue & issue );
+        
         void fatal( const ers::Issue & issue );
-	
+        
         void warning( const ers::Issue & issue );
 
       private:
-	LocalStream( );
-	~LocalStream( );
+        LocalStream( );
+        ~LocalStream( );
         
         void remove_issue_catcher();
 
-	void report_issue( ers::severity type, const ers::Issue & issue );
+        void report_issue( ers::severity type, const ers::Issue & issue );
         
-	void thread_wrapper();
+        void thread_wrapper();
 
       private:
-	std::function<void ( const ers::Issue & )>	m_issue_catcher;
-	std::unique_ptr<std::thread>			m_issue_catcher_thread;
-	std::mutex					m_mutex;
-	std::condition_variable			        m_condition;
-	bool						m_terminated;
-	std::queue<ers::Issue *>			m_issues;
-	std::thread::id					m_catcher_thread_id;
+        std::function<void ( const ers::Issue & )>	m_issue_catcher;
+        std::unique_ptr<std::thread>			m_issue_catcher_thread;
+        std::mutex					m_mutex;
+        std::condition_variable			        m_condition;
+        bool						m_terminated;
+        std::queue<ers::Issue *>			m_issues;
+        std::thread::id					m_catcher_thread_id;
     };
 }
 

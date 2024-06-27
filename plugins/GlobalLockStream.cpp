@@ -10,6 +10,7 @@
 #include <ers/internal/GlobalLockStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::GlobalLockStream, "glock", ERS_EMPTY )
+DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::GlobalLockStream, ERS_EMPTY )
 
 std::mutex ers::GlobalLockStream::mutex_;
 
