@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/RFilterStream.hpp>
+#include <internal/RFilterStream.hpp>
 #include <ers/internal/Util.hpp>
 #include <ers/StreamFactory.hpp>
 

@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/ThrowStream.hpp>
+#include <internal/ThrowStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ThrowStream, "throw", ERS_EMPTY)
 DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::ThrowStream, ERS_EMPTY )

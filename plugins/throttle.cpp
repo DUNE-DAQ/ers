@@ -8,11 +8,11 @@
  */
 #include <boost/lexical_cast.hpp>
 
-#include <ers/internal/FilterStream.hpp>
+#include <internal/FilterStream.hpp>
 #include <ers/internal/Util.hpp>
 #include <ers/StreamFactory.hpp>
 
-#include <ers/internal/ThrottleStream.hpp>
+#include <internal/ThrottleStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::ThrottleStream, "throttle", format )
 DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::ThrottleStream, format)

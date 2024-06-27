@@ -7,7 +7,7 @@
  *
  */
 
-#include <ers/internal/LockStream.hpp>
+#include <internal/LockStream.hpp>
 
 ERS_REGISTER_OUTPUT_STREAM( ers::LockStream, "lock", ERS_EMPTY)
 DEFINE_DUNE_ERS_OUTPUT_STREAM( ers::LockStream, ERS_EMPTY )

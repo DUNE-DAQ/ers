@@ -17,7 +17,7 @@
 #include <ers/Severity.hpp>
 #include <ers/ers.hpp>
 #include <ers/internal/Util.hpp>
-#include <ers/internal/NullStream.hpp>
+#include <internal/NullStream.hpp>
 // #include <ers/internal/PluginManager.hpp>
 #include <ers/internal/macro.hpp>
 #include <ers/internal/SingletonCreator.hpp>
