@@ -77,6 +77,7 @@ void ers::to_schema ( const Issue & i,   dunedaq::ersschema::IssueChain & out) {
     while ( cause_ptr ) {
       auto ptr = out.add_causes() ;
       to_schema( *cause_ptr, *ptr);
+      ptr -> set_severity(ers::to_string(i.severity()));  // severity is forced to be the same as the top issue
       cause_ptr = cause_ptr -> cause();
     }
 
