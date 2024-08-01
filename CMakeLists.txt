@@ -32,4 +32,7 @@ daq_add_application( ers_receiver ers_receiver.cxx TEST LINK_LIBRARIES ers )
 daq_add_application( ers_test ers_test.cxx TEST LINK_LIBRARIES ers )
 daq_add_application( ers_inheritance ers_inheritance.cxx TEST LINK_LIBRARIES ers )
 daq_add_application( ers_schema_test ers_schema_test.cxx TEST LINK_LIBRARIES ers )
+
+daq_add_application( cpp20_barriers cpp20_barriers.cxx )
+
 daq_install()
