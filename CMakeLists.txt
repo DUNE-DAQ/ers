@@ -9,6 +9,8 @@ find_package(Boost COMPONENTS unit_test_framework program_options regex REQUIRED
 find_package(Protobuf  REQUIRED)
 find_package(absl  REQUIRED)
 
+find_and_print_protobuf_info()
+
 daq_protobuf_codegen( *.proto )
 
 daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl ${PROTOBUF_LIBRARY} absl::status)
