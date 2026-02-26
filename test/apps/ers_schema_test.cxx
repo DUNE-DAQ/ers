@@ -18,7 +18,7 @@ using namespace dunedaq::ersschema;
 ERS_DECLARE_ISSUE(ersschema, TestIssue, "this is issue with ID: " << id, ((int)id))
 
 int
-main(int argc, char* argv[])
+main(int, char*[])
 {
 
   GOOGLE_PROTOBUF_VERIFY_VERSION;
