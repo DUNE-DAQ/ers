@@ -78,7 +78,7 @@ namespace ers
         static std::map<int,SignalHandler*> handlers;
     };
     
-  void ErrorHandler::SignalHandler::action(int signal, siginfo_t*, void */*ucontext*/) {
+    void ErrorHandler::SignalHandler::action(int signal, siginfo_t*, void */*ucontext*/) {
         static bool recursive_invocation = false;
         if (recursive_invocation) {
             std::cerr << "Got signal " << signal << " " << handlers[signal]->name_
