@@ -37,7 +37,11 @@ main(int, char*[])
   opt.preserve_proto_field_names = true;
 
   string json;
-  MessageToJsonString(schema, &json, opt);
+  auto status = MessageToJsonString(schema, &json, opt);
+  if (!status.ok()) {
+    std::cerr << "MessageToJsonString returned error\n";
+    return (1);
+  }
   cout << json << endl;
 
   // google::protobuf::Timestamp time;
