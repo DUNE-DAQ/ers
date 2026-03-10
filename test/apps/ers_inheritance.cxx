@@ -29,7 +29,7 @@ ERS_DECLARE_ISSUE_BASE(weird,                   // namespace name
 )
 
 int
-main(int ac, char** av)
+main(int, char**)
 {
 
   std::vector<std::unique_ptr<ers::Issue>> issues;

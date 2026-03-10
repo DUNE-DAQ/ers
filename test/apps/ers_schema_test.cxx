@@ -18,7 +18,7 @@ using namespace dunedaq::ersschema;
 ERS_DECLARE_ISSUE(ersschema, TestIssue, "this is issue with ID: " << id, ((int)id))
 
 int
-main(int argc, char* argv[])
+main(int, char*[])
 {
 
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -37,7 +37,11 @@ main(int argc, char* argv[])
   opt.preserve_proto_field_names = true;
 
   string json;
-  MessageToJsonString(schema, &json, opt);
+  auto status = MessageToJsonString(schema, &json, opt);
+  if (!status.ok()) {
+    std::cerr << "MessageToJsonString returned error\n";
+    return (1);
+  }
   cout << json << endl;
 
   // google::protobuf::Timestamp time;
