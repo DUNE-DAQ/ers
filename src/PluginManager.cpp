@@ -1,3 +1,10 @@
+/*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82 (2020-04-14).
+ * Renamed since fork: yes (from src/PluginManager.cxx to src/PluginManager.cpp).
+ */
+
 #ifndef __rtems__
 #include <dlfcn.h>
 #endif

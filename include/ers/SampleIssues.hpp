@@ -1,3 +1,10 @@
+/*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82 (2020-04-14).
+ * Renamed since fork: yes (from ers/SampleIssues.h to include/ers/SampleIssues.hpp).
+ */
+
 #ifndef ERS_SAMPLE_ISSUES_H
 #define ERS_SAMPLE_ISSUES_H
 

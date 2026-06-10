@@ -1,3 +1,10 @@
+/*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82 (2020-04-14).
+ * Renamed since fork: yes (from ers/internal/macro.h to include/ers/internal/macro.hpp).
+ */
+
 #ifndef ERS_MACRO_H
 #define ERS_MACRO_H
 

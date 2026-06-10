@@ -1,3 +1,5 @@
+<!-- DUNE DAQ modification notice: This file has been modified from the original ATLAS ers source for the DUNE DAQ project. Fork baseline commit: 8267df82 (2020-04-14). Renamed since fork: yes (from README.md to docs/README.md). -->
+
 # Error Reporting Service (ERS)
 
 The Error Reporting System (ERS) software package provides a common API for error reporting
