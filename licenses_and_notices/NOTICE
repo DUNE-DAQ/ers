@@ -1,0 +1,28 @@
+
+This repository was forked from the ATLAS ers repository in April 2020
+for the purposes of the DUNE DAQ project. Consistent with the ATLAS
+ers repository's Apache 2.0 license:
+
+* A copy of the original ATLAS ers NOTICE is cut-and-pasted into this
+  NOTICE (at the bottom, below the "/"'s)
+
+* A copy of the ATLAS ers Apache 2.0 license is included in this
+  directory; it is to be considered only in terms of satisfying ATLAS
+  ers's license terms and not as a licensing of this repository's code
+  as such.
+
+* All modifications to the source files for DUNE DAQ in this
+  repository are marked as such.
+
+//////////////////////////////////////////////////////////////////////
+
+Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+Licensed under the Apache License, version 2.0.
+
+Contributors
+============
+ Serguei Kolos <Serguei.Kolos@cern.ch>
+ mwiesman <mwiesman@mail.cern.ch>
+ Andrei Kazarov <Andrei.Kazarov@cern.ch>
+ grosrena <grosrena@mail.cern.ch>
+ Haimo Zobernig <Haimo.Zobernig@cern.ch>

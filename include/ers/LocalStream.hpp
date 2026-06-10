@@ -1,3 +1,14 @@
+/*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from ers/LocalStream.h to include/ers/LocalStream.hpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
 #ifndef ERS_LOCAL_STREAM_H
 #define ERS_LOCAL_STREAM_H
 
