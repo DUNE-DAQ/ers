@@ -22,7 +22,7 @@ daq_protobuf_codegen( *.proto )
 
 daq_add_library(*.cpp LINK_LIBRARIES Boost::regex pthread dl ${PROTOBUF_LIBRARY} absl::status)
 
-daq_add_python_bindings(*.cpp)
+daq_add_python_bindings(*.cpp GENERATE_STUBS)
 
 daq_add_application( ers_config ers_config.cxx LINK_LIBRARIES ers )
 
