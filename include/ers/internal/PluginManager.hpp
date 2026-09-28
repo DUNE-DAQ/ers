@@ -1,4 +1,15 @@
 /*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from ers/internal/PluginManager.h to include/ers/internal/PluginManager.hpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
  *  PluginManager.h
  *  ers
  *
@@ -8,65 +19,65 @@
  */
 
 /** \file PluginManager.h This file defines PluginManager ERS class.
-  * \author Serguei Kolos
-  * \brief ers header file 
-  */
+ * \author Serguei Kolos
+ * \brief ers header file
+ */
 
 #ifndef ERS_PLUGIN_MANAGER_H
 #define ERS_PLUGIN_MANAGER_H
 
-#include <string>
 #include <map>
+#include <string>
 
-namespace ers
+namespace ers {
+class PluginException
 {
-    class PluginException
-    {
-      public:
-	PluginException( const std::string & reason)
-	  : reason_( reason )
-	{ ; }
+public:
+  PluginException(const std::string& reason)
+    : reason_(reason)
+  {
+    ;
+  }
 
-	const std::string & reason() const
-	{ return reason_; }
+  const std::string& reason() const { return reason_; }
 
-      private:
-	const std::string reason_;
-    };
+private:
+  const std::string reason_;
+};
 
-    class PluginManager
-    {
-	class SharedLibrary
-	{
-	  public:
-	    /**	 Loads a shared library and locates the create function.
-	    Stores a pointer to the create function in the map indexed by
-	    the library name.
-	    @param name Name of the class to be loaded (library name excluding
-	    lib prefix and .so suffix).
-	    */
-	    SharedLibrary( const std::string & name );
+class PluginManager
+{
+  class SharedLibrary
+  {
+  public:
+    /**	 Loads a shared library and locates the create function.
+    Stores a pointer to the create function in the map indexed by
+    the library name.
+    @param name Name of the class to be loaded (library name excluding
+    lib prefix and .so suffix).
+    */
+    SharedLibrary(const std::string& name);
 
-	    /** Unloads dynamic library and removes it from the map.  */
-	    ~SharedLibrary();
+    /** Unloads dynamic library and removes it from the map.  */
+    ~SharedLibrary();
 
-	  private:
-	    void *	handle_;
-	};
+  private:
+    void* handle_;
+  };
 
-	typedef std::map< std::string, SharedLibrary* > LibMap;
+  typedef std::map<std::string, SharedLibrary*> LibMap;
 
-	LibMap	    libraries_;
+  LibMap libraries_;
 
-      public:
-	/** Constructor loads the plugins.
-	 */
-	PluginManager();
+public:
+  /** Constructor loads the plugins.
+   */
+  PluginManager();
 
-	/** Destructor unloads the plugins.
-	 */
-	~PluginManager();
-    };
+  /** Destructor unloads the plugins.
+   */
+  ~PluginManager();
+};
 }
 
 #endif

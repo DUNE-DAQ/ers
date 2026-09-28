@@ -1,4 +1,15 @@
 /*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from src/streams/ThrottleStream.cxx to plugins/ThrottleStream.cpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
  *  ThrottleStream.cxx
  *  ers
  *
@@ -8,115 +19,110 @@
  */
 #include <boost/lexical_cast.hpp>
 
+#include <ers/StreamFactory.hpp>
 #include <ers/internal/FilterStream.hpp>
 #include <ers/internal/Util.hpp>
-#include <ers/StreamFactory.hpp>
 
 #include <ers/internal/ThrottleStream.hpp>
 
-ERS_REGISTER_OUTPUT_STREAM( ers::ThrottleStream, "throttle", format )
+ERS_REGISTER_OUTPUT_STREAM(ers::ThrottleStream, "throttle", format)
 
 ers::ThrottleStream::IssueRecord::IssueRecord()
 {
-    reset();
+  reset();
 }
 
-void 
+void
 ers::ThrottleStream::IssueRecord::reset()
 {
-    m_lastOccurance=0;
-    m_lastReport=0;
-    m_initialCounter=0;
-    m_threshold=10;
-    m_suppressedCounter=0;
+  m_lastOccurance = 0;
+  m_lastReport = 0;
+  m_initialCounter = 0;
+  m_threshold = 10;
+  m_suppressedCounter = 0;
 }
 
-void 
+void
 ers::ThrottleStream::reportSuppression(IssueRecord& record, const ers::Issue& issue)
 {
-    std::ostringstream msgStream;
-    msgStream << " -- " << record.m_suppressedCounter << " similar messages suppressed, last occurrence was at "
-		<< record.m_lastOccuranceFormatted;
-    
-    ers::Issue* suppressedNotice = issue.clone();
-    suppressedNotice->wrap_message( "",  msgStream.str());
+  std::ostringstream msgStream;
+  msgStream << " -- " << record.m_suppressedCounter << " similar messages suppressed, last occurrence was at "
+            << record.m_lastOccuranceFormatted;
 
-    suppressedNotice->set_severity(issue.severity());
-    chained().write(*suppressedNotice);
-    delete suppressedNotice;
+  ers::Issue* suppressedNotice = issue.clone();
+  suppressedNotice->wrap_message("", msgStream.str());
 
-    record.m_lastReport = issue.time_t();
-    record.m_suppressedCounter = 0;
+  suppressedNotice->set_severity(issue.severity());
+  chained().write(*suppressedNotice);
+  delete suppressedNotice;
+
+  record.m_lastReport = issue.time_t();
+  record.m_suppressedCounter = 0;
 }
 
-void 
+void
 ers::ThrottleStream::throttle(IssueRecord& rec, const ers::Issue& issue)
 {
-    std::time_t issueTime=issue.time_t();
-    bool reported=false;
-    if (issueTime - rec.m_lastOccurance > m_timeLimit) {
-	if (rec.m_suppressedCounter>0) {
-	   reportSuppression(rec, issue);
-	   reported=true;
-	}
-	rec.reset();
+  std::time_t issueTime = issue.time_t();
+  bool reported = false;
+  if (issueTime - rec.m_lastOccurance > m_timeLimit) {
+    if (rec.m_suppressedCounter > 0) {
+      reportSuppression(rec, issue);
+      reported = true;
     }
+    rec.reset();
+  }
 
-    if (rec.m_initialCounter<m_initialThreshold) {
-	rec.m_initialCounter++;
-	rec.m_lastReport=issueTime;
-	if (!reported) {
-	    chained().write(issue);
-	}
+  if (rec.m_initialCounter < m_initialThreshold) {
+    rec.m_initialCounter++;
+    rec.m_lastReport = issueTime;
+    if (!reported) {
+      chained().write(issue);
     }
-    else if (rec.m_suppressedCounter>=rec.m_threshold) {
-	rec.m_threshold=rec.m_threshold*10;
-	reportSuppression(rec, issue);
-    }
-    else if (issueTime - rec.m_lastReport > m_timeLimit) {
-	reportSuppression(rec, issue);
-    }
-    else {
-	rec.m_suppressedCounter++;
-    }
+  } else if (rec.m_suppressedCounter >= rec.m_threshold) {
+    rec.m_threshold = rec.m_threshold * 10;
+    reportSuppression(rec, issue);
+  } else if (issueTime - rec.m_lastReport > m_timeLimit) {
+    reportSuppression(rec, issue);
+  } else {
+    rec.m_suppressedCounter++;
+  }
 
-    rec.m_lastOccurance=issueTime;
-    rec.m_lastOccuranceFormatted=issue.time<std::chrono::microseconds>();
+  rec.m_lastOccurance = issueTime;
+  rec.m_lastOccuranceFormatted = issue.time<std::chrono::microseconds>();
 }
 
-ers::ThrottleStream::ThrottleStream( const std::string & criteria )
+ers::ThrottleStream::ThrottleStream(const std::string& criteria)
 {
-    m_initialThreshold = 30;
-    m_timeLimit = 30;
-    
-    std::vector<std::string> params;
-    ers::tokenize( criteria, ",", params );
-    
-    if ( params.size() > 0 )
-    {
-	std::istringstream in( params[0] );
-        in >> m_initialThreshold;
-    }
-    
-    if ( params.size() > 1 )
-    {
-	std::istringstream in( params[1] );
-        in >> m_timeLimit;
-    }
+  m_initialThreshold = 30;
+  m_timeLimit = 30;
+
+  std::vector<std::string> params;
+  ers::tokenize(criteria, ",", params);
+
+  if (params.size() > 0) {
+    std::istringstream in(params[0]);
+    in >> m_initialThreshold;
+  }
+
+  if (params.size() > 1) {
+    std::istringstream in(params[1]);
+    in >> m_timeLimit;
+  }
 }
 
-/** Write method 
-  * basically calls \c throttle to check if the issue is accepted. 
-  * If this is the case, the \c write method on the chained stream is called with 
-  * \c issue. 
-  * \param issue issue to be sent.
-  */
-void 
-ers::ThrottleStream::write( const ers::Issue & issue )
+/** Write method
+ * basically calls \c throttle to check if the issue is accepted.
+ * If this is the case, the \c write method on the chained stream is called with
+ * \c issue.
+ * \param issue issue to be sent.
+ */
+void
+ers::ThrottleStream::write(const ers::Issue& issue)
 {
-    const ers::Context& context = issue.context();
-    std::string issueId = context.file_name() + boost::lexical_cast<std::string>(context.line_number());
+  const ers::Context& context = issue.context();
+  std::string issueId = context.file_name() + boost::lexical_cast<std::string>(context.line_number());
 
-    std::scoped_lock ml(m_mutex);
-    throttle( m_issueMap[issueId], issue );
+  std::scoped_lock ml(m_mutex);
+  throttle(m_issueMap[issueId], issue);
 }

@@ -1,4 +1,15 @@
 /*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from ers/IssueReceiver.h to include/ers/IssueReceiver.hpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
  *  IssueReceiver.h
  *  ers
  *
@@ -13,36 +24,33 @@
 #include <ers/Issue.hpp>
 
 /** \file IssueReceiver.h Defines abstract interface for ERS input streams.
-  * \author Serguei Kolos
-  * \brief ers header and documentation file 
-  */
-namespace ers
+ * \author Serguei Kolos
+ * \brief ers header and documentation file
+ */
+namespace ers {
+class Issue;
+
+/** ERS Issue receiver abstract interface.
+ * User must create a subsclass of this class in order to receive issues.
+ *
+ * \author Serguei Kolos
+ * \brief ERS Issue receiver interface.
+ */
+
+class IssueReceiver
 {
-    class Issue; 
+public:
+  virtual ~IssueReceiver() { ; }
 
-    /** ERS Issue receiver abstract interface.
-      * User must create a subsclass of this class in order to receive issues.
-      *
-      * \author Serguei Kolos
-      * \brief ERS Issue receiver interface.
-      */
-    
-    class IssueReceiver
-    {
-      public:
-	virtual ~IssueReceiver()
-        { ; }
-        
-	virtual void receive( const Issue & issue ) = 0;	/**< \brief Is called when a new issue is received */
-              
-      protected:
-        IssueReceiver() = default;
+  virtual void receive(const Issue& issue) = 0; /**< \brief Is called when a new issue is received */
 
-      private:
-	IssueReceiver( const IssueReceiver & ) = delete;
-        IssueReceiver & operator=( const IssueReceiver & ) = delete;
-    };
+protected:
+  IssueReceiver() = default;
+
+private:
+  IssueReceiver(const IssueReceiver&) = delete;
+  IssueReceiver& operator=(const IssueReceiver&) = delete;
+};
 }
 
 #endif
-

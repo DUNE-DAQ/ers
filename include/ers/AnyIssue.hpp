@@ -1,4 +1,15 @@
 /*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from ers/AnyIssue.h to include/ers/AnyIssue.hpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
  *  AnyIssue.h
  *  ers
  *
@@ -11,60 +22,55 @@
 #define ERS_ANY_ISSUE_H
 
 /** \file AnyIssue.h
-  * This file defines the ers::AnyIssue class
-  */ 
+ * This file defines the ers::AnyIssue class
+ */
 
 #include <ers/Issue.hpp>
 
-namespace ers
-{   
-    class AnyIssue : public ers::Issue
-    {
+namespace ers {
+class AnyIssue : public ers::Issue
+{
 
-      friend class IssueFactory;
-      
-      public:
-        AnyIssue( const std::string & type,
-		  const ers::Context & context,
-		  const std::string & message = "" )
-          : ers::Issue( context, message ),
-            m_type( type )
-        { ; }
-        
-        AnyIssue( const std::string & type,
-		  const inheritance_type & chain,
-        	  Severity severity,
-                  const ers::Context & context,
-		  const system_clock::time_point & time,
-		  const std::string & message,
-		  const std::vector<std::string> & qualifiers,
-		  const std::map<std::string, std::string> & parameters,
-                  const ers::Issue * cause = 0 )
-          : ers::Issue( severity, time, context, message, qualifiers, parameters, cause ),
-            m_type( type ),
-	    m_inheritance( chain )
-	{ ; }
-        
-        ~AnyIssue() noexcept { ; }
-        
-        virtual ers::Issue * clone() const
-        { return new AnyIssue( *this ); }
-	
-        virtual const char * get_class_name() const
-        { return m_type.c_str(); }
+  friend class IssueFactory;
 
-        virtual inheritance_type get_class_inheritance() const final {
-	  return m_inheritance ;
-	}
-       	
-        virtual void raise() const
-        { throw AnyIssue(*this); }
-        
-      private:
-      	std::string m_type;
-        inheritance_type m_inheritance;
-    };
+public:
+  AnyIssue(const std::string& type, const ers::Context& context, const std::string& message = "")
+    : ers::Issue(context, message)
+    , m_type(type)
+  {
+    ;
+  }
+
+  AnyIssue(const std::string& type,
+           const inheritance_type& chain,
+           Severity severity,
+           const ers::Context& context,
+           const system_clock::time_point& time,
+           const std::string& message,
+           const std::vector<std::string>& qualifiers,
+           const std::map<std::string, std::string>& parameters,
+           const ers::Issue* cause = 0)
+    : ers::Issue(severity, time, context, message, qualifiers, parameters, cause)
+    , m_type(type)
+    , m_inheritance(chain)
+  {
+    ;
+  }
+
+  ~AnyIssue() noexcept { ; }
+
+  virtual ers::Issue* clone() const { return new AnyIssue(*this); }
+
+  virtual const char* get_class_name() const { return m_type.c_str(); }
+
+  virtual inheritance_type get_class_inheritance() const final { return m_inheritance; }
+
+  virtual void raise() const { throw AnyIssue(*this); }
+
+private:
+  std::string m_type;
+  inheritance_type m_inheritance;
+};
 }
 
 #endif
-

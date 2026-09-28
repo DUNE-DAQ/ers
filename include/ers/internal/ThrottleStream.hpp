@@ -1,4 +1,15 @@
 /*
+ * DUNE DAQ modification notice:
+ * This file has been modified from the original ATLAS ers source for the DUNE DAQ project.
+ * Fork baseline commit: 8267df82a4f6fe6bf02c4014923eba19eddc4614 (2020-04-14).
+ * Renamed since fork: yes (from ers/internal/ThrottleStream.h to include/ers/internal/ThrottleStream.hpp).
+ *
+ * Original copyright:
+ * Copyright (C) 2001-2020 CERN for the benefit of the ATLAS collaboration.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
  *  ThrottleStream.h
  *  ers
  *
@@ -15,54 +26,55 @@
 
 #include <ers/OutputStream.hpp>
 
-namespace ers
+namespace ers {
+/** This class implements a stream that swallows identical issues if they are sent to the given stream too often.
+ * In order to employ this implementation in a stream configuration the name to be used is "throttle".
+ * E.g. the following configuration will suppress identical issues from been printed to the standard output:
+ *
+ *         export DUNEDAQ_ERS_FATAL="throttle(10, 20),stdout"
+ *
+ * This stream has two configuration parameters:
+ *   - first parameter defines an initial number of identical messages after which the throttling shall be started
+ *   - second parameter defines a timeout in seconds after which the throttling is reset to its initial state if no
+ *          issues of a given type have been reported in this period
+ *
+ * \author Serguei Kolos
+ * \brief Throws issues as exceptions
+ */
+class ThrottleStream : public ers::OutputStream
 {
-    /** This class implements a stream that swallows identical issues if they are sent to the given stream too often.
-     * In order to employ this implementation in a stream configuration the name to be used is "throttle".
-     * E.g. the following configuration will suppress identical issues from been printed to the standard output:
-     *
-     *         export DUNEDAQ_ERS_FATAL="throttle(10, 20),stdout"
-     *
-     * This stream has two configuration parameters:
-     *   - first parameter defines an initial number of identical messages after which the throttling shall be started
-     *   - second parameter defines a timeout in seconds after which the throttling is reset to its initial state if no
-     *          issues of a given type have been reported in this period
-     *
-     * \author Serguei Kolos
-     * \brief Throws issues as exceptions
-     */
-    class ThrottleStream: public ers::OutputStream {
-    public:
-        explicit ThrottleStream(const std::string &criteria);
+public:
+  explicit ThrottleStream(const std::string& criteria);
 
-        void write(const ers::Issue &issue) override;
+  void write(const ers::Issue& issue) override;
 
-    private:
-        class IssueRecord {
-        public:
-            IssueRecord();
-            void reset();
+private:
+  class IssueRecord
+  {
+  public:
+    IssueRecord();
+    void reset();
 
-            std::time_t m_lastOccurance;
-            std::time_t m_lastReport;
-            std::string m_lastOccuranceFormatted;
-            int m_initialCounter;
-            int m_threshold;
-            int m_suppressedCounter;
-        };
+    std::time_t m_lastOccurance;
+    std::time_t m_lastReport;
+    std::string m_lastOccuranceFormatted;
+    int m_initialCounter;
+    int m_threshold;
+    int m_suppressedCounter;
+  };
 
-    private:
-        void throttle(IssueRecord &record, const ers::Issue &issue);
+private:
+  void throttle(IssueRecord& record, const ers::Issue& issue);
 
-        void reportSuppression(IssueRecord &record, const ers::Issue &issue);
+  void reportSuppression(IssueRecord& record, const ers::Issue& issue);
 
-        typedef std::map<std::string, IssueRecord> IssueMap;
-        IssueMap m_issueMap;
+  typedef std::map<std::string, IssueRecord> IssueMap;
+  IssueMap m_issueMap;
 
-        int m_initialThreshold;
-        int m_timeLimit;
-        std::mutex m_mutex;
-    };
+  int m_initialThreshold;
+  int m_timeLimit;
+  std::mutex m_mutex;
+};
 }
 
 #endif
